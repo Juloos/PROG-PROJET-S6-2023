@@ -2,12 +2,24 @@ package Modele;
 
 import Global.Config;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Plateau {
-    int[][] grille = new int[Config.TAILLE_PLATEAU_Y][Config.TAILLE_PLATEAU_X];
+    int[][] grille;
+    int qMax, rMax;
+
+    public final static int VIDE = 0;  // Après avoir mangé une case
 
     public Plateau() {
-
+        grille = new int[Config.TAILLE_PLATEAU_Y][Config.TAILLE_PLATEAU_X];
+        qMax = Config.TAILLE_PLATEAU_X;
+        rMax = Config.TAILLE_PLATEAU_Y;
+        Random rand = new Random();
+        for (int q = 0; q < qMax; q++) {
+            for (int r = 0; r < rMax; r++) {
+                set(q, r, rand.nextInt(4));
+            }
+        }
     }
 
     public void set(int q, int r, int val) {
@@ -23,15 +35,15 @@ public class Plateau {
         ArrayList<Integer[]> vcells = new ArrayList<>();
         if (q > 0)
             vcells.add(new Integer[] {q - 1, r});
-        if (q < Config.TAILLE_PLATEAU_X - 1)
+        if (q < qMax - 1)
             vcells.add(new Integer[] {q + 1, r});
         if (r > 0)
             vcells.add(new Integer[] {q, r - 1});
-        if (r < Config.TAILLE_PLATEAU_Y - 1)
+        if (r < rMax - 1)
             vcells.add(new Integer[] {q, r + 1});
         if (q > 0 && r > 0)
             vcells.add(new Integer[] {q - 1, r - 1});
-        if (q < Config.TAILLE_PLATEAU_X - 1 && r < Config.TAILLE_PLATEAU_Y - 1)
+        if (q < qMax - 1 && r < rMax - 1)
             vcells.add(new Integer[] {q + 1, r + 1});
         return vcells;
     }
