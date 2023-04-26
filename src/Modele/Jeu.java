@@ -1,13 +1,15 @@
 package Modele;
 
+import Global.Config;
 import java.util.ArrayList;
 
 public abstract class Jeu {
     Plateau plateau;
-    int scoreJ1, scoreJ2;
-    int tuilesJ1, tuilesJ2;
+    int scoreJ1, scoreJ2;      // Score des joueurs
+    int tuilesJ1, tuilesJ2;    // Nombre de tuiles mangées
+    int bloquesJ1, bloquesJ2;  // Nombre de pions bloqués
     int joueurCourant;
-    ArrayList<Coord> pionsJ1, pionsJ2;
+    ArrayList<Coord> pionsJ1, pionsJ2;  // Liste des pions des joueurs
 
     public final static int J1 = 1;
     public final static int J2 = 2;
@@ -21,6 +23,17 @@ public abstract class Jeu {
         joueurCourant = J1;
         pionsJ1 = new ArrayList<>();
         pionsJ2 = new ArrayList<>();
+    }
+
+    public boolean peutJouer(int joueur) {
+        if (joueur == J1)
+            return bloquesJ1 != pionsJ1.size();
+        else
+            return bloquesJ2 != pionsJ2.size();
+    }
+
+    public boolean estTermine() {
+        return (tuilesJ1 + tuilesJ2) > 0 && pionsJ1.isEmpty() && pionsJ2.isEmpty();
     }
 
     public int getScoreJ1() {
@@ -70,17 +83,23 @@ public abstract class Jeu {
                     curr = curr.decale(dir);
                 }
             }
+            if (liste.isEmpty()) {
+                if (estPionJ1(c))
+                    bloquesJ1++;
+                else
+                    bloquesJ2++;
+            }
             return liste;
         } else
             return null;
     }
 
-    public boolean deplacer(Coord c1, Coord c2) {
+    public void deplacer(Coord c1, Coord c2) {
         // Renvoie vrai si le pion à bien été déplacé de (q1, r1) à (q2, r2) ou non
         if ((!estPionJ1(c1) || joueurCourant != J1) && (!estPionJ2(c1) || joueurCourant != J2))
-            return false;
+            throw new RuntimeException("Le pion ne correspond pas au joueur courant.");
         if (!deplacementsPion(c1).contains(c2))
-            return false;
+            throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
         manger(c1);
         if (joueurCourant == J1) {
             pionsJ1.remove(c1);
@@ -89,7 +108,24 @@ public abstract class Jeu {
             pionsJ2.remove(c1);
             pionsJ2.add(c2);
         }
-        joueurCourant = (joueurCourant == J1) ? J2 : J1;
-        return true;
+        if (joueurCourant == J1)
+            joueurCourant = pionsJ1.isEmpty() ? J2 : J1;
+        else
+            joueurCourant = pionsJ2.isEmpty() ? J1 : J2;
+    }
+
+    public void ajouterPion(Coord c) {
+        if (plateau.get(c) == Plateau.VIDE || estPionJ1(c) || estPionJ2(c))
+            throw new RuntimeException("Impossible de placer le pion à l'emplacement " + c + ".");
+        if (joueurCourant == J1) {
+            if (pionsJ1.size() >= Config.NB_PIONS)
+                throw new RuntimeException("J1 a déjà placé tout ses pions.");
+            pionsJ1.add(c);
+        } else {
+            if (pionsJ2.size() >= Config.NB_PIONS)
+                throw new RuntimeException("J2 a déjà placé tout ses pions.");
+            pionsJ2.add(c);
+        }
+        joueurCourant = joueurCourant == J1 ? J2 : J1;
     }
 }

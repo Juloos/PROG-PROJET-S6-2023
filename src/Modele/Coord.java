@@ -65,4 +65,9 @@ public class Coord {
             return false;
         return q == c.q && r == c.r;
     }
+
+    @Override
+    public String toString() {
+        return "(" + q + ", " + r + ")";
+    }
 }
