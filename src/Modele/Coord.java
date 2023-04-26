@@ -3,6 +3,13 @@ package Modele;
 public class Coord {
     public int q, r;
 
+    public final static int HAUT_GAUCHE = 0;
+    public final static int HAUT_DROITE = 1;
+    public final static int DROITE = 2;
+    public final static int BAS_DROITE = 3;
+    public final static int BAS_GAUCHE = 4;
+    public final static int GAUCHE = 5;
+
     public Coord() {
         this.q = 0;
         this.r = 0;
@@ -49,20 +56,26 @@ public class Coord {
 
     public Coord decale(int dir) {
         switch (dir) {
-            case 0 -> { return decaleHautGauche(); }
-            case 1 -> { return decaleHautDroite(); }
-            case 2 -> { return decaleDroite(); }
-            case 3 -> { return decaleBasDroite(); }
-            case 4 -> { return decaleBasGauche(); }
-            case 5 -> { return decaleGauche(); }
+            case HAUT_GAUCHE -> { return decaleHautGauche(); }
+            case HAUT_DROITE -> { return decaleHautDroite(); }
+            case DROITE -> { return decaleDroite(); }
+            case BAS_DROITE -> { return decaleBasDroite(); }
+            case BAS_GAUCHE -> { return decaleBasGauche(); }
+            case GAUCHE -> { return decaleGauche(); }
             default -> { return this; }
         }
     }
 
     @Override
+    public Coord clone() {
+        return new Coord(q, r);
+    }
+
+    @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Coord c))
+        if (!(o instanceof Coord))
             return false;
+        Coord c = (Coord) o;
         return q == c.q && r == c.r;
     }
 
