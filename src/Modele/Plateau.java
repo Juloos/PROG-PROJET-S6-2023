@@ -29,21 +29,27 @@ public class Plateau {
         return grille[r][q];
     }
 
-    public ArrayList<Integer[]> voisins(int q, int r) {
-        // ArrayList de couple d'entier (q, r)
-        ArrayList<Integer[]> vcells = new ArrayList<>();
-        if (q > 0)
-            vcells.add(new Integer[] {q - 1, r});
-        if (q < qMax - 1)
-            vcells.add(new Integer[] {q + 1, r});
-        if (r > 0)
-            vcells.add(new Integer[] {q, r - 1});
-        if (r < rMax - 1)
-            vcells.add(new Integer[] {q, r + 1});
-        if (q > 0 && r > 0)
-            vcells.add(new Integer[] {q - 1, r - 1});
-        if (q < qMax - 1 && r < rMax - 1)
-            vcells.add(new Integer[] {q + 1, r + 1});
-        return vcells;
+    public static int[] decaleHautGauche(int q, int r) {
+        return new int[] {q, r - 1};
+    }
+
+    public static int[] decaleHautDroite(int q, int r) {
+        return new int[] {q + 1, r - 1};
+    }
+
+    public static int[] decaleDroite(int q, int r) {
+        return new int[] {q + 1, r};
+    }
+
+    public static int[] decaleBasDroite(int q, int r) {
+        return new int[] {q + 1, r + 1};
+    }
+
+    public static int[] decaleBasGauche(int q, int r) {
+        return new int[] {q, r + 1};
+    }
+
+    public static int[] decaleGauche(int q, int r) {
+        return new int[] {q - 1, r};
     }
 }
