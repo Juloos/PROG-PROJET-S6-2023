@@ -59,7 +59,20 @@ public class Jeu {
     }
 
     ArrayList<Coord> deplacementsPion(Coord c) {
-        return null;
+        ArrayList<Coord> liste = new ArrayList<>();
+        if (estPionJ1(c) || estPionJ2(c)) {
+            for (int dir = 0; dir < 6; dir++) {
+                Coord curr = c.decale(dir);
+                while (plateau.get(curr) != Plateau.VIDE && curr.q > 0 && curr.r > 0 &&
+                        curr.q <= plateau.qMax && curr.r <= plateau.rMax &&
+                        !estPionJ1(curr) && !estPionJ2(curr)) {
+                    liste.add(curr);
+                    curr = curr.decale(dir);
+                }
+            }
+            return liste;
+        } else
+            return null;
     }
 
     public boolean deplacer(Coord c1, Coord c2) {

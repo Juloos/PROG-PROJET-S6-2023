@@ -47,6 +47,18 @@ public class Coord {
         return new Coord(q - 1, r);
     }
 
+    public Coord decale(int dir) {
+        switch (dir) {
+            case 0 -> { return decaleHautGauche(); }
+            case 1 -> { return decaleHautDroite(); }
+            case 2 -> { return decaleDroite(); }
+            case 3 -> { return decaleBasDroite(); }
+            case 4 -> { return decaleBasGauche(); }
+            case 5 -> { return decaleGauche(); }
+            default -> { return this; }
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Coord c))
