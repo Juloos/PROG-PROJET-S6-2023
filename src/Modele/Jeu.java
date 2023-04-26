@@ -108,12 +108,14 @@ public abstract class Jeu {
     public void terminerJoueur(int joueur) {
         if (peutJouer(joueur))
             return;
-        if (joueur == J1)
 
+        if (joueur == J1){
             for (Coord c : joueurs[J1].pions.keySet())
                 manger(c);
-        else
+        }else {
             for (Coord c : joueurs[J2].pions.keySet())
                 manger(c);
+        }
+        joueurCourant = joueurSuivant();
     }
 }
