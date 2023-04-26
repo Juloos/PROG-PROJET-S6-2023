@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class Joueur {
     public int score;
     public int tuiles;
-    public HashMap<Coord,Boolean> pions;
+    public HashMap<Coord, Boolean> pions;
 
     public Joueur(){
         score = 0;

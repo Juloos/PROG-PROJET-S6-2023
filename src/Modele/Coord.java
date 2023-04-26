@@ -1,5 +1,7 @@
 package Modele;
 
+import java.util.Arrays;
+
 public class Coord {
     public int q, r;
 
@@ -82,5 +84,10 @@ public class Coord {
     @Override
     public String toString() {
         return "(" + q + ", " + r + ")";
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(new int[] {q, r});
     }
 }

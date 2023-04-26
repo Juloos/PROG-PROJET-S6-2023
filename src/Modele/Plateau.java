@@ -18,7 +18,7 @@ public class Plateau {
         Coord c = new Coord();
         for (c.q = 0; c.q < qMax; c.q++)
             for (c.r = 0; c.r < rMax; c.r++)
-                set(c, weights[rand.nextInt(7) - 1]);
+                set(c, weights[rand.nextInt(6)]);
     }
 
     public void set(Coord c, int val) {
@@ -27,5 +27,16 @@ public class Plateau {
 
     public int get(Coord c) {
         return grille[c.r][c.q];
+    }
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        Coord c = new Coord();
+        for (c.r = 0; c.r < rMax; c.r++) {
+            for (c.q = 0; c.q < qMax; c.q++)
+                str.append(get(c)).append(" ");
+            str.append("\n");
+        }
+        return str.toString();
     }
 }
