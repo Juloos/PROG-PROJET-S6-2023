@@ -15,11 +15,10 @@ public class Plateau {
         qMax = Config.TAILLE_PLATEAU_X;
         rMax = Config.TAILLE_PLATEAU_Y;
         Random rand = new Random();
-        for (int q = 0; q < qMax; q++) {
-            for (int r = 0; r < rMax; r++) {
-                set(q, r, rand.nextInt(4));
-            }
-        }
+        int[] weights = new int[] {1, 1, 1, 2, 2, 3};
+        for (int q = 0; q < qMax; q++)
+            for (int r = 0; r < rMax; r++)
+                set(q, r, weights[rand.nextInt(0, 6)]);
     }
 
     public void set(int q, int r, int val) {
