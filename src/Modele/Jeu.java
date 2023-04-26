@@ -2,12 +2,13 @@ package Modele;
 
 import Global.Config;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public abstract class Jeu {
     Plateau plateau;
     int scoreJ1, scoreJ2;      // Score des joueurs
     int tuilesJ1, tuilesJ2;    // Nombre de tuiles mangées
-    int bloquesJ1, bloquesJ2;  // Nombre de pions bloqués
+    HashMap<Coord, Boolean> bloquesJ1, bloquesJ2;  // Pions bloqués
     int joueurCourant;
     ArrayList<Coord> pionsJ1, pionsJ2;  // Liste des pions des joueurs
 
@@ -27,13 +28,13 @@ public abstract class Jeu {
 
     public boolean peutJouer(int joueur) {
         if (joueur == J1)
-            return bloquesJ1 != pionsJ1.size();
+            return bloquesJ1.containsValue(false);
         else
-            return bloquesJ2 != pionsJ2.size();
+            return bloquesJ2.containsValue(false);
     }
 
     public boolean estTermine() {
-        return (tuilesJ1 + tuilesJ2) > 0 && !peutJouer(J1) && !peutJouer(J2);
+        return !peutJouer(J1) && !peutJouer(J2);
     }
 
     public int getScoreJ1() {
@@ -85,9 +86,9 @@ public abstract class Jeu {
             }
             if (liste.isEmpty()) {
                 if (estPionJ1(c))
-                    bloquesJ1++;
+                    bloquesJ1.putIfAbsent(c, true);
                 else
-                    bloquesJ2++;
+                    bloquesJ2.putIfAbsent(c, true);
             }
             return liste;
         } else
@@ -109,10 +110,14 @@ public abstract class Jeu {
         manger(c1);
         if (joueurCourant == J1) {
             pionsJ1.remove(c1);
+            bloquesJ1.remove(c1);
             pionsJ1.add(c2);
+            bloquesJ1.put(c2, false);
         } else {
             pionsJ2.remove(c1);
+            bloquesJ2.remove(c1);
             pionsJ2.add(c2);
+            bloquesJ2.put(c2, false);
         }
         joueurCourant = joueurSuivant();
     }
