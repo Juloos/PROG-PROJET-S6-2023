@@ -1,94 +1,67 @@
 package Modele;
 
 import Global.Config;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class Jeu {
     Plateau plateau;
-    int scoreJ1, scoreJ2;      // Score des joueurs
-    int tuilesJ1, tuilesJ2;    // Nombre de tuiles mangées
-    HashMap<Coord, Boolean> bloquesJ1, bloquesJ2;  // Pions bloqués
-    int joueurCourant;
-    ArrayList<Coord> pionsJ1, pionsJ2;  // Liste des pions des joueurs
+    Joueur[] joueurs;
 
-    public final static int J1 = 1;
-    public final static int J2 = 2;
+    int joueurCourant;
+
+    public final static int J1 = 0;
+    public final static int J2 = 1;
 
     public Jeu() {
         plateau = new Plateau();
-        scoreJ1 = 0;
-        scoreJ2 = 0;
-        tuilesJ1 = 0;
-        tuilesJ2 = 0;
+        joueurs = new Joueur[Config.NB_JOUEUR];
+        for (Joueur j : joueurs) {
+            j = new Joueur();
+        }
         joueurCourant = J1;
-        pionsJ1 = new ArrayList<>();
-        pionsJ2 = new ArrayList<>();
     }
 
     public boolean peutJouer(int joueur) {
         if (joueur == J1)
-            return bloquesJ1.containsValue(false);
+            return joueurs[J1].peutJouer();
         else
-            return bloquesJ2.containsValue(false);
+            return joueurs[J2].peutJouer();
     }
 
     public boolean estTermine() {
         return !peutJouer(J1) && !peutJouer(J2);
     }
 
-    public int getScoreJ1() {
-        return scoreJ1;
-    }
-
-    public int getScoreJ2() {
-        return scoreJ2;
-    }
-
-    public int getNbTuilesJ1() {
-        return tuilesJ1;
-    }
-
-    public int getNbTuilesJ2() {
-        return tuilesJ2;
-    }
-
-    public boolean estPionJ1(Coord c) {
-        return pionsJ1.contains(c);
-    }
-
-    public boolean estPionJ2(Coord c) {
-        return pionsJ2.contains(c);
-    }
-
     void manger(Coord c) {
         if (joueurCourant == J1) {
-            scoreJ1 += plateau.get(c);
-            tuilesJ1++;
+            joueurs[J1].score += plateau.get(c);
+            joueurs[J1].tuiles++;
         } else {
-            scoreJ2 += plateau.get(c);
-            tuilesJ2++;
+            joueurs[J2].score += plateau.get(c);
+            joueurs[J2].tuiles++;
         }
         plateau.set(c, Plateau.VIDE);
     }
 
     ArrayList<Coord> deplacementsPion(Coord c) {
         ArrayList<Coord> liste = new ArrayList<>();
-        if (estPionJ1(c) || estPionJ2(c)) {
+        if (joueurs[J1].estPion(c) || joueurs[J2].estPion(c)) {
             for (int dir = 0; dir < 6; dir++) {
                 Coord curr = c.decale(dir);
                 while (plateau.get(curr) != Plateau.VIDE && curr.q > 0 && curr.r > 0 &&
                         curr.q <= plateau.qMax && curr.r <= plateau.rMax &&
-                        !estPionJ1(curr) && !estPionJ2(curr)) {
+                        !joueurs[J1].estPion(curr) && !joueurs[J2].estPion(curr)) {
                     liste.add(curr);
                     curr = curr.decale(dir);
                 }
             }
             if (liste.isEmpty()) {
-                if (estPionJ1(c))
-                    bloquesJ1.putIfAbsent(c, true);
+                if (joueurs[J1].estPion(c))
+                    joueurs[J1].pions.put(c, true);
                 else
-                    bloquesJ2.putIfAbsent(c, true);
+                    joueurs[J2].pions.put(c, true);
             }
             return liste;
         } else
@@ -103,36 +76,28 @@ public abstract class Jeu {
     }
 
     public void deplacerPion(Coord c1, Coord c2) {
-        if ((!estPionJ1(c1) || joueurCourant != J1) && (!estPionJ2(c1) || joueurCourant != J2))
+        if ((!joueurs[J1].estPion(c1) || joueurCourant != J1) && (!joueurs[J1].estPion(c1) || joueurCourant != J2))
             throw new RuntimeException("Le pion ne correspond pas au joueur courant.");
         if (!deplacementsPion(c1).contains(c2))
             throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
         manger(c1);
         if (joueurCourant == J1) {
-            pionsJ1.remove(c1);
-            bloquesJ1.remove(c1);
-            pionsJ1.add(c2);
-            bloquesJ1.put(c2, false);
+            joueurs[J1].pions.remove(c1);
+            joueurs[J1].pions.put(c2, false);
         } else {
-            pionsJ2.remove(c1);
-            bloquesJ2.remove(c1);
-            pionsJ2.add(c2);
-            bloquesJ2.put(c2, false);
+            joueurs[J2].pions.remove(c1);
+            joueurs[J2].pions.put(c2, false);
         }
         joueurCourant = joueurSuivant();
     }
 
     public void ajouterPion(Coord c) {
-        if (plateau.get(c) == Plateau.VIDE || estPionJ1(c) || estPionJ2(c))
+        if (plateau.get(c) == Plateau.VIDE || joueurs[J1].estPion(c) || joueurs[J2].estPion(c))
             throw new RuntimeException("Impossible de placer le pion à l'emplacement " + c + ".");
         if (joueurCourant == J1) {
-            if (pionsJ1.size() >= Config.NB_PIONS)
-                throw new RuntimeException("J1 a déjà placé tout ses pions.");
-            pionsJ1.add(c);
+            joueurs[J1].ajouterPion(c);
         } else {
-            if (pionsJ2.size() >= Config.NB_PIONS)
-                throw new RuntimeException("J2 a déjà placé tout ses pions.");
-            pionsJ2.add(c);
+            joueurs[J2].ajouterPion(c);
         }
         joueurCourant = joueurSuivant();
     }
@@ -141,10 +106,11 @@ public abstract class Jeu {
         if (peutJouer(joueur))
             return;
         if (joueur == J1)
-            for (Coord c : pionsJ1)
+
+            for (Coord c : joueurs[J1].pions.keySet())
                 manger(c);
         else
-            for (Coord c : pionsJ2)
+            for (Coord c : joueurs[J2].pions.keySet())
                 manger(c);
     }
 }
