@@ -33,7 +33,7 @@ public abstract class Jeu {
     }
 
     public boolean estTermine() {
-        return (tuilesJ1 + tuilesJ2) > 0 && pionsJ1.isEmpty() && pionsJ2.isEmpty();
+        return (tuilesJ1 + tuilesJ2) > 0 && !peutJouer(J1) && !peutJouer(J2);
     }
 
     public int getScoreJ1() {
@@ -94,8 +94,14 @@ public abstract class Jeu {
             return null;
     }
 
-    public void deplacer(Coord c1, Coord c2) {
-        // Renvoie vrai si le pion à bien été déplacé de (q1, r1) à (q2, r2) ou non
+    int joueurSuivant() {
+        if (joueurCourant == J1)
+            return peutJouer(J2) ? J2 : J1;
+        else
+            return peutJouer(J1) ? J1 : J2;
+    }
+
+    public void deplacerPion(Coord c1, Coord c2) {
         if ((!estPionJ1(c1) || joueurCourant != J1) && (!estPionJ2(c1) || joueurCourant != J2))
             throw new RuntimeException("Le pion ne correspond pas au joueur courant.");
         if (!deplacementsPion(c1).contains(c2))
@@ -108,10 +114,7 @@ public abstract class Jeu {
             pionsJ2.remove(c1);
             pionsJ2.add(c2);
         }
-        if (joueurCourant == J1)
-            joueurCourant = pionsJ1.isEmpty() ? J2 : J1;
-        else
-            joueurCourant = pionsJ2.isEmpty() ? J1 : J2;
+        joueurCourant = joueurSuivant();
     }
 
     public void ajouterPion(Coord c) {
@@ -126,6 +129,17 @@ public abstract class Jeu {
                 throw new RuntimeException("J2 a déjà placé tout ses pions.");
             pionsJ2.add(c);
         }
-        joueurCourant = joueurCourant == J1 ? J2 : J1;
+        joueurCourant = joueurSuivant();
+    }
+
+    public void terminerJoueur(int joueur) {
+        if (peutJouer(joueur))
+            return;
+        if (joueur == J1)
+            for (Coord c : pionsJ1)
+                manger(c);
+        else
+            for (Coord c : pionsJ2)
+                manger(c);
     }
 }
