@@ -2,7 +2,7 @@ package Modele;
 
 import java.util.ArrayList;
 
-public class Jeu {
+public abstract class Jeu {
     Plateau plateau;
     int scoreJ1, scoreJ2;
     int tuilesJ1, tuilesJ2;
@@ -47,7 +47,7 @@ public class Jeu {
         return pionsJ2.contains(c);
     }
 
-    public void manger(Coord c) {
+    void manger(Coord c) {
         if (joueurCourant == J1) {
             scoreJ1 += plateau.get(c);
             tuilesJ1++;
@@ -89,6 +89,7 @@ public class Jeu {
             pionsJ2.remove(c1);
             pionsJ2.add(c2);
         }
+        joueurCourant = (joueurCourant == J1) ? J2 : J1;
         return true;
     }
 }
