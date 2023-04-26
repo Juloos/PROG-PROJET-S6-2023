@@ -21,16 +21,5 @@ public class Joueur {
         return pions.containsKey(c);
     }
 
-    public void ajouterPion(Coord c){
-        if (pions.size() >= Config.NB_PIONS)
-            throw new RuntimeException("J1 a déjà placé tout ses pions.");
-
-        if(!estPion(c)){
-            pions.put(c,false);
-        }else{
-            throw new RuntimeException("Impossible de placer le pion à l'emplacement " + c + ".");
-        }
-
-    }
 
 }

@@ -17,8 +17,8 @@ public abstract class Jeu {
     public Jeu() {
         plateau = new Plateau();
         joueurs = new Joueur[Config.NB_JOUEUR];
-        for (Joueur j : joueurs) {
-            j = new Joueur();
+        for(int i =0; i < Config.NB_JOUEUR; i++){
+         joueurs[i] = new Joueur();
         }
         joueurCourant = J1;
     }
@@ -95,9 +95,18 @@ public abstract class Jeu {
         if (plateau.get(c) == Plateau.VIDE || joueurs[J1].estPion(c) || joueurs[J2].estPion(c))
             throw new RuntimeException("Impossible de placer le pion à l'emplacement " + c + ".");
         if (joueurCourant == J1) {
-            joueurs[J1].ajouterPion(c);
+            if (joueurs[J1].pions.size() >= Config.NB_PIONS)
+                throw new RuntimeException("J1 a déjà placé tout ses pions.");
+
+
+            joueurs[J1].pions.put(c,false);
+
         } else {
-            joueurs[J2].ajouterPion(c);
+            if (joueurs[J2].pions.size() >= Config.NB_PIONS)
+                throw new RuntimeException("J1 a déjà placé tout ses pions.");
+
+            joueurs[J2].pions.put(c,false);
+
         }
         joueurCourant = joueurSuivant();
     }
