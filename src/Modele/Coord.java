@@ -31,19 +31,19 @@ public class Coord {
         return new Coord(q + 1, r - 1);
     }
 
-    public Coord decaleDroite(int q, int r) {
+    public Coord decaleDroite() {
         return new Coord(q + 1, r);
     }
 
-    public Coord decaleBasDroite(int q, int r) {
+    public Coord decaleBasDroite() {
         return new Coord(q + 1, r + 1);
     }
 
-    public Coord decaleBasGauche(int q, int r) {
+    public Coord decaleBasGauche() {
         return new Coord(q, r + 1);
     }
 
-    public Coord decaleGauche(int q, int r) {
+    public Coord decaleGauche() {
         return new Coord(q - 1, r);
     }
 
