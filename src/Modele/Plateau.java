@@ -18,7 +18,7 @@ public class Plateau {
         Coord c = new Coord();
         for (c.q = 0; c.q < qMax; c.q++)
             for (c.r = 0; c.r < rMax; c.r++)
-                set(c, weights[rand.nextInt(6)]);
+                set(c, (c.r % 2 == 0 && c.q == qMax - 1) ? VIDE : weights[rand.nextInt(6)]);
     }
 
     public void set(Coord c, int val) {

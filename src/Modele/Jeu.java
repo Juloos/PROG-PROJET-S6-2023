@@ -1,9 +1,9 @@
 package Modele;
 
-import Global.Config;
-
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+
+import static Global.Config.*;
 
 public abstract class Jeu {
     Plateau plateau;
@@ -11,111 +11,119 @@ public abstract class Jeu {
 
     int joueurCourant;
 
-    public final static int J1 = 0;
-    public final static int J2 = 1;
-
     public Jeu() {
         plateau = new Plateau();
-        joueurs = new Joueur[Config.NB_JOUEUR];
-        for (int i = 0; i < Config.NB_JOUEUR; i++)
+        joueurs = new Joueur[NB_JOUEUR];
+        for (int i = 0; i < NB_JOUEUR; i++)
             joueurs[i] = new Joueur();
-        joueurCourant = J1;
+        joueurCourant = 0;
+    }
+
+    public boolean estJoueurValide(int joueur) {
+        return joueur >= 0 && joueur < NB_JOUEUR;
     }
 
     public boolean peutJouer(int joueur) {
-        if (joueur == J1)
-            return joueurs[J1].peutJouer();
-        else
-            return joueurs[J2].peutJouer();
+        return estJoueurValide(joueur) && joueurs[joueur].peutJouer();
+    }
+
+    public boolean peutJouer() {
+        return joueurs[joueurCourant].peutJouer();
     }
 
     public boolean estTermine() {
-        return !peutJouer(J1) && !peutJouer(J2);
+        return Arrays.stream(joueurs).noneMatch(Joueur::peutJouer);
+    }
+
+    public boolean estPion(Coord c) {
+        return Arrays.stream(joueurs).anyMatch(j -> j.estPion(c));
+    }
+
+    public int joueurDePion(Coord c) {
+        for (int i = 0; i < NB_JOUEUR; i++)
+            if (joueurs[i].estPion(c))
+                return i;
+        return -1;
     }
 
     void manger(Coord c) {
-        if (joueurCourant == J1) {
-            joueurs[J1].score += plateau.get(c);
-            joueurs[J1].tuiles++;
-        } else {
-            joueurs[J2].score += plateau.get(c);
-            joueurs[J2].tuiles++;
-        }
+        joueurs[joueurCourant].ajouterTuile(plateau.get(c));
         plateau.set(c, Plateau.VIDE);
     }
 
     ArrayList<Coord> deplacementsPion(Coord c) {
         ArrayList<Coord> liste = new ArrayList<>();
-        if (joueurs[J1].estPion(c) || joueurs[J2].estPion(c)) {
+        if (Arrays.stream(joueurs).anyMatch(j -> j.estPion(c))) {
             for (int dir = 0; dir < 6; dir++) {
                 Coord curr = c.decale(dir);
-                while (plateau.get(curr) != Plateau.VIDE && curr.q > 0 && curr.r > 0 &&
-                        curr.q <= plateau.qMax && curr.r <= plateau.rMax &&
-                        !joueurs[J1].estPion(curr) && !joueurs[J2].estPion(curr)) {
+                while (
+                        plateau.get(curr) != Plateau.VIDE && curr.q > 0 && curr.r > 0 &&
+                        curr.q <= plateau.qMax && curr.r <= plateau.rMax && !estPion(curr)) {
                     liste.add(curr);
                     curr = curr.decale(dir);
                 }
             }
-            if (liste.isEmpty()) {
-                if (joueurs[J1].estPion(c))
-                    joueurs[J1].pions.put(c, true);
-                else
-                    joueurs[J2].pions.put(c, true);
-            }
+            if (liste.isEmpty())
+                joueurs[joueurCourant].bloquerPion(c);
             return liste;
         } else
             return null;
     }
 
-    int joueurSuivant() {
-        if (joueurCourant == J1)
-            return peutJouer(J2) ? J2 : J1;
-        else
-            return peutJouer(J1) ? J1 : J2;
+    void joueurSuivant() {
+        do {
+            joueurCourant = (joueurCourant + 1) % NB_JOUEUR;
+        } while (!peutJouer());
     }
 
     public void deplacerPion(Coord c1, Coord c2) {
-        if ((!joueurs[J1].estPion(c1) || joueurCourant != J1) && (!joueurs[J1].estPion(c1) || joueurCourant != J2))
-            throw new RuntimeException("Le pion ne correspond pas au joueur courant.");
         if (!deplacementsPion(c1).contains(c2))
             throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
         manger(c1);
-        if (joueurCourant == J1) {
-            joueurs[J1].pions.remove(c1);
-            joueurs[J1].pions.put(c2, false);
-        } else {
-            joueurs[J2].pions.remove(c1);
-            joueurs[J2].pions.put(c2, false);
-        }
-        joueurCourant = joueurSuivant();
+        joueurs[joueurCourant].deplacerPion(c1, c2);
+        joueurSuivant();
     }
 
     public void ajouterPion(Coord c) {
-        if (plateau.get(c) == Plateau.VIDE || joueurs[J1].estPion(c) || joueurs[J2].estPion(c))
+        if (plateau.get(c) != 1 || Arrays.stream(joueurs).anyMatch(j -> j.estPion(c)))
             throw new RuntimeException("Impossible de placer le pion à l'emplacement " + c + ".");
-        if (joueurCourant == J1) {
-            if (joueurs[J1].pions.size() >= Config.NB_PIONS)
-                throw new RuntimeException("J1 a déjà placé tout ses pions.");
-            joueurs[J1].pions.put(c,false);
-        } else {
-            if (joueurs[J2].pions.size() >= Config.NB_PIONS)
-                throw new RuntimeException("J1 a déjà placé tout ses pions.");
-            joueurs[J2].pions.put(c,false);
-        }
-        joueurCourant = joueurSuivant();
+        joueurs[joueurCourant].ajouterPion(c);
+        joueurSuivant();
     }
 
     public void terminerJoueur(int joueur) {
         if (peutJouer(joueur))
-            return;
+            throw new IllegalArgumentException("Le joueur " + joueur + " peut encore jouer.");
+        for (Coord c : joueurs[joueurCourant].getPions())
+            manger(c);
+        joueurSuivant();
+    }
 
-        if (joueur == J1){
-            for (Coord c : joueurs[J1].pions.keySet())
-                manger(c);
-        }else {
-            for (Coord c : joueurs[J2].pions.keySet())
-                manger(c);
+    @Override
+    public String toString() {
+        // Même format que Plateau.toString() mais en mettant en couleur les pions des différents joueurs,
+        // et une Ligne de score à la fin.
+        StringBuilder str = new StringBuilder();
+        for (int r = 0; r < plateau.rMax; r++) {
+            if (r % 2 == 0)
+                str.append(" ");
+            for (int q = 0; q < plateau.qMax; q++) {
+                Coord c = new Coord(q, r);
+                str.append(COULEURS[joueurDePion(c) + 1]);
+                str.append(plateau.get(c) != Plateau.VIDE ? plateau.get(c) : " ");
+                str.append(" ");
+            }
+            str.append("\n");
         }
-        joueurCourant = joueurSuivant();
+        str.append(COULEURS[0]);
+        str.append("Score : ");
+        for (int i = 0; i < NB_JOUEUR; i++) {
+            str.append(COULEURS[i + 1]);
+            str.append(joueurs[i].getScore());
+            str.append(COULEURS[0]);
+            str.append(" - ");
+        }
+        str.delete(str.length() - 3, str.length());
+        return str.toString();
     }
 }
