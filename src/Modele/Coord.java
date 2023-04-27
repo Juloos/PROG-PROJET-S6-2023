@@ -58,13 +58,20 @@ public class Coord {
 
     public Coord decale(int dir) {
         switch (dir) {
-            case HAUT_GAUCHE: return decaleHautGauche();
-            case HAUT_DROITE: return decaleHautDroite();
-            case DROITE: return decaleDroite();
-            case BAS_DROITE: return decaleBasDroite();
-            case BAS_GAUCHE: return decaleBasGauche();
-            case GAUCHE: return decaleGauche();
-            default: return this;
+            case HAUT_GAUCHE:
+                return decaleHautGauche();
+            case HAUT_DROITE:
+                return decaleHautDroite();
+            case DROITE:
+                return decaleDroite();
+            case BAS_DROITE:
+                return decaleBasDroite();
+            case BAS_GAUCHE:
+                return decaleBasGauche();
+            case GAUCHE:
+                return decaleGauche();
+            default:
+                return this;
         }
     }
 
@@ -88,6 +95,6 @@ public class Coord {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(new int[] {q, r});
+        return Arrays.hashCode(new int[]{q, r});
     }
 }

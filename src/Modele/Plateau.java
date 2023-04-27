@@ -1,7 +1,7 @@
 package Modele;
 
-import Global.Config;
 import java.util.Random;
+import static Global.Config.*;
 
 public class Plateau {
     int[][] grille;
@@ -10,9 +10,9 @@ public class Plateau {
     public final static int VIDE = 0;  // Après avoir mangé une case
 
     public Plateau() {
-        grille = new int[Config.TAILLE_PLATEAU_Y][Config.TAILLE_PLATEAU_X];
-        qMax = Config.TAILLE_PLATEAU_X;
-        rMax = Config.TAILLE_PLATEAU_Y;
+        qMax = TAILLE_PLATEAU_X;
+        rMax = TAILLE_PLATEAU_Y;
+        grille = new int[rMax][qMax];
         Random rand = new Random();
         int[] weights = new int[] {1, 1, 1, 2, 2, 3};
         Coord c = new Coord();
@@ -28,6 +28,7 @@ public class Plateau {
     public int get(Coord c) {
         return grille[c.r][c.q];
     }
+
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
