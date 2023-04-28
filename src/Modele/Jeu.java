@@ -39,7 +39,7 @@ public abstract class Jeu {
     }
 
     public boolean estTermine() {
-        return Arrays.stream(joueurs).noneMatch(Joueur::peutJouer);
+        return Arrays.stream(joueurs).allMatch(j -> j.estTermine());
     }
 
     public boolean estPion(Coord c) {
@@ -98,9 +98,8 @@ public abstract class Jeu {
         joueurSuivant();
     }
 
-    public void terminerJoueur(int joueur) {
-        if (peutJouer(joueur))
-            throw new IllegalArgumentException("Le joueur " + joueur + " peut encore jouer.");
+    public void terminerJoueur() {
+        joueurs[joueurCourant].terminer();
         for (Coord c : joueurs[joueurCourant].getPions())
             manger(c);
         joueurSuivant();
@@ -108,7 +107,9 @@ public abstract class Jeu {
 
     public void jouer(Coup c) {
         if (!c.estJouable(this))
-            throw new IllegalArgumentException("Ce coup n'est pas possible");
+            throw new IllegalArgumentException("Ce coup n'est pas possible.");
+        if (c.getJoueur() != joueurCourant)
+            throw new IllegalArgumentException("Mauvaise selection du joueur du coup.");
         c.jouer(this);
     }
 

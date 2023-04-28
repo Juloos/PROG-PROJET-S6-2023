@@ -9,12 +9,14 @@ public class Joueur implements Comparable<Joueur> {
     private int score;
     private int tuiles;
     private final HashMap<Coord, Boolean> pions;
+    private boolean termine;
 
     public Joueur(int id) {
         this.id = id;
         score = 0;
         tuiles = 0;
         pions = new HashMap<>();
+        termine = false;
     }
 
     public int getScore() {
@@ -65,6 +67,16 @@ public class Joueur implements Comparable<Joueur> {
 
     public boolean peutJouer() {
         return pions.containsValue(false) || pions.size() < NB_PIONS;
+    }
+
+    public boolean estTermine() {
+        return termine;
+    }
+
+    public void terminer() {
+        if (peutJouer())
+            throw new IllegalArgumentException("Joueur peut encore jouer.");
+        termine = true;
     }
 
     public boolean estPion(Coord c) {

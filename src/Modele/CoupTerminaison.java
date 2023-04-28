@@ -14,7 +14,7 @@ public class CoupTerminaison implements Coup {
     public void jouer(Jeu j) {
         for (Coord key : j.getJoueur(joueur).getPions())
             oldVals.put(key, j.getValeur(key));
-        j.terminerJoueur(joueur);
+        j.terminerJoueur();
     }
 
     public boolean estJouable(Jeu j) {
