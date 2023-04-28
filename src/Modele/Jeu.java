@@ -26,6 +26,10 @@ public abstract class Jeu {
         return plateau.get(c);
     }
 
+    public Plateau getPlateau() {
+        return plateau;
+    }
+
     public boolean estJoueurValide(int joueur) {
         return joueur >= 0 && joueur < NB_JOUEUR;
     }
@@ -64,8 +68,8 @@ public abstract class Jeu {
             for (int dir = 0; dir < 6; dir++) {
                 Coord curr = c.decale(dir);
                 while (
-                        plateau.get(curr) != Plateau.VIDE && curr.q > 0 && curr.r > 0 &&
-                        curr.q <= plateau.qMax && curr.r <= plateau.rMax && !estPion(curr)) {
+                        curr.q >= 0 && curr.r >= 0 && curr.q < plateau.qMax && curr.r < plateau.rMax &&
+                        plateau.get(curr) != Plateau.VIDE && !estPion(curr)) {
                     liste.add(curr);
                     curr = curr.decale(dir);
                 }
