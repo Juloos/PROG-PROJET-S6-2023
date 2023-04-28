@@ -66,12 +66,6 @@ public class Joueur implements Comparable<Joueur> {
         pions.put(c, true);
     }
 
-    public boolean estPionBloque(Coord c) {
-        if (!pions.containsKey(c))
-            throw new IllegalArgumentException("Pion inexistant");
-        return pions.get(c);
-    }
-
     public boolean peutJouer() {
         return pions.containsValue(false) || pions.size() < NB_PIONS;
     }
@@ -92,6 +86,6 @@ public class Joueur implements Comparable<Joueur> {
 
     @Override
     public int compareTo(Joueur j) {
-        return j.score != score ? score - j.score : tuiles - j.tuiles;
+        return TAILLE_PLATEAU_X * TAILLE_PLATEAU_Y * (score - j.score) + (tuiles - j.tuiles);
     }
 }

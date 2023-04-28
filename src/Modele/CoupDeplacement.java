@@ -14,7 +14,7 @@ public class CoupDeplacement implements Coup {
     }
 
     public void jouer(Jeu j) {
-        oldVal = j.getValeur(source);
+        oldVal = j.getPlateau().get(source);
         j.deplacerPion(source, cible);
     }
 

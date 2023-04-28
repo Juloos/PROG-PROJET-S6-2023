@@ -2,7 +2,6 @@ package Modele;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 import static Global.Config.*;
 
 public class Plateau {
@@ -32,11 +31,19 @@ public class Plateau {
     }
 
     public void set(Coord c, int val) {
+        if (!estCoordValide(c))
+            throw new IllegalArgumentException("Coordonnées invalides : " + c + ".");
         grille[c.r][c.q] = val;
     }
 
     public int get(Coord c) {
+        if (!estCoordValide(c))
+            throw new IllegalArgumentException("Coordonnées invalides : " + c + ".");
         return grille[c.r][c.q];
+    }
+
+    public boolean estCoordValide(Coord c) {
+        return c.r >= 0 && c.r < rMax && c.q >= 0 && c.q < qMax;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package Modele;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 
 public class Coord {
     public int q, r;
@@ -73,6 +74,13 @@ public class Coord {
             default:
                 return this;
         }
+    }
+
+    public ArrayList<Coord> voisins() {
+        ArrayList<Coord> voisins = new ArrayList<>();
+        for (int i = 0; i < 6; i++)
+            voisins.add(decale(i));
+        return voisins;
     }
 
     @Override

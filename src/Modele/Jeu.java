@@ -26,11 +26,7 @@ public abstract class Jeu {
         return joueurs[id];
     }
 
-    public int getValeur(Coord c) {
-        return plateau.get(c);
-    }
-
-    public Plateau getPlateau(){
+    public Plateau getPlateau() {
         return plateau;
     }
 
@@ -43,7 +39,7 @@ public abstract class Jeu {
     }
 
     public boolean peutJouer() {
-        return joueurs[joueurCourant].peutJouer();
+        return peutJouer(joueurCourant);
     }
 
     public boolean estTermine() {
@@ -52,6 +48,12 @@ public abstract class Jeu {
 
     public boolean estPion(Coord c) {
         return Arrays.stream(joueurs).anyMatch(j -> j.estPion(c));
+    }
+
+    public boolean estPionBloque(Coord c) {
+        return estPion(c) && c.voisins().stream().allMatch(
+                v -> !plateau.estCoordValide(v) || plateau.get(v) == Plateau.VIDE || estPion(v)
+        );
     }
 
     public int joueurDePion(Coord c) {
@@ -71,23 +73,24 @@ public abstract class Jeu {
         if (Arrays.stream(joueurs).anyMatch(j -> j.estPion(c))) {
             for (int dir = 0; dir < 6; dir++) {
                 Coord curr = c.decale(dir);
-                while (curr.q >= 0 && curr.r >= 0 && curr.q < plateau.qMax && curr.r < plateau.rMax &&
-                        plateau.get(curr) != Plateau.VIDE && !estPion(curr)) {
+                while (plateau.estCoordValide(curr) && plateau.get(curr) != Plateau.VIDE && !estPion(curr)) {
                     liste.add(curr);
                     curr = curr.decale(dir);
                 }
             }
-            if (liste.isEmpty())
-                joueurs[joueurCourant].bloquerPion(c);
             return liste;
         } else
             return null;
     }
 
     void joueurSuivant() {
-        do {
-            joueurCourant = (joueurCourant + 1) % NB_JOUEUR;
-        } while (!peutJouer());
+        joueurCourant = (joueurCourant + 1) % NB_JOUEUR;
+        for (int i = 1; i < NB_JOUEUR; i++) {
+            if (getJoueur().estTermine())
+                joueurCourant = (joueurCourant + 1) % NB_JOUEUR;
+            else
+                return;
+        }
     }
 
     public void deplacerPion(Coord c1, Coord c2) {
@@ -95,6 +98,14 @@ public abstract class Jeu {
             throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
         manger(c1);
         joueurs[joueurCourant].deplacerPion(c1, c2);
+        if (estPionBloque(c2))
+            joueurs[joueurCourant].bloquerPion(c2);
+        c1.voisins().forEach(
+                voisin -> {
+                    if (estPion(voisin) && estPionBloque(voisin))
+                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                }
+        );
         joueurSuivant();
     }
 
@@ -102,6 +113,8 @@ public abstract class Jeu {
         if (plateau.get(c) != 1 || Arrays.stream(joueurs).anyMatch(j -> j.estPion(c)))
             throw new RuntimeException("Impossible de placer le pion à l'emplacement " + c + ".");
         joueurs[joueurCourant].ajouterPion(c);
+        if (estPionBloque(c))
+            joueurs[joueurCourant].bloquerPion(c);
         joueurSuivant();
     }
 
@@ -114,9 +127,9 @@ public abstract class Jeu {
 
     public void jouer(Coup c) {
         if (!c.estJouable(this))
-            throw new IllegalArgumentException("Ce coup n'est pas possible.");
+            throw new IllegalArgumentException("Ce coup n'est pas possible : " + c + ".");
         if (c.getJoueur() != joueurCourant)
-            throw new IllegalArgumentException("Mauvaise selection du joueur du coup.");
+            throw new IllegalArgumentException("Mauvaise selection du joueur du coup : " + c + ".");
         c.jouer(this);
     }
 
@@ -125,7 +138,6 @@ public abstract class Jeu {
         // Même format que Plateau.toString() mais en mettant en couleur les pions des différents joueurs,
         // et une Ligne de score à la fin.
         StringBuilder str = new StringBuilder();
-        System.out.println("Joueur " + COULEURS[joueurCourant + 1] + joueurCourant + COULEURS[0] + " :");
         for (int r = 0; r < plateau.rMax; r++) {
             if (r % 2 == 0)
                 str.append(" ");

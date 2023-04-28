@@ -13,7 +13,7 @@ public class CoupTerminaison implements Coup {
 
     public void jouer(Jeu j) {
         for (Coord key : j.getJoueur(joueur).getPions())
-            oldCase.put(key, j.getValeur(key));
+            oldCase.put(key, j.getPlateau().get(key));
         j.terminerJoueur();
     }
 

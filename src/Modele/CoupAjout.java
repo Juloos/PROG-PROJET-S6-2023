@@ -16,7 +16,7 @@ public class CoupAjout implements Coup {
     }
 
     public boolean estJouable(Jeu j) {
-        return j.getValeur(cible) == 1 && !j.estPion(cible) && j.getJoueur(joueur).getPions().size() < NB_PIONS;
+        return j.getPlateau().get(cible) == 1 && !j.estPion(cible) && j.getJoueur(joueur).getPions().size() < NB_PIONS;
     }
 
     public void annuler(Jeu j){
