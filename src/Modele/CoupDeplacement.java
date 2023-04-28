@@ -22,6 +22,11 @@ public class CoupDeplacement implements Coup {
         return j.peutJouer(joueur) && j.getJoueur(joueur).estPion(source) && j.deplacementsPion(source).contains(cible);
     }
 
+    public void annuler(Jeu j){
+        j.getPlateau().set(source,oldVal);
+        j.getJoueur(joueur).deplacerPion(cible,source);
+    }
+
     public int getJoueur() {
         return joueur;
     }
