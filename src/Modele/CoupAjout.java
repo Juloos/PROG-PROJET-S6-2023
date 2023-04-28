@@ -22,4 +22,9 @@ public class CoupAjout implements Coup {
     public int getJoueur() {
         return joueur;
     }
+
+    @Override
+    public String toString() {
+        return "CoupAjout{" + "cible=" + cible + ", joueur=" + joueur + '}';
+    }
 }

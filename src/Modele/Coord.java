@@ -33,11 +33,11 @@ public class Coord {
     }
 
     public Coord decaleHautGauche() {
-        return new Coord(q, r - 1);
+        return new Coord(q - (r % 2), r - 1);
     }
 
     public Coord decaleHautDroite() {
-        return new Coord(q + 1, r - 1);
+        return new Coord(q + 1 - (r % 2), r - 1);
     }
 
     public Coord decaleDroite() {
@@ -45,11 +45,11 @@ public class Coord {
     }
 
     public Coord decaleBasDroite() {
-        return new Coord(q + 1, r + 1);
+        return new Coord(q + 1 - (r % 2), r + 1);
     }
 
     public Coord decaleBasGauche() {
-        return new Coord(q, r + 1);
+        return new Coord(q - (r % 2), r + 1);
     }
 
     public Coord decaleGauche() {

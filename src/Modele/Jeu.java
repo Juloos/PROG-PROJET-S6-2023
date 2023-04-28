@@ -18,6 +18,10 @@ public abstract class Jeu {
         joueurCourant = 0;
     }
 
+    public Joueur getJoueur() {
+        return joueurs[joueurCourant];
+    }
+
     public Joueur getJoueur(int id) {
         return joueurs[id];
     }
@@ -39,7 +43,7 @@ public abstract class Jeu {
     }
 
     public boolean estTermine() {
-        return Arrays.stream(joueurs).allMatch(j -> j.estTermine());
+        return Arrays.stream(joueurs).allMatch(Joueur::estTermine);
     }
 
     public boolean estPion(Coord c) {
@@ -58,7 +62,7 @@ public abstract class Jeu {
         plateau.set(c, Plateau.VIDE);
     }
 
-    ArrayList<Coord> deplacementsPion(Coord c) {
+    public ArrayList<Coord> deplacementsPion(Coord c) {
         ArrayList<Coord> liste = new ArrayList<>();
         if (Arrays.stream(joueurs).anyMatch(j -> j.estPion(c))) {
             for (int dir = 0; dir < 6; dir++) {
@@ -124,7 +128,15 @@ public abstract class Jeu {
             for (int q = 0; q < plateau.qMax; q++) {
                 Coord c = new Coord(q, r);
                 str.append(COULEURS[joueurDePion(c) + 1]);
-                str.append(plateau.get(c) != Plateau.VIDE ? plateau.get(c) : " ");
+                str.append(
+                        plateau.get(c) != Plateau.VIDE ?
+                                plateau.get(c) :
+                                (
+                                        r % 2 == 0 && q == plateau.qMax - 1 ?
+                                                " " :
+                                                "."
+                                )
+                );
                 str.append(" ");
             }
             str.append("\n");

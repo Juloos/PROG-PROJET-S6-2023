@@ -2,8 +2,6 @@ package Modele;
 
 import java.util.Stack;
 
-import static Global.Config.NB_PIONS;
-
 public class JeuConcret extends Jeu {
     Stack<Coup> passe;
     Stack<Coup> future;

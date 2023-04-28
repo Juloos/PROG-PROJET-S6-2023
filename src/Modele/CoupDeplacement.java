@@ -25,4 +25,9 @@ public class CoupDeplacement implements Coup {
     public int getJoueur() {
         return joueur;
     }
+
+    @Override
+    public String toString() {
+        return "CoupDeplacement{" + "source=" + source + ", cible=" + cible + ", oldVal=" + oldVal + ", joueur=" + joueur + '}';
+    }
 }

@@ -24,4 +24,9 @@ public class CoupTerminaison implements Coup {
     public int getJoueur() {
         return joueur;
     }
+
+    @Override
+    public String toString() {
+        return "CoupTerminaison{" + "oldVals=" + oldVals + ", joueur=" + joueur + '}';
+    }
 }
