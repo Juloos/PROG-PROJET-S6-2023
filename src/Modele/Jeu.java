@@ -6,17 +6,24 @@ import java.util.Arrays;
 import static Global.Config.*;
 
 public abstract class Jeu {
-    Plateau plateau;
-    Joueur[] joueurs;
-
+    private final Plateau plateau;
+    private final Joueur[] joueurs;
     int joueurCourant;
 
     public Jeu() {
         plateau = new Plateau();
         joueurs = new Joueur[NB_JOUEUR];
         for (int i = 0; i < NB_JOUEUR; i++)
-            joueurs[i] = new Joueur();
+            joueurs[i] = new Joueur(i);
         joueurCourant = 0;
+    }
+
+    public Joueur getJoueur(int id) {
+        return joueurs[id];
+    }
+
+    public int getValeur(Coord c) {
+        return plateau.get(c);
     }
 
     public boolean estJoueurValide(int joueur) {
@@ -97,6 +104,12 @@ public abstract class Jeu {
         for (Coord c : joueurs[joueurCourant].getPions())
             manger(c);
         joueurSuivant();
+    }
+
+    public void jouer(Coup c) {
+        if (!c.estJouable(this))
+            throw new IllegalArgumentException("Ce coup n'est pas possible");
+        c.jouer(this);
     }
 
     @Override

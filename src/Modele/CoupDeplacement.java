@@ -1,0 +1,28 @@
+package Modele;
+
+public class CoupDeplacement implements Coup {
+    Coord source;
+    Coord cible;
+    int oldVal;
+    int joueur;
+
+    public CoupDeplacement(Coord source, Coord cible, int joueur) {
+        this.source = source;
+        this.cible = cible;
+        this.oldVal = Plateau.VIDE;
+        this.joueur = joueur;
+    }
+
+    public void jouer(Jeu j) {
+        oldVal = j.getValeur(source);
+        j.deplacerPion(source, cible);
+    }
+
+    public boolean estJouable(Jeu j) {
+        return j.peutJouer(joueur) && j.getJoueur(joueur).estPion(source) && j.deplacementsPion(source).contains(cible);
+    }
+
+    public int getJoueur() {
+        return joueur;
+    }
+}

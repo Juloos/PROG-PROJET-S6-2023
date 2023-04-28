@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class Joueur implements Comparable<Joueur> {
+    public final int id;
     private int score;
     private int tuiles;
     private final HashMap<Coord, Boolean> pions;
 
-    public Joueur() {
+    public Joueur(int id) {
+        this.id = id;
         score = 0;
         tuiles = 0;
         pions = new HashMap<>();
