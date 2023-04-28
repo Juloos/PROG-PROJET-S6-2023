@@ -125,6 +125,7 @@ public abstract class Jeu {
         // Même format que Plateau.toString() mais en mettant en couleur les pions des différents joueurs,
         // et une Ligne de score à la fin.
         StringBuilder str = new StringBuilder();
+        System.out.println("Joueur " + COULEURS[joueurCourant + 1] + joueurCourant + COULEURS[0] + " :");
         for (int r = 0; r < plateau.rMax; r++) {
             if (r % 2 == 0)
                 str.append(" ");
