@@ -26,10 +26,6 @@ public abstract class Jeu {
         return plateau.get(c);
     }
 
-    public Plateau getPlateau() {
-        return plateau;
-    }
-
     public boolean estJoueurValide(int joueur) {
         return joueur >= 0 && joueur < NB_JOUEUR;
     }

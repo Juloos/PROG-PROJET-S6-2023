@@ -16,7 +16,7 @@ public class TestJeu {
         do {
             c.r = rand.nextInt(TAILLE_PLATEAU_X);
             c.q = (c.r % 2 == 0) ? rand.nextInt(TAILLE_PLATEAU_Y - 1) : rand.nextInt(TAILLE_PLATEAU_Y);
-        } while (j.estPion(c));
+        } while (j.estPion(c) || j.getValeur(c) != 1);
         return c;
     }
 }
