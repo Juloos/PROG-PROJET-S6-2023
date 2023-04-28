@@ -3,17 +3,17 @@ package Modele;
 import java.util.HashMap;
 
 public class CoupTerminaison implements Coup {
-    HashMap<Coord, Integer> oldCase;
+    HashMap<Coord, Integer> oldVals;
     int joueur;
 
     public CoupTerminaison(int joueur) {
-        this.oldCase = new HashMap<>();
+        this.oldVals = new HashMap<>();
         this.joueur = joueur;
     }
 
     public void jouer(Jeu j) {
         for (Coord key : j.getJoueur(joueur).getPions())
-            oldCase.put(key, j.getPlateau().get(key));
+            oldVals.put(key, j.getPlateau().get(key));
         j.terminerJoueur();
     }
 
@@ -22,7 +22,7 @@ public class CoupTerminaison implements Coup {
     }
 
     public void annuler(Jeu j){
-        oldCase.forEach(
+        oldVals.forEach(
             (source, oldVal) -> {
                 j.getPlateau().set(source, oldVal);
                 j.getJoueur(joueur).ajouterPion(source);
@@ -36,6 +36,6 @@ public class CoupTerminaison implements Coup {
 
     @Override
     public String toString() {
-        return "CoupTerminaison{" + "oldVals=" + oldCase + ", joueur=" + joueur + '}';
+        return "CoupTerminaison{" + "oldVals=" + oldVals + ", joueur=" + joueur + '}';
     }
 }
