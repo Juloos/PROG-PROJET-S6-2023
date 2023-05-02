@@ -1,6 +1,7 @@
 package Modele;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 
 public class Coord {
     public int q, r;
@@ -33,11 +34,11 @@ public class Coord {
     }
 
     public Coord decaleHautGauche() {
-        return new Coord(q, r - 1);
+        return new Coord(q - (r % 2), r - 1);
     }
 
     public Coord decaleHautDroite() {
-        return new Coord(q + 1, r - 1);
+        return new Coord(q + 1 - (r % 2), r - 1);
     }
 
     public Coord decaleDroite() {
@@ -45,11 +46,11 @@ public class Coord {
     }
 
     public Coord decaleBasDroite() {
-        return new Coord(q + 1, r + 1);
+        return new Coord(q + 1 - (r % 2), r + 1);
     }
 
     public Coord decaleBasGauche() {
-        return new Coord(q, r + 1);
+        return new Coord(q - (r % 2), r + 1);
     }
 
     public Coord decaleGauche() {
@@ -58,14 +59,28 @@ public class Coord {
 
     public Coord decale(int dir) {
         switch (dir) {
-            case HAUT_GAUCHE: return decaleHautGauche();
-            case HAUT_DROITE: return decaleHautDroite();
-            case DROITE: return decaleDroite();
-            case BAS_DROITE: return decaleBasDroite();
-            case BAS_GAUCHE: return decaleBasGauche();
-            case GAUCHE: return decaleGauche();
-            default: return this;
+            case HAUT_GAUCHE:
+                return decaleHautGauche();
+            case HAUT_DROITE:
+                return decaleHautDroite();
+            case DROITE:
+                return decaleDroite();
+            case BAS_DROITE:
+                return decaleBasDroite();
+            case BAS_GAUCHE:
+                return decaleBasGauche();
+            case GAUCHE:
+                return decaleGauche();
+            default:
+                return this;
         }
+    }
+
+    public ArrayList<Coord> voisins() {
+        ArrayList<Coord> voisins = new ArrayList<>();
+        for (int i = 0; i < 6; i++)
+            voisins.add(decale(i));
+        return voisins;
     }
 
     @Override
@@ -88,6 +103,6 @@ public class Coord {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(new int[] {q, r});
+        return Arrays.hashCode(new int[]{q, r});
     }
 }

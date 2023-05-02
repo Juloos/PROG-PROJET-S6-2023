@@ -1,33 +1,50 @@
 import Modele.*;
 import java.util.*;
+import static Global.Config.*;
+
 public class TestJeu {
-    public static void main(String[] args){
-        JeuGraphe j = new JeuGraphe();
-        Scanner sc = new Scanner(System.in);
-        Coord c1 = new Coord();
-        Coord c2 = new Coord();
-        Coord c3 = new Coord();
-        Coord c4 = new Coord();
-        System.out.println("J1 : Entrez coordonnée pion 1 : ");
-        c1.q = sc.nextInt();
-        c1.r = sc.nextInt();
-        System.out.println(c1);
-        j.ajouterPion(c1);
-        System.out.println("J2 : Entrez coordonnée pion 1 : ");
-        c2.q = sc.nextInt();
-        c2.r = sc.nextInt();
-        System.out.println(c2);
-        j.ajouterPion(c2);
-        System.out.println("J1 : Entrez coordonnée pion 2 : ");
-        c3.q = sc.nextInt();
-        c3.r = sc.nextInt();
-        System.out.println(c3);
-        j.ajouterPion(c3);
-        System.out.println("J2 : Entrez coordonnée pion 2 : ");
-        c4.q = sc.nextInt();
-        c4.r = sc.nextInt();
-        System.out.println(c4);
-        j.ajouterPion(c4);
-        System.out.println(j.plateau);
+    public static void main(String[] args) {
+        JeuConcret j = new JeuConcret();
+        System.out.println(j + "\n");
+        Coup c;
+        for (int i = 0; i < NB_JOUEUR * NB_PIONS; i++) {
+            j.jouer(c = randomAjout(j));
+            System.out.println(c);
+            if (DEBUG)
+                System.out.println(j);
+        }
+        System.out.println(j + "\n");
+        while (!j.estTermine()) {
+            while (j.peutJouer()) {
+                j.jouer(c = randomDeplacement(j));
+                System.out.println(c);
+                if (DEBUG)
+                    System.out.println(j);
+            }
+            j.jouer(c = new CoupTerminaison(j.getJoueur().id));
+            System.out.println(c);
+        }
+        System.out.println(j);
+    }
+
+    static CoupAjout randomAjout(Jeu j) {
+        Random rand = new Random();
+        Coord c = new Coord();
+        do {
+            c.r = rand.nextInt(TAILLE_PLATEAU_X);
+            c.q = (c.r % 2 == 0) ? rand.nextInt(TAILLE_PLATEAU_Y - 1) : rand.nextInt(TAILLE_PLATEAU_Y);
+        } while (j.estPion(c) || j.getPlateau().get(c) != 1);
+        return new CoupAjout(c, j.getJoueur().id);
+    }
+
+    static CoupDeplacement randomDeplacement(Jeu j) {
+        Random rand = new Random();
+        Coord c = new Coord();
+        do {
+            c.r = rand.nextInt(TAILLE_PLATEAU_X);
+            c.q = (c.r % 2 == 0) ? rand.nextInt(TAILLE_PLATEAU_Y - 1) : rand.nextInt(TAILLE_PLATEAU_Y);
+        } while (!j.estPion(c) || j.joueurDePion(c) != j.getJoueur().id || j.estPionBloque(c));
+        ArrayList<Coord> voisins = j.deplacementsPion(c);
+        return new CoupDeplacement(c, voisins.get(rand.nextInt(voisins.size())), j.getJoueur().id);
     }
 }
