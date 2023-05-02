@@ -17,9 +17,10 @@ public class IHMGraphique extends IHM {
 
         frame = new JFrame("");
 
-        ouvrirFenetre(new EcranCreationPartie());
+        ouvrirFenetre(new EcranAccueil());
 
         frame.setSize(1500, 1000);
+        frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
