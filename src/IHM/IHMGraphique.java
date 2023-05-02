@@ -17,7 +17,7 @@ public class IHMGraphique extends IHM {
 
         frame = new JFrame("");
 
-        ouvrirFenetre(new EcranAccueil());
+        ouvrirFenetre(new EcranCreationPartie());
 
         frame.setSize(1500, 1000);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,8 +34,10 @@ public class IHMGraphique extends IHM {
      */
     public void retournerPrecedenteFenetre() {
         fenetres.peek().close(this);
+        System.out.println("Fermeture de la fenetre : " + fenetres.peek().title);
         fenetres.pop();
         fenetres.peek().open(this);
+        System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
         frame.revalidate();
     }
 
@@ -46,6 +48,7 @@ public class IHMGraphique extends IHM {
     public void ouvrirFenetre(Fenetre fenetre) {
         fenetres.push(fenetre);
         fenetre.open(this);
+        System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
         frame.revalidate();
     }
 }
