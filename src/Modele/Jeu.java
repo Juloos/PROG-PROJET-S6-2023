@@ -14,7 +14,13 @@ public abstract class Jeu {
         plateau = new Plateau();
         joueurs = new Joueur[NB_JOUEUR];
         for (int i = 0; i < NB_JOUEUR; i++)
-            joueurs[i] = new Joueur(i);
+            joueurs[i] = new JoueurIA(i);
+        joueurCourant = 0;
+    }
+
+    public Jeu(Joueur[] joueurs) {
+        plateau = new Plateau();
+        this.joueurs = joueurs;
         joueurCourant = 0;
     }
 
@@ -106,6 +112,12 @@ public abstract class Jeu {
                         joueurs[joueurDePion(voisin)].bloquerPion(voisin);
                 }
         );
+        c2.voisins().forEach(
+                voisin -> {
+                    if (estPion(voisin) && estPionBloque(voisin))
+                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                }
+        );
         joueurSuivant();
     }
 
@@ -131,6 +143,9 @@ public abstract class Jeu {
         if (c.getJoueur() != joueurCourant)
             throw new IllegalArgumentException("Mauvaise selection du joueur du coup : " + c + ".");
         c.jouer(this);
+    }
+    public int getWinner(){
+        return Arrays.stream(joueurs).max(Joueur::compareTo).get().id;
     }
 
     @Override

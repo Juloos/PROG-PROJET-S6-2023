@@ -1,4 +1,4 @@
-package IHM;
+package IHM.Graphique;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -6,9 +6,9 @@ import java.awt.event.ActionListener;
 
 public abstract class Fenetre {
 
-    private String title;
-    JPanel panel;
-    JButton retour;
+    protected JPanel panel;
+    protected JButton retour;
+    String title;
 
     public Fenetre(String title) {
         this.title = title;
@@ -21,6 +21,8 @@ public abstract class Fenetre {
         ihm.frame.getContentPane().removeAll();
         ihm.frame.getContentPane().add(panel);
 
+        panel.removeAll();
+
         retour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -30,6 +32,5 @@ public abstract class Fenetre {
     }
 
     public void close(IHMGraphique ihm) {
-
     }
 }

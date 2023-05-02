@@ -4,7 +4,7 @@ import static Global.Config.*;
 import java.util.HashMap;
 import java.util.Set;
 
-public class Joueur implements Comparable<Joueur> {
+public abstract class Joueur implements Comparable<Joueur> {
     public final int id;
     private int score;
     private int tuiles;

@@ -19,6 +19,12 @@ public class JeuConcret extends Jeu {
         future = new Stack<>();
     }
 
+    public JeuConcret(Joueur[] joueurs) {
+        super(joueurs);
+        passe = new Stack<>();
+        future = new Stack<>();
+    }
+
     public void jouer(Coup c) {
         super.jouer(c);
         passe.push(c);

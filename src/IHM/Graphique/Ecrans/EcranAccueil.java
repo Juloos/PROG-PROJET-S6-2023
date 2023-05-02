@@ -1,4 +1,7 @@
-package IHM;
+package IHM.Graphique.Ecrans;
+
+import IHM.Graphique.IHMGraphique;
+import IHM.Graphique.PopUp.PopUpConfirmation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,21 +9,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class EcranAccueil extends Ecran {
-
     public EcranAccueil() {
         super("Accueil");
-        panel.setLayout(new BorderLayout());
     }
 
     @Override
     public void open(IHMGraphique ihm) {
         super.open(ihm);
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+        JPanel buttons = new JPanel();
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        constraints.gridwidth = 4;
 
-        JLabel title = new JLabel("Hey that's my fish!");
-        panel.add(title, BorderLayout.PAGE_START);
-
-        JPanel centerMenu = new JPanel();
-        centerMenu.setLayout(new BoxLayout(centerMenu, BoxLayout.PAGE_AXIS));
+        panel.setLayout(new GridBagLayout());
+        panel.setLayout(new BorderLayout());
 
         JButton nouvellePartie = new JButton("Nouvelle partie");
         nouvellePartie.addActionListener(new ActionListener() {
@@ -29,7 +33,8 @@ public class EcranAccueil extends Ecran {
                 ihm.ouvrirFenetre(new EcranCreationPartie());
             }
         });
-        centerMenu.add(nouvellePartie);
+
+        buttons.add(nouvellePartie, BorderLayout.CENTER);
 
         JButton chargerPartie = new JButton("Charger partie");
         chargerPartie.addActionListener(new ActionListener() {
@@ -38,7 +43,7 @@ public class EcranAccueil extends Ecran {
                 ihm.ouvrirFenetre(new EcranChargerPartie());
             }
         });
-        centerMenu.add(chargerPartie);
+        buttons.add(chargerPartie, BorderLayout.CENTER);
 
         JButton options = new JButton("Options");
         options.addActionListener(new ActionListener() {
@@ -47,16 +52,21 @@ public class EcranAccueil extends Ecran {
                 ihm.ouvrirFenetre(new EcranOptions());
             }
         });
-        centerMenu.add(options);
-
+        buttons.add(options, BorderLayout.CENTER);
         JButton quitter = new JButton("Quitter");
         quitter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                ihm.ouvrirFenetre(new PopUpConfirmation(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent actionEvent) {
+                        ihm.retournerPrecedenteFenetre();
+                        System.exit(0);
+                    }
+                }));
             }
         });
-        centerMenu.add(quitter);
-
-        panel.add(centerMenu, BorderLayout.CENTER);
+        buttons.add(quitter, BorderLayout.CENTER);
+        panel.add(buttons, BorderLayout.CENTER);
     }
 }
