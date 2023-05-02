@@ -5,7 +5,7 @@ import java.util.Collections;
 import static Global.Config.*;
 
 public class Plateau {
-    int[][] grille;
+    boolean[][][] grille;
     int qMax, rMax;
 
     public final static int VIDE = 0;  // Après avoir mangé une case
@@ -13,7 +13,7 @@ public class Plateau {
     public Plateau() {
         qMax = TAILLE_PLATEAU_X;
         rMax = TAILLE_PLATEAU_Y;
-        grille = new int[rMax][qMax];
+        grille = new boolean[rMax][qMax][2];
 
         ArrayList<Integer> weights = new ArrayList<>();
         for (int i = 0; i < 30; i++)
@@ -30,16 +30,24 @@ public class Plateau {
                 set(c, (c.r % 2 == 0 && c.q == qMax - 1) ? VIDE : weights.get(i++));
     }
 
+    private boolean[] int2booleans(int i) {
+        return new boolean[] {i % 2 == 1, i / 2 == 1};
+    }
+
+    private int booleans2int(boolean[] b) {
+        return (b[0] ? 1 : 0) + (b[1] ? 2 : 0);
+    }
+
     public void set(Coord c, int val) {
         if (!estCoordValide(c))
             throw new IllegalArgumentException("Coordonnées invalides : " + c + ".");
-        grille[c.r][c.q] = val;
+        grille[c.r][c.q] = int2booleans(val);
     }
 
     public int get(Coord c) {
         if (!estCoordValide(c))
             throw new IllegalArgumentException("Coordonnées invalides : " + c + ".");
-        return grille[c.r][c.q];
+        return booleans2int(grille[c.r][c.q]);
     }
 
     public boolean estCoordValide(Coord c) {

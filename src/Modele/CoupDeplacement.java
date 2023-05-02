@@ -31,6 +31,10 @@ public class CoupDeplacement implements Coup {
         return joueur;
     }
 
+    public String getSaveString(){
+        return "-2 "+joueur+" "+source.q+" "+source.r+" "+destination.q+" "+destination.r+" "+oldVal;
+    }
+
     @Override
     public String toString() {
         return "CoupDeplacement{" + "source=" + source + ", destination=" + destination + ", oldVal=" + oldVal + ", joueur=" + joueur + '}';

@@ -51,13 +51,13 @@ public class Joueur implements Comparable<Joueur> {
     }
 
 
-    public void deplacerPion(Coord source, Coord cible) {
+    public void deplacerPion(Coord source, Coord destination) {
         if (!pions.containsKey(source))
             throw new IllegalArgumentException("Pion inexistant");
-        if (pions.containsKey(cible))
+        if (pions.containsKey(destination))
             throw new IllegalArgumentException("Pion déjà présent");
         pions.remove(source);
-        pions.put(cible, false);
+        pions.put(destination, false);
     }
 
     public void bloquerPion(Coord c) {

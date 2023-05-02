@@ -27,6 +27,10 @@ public class CoupAjout implements Coup {
         return joueur;
     }
 
+    public String getSaveString(){
+        return "-1 "+joueur+" "+cible.q+" "+cible.r;
+    }
+
     @Override
     public String toString() {
         return "CoupAjout{" + "cible=" + cible + ", joueur=" + joueur + '}';

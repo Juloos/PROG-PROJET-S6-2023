@@ -34,6 +34,18 @@ public class CoupTerminaison implements Coup {
         return joueur;
     }
 
+    public String getSaveString(){
+        StringBuilder save = new StringBuilder();
+        final String[] temp = new String[1];
+        oldVals.forEach(
+                (source, oldVal) -> {
+                    temp[0] = " "+source.q+" "+source.r+" "+oldVal;
+                    save.append(temp[0]);
+                }
+        );
+        return "-3 "+joueur+save;
+    }
+
     @Override
     public String toString() {
         return "CoupTerminaison{" + "oldVals=" + oldVals + ", joueur=" + joueur + '}';
