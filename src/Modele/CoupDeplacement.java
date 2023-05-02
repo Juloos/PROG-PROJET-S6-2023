@@ -13,6 +13,13 @@ public class CoupDeplacement implements Coup {
         this.joueur = joueur;
     }
 
+    public CoupDeplacement(Coord source, Coord destination,int oldVal, int joueur) {
+        this.source = source;
+        this.destination = destination;
+        this.oldVal = oldVal;
+        this.joueur = joueur;
+    }
+
     public void jouer(Jeu j) {
         oldVal = j.getPlateau().get(source);
         j.deplacerPion(source, destination);
