@@ -1,5 +1,10 @@
-package IHM;
+package IHM.Graphique;
 
+import IHM.Graphique.Ecrans.EcranCreationPartie;
+import IHM.IHM;
+import Modele.CoupAjout;
+import Modele.CoupDeplacement;
+import Modele.Jeu;
 import com.sun.istack.internal.NotNull;
 
 import javax.swing.*;
@@ -17,21 +22,26 @@ public class IHMGraphique extends IHM {
 
         frame = new JFrame("");
 
-        ouvrirFenetre(new EcranAccueil());
+        ouvrirFenetre(new EcranCreationPartie());
 
         frame.setSize(1500, 1000);
-        frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
 
-    /**Détruit toutes les fenêtres de l'IHM et retourne au menu d'accueil
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    /**
+     * Détruit toutes les fenêtres de l'IHM et retourne au menu d'accueil
      */
     public void fermerFenetres() {
 
     }
 
-    /**Retourne à la fenêtre précédente et détruit la fenêtre actuelle
+    /**
+     * Retourne à la fenêtre précédente et détruit la fenêtre actuelle
      */
     public void retournerPrecedenteFenetre() {
         fenetres.peek().close(this);
@@ -42,7 +52,9 @@ public class IHMGraphique extends IHM {
         frame.revalidate();
     }
 
-    /**Ouvre une nouvelle fenêtre
+    /**
+     * Ouvre une nouvelle fenêtre
+     *
      * @param fenetre La nouvelle fenêtre à ouvrir
      */
     @NotNull()
@@ -51,5 +63,20 @@ public class IHMGraphique extends IHM {
         fenetre.open(this);
         System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
         frame.revalidate();
+    }
+
+    @Override
+    public void AfficherPlateau(Jeu jeu) {
+
+    }
+
+    @Override
+    public CoupAjout placerPingouin(int numJoueur) {
+        return null;
+    }
+
+    @Override
+    public CoupDeplacement deplacerPingouin(int numJoueur) {
+        return null;
     }
 }

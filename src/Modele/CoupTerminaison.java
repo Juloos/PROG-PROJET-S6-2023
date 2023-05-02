@@ -11,6 +11,11 @@ public class CoupTerminaison implements Coup {
         this.joueur = joueur;
     }
 
+    public CoupTerminaison(HashMap<Coord, Integer> oldVals, int joueur) {
+        this.oldVals = oldVals;
+        this.joueur = joueur;
+    }
+
     public void jouer(Jeu j) {
         for (Coord key : j.getJoueur(joueur).getPions())
             oldVals.put(key, j.getPlateau().get(key));

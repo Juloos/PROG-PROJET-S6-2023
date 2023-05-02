@@ -1,16 +1,14 @@
-package IHM;
+package IHM.Graphique;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public abstract class Fenetre {
 
+    protected JPanel panel;
+    protected JButton retour;
     String title;
-    JPanel panel;
-    JButton retour;
     Image backgroundImage;
 
     public Fenetre(String title) {

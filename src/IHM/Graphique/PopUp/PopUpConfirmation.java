@@ -1,8 +1,9 @@
-package IHM;
+package IHM.Graphique.PopUp;
+
+import IHM.Graphique.IHMGraphique;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PopUpConfirmation extends PopUp {

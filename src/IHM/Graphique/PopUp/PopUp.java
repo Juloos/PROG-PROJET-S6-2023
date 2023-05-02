@@ -1,4 +1,7 @@
-package IHM;
+package IHM.Graphique.PopUp;
+
+import IHM.Graphique.Fenetre;
+import IHM.Graphique.IHMGraphique;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
