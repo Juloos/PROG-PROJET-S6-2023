@@ -33,8 +33,10 @@ public class TestJeu {
             }
             j.jouer(c = new CoupTerminaison(j.getJoueur().id));
             System.out.println(c);
+
         }
         System.out.println(j);
+        System.out.println("Le gagnant est le joueur "+ (j.getWinner()+1));
     }
 
     static Coord askAjout(Jeu j) {

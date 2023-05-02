@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 
 public abstract class Fenetre {
 
-    private String title;
+    String title;
     JPanel panel;
     JButton retour;
 
@@ -21,6 +21,8 @@ public abstract class Fenetre {
         ihm.frame.getContentPane().removeAll();
         ihm.frame.getContentPane().add(panel);
 
+        panel.removeAll();
+
         retour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -30,6 +32,5 @@ public abstract class Fenetre {
     }
 
     public void close(IHMGraphique ihm) {
-
     }
 }

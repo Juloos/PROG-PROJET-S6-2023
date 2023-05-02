@@ -1,6 +1,8 @@
 package IHM;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -13,12 +15,12 @@ public abstract class PopUp extends Fenetre {
 
         frame = new JFrame(title);
         frame.setSize(700, 400);
+        frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     @Override
     public void open(IHMGraphique ihm) {
-        super.open(ihm);
         frame.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent windowEvent) {
@@ -55,7 +57,16 @@ public abstract class PopUp extends Fenetre {
 
             }
         });
+        retour.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                ihm.retournerPrecedenteFenetre();
+            }
+        });
+    }
 
-        panel.add(retour);
+    @Override
+    public void close(IHMGraphique ihm) {
+
     }
 }

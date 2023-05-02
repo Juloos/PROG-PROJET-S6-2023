@@ -112,6 +112,12 @@ public abstract class Jeu {
                         joueurs[joueurDePion(voisin)].bloquerPion(voisin);
                 }
         );
+        c2.voisins().forEach(
+                voisin -> {
+                    if (estPion(voisin) && estPionBloque(voisin))
+                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                }
+        );
         joueurSuivant();
     }
 
@@ -137,6 +143,9 @@ public abstract class Jeu {
         if (c.getJoueur() != joueurCourant)
             throw new IllegalArgumentException("Mauvaise selection du joueur du coup : " + c + ".");
         c.jouer(this);
+    }
+    public int getWinner(){
+        return Arrays.stream(joueurs).max(Joueur::compareTo).get().id;
     }
 
     @Override
