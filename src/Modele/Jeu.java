@@ -14,7 +14,13 @@ public abstract class Jeu {
         plateau = new Plateau();
         joueurs = new Joueur[NB_JOUEUR];
         for (int i = 0; i < NB_JOUEUR; i++)
-            joueurs[i] = new Joueur(i);
+            joueurs[i] = new JoueurIA(i);
+        joueurCourant = 0;
+    }
+
+    public Jeu(Joueur[] joueurs) {
+        plateau = new Plateau();
+        this.joueurs = joueurs;
         joueurCourant = 0;
     }
 
