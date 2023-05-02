@@ -7,35 +7,35 @@ public class TestJeu {
     public static void main(String[] args) {
         Joueur[] Joueurs = new Joueur[] {new JoueurHumain(0, "Joueur 1"), new JoueurIA(1, IA.Difficulte.ALEATOIRE)};
         JeuConcret j = new JeuConcret(Joueurs);
-        System.out.println(j + "\n");
         Coup c;
         for (int i = 0; i < NB_JOUEUR * NB_PIONS; i++) {
+            if (DEBUG || j.getJoueur() instanceof JoueurHumain)
+                System.out.println(j);
             if (j.getJoueur() instanceof JoueurIA)
                 c = ((JoueurIA) j.getJoueur()).jouer(j);
             else
                 c = new CoupAjout(askAjout(j), j.getJoueur().id);
+            if (DEBUG || j.getJoueur() instanceof JoueurIA)
+                System.out.println(c);
             j.jouer(c);
-            System.out.println(c);
-            if (DEBUG)
-                System.out.println(j);
         }
-        System.out.println(j + "\n");
         while (!j.estTermine()) {
             while (j.peutJouer()) {
+                if (DEBUG || j.getJoueur() instanceof JoueurHumain)
+                    System.out.println(j);
                 if (j.getJoueur() instanceof JoueurIA)
                     c = ((JoueurIA) j.getJoueur()).jouer(j);
                 else
                     c = new CoupDeplacement(askDeplacement1(j), askDeplacement2(j), j.getJoueur().id);
+                if (DEBUG || j.getJoueur() instanceof JoueurIA)
+                    System.out.println(c);
                 j.jouer(c);
-                System.out.println(c);
-                if (DEBUG)
-                    System.out.println(j);
             }
-            j.jouer(c = new CoupTerminaison(j.getJoueur().id));
-            System.out.println(c);
-
+            c = new CoupTerminaison(j.getJoueur().id);
+            if (DEBUG)
+                System.out.println(c);
+            j.jouer(c);
         }
-        System.out.println(j);
         System.out.println("Le gagnant est le joueur "+ (j.getWinner()+1));
     }
 
