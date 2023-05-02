@@ -14,24 +14,29 @@ public class EcranAccueil extends Ecran {
     public void open(IHMGraphique ihm) {
         super.open(ihm);
         panel.setLayout(new GridBagLayout());
+        // Chargement de l'image de fond
+        ImageIcon icon = new ImageIcon("src\\background.png");
+        this.backgroundImage = icon.getImage();
         GridBagConstraints constraints = new GridBagConstraints();
-        JPanel buttons = new JPanel();
         constraints.gridx = 1;
         constraints.gridy = 0;
         constraints.gridwidth = 4;
 
         panel.setLayout(new GridBagLayout());
-        panel.setLayout(new BorderLayout());
-
+        Color color = Color.decode("#13B0E8");
         JButton nouvellePartie = new JButton("Nouvelle partie");
+        nouvellePartie.setBackground(color);
+        nouvellePartie.setForeground(Color.WHITE);
+        nouvellePartie.setFont(new Font("Forte", Font.PLAIN, 17));
+        nouvellePartie.setPreferredSize(new Dimension(200, 50));
+        nouvellePartie.setBorderPainted(false); //enlever la bordure visible
+        nouvellePartie.setContentAreaFilled(false); //enlever la couleur de fond par défaut
         nouvellePartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 ihm.ouvrirFenetre(new EcranCreationPartie());
             }
         });
-
-        buttons.add(nouvellePartie, BorderLayout.CENTER);
 
         JButton chargerPartie = new JButton("Charger partie");
         chargerPartie.addActionListener(new ActionListener() {
@@ -40,7 +45,6 @@ public class EcranAccueil extends Ecran {
                 ihm.ouvrirFenetre(new EcranChargerPartie());
             }
         });
-        buttons.add(chargerPartie, BorderLayout.CENTER);
 
         JButton options = new JButton("Options");
         options.addActionListener(new ActionListener() {
@@ -49,7 +53,6 @@ public class EcranAccueil extends Ecran {
                 ihm.ouvrirFenetre(new EcranOptions());
             }
         });
-        buttons.add(options, BorderLayout.CENTER);
         JButton quitter = new JButton("Quitter");
         quitter.addActionListener(new ActionListener() {
             @Override
@@ -63,7 +66,14 @@ public class EcranAccueil extends Ecran {
                 }));
             }
         });
-        buttons.add(quitter, BorderLayout.CENTER);
-        panel.add(buttons, BorderLayout.CENTER);
+        panel.add(nouvellePartie, constraints);
+        constraints.gridy = 1;
+        panel.add(chargerPartie, constraints);
+        constraints.gridy = 2;
+        panel.add(options, constraints);
+        constraints.gridy = 3;
+        panel.add(quitter, constraints);
+        panel.revalidate();
+        panel.repaint();
     }
 }
