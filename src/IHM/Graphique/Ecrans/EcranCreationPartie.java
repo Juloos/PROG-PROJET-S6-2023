@@ -1,6 +1,7 @@
-package IHM;
+package IHM.Graphique.Ecrans;
 
 import Global.Config;
+import IHM.Graphique.IHMGraphique;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -34,8 +35,8 @@ public class EcranCreationPartie extends Ecran {
         panel.add(label, BorderLayout.PAGE_START);
 
         joueursPanel = new JPanel(new GridLayout(1, Config.NB_MAX_JOUEUR));
-        for(int i = 0; i < nbJoueurs; i++) {
-            joueursPanel.add(new MenuJoueur(i+1), i);
+        for (int i = 0; i < nbJoueurs; i++) {
+            joueursPanel.add(new MenuJoueur(i + 1), i);
         }
 
         panel.add(joueursPanel, BorderLayout.CENTER);
@@ -61,23 +62,23 @@ public class EcranCreationPartie extends Ecran {
 
     protected void nouveauJoueur() {
         nbJoueurs++;
-        if(nbJoueurs == Config.NB_MAX_JOUEUR) {
+        if (nbJoueurs == Config.NB_MAX_JOUEUR) {
             ajouterJoueur.setVisible(false);
         }
 
-        joueursPanel.add(new MenuJoueur(nbJoueurs), nbJoueurs-1);
+        joueursPanel.add(new MenuJoueur(nbJoueurs), nbJoueurs - 1);
         panel.revalidate();
     }
 
     protected void supprimerJoueur(int num) {
         nbJoueurs--;
-        if(nbJoueurs < Config.NB_MAX_JOUEUR) {
+        if (nbJoueurs < Config.NB_MAX_JOUEUR) {
             ajouterJoueur.setVisible(true);
         }
 
         joueursPanel.remove(num);
-        for(int i = Config.NB_JOUEUR; i < nbJoueurs; i++) {
-            ((MenuJoueur) joueursPanel.getComponent(i)).updateNumJoueur(i+1);
+        for (int i = Config.NB_JOUEUR; i < nbJoueurs; i++) {
+            ((MenuJoueur) joueursPanel.getComponent(i)).updateNumJoueur(i + 1);
         }
 
         panel.repaint();
@@ -125,13 +126,13 @@ public class EcranCreationPartie extends Ecran {
 
             add(difficultesIA);
 
-            if(num > Config.NB_JOUEUR) {
+            if (num > Config.NB_JOUEUR) {
                 close = new JButton("X");
 
                 closeAction = new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
-                        supprimerJoueur(num-1);
+                        supprimerJoueur(num - 1);
                     }
                 };
                 close.addActionListener(closeAction);
@@ -148,7 +149,7 @@ public class EcranCreationPartie extends Ecran {
             closeAction = new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
-                    supprimerJoueur(num-1);
+                    supprimerJoueur(num - 1);
                 }
             };
             close.addActionListener(closeAction);

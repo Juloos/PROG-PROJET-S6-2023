@@ -1,4 +1,7 @@
-package IHM;
+package IHM.Graphique.Ecrans;
+
+import IHM.Graphique.IHMGraphique;
+import IHM.Graphique.PopUp.PopUpConfirmation;
 
 import javax.swing.*;
 import java.awt.*;

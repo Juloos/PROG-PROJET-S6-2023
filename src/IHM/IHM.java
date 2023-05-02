@@ -3,7 +3,6 @@ package IHM;
 import Modele.CoupAjout;
 import Modele.CoupDeplacement;
 import Modele.Jeu;
-import Modele.Plateau;
 
 public abstract class IHM {
 

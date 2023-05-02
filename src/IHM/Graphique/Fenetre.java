@@ -1,4 +1,4 @@
-package IHM;
+package IHM.Graphique;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -6,9 +6,9 @@ import java.awt.event.ActionListener;
 
 public abstract class Fenetre {
 
+    protected JPanel panel;
+    protected JButton retour;
     String title;
-    JPanel panel;
-    JButton retour;
 
     public Fenetre(String title) {
         this.title = title;

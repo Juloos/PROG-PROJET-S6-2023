@@ -1,8 +1,8 @@
-package IHM;
+package IHM.Graphique.Ecrans;
 
-import java.awt.*;
+import IHM.Graphique.IHMGraphique;
 
-public class EcranOptions extends  Ecran {
+public class EcranOptions extends Ecran {
 
     public EcranOptions() {
         super("Options");

@@ -1,4 +1,6 @@
-package IHM;
+package IHM.Graphique.Ecrans;
+
+import IHM.Graphique.IHMGraphique;
 
 import java.awt.*;
 

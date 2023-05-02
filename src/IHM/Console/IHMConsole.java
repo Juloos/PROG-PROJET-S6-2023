@@ -1,9 +1,11 @@
 package IHM.Console;
 
 import IHM.IHM;
-import Modele.*;
+import Modele.Coord;
+import Modele.CoupAjout;
+import Modele.CoupDeplacement;
+import Modele.Jeu;
 
-import java.io.InputStream;
 import java.util.Scanner;
 
 public class IHMConsole extends IHM {
@@ -21,7 +23,7 @@ public class IHMConsole extends IHM {
 
     @Override
     public CoupAjout placerPingouin(int numJoueur) {
-        System.out.println("Joueur " + (numJoueur+1) + " placez un pingouin");
+        System.out.println("Joueur " + (numJoueur + 1) + " placez un pingouin");
         String ligne = input.nextLine();
         int[] valeurs = decouperLigne(ligne);
 
@@ -31,7 +33,7 @@ public class IHMConsole extends IHM {
 
     @Override
     public CoupDeplacement deplacerPingouin(int numJoueur) {
-        System.out.println("Joueur " + (numJoueur+1) + " déplacez un pingouin (source puis destination)");
+        System.out.println("Joueur " + (numJoueur + 1) + " déplacez un pingouin (source puis destination)");
         // Source
         String ligne = input.nextLine();
         int[] valeurs = decouperLigne(ligne);
@@ -51,7 +53,7 @@ public class IHMConsole extends IHM {
         String[] ligne_split = ligne.split(" ");
         int[] valeurs = new int[ligne_split.length];
 
-        for(int i = 0; i < ligne_split.length; i++) {
+        for (int i = 0; i < ligne_split.length; i++) {
             valeurs[i] = Integer.parseInt(ligne_split[i]);
         }
 
