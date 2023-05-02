@@ -5,6 +5,7 @@ public interface Coup {
     public boolean estJouable(Jeu j);
     public void annuler(Jeu j);
     public int getJoueur();
+    public String getSaveString();
     @Override
     public String toString();
 }
