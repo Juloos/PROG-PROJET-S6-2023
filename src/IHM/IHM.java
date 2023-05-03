@@ -1,14 +1,32 @@
 package IHM;
 
-import Modele.CoupAjout;
-import Modele.CoupDeplacement;
+import Controlleur.MoteurJeu;
 import Modele.Jeu;
 
 public abstract class IHM {
 
-    public abstract void AfficherPlateau(Jeu jeu);
+    protected MoteurJeu moteurJeu;
 
-    public abstract CoupAjout placerPingouin(int numJoueur);
+    public IHM(MoteurJeu moteurJeu) {
+        this.moteurJeu = moteurJeu;
+    }
 
-    public abstract CoupDeplacement deplacerPingouin(int numJoueur);
+    /**
+     * met à jour l'affichage du plateau ainsi que des informations des joueurs
+     *
+     * @param jeu : le jeu actuel
+     */
+    public abstract void updateAffichage(Jeu jeu);
+
+    /**
+     * attend que le joueur fasse une action
+     */
+    public abstract void attendreActionJoueur();
+
+    /**
+     * affiche un message sur l'IHM
+     *
+     * @param message : le message à afficher
+     */
+    public abstract void afficherMessage(String message);
 }
