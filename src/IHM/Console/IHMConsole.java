@@ -1,6 +1,6 @@
 package IHM.Console;
 
-import Controlleur.MoteurJeu;
+import Controleur.MoteurJeu;
 import IHM.Actions.ActionIHM;
 import IHM.Actions.ActionJouerCoup;
 import IHM.IHM;
@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 public class IHMConsole extends IHM {
 
-    private Scanner input;
+    private final Scanner input;
 
     public IHMConsole(MoteurJeu moteurJeu) {
         super(moteurJeu);

@@ -1,6 +1,6 @@
 package IHM.Graphique;
 
-import Controlleur.MoteurJeu;
+import Controleur.MoteurJeu;
 import IHM.Graphique.Ecrans.EcranJeu;
 import IHM.IHM;
 import Modele.Jeu;

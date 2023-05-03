@@ -1,4 +1,4 @@
-package Controlleur;
+package Controleur;
 
 import Global.Config;
 import IHM.Console.IHMConsole;

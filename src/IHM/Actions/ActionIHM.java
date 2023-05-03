@@ -1,8 +1,7 @@
 package IHM.Actions;
 
-import Controlleur.MoteurJeu;
+import Controleur.MoteurJeu;
 
 public interface ActionIHM {
-
-    public void action(MoteurJeu moteurJeu);
+    void action(MoteurJeu moteurJeu);
 }

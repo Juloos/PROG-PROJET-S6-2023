@@ -1,6 +1,6 @@
 package Modele;
 
-import Controlleur.MoteurJeu;
+import Controleur.MoteurJeu;
 
 import java.util.HashMap;
 import java.util.Set;
