@@ -6,8 +6,8 @@ import java.util.Arrays;
 import static Global.Config.*;
 
 public abstract class Jeu {
-    private final Plateau plateau;
-    private final Joueur[] joueurs;
+    final Plateau plateau;
+    final Joueur[] joueurs;
     int nbJoueurs;
     int nbPions;
     int joueurCourant;
@@ -24,6 +24,16 @@ public abstract class Jeu {
 
     public Jeu(Joueur[] joueurs) {
         plateau = new Plateau();
+        this.joueurs = joueurs;
+        nbJoueurs = joueurs.length;
+        if (nbJoueurs > NB_MAX_JOUEUR)
+            throw new IllegalArgumentException("Trop de joueurs");
+        joueurCourant = 0;
+        nbPions = NB_PIONS / nbJoueurs;
+    }
+
+    public Jeu(Joueur[] joueurs, Plateau plateau) {
+        this.plateau = plateau;
         this.joueurs = joueurs;
         nbJoueurs = joueurs.length;
         if (nbJoueurs > NB_MAX_JOUEUR)
@@ -165,8 +175,13 @@ public abstract class Jeu {
         c.jouer(this);
     }
 
-    public int getWinner() {
-        return Arrays.stream(joueurs).max(Joueur::compareTo).get().id;
+    public ArrayList<Integer> getWinner() {
+        ArrayList<Integer> winners = new ArrayList<>();
+        Joueur max = Arrays.stream(joueurs).max(Joueur::compareTo).get();
+        for (int i = 0; i < nbJoueurs; i++)
+            if (joueurs[i].compareTo(max) == 0)
+                winners.add(i);
+        return winners;
     }
 
     @Override

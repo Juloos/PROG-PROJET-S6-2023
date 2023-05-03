@@ -10,11 +10,19 @@ public class Plateau {
 
     public final static int VIDE = 0;  // Après avoir mangé une case
 
-    public Plateau() {
+    public Plateau(boolean random) {
         qMax = TAILLE_PLATEAU_X;
         rMax = TAILLE_PLATEAU_Y;
         grille = new boolean[rMax][qMax][2];
+        if (random)
+            randomInit();
+    }
 
+    public Plateau() {
+        this(true);
+    }
+
+    private void randomInit() {
         ArrayList<Integer> weights = new ArrayList<>();
         for (int i = 0; i < 30; i++)
             weights.add(1);
@@ -64,5 +72,15 @@ public class Plateau {
             str.append("\n");
         }
         return str.toString();
+    }
+
+    @Override
+    public Plateau clone() {
+        Plateau p = new Plateau(false);
+        Coord c = new Coord();
+        for (c.r = 0; c.r < rMax; c.r++)
+            for (c.q = 0; c.q < qMax; c.q++)
+                p.set(c, get(c));
+        return p;
     }
 }

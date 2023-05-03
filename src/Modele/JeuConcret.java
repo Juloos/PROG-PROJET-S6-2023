@@ -52,7 +52,7 @@ public class JeuConcret extends Jeu {
         Coup elem_hist;
 
         // Sauvegarde le plateau a l'instant de la sauvegarde
-        w_f.print(super.getPlateau().toString());
+        w_f.print(plateau);
 
         // Sauvegarde les a l'instant de la sauvegarde
         for (int i = 0; i < nbJoueurs; i++) {

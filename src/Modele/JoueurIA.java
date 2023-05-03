@@ -37,4 +37,14 @@ public class JoueurIA extends Joueur {
             throw new IllegalArgumentException("Mauvais joueur courant pôur ce joueur : " + mt.getJoueurActif().id);
         return ia.reflechir(mt.getJeu());
     }
+
+    @Override
+    public JoueurIA clone() {
+        JoueurIA j = new JoueurIA(id);
+        j.score = score;
+        j.tuiles = tuiles;
+        j.termine = termine;
+        j.ia = ia;
+        return j;
+    }
 }

@@ -10,10 +10,10 @@ import static Global.Config.TAILLE_PLATEAU_Y;
 
 public abstract class Joueur implements Comparable<Joueur> {
     public final int id;
-    private final HashMap<Coord, Boolean> pions;
-    private int score;
-    private int tuiles;
-    private boolean termine;
+    final HashMap<Coord, Boolean> pions;
+    int score;
+    int tuiles;
+    boolean termine;
 
     public Joueur(int id) {
         this.id = id;
@@ -24,6 +24,9 @@ public abstract class Joueur implements Comparable<Joueur> {
     }
 
     public abstract Coup reflechir(MoteurJeu mt);
+
+    @Override
+    public abstract Joueur clone();
 
     public int getScore() {
         return score;
