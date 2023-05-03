@@ -144,7 +144,8 @@ public abstract class Jeu {
             throw new IllegalArgumentException("Mauvaise selection du joueur du coup : " + c + ".");
         c.jouer(this);
     }
-    public int getWinner(){
+
+    public int getWinner() {
         return Arrays.stream(joueurs).max(Joueur::compareTo).get().id;
     }
 
@@ -159,15 +160,7 @@ public abstract class Jeu {
             for (int q = 0; q < plateau.qMax; q++) {
                 Coord c = new Coord(q, r);
                 str.append(COULEURS[joueurDePion(c) + 1]);
-                str.append(
-                        plateau.get(c) != Plateau.VIDE ?
-                                plateau.get(c) :
-                                (
-                                        r % 2 == 0 && q == plateau.qMax - 1 ?
-                                                " " :
-                                                "."
-                                )
-                );
+                str.append(plateau.get(c) != Plateau.VIDE ? plateau.get(c) : (r % 2 == 0 && q == plateau.qMax - 1 ? " " : "."));
                 str.append(" ");
             }
             str.append("\n");
