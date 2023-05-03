@@ -21,13 +21,17 @@ public class PopUpConfirmation extends PopUp {
         panel.setLayout(new BorderLayout());
 
         JLabel label = new JLabel("Voulez vous quitter ?");
+        label.setFont(new Font("Impact", Font.PLAIN, 48));
         panel.add(label, BorderLayout.CENTER);
 
         panel.add(retour, BorderLayout.PAGE_START);
 
         JButton confirmation = new JButton("Oui");
+        confirmation.setFont(new Font("Impact", Font.PLAIN, 48));
+        confirmation.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        confirmation.setBackground(Color.GREEN);
         confirmation.addActionListener(confirmationAction);
-        panel.add(confirmation, BorderLayout.PAGE_END);
+        panel.add(confirmation, BorderLayout.SOUTH);
 
         frame.setContentPane(panel);
         frame.setVisible(true);

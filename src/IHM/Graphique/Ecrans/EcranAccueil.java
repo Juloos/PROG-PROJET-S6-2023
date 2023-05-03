@@ -21,19 +21,17 @@ public class EcranAccueil extends Ecran {
         ImageIcon icon = new ImageIcon("src\\background.png");
         this.backgroundImage = icon.getImage();
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridx = 1;
-        constraints.gridy = 0;
-        constraints.gridwidth = 4;
-
-        panel.setLayout(new GridBagLayout());
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridx = 10;
+        constraints.gridy = 8;
+        constraints.gridwidth = 2;
+        constraints.insets = new Insets(0, 0, 30, 0);
         Color color = Color.decode("#13B0E8");
         JButton nouvellePartie = new JButton("Nouvelle partie");
-        nouvellePartie.setBackground(color);
+
         nouvellePartie.setForeground(Color.WHITE);
-        nouvellePartie.setFont(new Font("Forte", Font.PLAIN, 17));
-        nouvellePartie.setPreferredSize(new Dimension(200, 50));
-        nouvellePartie.setBorderPainted(false); //enlever la bordure visible
-        nouvellePartie.setContentAreaFilled(false); //enlever la couleur de fond par défaut
+        nouvellePartie.setFont(new Font("Forte", Font.PLAIN, 50));
+        nouvellePartie.setBackground(color);
         nouvellePartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -42,6 +40,9 @@ public class EcranAccueil extends Ecran {
         });
 
         JButton chargerPartie = new JButton("Charger partie");
+        chargerPartie.setBackground(color);
+        chargerPartie.setForeground(Color.WHITE);
+        chargerPartie.setFont(new Font("Forte", Font.PLAIN, 50));
         chargerPartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -50,6 +51,9 @@ public class EcranAccueil extends Ecran {
         });
 
         JButton options = new JButton("Options");
+        options.setBackground(Color.WHITE);
+        options.setForeground(color);
+        options.setFont(new Font("Forte", Font.PLAIN, 50));
         options.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -57,6 +61,9 @@ public class EcranAccueil extends Ecran {
             }
         });
         JButton quitter = new JButton("Quitter");
+        quitter.setBackground(Color.WHITE);
+        quitter.setForeground(color);
+        quitter.setFont(new Font("Forte", Font.PLAIN, 50));
         quitter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -69,14 +76,16 @@ public class EcranAccueil extends Ecran {
                 }));
             }
         });
+        //Ajout des boutons au panel en bas à droite
+
         panel.add(nouvellePartie, constraints);
-        constraints.gridy = 1;
+        constraints.gridy = 9;
         panel.add(chargerPartie, constraints);
-        constraints.gridy = 2;
+        constraints.gridy = 10;
         panel.add(options, constraints);
-        constraints.gridy = 3;
+        constraints.gridy = 11;
         panel.add(quitter, constraints);
-        panel.revalidate();
         panel.repaint();
+        panel.revalidate();
     }
 }
