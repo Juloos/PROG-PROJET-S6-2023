@@ -1,6 +1,6 @@
 package Modele;
 
-import Controlleur.MoteurJeu;
+import Controleur.MoteurJeu;
 
 public class JoueurHumain extends Joueur {
     String nom;

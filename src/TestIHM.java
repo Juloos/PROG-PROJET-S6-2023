@@ -1,4 +1,4 @@
-import Controlleur.MoteurJeu;
+import Controleur.MoteurJeu;
 
 public class TestIHM {
 

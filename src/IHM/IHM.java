@@ -1,6 +1,6 @@
 package IHM;
 
-import Controlleur.MoteurJeu;
+import Controleur.MoteurJeu;
 import Modele.Jeu;
 
 public abstract class IHM {

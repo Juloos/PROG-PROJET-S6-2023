@@ -1,6 +1,6 @@
 package Modele;
 
-import Controlleur.MoteurJeu;
+import Controleur.MoteurJeu;
 import IA.*;
 
 public class JoueurIA extends Joueur {
