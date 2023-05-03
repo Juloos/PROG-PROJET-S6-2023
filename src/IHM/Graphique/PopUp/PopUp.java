@@ -4,6 +4,7 @@ import IHM.Graphique.Fenetre;
 import IHM.Graphique.IHMGraphique;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -60,6 +61,8 @@ public abstract class PopUp extends Fenetre {
 
             }
         });
+        retour.setFont(new Font("Impact", Font.PLAIN, 48));
+        retour.setBackground(Color.RED);
         retour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

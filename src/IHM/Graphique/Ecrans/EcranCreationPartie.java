@@ -21,20 +21,23 @@ public class EcranCreationPartie extends Ecran {
 
     public EcranCreationPartie() {
         super("Creation partie");
-        nbJoueurs = 3;//Config.NB_JOUEUR;
+        nbJoueurs = Config.NB_JOUEUR;
     }
 
     @Override
     public void open(IHMGraphique ihm) {
         super.open(ihm);
         panel.setLayout(new BorderLayout());
+        ImageIcon icon = new ImageIcon("src\\background2.jpg");
+        this.backgroundImage = icon.getImage();
 
         JLabel label = new JLabel("Nouvelle Partie", SwingConstants.CENTER);
         label.setFont(new Font("Impact", Font.PLAIN, 48));
         label.setBorder(new EmptyBorder(20, 20, 20, 20));
         panel.add(label, BorderLayout.PAGE_START);
 
-        joueursPanel = new JPanel(new GridLayout(1, Config.NB_MAX_JOUEUR));
+        joueursPanel = new JPanel(new GridLayout(0, Config.NB_MAX_JOUEUR));
+        joueursPanel.setOpaque(true);
         for (int i = 0; i < nbJoueurs; i++) {
             joueursPanel.add(new MenuJoueur(i + 1), i);
         }
@@ -67,7 +70,6 @@ public class EcranCreationPartie extends Ecran {
         }
 
         joueursPanel.add(new MenuJoueur(nbJoueurs), nbJoueurs - 1);
-        panel.revalidate();
     }
 
     protected void supprimerJoueur(int num) {
@@ -98,11 +100,11 @@ public class EcranCreationPartie extends Ecran {
             setLayout(new GridLayout(0, 1));
 
             numJoueur = new JLabel("Joueur " + num, SwingConstants.CENTER);
+            numJoueur.setFont(new Font("Impact", Font.PLAIN, 24));
             add(numJoueur);
 
             ia = new JCheckBox("IA");
             add(ia);
-
             ia.addItemListener(new ItemListener() {
                 @Override
                 public void itemStateChanged(ItemEvent itemEvent) {
