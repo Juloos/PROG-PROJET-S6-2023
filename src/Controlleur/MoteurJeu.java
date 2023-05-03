@@ -27,6 +27,10 @@ public class MoteurJeu implements Runnable {
         jeu = new JeuConcret(joueurs);
     }
 
+    public IHM getIHM() {
+        return ihm;
+    }
+
     public Jeu getJeu() {
         return jeu;
     }
@@ -58,7 +62,7 @@ public class MoteurJeu implements Runnable {
     }
 
     public void sauvegarder() {
-        
+
     }
 
     @Override
@@ -67,11 +71,11 @@ public class MoteurJeu implements Runnable {
 
         nbPionsPlaces = 0;
         while (nbPionsPlaces < jeu.getNbJoueurs() * jeu.getNbPions()) {
-            ihm.attendreActionJoueur();
+            jeu.getJoueur().reflechir(this);
         }
 
         while (!jeu.estTermine()) {
-            ihm.attendreActionJoueur();
+            jeu.getJoueur().reflechir(this);
         }
     }
 }

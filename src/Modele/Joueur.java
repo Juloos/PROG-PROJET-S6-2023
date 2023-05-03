@@ -1,15 +1,18 @@
 package Modele;
 
-import IHM.IHM;
-import static Global.Config.*;
+import Controlleur.MoteurJeu;
+
 import java.util.HashMap;
 import java.util.Set;
 
+import static Global.Config.TAILLE_PLATEAU_X;
+import static Global.Config.TAILLE_PLATEAU_Y;
+
 public abstract class Joueur implements Comparable<Joueur> {
     public final int id;
+    private final HashMap<Coord, Boolean> pions;
     private int score;
     private int tuiles;
-    private final HashMap<Coord, Boolean> pions;
     private boolean termine;
 
     public Joueur(int id) {

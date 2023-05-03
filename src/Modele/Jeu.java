@@ -29,6 +29,7 @@ public abstract class Jeu {
         if (nbJoueurs > NB_MAX_JOUEUR)
             throw new IllegalArgumentException("Trop de joueurs");
         joueurCourant = 0;
+        nbPions = NB_PIONS / nbJoueurs;
     }
 
     public Joueur getJoueur() {
