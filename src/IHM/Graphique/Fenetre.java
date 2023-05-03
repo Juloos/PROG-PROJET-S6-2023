@@ -24,11 +24,6 @@ public abstract class Fenetre {
 
     public void open(IHMGraphique ihm) {
         ihm.frame.setTitle(title);
-        ihm.frame.getContentPane().removeAll();
-        ihm.frame.getContentPane().add(panel);
-
-        panel.removeAll();
-
         retour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
