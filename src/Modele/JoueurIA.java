@@ -29,9 +29,10 @@ public class JoueurIA extends Joueur {
         }
     }
 
-    public Coup jouer(Jeu j) {
-        if (j.getJoueur().id != id)
-            throw new IllegalArgumentException("Mauvais joueur courant pôur ce joueur : " + j.getJoueur().id);
-        return ia.reflechir(j);
+    @Override
+    public Coup reflechir(MoteurJeu mt) {
+        if (mt.jeu.getJoueur().id != id)
+            throw new IllegalArgumentException("Mauvais joueur courant pôur ce joueur : " + mt.jeu.getJoueur().id);
+        return ia.reflechir(mt.jeu);
     }
 }

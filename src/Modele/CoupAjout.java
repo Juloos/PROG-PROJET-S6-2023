@@ -1,7 +1,5 @@
 package Modele;
 
-import static Global.Config.NB_PIONS;
-
 public class CoupAjout implements Coup {
     Coord cible;
     int joueur;
@@ -16,7 +14,7 @@ public class CoupAjout implements Coup {
     }
 
     public boolean estJouable(Jeu j) {
-        return j.getPlateau().get(cible) == 1 && !j.estPion(cible) && j.getJoueur(joueur).getPions().size() < NB_PIONS;
+        return j.getPlateau().get(cible) == 1 && !j.estPion(cible) && j.getJoueur(joueur).getPions().size() < j.getNbPions();
     }
 
     public void annuler(Jeu j){

@@ -1,5 +1,6 @@
 package Modele;
 
+import IHM.IHM;
 import static Global.Config.*;
 import java.util.HashMap;
 import java.util.Set;
@@ -18,6 +19,8 @@ public abstract class Joueur implements Comparable<Joueur> {
         pions = new HashMap<>();
         termine = false;
     }
+
+    public abstract Coup reflechir(MoteurJeu mt);
 
     public int getScore() {
         return score;
@@ -39,8 +42,6 @@ public abstract class Joueur implements Comparable<Joueur> {
     public void ajouterPion(Coord c) {
         if (pions.containsKey(c))
             throw new IllegalArgumentException("Pion déjà présent");
-        if (pions.size() >= NB_PIONS)
-            throw new IllegalArgumentException("Trop de pions");
         pions.put(c, false);
     }
 
@@ -66,8 +67,8 @@ public abstract class Joueur implements Comparable<Joueur> {
         pions.put(c, true);
     }
 
-    public boolean peutJouer() {
-        return pions.containsValue(false) || pions.size() < NB_PIONS;
+    public boolean peutJouer(Jeu j) {
+        return pions.containsValue(false) || pions.size() < j.getNbPions();
     }
 
     public boolean estTermine() {
@@ -75,8 +76,6 @@ public abstract class Joueur implements Comparable<Joueur> {
     }
 
     public void terminer() {
-        if (peutJouer())
-            throw new IllegalArgumentException("Joueur peut encore jouer.");
         termine = true;
     }
 

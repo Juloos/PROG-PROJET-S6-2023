@@ -8,6 +8,8 @@ import static Global.Config.*;
 public abstract class Jeu {
     private final Plateau plateau;
     private final Joueur[] joueurs;
+    int nbJoueurs;
+    int nbPions;
     int joueurCourant;
 
     public Jeu() {
@@ -16,11 +18,16 @@ public abstract class Jeu {
         for (int i = 0; i < NB_JOUEUR; i++)
             joueurs[i] = new JoueurIA(i);
         joueurCourant = 0;
+        nbJoueurs = NB_JOUEUR;
+        nbPions = NB_PIONS / nbJoueurs;
     }
 
     public Jeu(Joueur[] joueurs) {
         plateau = new Plateau();
         this.joueurs = joueurs;
+        nbJoueurs = joueurs.length;
+        if (nbJoueurs > NB_MAX_JOUEUR)
+            throw new IllegalArgumentException("Trop de joueurs");
         joueurCourant = 0;
     }
 
@@ -32,16 +39,24 @@ public abstract class Jeu {
         return joueurs[id];
     }
 
+    public int getNbJoueurs() {
+        return nbJoueurs;
+    }
+
+    public int getNbPions() {
+        return nbPions;
+    }
+
     public Plateau getPlateau() {
         return plateau;
     }
 
     public boolean estJoueurValide(int joueur) {
-        return joueur >= 0 && joueur < NB_JOUEUR;
+        return joueur >= 0 && joueur < nbJoueurs;
     }
 
     public boolean peutJouer(int joueur) {
-        return estJoueurValide(joueur) && joueurs[joueur].peutJouer();
+        return estJoueurValide(joueur) && joueurs[joueur].peutJouer(this);
     }
 
     public boolean peutJouer() {
@@ -63,7 +78,7 @@ public abstract class Jeu {
     }
 
     public int joueurDePion(Coord c) {
-        for (int i = 0; i < NB_JOUEUR; i++)
+        for (int i = 0; i < nbJoueurs; i++)
             if (joueurs[i].estPion(c))
                 return i;
         return -1;
@@ -90,10 +105,10 @@ public abstract class Jeu {
     }
 
     void joueurSuivant() {
-        joueurCourant = (joueurCourant + 1) % NB_JOUEUR;
-        for (int i = 1; i < NB_JOUEUR; i++) {
+        joueurCourant = (joueurCourant + 1) % nbJoueurs;
+        for (int i = 1; i < nbJoueurs; i++) {
             if (getJoueur().estTermine())
-                joueurCourant = (joueurCourant + 1) % NB_JOUEUR;
+                joueurCourant = (joueurCourant + 1) % nbJoueurs;
             else
                 return;
         }
@@ -124,6 +139,8 @@ public abstract class Jeu {
     public void ajouterPion(Coord c) {
         if (plateau.get(c) != 1 || Arrays.stream(joueurs).anyMatch(j -> j.estPion(c)))
             throw new RuntimeException("Impossible de placer le pion à l'emplacement " + c + ".");
+        if (joueurs[joueurCourant].getPions().size() >= nbPions)
+            throw new RuntimeException("Trop de pions.");
         joueurs[joueurCourant].ajouterPion(c);
         if (estPionBloque(c))
             joueurs[joueurCourant].bloquerPion(c);
@@ -131,6 +148,8 @@ public abstract class Jeu {
     }
 
     public void terminerJoueur() {
+        if (joueurs[joueurCourant].peutJouer(this))
+            throw new RuntimeException("Le joueur " + joueurCourant + " peut encore jouer.");
         joueurs[joueurCourant].terminer();
         for (Coord c : joueurs[joueurCourant].getPions())
             manger(c);
@@ -167,7 +186,7 @@ public abstract class Jeu {
         }
         str.append(COULEURS[0]);
         str.append("Score : ");
-        for (int i = 0; i < NB_JOUEUR; i++) {
+        for (int i = 0; i < nbJoueurs; i++) {
             str.append(COULEURS[i + 1]);
             str.append(joueurs[i].getScore());
             str.append(COULEURS[0]);
