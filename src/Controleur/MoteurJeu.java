@@ -10,20 +10,24 @@ public class MoteurJeu implements Runnable {
 
     IHM ihm;
 
-    Jeu jeu;
+    JeuConcret jeu;
 
     int nbPionsPlaces;
 
     public MoteurJeu() {
-        switch (Config.typeIHM) {
+        switch (Config.TYPE_IHM) {
             case CONSOLE:
                 ihm = new IHMConsole(this);
                 break;
             case GRAPHIQUE:
                 ihm = new IHMGraphique(this);
+                break;
+            case AUCUNE:
+                ihm = null;
+                break;
         }
 
-        Joueur[] joueurs = new Joueur[]{new JoueurHumain(0), new JoueurHumain(1)};
+        Joueur[] joueurs = new Joueur[] {new JoueurHumain(0), new JoueurHumain(1)};
         jeu = new JeuConcret(joueurs);
     }
 
@@ -31,7 +35,7 @@ public class MoteurJeu implements Runnable {
         return ihm;
     }
 
-    public Jeu getJeu() {
+    public JeuConcret getJeu() {
         return jeu;
     }
 
@@ -47,27 +51,35 @@ public class MoteurJeu implements Runnable {
         if (coup.estJouable(jeu)) {
             coup.jouer(jeu);
             nbPionsPlaces++;
-            ihm.updateAffichage(jeu);
-        } else {
+            if (ihm != null)
+                ihm.updateAffichage(jeu);
+        } else if (ihm != null)
             ihm.afficherMessage("Coup injouable");
-        }
     }
 
     public void annulerCoup() {
         System.out.println("Annulation du dernier coup joué");
+        jeu.annuler(jeu);
     }
 
     public void refaireCoup() {
         System.out.println("Refaison du dernier coup annulé");
+        jeu.refaire();
     }
 
     public void sauvegarder() {
-
+        System.out.println("Sauvegarde de la partie");
+        try {
+            jeu.sauvegarder("sauvegarde.txt");
+        } catch (Exception e) {
+            System.out.println("Erreur lors de la sauvegarde");
+        }
     }
 
     @Override
     public void run() {
-        ihm.updateAffichage(jeu);
+        if (ihm != null)
+            ihm.updateAffichage(jeu);
 
         nbPionsPlaces = 0;
         while (nbPionsPlaces < jeu.getNbJoueurs() * jeu.getNbPions()) {
@@ -75,7 +87,9 @@ public class MoteurJeu implements Runnable {
         }
 
         while (!jeu.estTermine()) {
-            jeu.getJoueur().reflechir(this);
+            while (jeu.peutJouer())
+                jeu.jouer(jeu.getJoueur().reflechir(this));
+            jeu.jouer(new CoupTerminaison(jeu.getJoueur().id));
         }
     }
 }
