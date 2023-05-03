@@ -1,7 +1,7 @@
 package IHM.Graphique;
 
 import Controlleur.MoteurJeu;
-import IHM.Graphique.Ecrans.EcranCreationPartie;
+import IHM.Graphique.Ecrans.EcranJeu;
 import IHM.IHM;
 import Modele.Jeu;
 import com.sun.istack.internal.NotNull;
@@ -21,7 +21,7 @@ public class IHMGraphique extends IHM {
 
         frame = new JFrame("");
 
-        ouvrirFenetre(new EcranCreationPartie());
+        ouvrirFenetre(new EcranJeu());
 
         frame.setSize(1500, 1000);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

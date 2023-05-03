@@ -1,6 +1,6 @@
 package Modele;
 
-import IHM.IHM;
+import Controlleur.MoteurJeu;
 
 public class JoueurHumain extends Joueur {
     String nom;
@@ -10,15 +10,15 @@ public class JoueurHumain extends Joueur {
         this.nom = Integer.toString(id);
     }
 
-    @Override
-    public Coup reflechir(MoteurJeu mt) {
-        // TODO: Romain doit coder cette partie
-        return null;
-    }
-
     public JoueurHumain(int id, String nom) {
         super(id);
         this.nom = nom;
+    }
+
+    @Override
+    public Coup reflechir(MoteurJeu mt) {
+        mt.getIHM().attendreActionJoueur();
+        return null;
     }
 
     public String getNom() {

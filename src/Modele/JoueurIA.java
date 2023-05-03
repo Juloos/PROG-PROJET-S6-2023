@@ -1,4 +1,6 @@
 package Modele;
+
+import Controlleur.MoteurJeu;
 import IA.*;
 
 public class JoueurIA extends Joueur {
@@ -31,8 +33,8 @@ public class JoueurIA extends Joueur {
 
     @Override
     public Coup reflechir(MoteurJeu mt) {
-        if (mt.jeu.getJoueur().id != id)
-            throw new IllegalArgumentException("Mauvais joueur courant pôur ce joueur : " + mt.jeu.getJoueur().id);
-        return ia.reflechir(mt.jeu);
+        if (mt.getJeu().getJoueur().id != id)
+            throw new IllegalArgumentException("Mauvais joueur courant pôur ce joueur : " + mt.getJoueurActif().id);
+        return ia.reflechir(mt.getJeu());
     }
 }
