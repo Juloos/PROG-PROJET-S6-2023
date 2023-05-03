@@ -1,9 +1,8 @@
 package IHM.Graphique;
 
+import Controlleur.MoteurJeu;
 import IHM.Graphique.Ecrans.EcranCreationPartie;
 import IHM.IHM;
-import Modele.CoupAjout;
-import Modele.CoupDeplacement;
 import Modele.Jeu;
 import com.sun.istack.internal.NotNull;
 
@@ -15,10 +14,10 @@ public class IHMGraphique extends IHM {
     Stack<Fenetre> fenetres;
     JFrame frame;
 
-    public IHMGraphique() {
-        super();
+    public IHMGraphique(MoteurJeu moteurJeu) {
+        super(moteurJeu);
 
-        fenetres = new Stack<Fenetre>();
+        fenetres = new Stack<>();
 
         frame = new JFrame("");
 
@@ -27,6 +26,21 @@ public class IHMGraphique extends IHM {
         frame.setSize(1500, 1000);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+    }
+
+    @Override
+    public void updateAffichage(Jeu jeu) {
+
+    }
+
+    @Override
+    public void attendreActionJoueur() {
+
+    }
+
+    @Override
+    public void afficherMessage(String message) {
+
     }
 
     public JFrame getFrame() {
@@ -63,20 +77,5 @@ public class IHMGraphique extends IHM {
         fenetre.open(this);
         System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
         frame.revalidate();
-    }
-
-    @Override
-    public void AfficherPlateau(Jeu jeu) {
-
-    }
-
-    @Override
-    public CoupAjout placerPingouin(int numJoueur) {
-        return null;
-    }
-
-    @Override
-    public CoupDeplacement deplacerPingouin(int numJoueur) {
-        return null;
     }
 }

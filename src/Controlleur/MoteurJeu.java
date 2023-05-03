@@ -4,15 +4,15 @@ import Global.Config;
 import IHM.Console.IHMConsole;
 import IHM.Graphique.IHMGraphique;
 import IHM.IHM;
-import Modele.Coup;
-import Modele.Jeu;
-import Modele.Joueur;
+import Modele.*;
 
-public class MoteurJeu {
+public class MoteurJeu implements Runnable {
 
     IHM ihm;
 
     Jeu jeu;
+
+    int nbPionsPlaces;
 
     public MoteurJeu() {
         switch (Config.typeIHM) {
@@ -22,6 +22,9 @@ public class MoteurJeu {
             case GRAPHIQUE:
                 ihm = new IHMGraphique(this);
         }
+
+        Joueur[] joueurs = new Joueur[]{new JoueurHumain(0), new JoueurHumain(1)};
+        jeu = new JeuConcret(joueurs);
     }
 
     public Jeu getJeu() {
@@ -29,18 +32,46 @@ public class MoteurJeu {
     }
 
     public Joueur getJoueurActif() {
-        return null;
+        return jeu.getJoueur();
     }
 
-    public void joueurCoup(Coup coup) {
+    public boolean estPhasePlacementPions() {
+        return nbPionsPlaces < jeu.getNbJoueurs() * jeu.getNbPions();
+    }
 
+    public void jouerCoup(Coup coup) {
+        if (coup.estJouable(jeu)) {
+            coup.jouer(jeu);
+            nbPionsPlaces++;
+            ihm.updateAffichage(jeu);
+        } else {
+            ihm.afficherMessage("Coup injouable");
+        }
     }
 
     public void annulerCoup() {
-
+        System.out.println("Annulation du dernier coup joué");
     }
 
     public void refaireCoup() {
+        System.out.println("Refaison du dernier coup annulé");
+    }
 
+    public void sauvegarder() {
+        
+    }
+
+    @Override
+    public void run() {
+        ihm.updateAffichage(jeu);
+
+        nbPionsPlaces = 0;
+        while (nbPionsPlaces < jeu.getNbJoueurs() * jeu.getNbPions()) {
+            ihm.attendreActionJoueur();
+        }
+
+        while (!jeu.estTermine()) {
+            ihm.attendreActionJoueur();
+        }
     }
 }
