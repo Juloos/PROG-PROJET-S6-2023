@@ -4,8 +4,9 @@ import Global.Config;
 import IHM.Console.IHMConsole;
 import IHM.Graphique.IHMGraphique;
 import IHM.IHM;
-import Modele.Coord;
+import Modele.Coup;
 import Modele.Jeu;
+import Modele.Joueur;
 
 public class MoteurJeu {
 
@@ -23,11 +24,15 @@ public class MoteurJeu {
         }
     }
 
-    public void ajouterPion(Coord coord, int numJoueur) {
-
+    public Jeu getJeu() {
+        return jeu;
     }
 
-    public void deplacerPion(Coord source, Coord dest, int numJoueur) {
+    public Joueur getJoueurActif() {
+        return null;
+    }
+
+    public void joueurCoup(Coup coup) {
 
     }
 
@@ -36,6 +41,6 @@ public class MoteurJeu {
     }
 
     public void refaireCoup() {
-        
+
     }
 }
