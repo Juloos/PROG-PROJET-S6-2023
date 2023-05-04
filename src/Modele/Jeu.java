@@ -102,7 +102,7 @@ public abstract class Jeu {
 
     public ArrayList<Coord> deplacementsPion(Coord c) {
         ArrayList<Coord> liste = new ArrayList<>();
-        if (Arrays.stream(joueurs).anyMatch(j -> j.estPion(c))) {
+        if (true) {
             for (int dir = 0; dir < 6; dir++) {
                 Coord curr = c.decale(dir);
                 while (plateau.estCoordValide(curr) && plateau.get(curr) != Plateau.VIDE && !estPion(curr)) {
@@ -114,7 +114,8 @@ public abstract class Jeu {
         } else
             return null;
     }
-    public void annulerDeplacerPion(int j,Coord c1, Coord c2){
+
+    public void annulerDeplacerPion(int j, Coord c1, Coord c2) {
         if (!deplacementsPion(c1).contains(c2))
             throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
         joueurs[j].deplacerPion(c1, c2);
@@ -132,12 +133,13 @@ public abstract class Jeu {
         );
         joueurSuivant();
     }
-    public ArrayList<Coord> placememntPionValide(){
+
+    public ArrayList<Coord> placememntPionValide() {
         ArrayList<Coord> liste = new ArrayList<>();
         for (int i = 0; i < plateau.getNbColumns(); i++) {
             for (int j = 0; j < plateau.getNbRows(); j++) {
-                Coord check = new Coord(i,j);
-                if(plateau.estCoordValide(check) && plateau.get(check) == 1){
+                Coord check = new Coord(i, j);
+                if (plateau.estCoordValide(check) && plateau.get(check) == 1 && !estPion(check)) {
                     liste.add(check);
                 }
             }

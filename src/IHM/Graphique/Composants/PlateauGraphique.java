@@ -89,7 +89,12 @@ public class PlateauGraphique extends JComponent {
                     final int x = XHexToPixel(q, r);
                     final int y = YHexToPixel(r);
 
-                    Image img = jeu.estPion(coord) ? sprites[jeu.joueurDePion(coord) + 1][TYPE_TUILE - 1] : sprites[0][TYPE_TUILE];
+                    Image img;
+                    if (jeu.estPion(coord) && TYPE_TUILE > 0) {
+                        img = sprites[jeu.joueurDePion(coord) + 1][TYPE_TUILE - 1];
+                    } else {
+                        img = sprites[0][TYPE_TUILE];
+                    }
                     drawable.drawImage(img, x, y, (int) TAILLE_CASES, (int) TAILLE_CASES, null);
 
                     if (tuilesSurbrillance != null && tuilesSurbrillance.contains(coord)) {

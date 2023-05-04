@@ -13,14 +13,16 @@ public abstract class IHM {
     }
 
     /**
-     * met à jour l'affichage du plateau ainsi que des informations des joueurs
+     * Met à jour l'affichage du plateau ainsi que des informations des joueurs
      *
      * @param jeu : le jeu actuel
      */
     public abstract void updateAffichage(Jeu jeu);
 
     /**
-     * attend que le joueur fasse une action
+     * Attend que le joueur actif demande de faire une action
+     *
+     * @return l'action que le jouer actif veut faire
      */
     public abstract Action attendreActionJoueur();
 

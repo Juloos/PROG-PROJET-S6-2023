@@ -18,7 +18,7 @@ public class JoueurIA extends Joueur {
         assignerIA(d);
     }
 
-    public JoueurIA(int id, int score, int tuiles, HashMap<Coord,Boolean> pions, boolean termine, IA.Difficulte d){
+    public JoueurIA(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, boolean termine, IA.Difficulte d) {
         super(id, score, tuiles, pions, termine);
         assignerIA(d);
     }
@@ -46,6 +46,11 @@ public class JoueurIA extends Joueur {
     public Action reflechir(MoteurJeu mt) {
         if (mt.getJeu().getJoueur().id != id)
             throw new IllegalArgumentException("Mauvais joueur courant pôur ce joueur : " + mt.getJoueurActif().id);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return new ActionCoup(ia.reflechir(mt.getJeu()));
     }
 

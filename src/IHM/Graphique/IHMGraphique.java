@@ -17,14 +17,17 @@ import java.util.Stack;
 
 public class IHMGraphique extends IHM implements MouseListener, Runnable {
 
+    // Pile des fenêtres qui ont été ouverte, la fênetre ouverte est au sommet de la pile
     Stack<Fenetre> fenetres;
     JFrame frame;
     boolean enJeu;
     Clip clip;
+    // La réprésentation graphique du plateau
     PlateauGraphique plateauGraphique;
+    // La tuile sélectionné par le joueur
     Coord selection;
+    // L'action que le joueur fait
     Action actionJoueur;
-    boolean attente = false;
 
     public IHMGraphique(MoteurJeu moteurJeu) {
         super(moteurJeu);
@@ -79,6 +82,7 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         return actionJoueur;
     }
 
+
     @Override
     public void afficherMessage(String message) {
         System.out.println(message);
@@ -100,7 +104,10 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
      * Détruit toutes les fenêtres de l'IHM et retourne au menu d'accueil
      */
     public void fermerFenetres() {
-
+        for (Fenetre fenetre : fenetres) {
+            fenetre.close(this);
+        }
+        fenetres.clear();
     }
 
     /**
@@ -132,6 +139,11 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         enJeu = fenetres.peek() instanceof EcranJeu;
     }
 
+    /**
+     * Lorsqu'un joueur clique sur la fenêtre
+     *
+     * @param mouseEvent
+     */
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
         if (moteurJeu.estPhasePlacementPions()) {
@@ -168,22 +180,18 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
 
     @Override
     public void mousePressed(MouseEvent mouseEvent) {
-
     }
 
     @Override
     public void mouseReleased(MouseEvent mouseEvent) {
-
     }
 
     @Override
     public void mouseEntered(MouseEvent mouseEvent) {
-
     }
 
     @Override
     public void mouseExited(MouseEvent mouseEvent) {
-
     }
 
     public void setVolume(float volume) {
@@ -197,6 +205,9 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         }
     }
 
+    /**
+     * Fonction utilisée pour attendre que le joueur fasse une action sans bloquer l'IHM
+     */
     @Override
     public void run() {
         while (actionJoueur == null) {

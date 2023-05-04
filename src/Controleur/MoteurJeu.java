@@ -15,7 +15,7 @@ public class MoteurJeu implements Runnable {
     int nbPionsPlaces;
 
     public MoteurJeu() {
-        Joueur[] joueurs = new Joueur[]{new JoueurHumain(0), new JoueurHumain(1), new JoueurHumain(2), new JoueurHumain(3)};
+        Joueur[] joueurs = new Joueur[]{new JoueurHumain(0), new JoueurIA(1), new JoueurIA(2), new JoueurIA(3)};
         jeu = new JeuConcret(joueurs);
 
         switch (Config.TYPE_IHM) {
@@ -105,5 +105,7 @@ public class MoteurJeu implements Runnable {
                 appliquerAction(jeu.getJoueur().reflechir(this));
             jeu.jouer(new CoupTerminaison(jeu.getJoueur().id));
         }
+
+        System.out.println("Fin de jeu");
     }
 }
