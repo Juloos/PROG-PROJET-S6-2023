@@ -18,7 +18,7 @@ public class EcranAccueil extends Ecran {
         super.open(ihm);
         panel.setLayout(new GridBagLayout());
         // Chargement de l'image de fond
-        ImageIcon icon = new ImageIcon("src\\background.png");
+        ImageIcon icon = new ImageIcon("res\\background.png");
         this.backgroundImage = icon.getImage();
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -26,7 +26,7 @@ public class EcranAccueil extends Ecran {
         constraints.gridy = 8;
         constraints.gridwidth = 2;
         constraints.insets = new Insets(0, 0, 30, 0);
-        Color color = Color.decode("#13B0E8");
+        Color color = Color.decode("#0000BB");
         JButton nouvellePartie = new JButton("Nouvelle partie");
 
         nouvellePartie.setForeground(Color.WHITE);
@@ -76,8 +76,6 @@ public class EcranAccueil extends Ecran {
                 }));
             }
         });
-        //Ajout des boutons au panel en bas à droite
-
         panel.add(nouvellePartie, constraints);
         constraints.gridy = 9;
         panel.add(chargerPartie, constraints);
