@@ -8,13 +8,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Random;
 
 public class PlateauGraphique extends JComponent {
 
     final int BORDURES_X = 2, BORDURES_Y = 1;
+    final Color SURBRIANLLANCE = new Color(0.5f, 0.8f, 0.5f, 0.45f);
     Image[] sprites;
     double TAILLE_CASES, Y_OFFSET;
-
     Plateau plateau;
 
     public PlateauGraphique() {
@@ -47,6 +48,8 @@ public class PlateauGraphique extends JComponent {
         Graphics2D drawable = (Graphics2D) g;
 
         if (plateau != null) {
+            Random random = new Random();
+
             final int NB_ROWS = plateau.getNbRows();
             TAILLE_CASES = (Math.min(getHeight(), getWidth()) * 4.0 / (3.0 * NB_ROWS)) - 1.0;
             Y_OFFSET = TAILLE_CASES / NB_ROWS;
@@ -61,9 +64,34 @@ public class PlateauGraphique extends JComponent {
                     Image img = sprites[TYPE_TUILE];
 
                     drawable.drawImage(img, x, y, (int) TAILLE_CASES, (int) TAILLE_CASES, null);
+
+                    if (random.nextBoolean()) {
+                        ajouterSurbrillance(drawable, q, r, SURBRIANLLANCE);
+                    }
                 }
             }
         }
+    }
+
+    private void ajouterSurbrillance(Graphics2D g, int q, int r, Color color) {
+        final int x = XHexToPixel(q, r) + (int) (TAILLE_CASES / 2.0);
+        final int y = YHexToPixel(r) + (int) (TAILLE_CASES / 2.0);
+
+        Polygon hexagone = new Polygon();
+
+        for (int i = 0; i < 6; i++) {
+            double angle_deg = 60.0 * i - 30.0;
+            double angle_rad = Math.PI / 180.0 * angle_deg;
+            hexagone.addPoint(
+                    (int) (x + (TAILLE_CASES / 2.2) * Math.cos(angle_rad)),
+                    (int) (y + (TAILLE_CASES / 2.2) * Math.sin(angle_rad))
+            );
+        }
+
+        Color saveColor = g.getColor();
+        g.setColor(color);
+        g.fillPolygon(hexagone);
+        g.setColor(saveColor);
     }
 
     private int XHexToPixel(int q, int r) {
