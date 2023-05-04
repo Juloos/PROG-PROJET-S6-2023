@@ -4,10 +4,7 @@ import Controleur.MoteurJeu;
 import IHM.Actions.ActionIHM;
 import IHM.Actions.ActionJouerCoup;
 import IHM.IHM;
-import Modele.Coord;
-import Modele.CoupAjout;
-import Modele.CoupDeplacement;
-import Modele.Jeu;
+import Modele.*;
 
 import java.util.Scanner;
 
@@ -26,37 +23,35 @@ public class IHMConsole extends IHM {
     }
 
     @Override
-    public void attendreActionJoueur() {
+    public Action attendreActionJoueur() {
         int numJoueur = moteurJeu.getJoueurActif().id;
 
         System.out.println("Joueur " + (numJoueur + 1) + " quelle action voulez-vous faire (jouer, annuler, refaire, sauvegarder) ?");
 
         String actionSouhaitee = input.nextLine();
 
-        switch (actionSouhaitee.toLowerCase()) {
-            case "jouer":
-                if (moteurJeu.estPhasePlacementPions()) {
-                    attendrePlacementPion();
-                } else {
-                    attendreDeplacementPion();
-                }
-                break;
-            case "annuler":
-                moteurJeu.annulerCoup();
-                break;
-            case "refaire":
-                moteurJeu.refaireCoup();
-                break;
-            case "sauvegarder":
-                moteurJeu.sauvegarder();
-                break;
-            default:
-                System.out.println("Mais t'es con ou quoi fréro ?");
-                break;
-        }
+        do {
+            switch (actionSouhaitee.toLowerCase()) {
+                case "jouer":
+                    if (moteurJeu.estPhasePlacementPions()) {
+                        return attendrePlacementPion();
+                    } else {
+                        return attendreDeplacementPion();
+                    }
+                case "annuler":
+                    return new ActionAnnuler();
+                case "refaire":
+                    return new ActionRefaire();
+                case "sauvegarder":
+                    return new ActionSauvegarder();
+                default:
+                    System.out.println("Mais t'es con ou quoi fréro ?");
+                    break;
+            }
+        } while(true);
     }
 
-    private void attendrePlacementPion() {
+    private Action attendrePlacementPion() {
         int numJoueur = moteurJeu.getJoueurActif().id;
 
         System.out.println("Veuillez placez un pingouin");
@@ -64,11 +59,10 @@ public class IHMConsole extends IHM {
         int[] valeurs = decouperLigne(ligne);
 
         Coord coord = new Coord(valeurs[0], valeurs[1]);
-        ActionIHM action = new ActionJouerCoup(new CoupAjout(coord, numJoueur));
-        action.action(moteurJeu);
+        return new ActionCoup(new CoupAjout(coord, numJoueur));
     }
 
-    private void attendreDeplacementPion() {
+    private Action attendreDeplacementPion() {
         int numJoueur = moteurJeu.getJoueurActif().id;
         System.out.println("Veuillez déplacez un pingouin (source puis destination)");
         // Source
@@ -83,8 +77,7 @@ public class IHMConsole extends IHM {
 
         Coord destination = new Coord(valeurs[0], valeurs[1]);
 
-        ActionIHM action = new ActionJouerCoup(new CoupDeplacement(source, destination, numJoueur));
-        action.action(moteurJeu);
+        return new ActionCoup(new CoupDeplacement(source, destination, numJoueur));
     }
 
     @Override

@@ -23,9 +23,8 @@ public class JoueurHumain extends Joueur {
     }
 
     @Override
-    public Coup reflechir(MoteurJeu mt) {
-        mt.getIHM().attendreActionJoueur();
-        return null;
+    public Action reflechir(MoteurJeu mt) {
+        return mt.getIHM().attendreActionJoueur();
     }
 
     public JoueurHumain clone() {

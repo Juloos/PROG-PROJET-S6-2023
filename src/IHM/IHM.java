@@ -1,6 +1,7 @@
 package IHM;
 
 import Controleur.MoteurJeu;
+import Modele.Action;
 import Modele.Jeu;
 
 public abstract class IHM {
@@ -21,7 +22,7 @@ public abstract class IHM {
     /**
      * attend que le joueur fasse une action
      */
-    public abstract void attendreActionJoueur();
+    public abstract Action attendreActionJoueur();
 
     /**
      * affiche un message sur l'IHM
