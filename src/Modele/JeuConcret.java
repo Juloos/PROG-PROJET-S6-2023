@@ -28,16 +28,24 @@ public class JeuConcret extends Jeu {
         future.clear();  // on doit vider la pile si l'on fait de nouveau coup après avoir reculer
     }
 
-    public void annuler(Jeu j) {
-        Coup c = passe.pop();
-        c.annuler(j);
-        future.push(c);
+    public void annuler() {
+        if(!passe.empty()){
+            Coup c = passe.pop();
+            c.annuler(this);
+            future.push(c);
+        }else{
+            System.out.println("Aucune action a annuler");
+        }
     }
 
     public void refaire() {
-        Coup c = future.pop();
-        super.jouer(c);
-        passe.push(c);
+        if(!future.empty()){
+            Coup c = future.pop();
+            super.jouer(c);
+            passe.push(c);
+        }else{
+            System.out.println("Aucune action a refaire");
+        }
     }
 
     public void sauvegarder(String fichier) throws Exception {
@@ -56,9 +64,9 @@ public class JeuConcret extends Jeu {
 
         // Sauvegarde les a l'instant de la sauvegarde
         for (int i = 0; i < nbJoueurs; i++) {
-            Joueur jou = super.getJoueur(0);
+            Joueur jou = super.getJoueur(i);
             Coord[] tempL = jou.getPions().toArray(new Coord[nbPions]);
-            for (int j = 0; j < nbPions; j++) {
+            for (int j = 0; j < jou.getPions().size(); j++) {
                 sauv_data += " " + tempL[j].q + " " + tempL[j].r;
             }
             w_f.println(i + " " + jou.getScore() + " " + jou.getTuiles() + sauv_data);

@@ -50,7 +50,7 @@ public class MoteurJeu implements Runnable {
 
     public void jouerCoup(Coup coup) {
         if (coup.estJouable(jeu)) {
-            coup.jouer(jeu);
+            jeu.jouer(coup);
             nbPionsPlaces++;
             if (ihm != null)
                 ihm.updateAffichage(jeu);
@@ -60,7 +60,7 @@ public class MoteurJeu implements Runnable {
 
     public void annulerCoup() {
         System.out.println("Annulation du dernier coup joué");
-        jeu.annuler(jeu);
+        jeu.annuler();
     }
 
     public void refaireCoup() {

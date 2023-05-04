@@ -9,17 +9,18 @@ public abstract class Fenetre {
 
     protected JPanel panel;
     protected JButton retour;
-    String title;
     protected Image backgroundImage;
+    String title;
 
     public Fenetre(String title) {
         this.title = title;
-        panel = new JPanel(){
-        @Override
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
-        }};
+        panel = new JPanel() {
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
+            }
+        };
         retour = new JButton("Retour");
     }
 
