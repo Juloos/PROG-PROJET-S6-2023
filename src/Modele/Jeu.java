@@ -115,6 +115,19 @@ public abstract class Jeu {
             return null;
     }
 
+    public ArrayList<Coord> placememntPionValide(){
+        ArrayList<Coord> liste = new ArrayList<>();
+        for (int i = 0; i < plateau.getNbColumns(); i++) {
+            for (int j = 0; j < plateau.getNbRows(); j++) {
+                Coord check = new Coord(i,j);
+                if(plateau.estCoordValide(check) && plateau.get(check) == 1){
+                    liste.add(check);
+                }
+            }
+        }
+        return liste;
+    }
+
     void joueurSuivant() {
         joueurCourant = (joueurCourant + 1) % nbJoueurs;
         for (int i = 1; i < nbJoueurs; i++) {
