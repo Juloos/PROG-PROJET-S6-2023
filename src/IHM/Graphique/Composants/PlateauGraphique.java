@@ -1,6 +1,7 @@
 package IHM.Graphique.Composants;
 
 import Modele.Coord;
+import Modele.Jeu;
 import Modele.Plateau;
 
 import javax.imageio.ImageIO;
@@ -8,22 +9,25 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Random;
 
 public class PlateauGraphique extends JComponent {
 
     final int BORDURES_X = 2, BORDURES_Y = 1;
     final Color SURBRIANLLANCE = new Color(0.5f, 0.8f, 0.5f, 0.45f);
-    Image[] sprites;
+    Image[][] sprites;
     double TAILLE_CASES, Y_OFFSET;
-    Plateau plateau;
+    Jeu jeu;
+
+    List<Coord> tuilesSurbrillance;
 
     public PlateauGraphique() {
         super();
 
-        this.plateau = null;
+        this.jeu = null;
 
-        sprites = new Image[4];
+        sprites = new Image[5][4];
         String chemin = "res/tuiles/";
 
         int i = 0;
@@ -31,41 +35,64 @@ public class PlateauGraphique extends JComponent {
             try {
                 InputStream in = new FileInputStream(chemin + fileName);
 
-                sprites[i] = ImageIO.read(in);
+                sprites[0][i] = ImageIO.read(in);
                 i++;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
+        i = 0;
+        for (String fileName : new String[]{"1PingouinRouge.png", "2PingouinRouge.png", "3PingouinRouge.png",
+                "1PingouinBleu.png", "2PingouinBleu.png", "3PingouinBleu.png",
+                "1PingouinVert.png", "2PingouinVert.png", "3PingouinVert.png",
+                "1PingouinJaune.png", "2PingouinJaune.png", "3PingouinJaune.png"}) {
+            sprites[(i / 3) + 1][i % 3] = chargerImage(chemin + fileName);
+            i++;
+        }
     }
 
-    public void setPlateau(Plateau plateau) {
-        this.plateau = plateau;
+    private Image chargerImage(String chemin) {
+        try {
+            InputStream in = new FileInputStream(chemin);
+
+            return ImageIO.read(in);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void setJeu(Jeu jeu) {
+        this.jeu = jeu;
     }
 
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D drawable = (Graphics2D) g;
 
-        if (plateau != null) {
+        drawable.clearRect(0, 0, getWidth(), getHeight());
+
+        Plateau plateau = jeu.getPlateau();
+        if (jeu != null) {
             Random random = new Random();
 
             final int NB_ROWS = plateau.getNbRows();
-            TAILLE_CASES = (Math.min(getHeight(), getWidth()) * 4.0 / (3.0 * NB_ROWS)) - 1.0;
+            TAILLE_CASES = Math.floor((Math.min(getHeight(), getWidth()) * 4.0 / (3.0 * NB_ROWS)) - 1.0);
             Y_OFFSET = TAILLE_CASES / NB_ROWS;
 
             for (int r = 0; r < NB_ROWS; r++) {
                 for (int q = 0; q < (r % 2 == 0 ? plateau.getNbColumns() - 1 : plateau.getNbColumns()); q++) {
-                    final int TYPE_TUILE = plateau.get(new Coord(q, r));
+                    Coord coord = new Coord(q, r);
+                    final int TYPE_TUILE = plateau.get(coord);
 
                     final int x = XHexToPixel(q, r);
                     final int y = YHexToPixel(r);
 
-                    Image img = sprites[TYPE_TUILE];
-
+                    Image img = jeu.estPion(coord) ? sprites[jeu.joueurDePion(coord) + 1][TYPE_TUILE - 1] : sprites[0][TYPE_TUILE];
                     drawable.drawImage(img, x, y, (int) TAILLE_CASES, (int) TAILLE_CASES, null);
 
-                    if (random.nextBoolean()) {
+                    if (tuilesSurbrillance != null && tuilesSurbrillance.contains(coord)) {
                         ajouterSurbrillance(drawable, q, r, SURBRIANLLANCE);
                     }
                 }
@@ -100,5 +127,17 @@ public class PlateauGraphique extends JComponent {
 
     private int YHexToPixel(int r) {
         return (int) (Y_OFFSET + ((TAILLE_CASES / 2.2) * (3.0 / 2.0) * r));
+    }
+
+    public Coord getClickedTuile(int x, int y) {
+        double r = (2.0 / 3.0) * (2.2 / TAILLE_CASES) * (y - Y_OFFSET);
+        int rInt = (int) (r - (r % 1 < 0.5 ? 1.0 : 0.0));
+        double q = (2.2 / TAILLE_CASES) * (1.0 / Math.sqrt(3.0)) * (x - (TAILLE_CASES / 2.0)) + 0.5 * (rInt & 1);
+
+        return new Coord((int) q, rInt);
+    }
+
+    public void setTuilesSurbrillance(List<Coord> tuilesSurbrillance) {
+        this.tuilesSurbrillance = tuilesSurbrillance;
     }
 }

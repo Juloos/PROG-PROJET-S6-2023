@@ -15,7 +15,7 @@ public class MoteurJeu implements Runnable {
     int nbPionsPlaces;
 
     public MoteurJeu() {
-        Joueur[] joueurs = new Joueur[]{new JoueurHumain(0), new JoueurHumain(1)};
+        Joueur[] joueurs = new Joueur[]{new JoueurHumain(0), new JoueurHumain(1), new JoueurHumain(2), new JoueurHumain(3)};
         jeu = new JeuConcret(joueurs);
 
         switch (Config.TYPE_IHM) {
@@ -28,10 +28,6 @@ public class MoteurJeu implements Runnable {
             case AUCUNE:
                 ihm = null;
                 break;
-        }
-
-        if (ihm != null) {
-            ihm.updateAffichage(jeu);
         }
     }
 
@@ -55,7 +51,6 @@ public class MoteurJeu implements Runnable {
         if (coup.estJouable(jeu)) {
             jeu.jouer(coup);
             nbPionsPlaces++;
-            System.out.println("Nouveau pion placé");
             if (ihm != null)
                 ihm.updateAffichage(jeu);
         } else if (ihm != null)
@@ -84,8 +79,12 @@ public class MoteurJeu implements Runnable {
     public void appliquerAction(Action action) {
         if (!action.peutAppliquer(this)) {
             ihm.afficherMessage("Action non applicable");
+            ihm.updateAffichage(jeu);
         } else {
             action.appliquer(this);
+            if (ihm != null) {
+                ihm.updateAffichage(jeu);
+            }
         }
     }
 
@@ -95,9 +94,11 @@ public class MoteurJeu implements Runnable {
             ihm.updateAffichage(jeu);
 
         nbPionsPlaces = 0;
-        while (nbPionsPlaces < jeu.getNbJoueurs() * jeu.getNbPions()) {
+        while (estPhasePlacementPions()) {
             appliquerAction(jeu.getJoueur().reflechir(this));
         }
+
+        System.out.println("Fin de la phase de placements des pions");
 
         while (!jeu.estTermine()) {
             while (jeu.peutJouer())

@@ -1,15 +1,13 @@
 package IHM.Graphique;
 
 import Controleur.MoteurJeu;
-import IHM.Graphique.Ecrans.EcranAccueil;
+import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.EcranJeu;
 import IHM.IHM;
 import Modele.Action;
-import Modele.Jeu;
+import Modele.*;
 import com.sun.istack.internal.NotNull;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.swing.*;
@@ -17,13 +15,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Stack;
 
-public class IHMGraphique extends IHM implements MouseListener {
+public class IHMGraphique extends IHM implements MouseListener, Runnable {
 
     Stack<Fenetre> fenetres;
     JFrame frame;
     boolean enJeu;
-
     Clip clip;
+    PlateauGraphique plateauGraphique;
+    Coord selection;
+    Action actionJoueur;
+    boolean attente = false;
 
     public IHMGraphique(MoteurJeu moteurJeu) {
         super(moteurJeu);
@@ -31,18 +32,20 @@ public class IHMGraphique extends IHM implements MouseListener {
         fenetres = new Stack<>();
 
         frame = new JFrame("");
-        try {
-            // chargement du fichier audio
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("Wallpaper.wav")); // "res/Wallpaper.wav
-            // création du Clip
-            clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.loop(Clip.LOOP_CONTINUOUSLY); // boucle infinie
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            // chargement du fichier audio
+//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("Wallpaper.wav")); // "res/Wallpaper.wav
+//            // création du Clip
+//            clip = AudioSystem.getClip();
+//            clip.open(audioInputStream);
+//            clip.loop(Clip.LOOP_CONTINUOUSLY); // boucle infinie
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
-        ouvrirFenetre(new EcranAccueil());
+        plateauGraphique = new PlateauGraphique();
+
+        ouvrirFenetre(new EcranJeu());
 
         frame.addMouseListener(this);
         frame.setSize(1500, 1000);
@@ -53,19 +56,32 @@ public class IHMGraphique extends IHM implements MouseListener {
 
     @Override
     public void updateAffichage(Jeu jeu) {
-        if (enJeu) {
-            ((EcranJeu) fenetres.peek()).updatePlateau(jeu.getPlateau());
+        actionJoueur = null;
+        selection = null;
+
+        plateauGraphique.setJeu(jeu);
+        if (moteurJeu.estPhasePlacementPions()) {
+            plateauGraphique.setTuilesSurbrillance(jeu.placememntPionValide());
+        } else {
+            plateauGraphique.setTuilesSurbrillance(null);
         }
+        plateauGraphique.repaint();
     }
 
     @Override
     public Action attendreActionJoueur() {
-        return null;
+        Thread thread = new Thread(this);
+        thread.start();
+        try {
+            thread.join();
+        } catch (Exception e) {
+        }
+        return actionJoueur;
     }
 
     @Override
     public void afficherMessage(String message) {
-
+        System.out.println(message);
     }
 
     public MoteurJeu getMoteurJeu() {
@@ -74,6 +90,10 @@ public class IHMGraphique extends IHM implements MouseListener {
 
     public JFrame getFrame() {
         return frame;
+    }
+
+    public PlateauGraphique getPlateauGraphique() {
+        return plateauGraphique;
     }
 
     /**
@@ -114,6 +134,36 @@ public class IHMGraphique extends IHM implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
+        if (moteurJeu.estPhasePlacementPions()) {
+            selection = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
+            actionJoueur = new ActionCoup(new CoupAjout(selection, moteurJeu.getJoueurActif().id));
+        } else {
+            if (selection == null) {
+                selection = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
+
+                if (moteurJeu.getJeu().getPlateau().estCoordValide(selection) && moteurJeu.getJeu().estPion(selection)
+                        && moteurJeu.getJeu().joueurDePion(selection) == moteurJeu.getJoueurActif().id) {
+                    System.out.println("Selection");
+                    plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection));
+                    plateauGraphique.repaint();
+                } else {
+                    selection = null;
+                }
+
+            } else {
+                Coord cible = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
+                System.out.println("Cible");
+
+                if (moteurJeu.getJeu().getPlateau().estCoordValide(cible) && !moteurJeu.getJeu().estPion(cible)) {
+                    actionJoueur = new ActionCoup(new CoupDeplacement(selection, cible, moteurJeu.getJoueurActif().id));
+                } else {
+                    selection = cible;
+                    plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection));
+                    plateauGraphique.repaint();
+                }
+
+            }
+        }
     }
 
     @Override
@@ -135,6 +185,7 @@ public class IHMGraphique extends IHM implements MouseListener {
     public void mouseExited(MouseEvent mouseEvent) {
 
     }
+
     public void setVolume(float volume) {
         if (clip != null) {
             // Récupération du contrôle de volume du clip
@@ -143,6 +194,17 @@ public class IHMGraphique extends IHM implements MouseListener {
             float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
             // Réglage du contrôle de volume
             gainControl.setValue(dB);
+        }
+    }
+
+    @Override
+    public void run() {
+        while (actionJoueur == null) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
