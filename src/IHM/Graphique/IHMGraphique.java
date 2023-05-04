@@ -7,12 +7,15 @@ import Modele.Jeu;
 import com.sun.istack.internal.NotNull;
 
 import javax.swing.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Stack;
 
-public class IHMGraphique extends IHM {
+public class IHMGraphique extends IHM implements MouseListener {
 
     Stack<Fenetre> fenetres;
     JFrame frame;
+    boolean enJeu;
 
     public IHMGraphique(MoteurJeu moteurJeu) {
         super(moteurJeu);
@@ -23,6 +26,7 @@ public class IHMGraphique extends IHM {
 
         ouvrirFenetre(new EcranJeu());
 
+        frame.addMouseListener(this);
         frame.setSize(1500, 1000);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -31,8 +35,7 @@ public class IHMGraphique extends IHM {
 
     @Override
     public void updateAffichage(Jeu jeu) {
-        if (fenetres.peek() instanceof EcranJeu) {
-            System.out.println("On met à jour");
+        if (enJeu) {
             ((EcranJeu) fenetres.peek()).updatePlateau(jeu.getPlateau());
         }
     }
@@ -72,6 +75,8 @@ public class IHMGraphique extends IHM {
         fenetres.peek().open(this);
         System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
         frame.revalidate();
+
+        enJeu = fenetres.peek() instanceof EcranJeu;
     }
 
     /**
@@ -85,5 +90,31 @@ public class IHMGraphique extends IHM {
         fenetre.open(this);
         System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
         frame.revalidate();
+
+        enJeu = fenetres.peek() instanceof EcranJeu;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent mouseEvent) {
+    }
+
+    @Override
+    public void mousePressed(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent mouseEvent) {
+
     }
 }
