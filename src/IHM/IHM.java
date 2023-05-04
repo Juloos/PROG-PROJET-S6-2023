@@ -1,8 +1,8 @@
 package IHM;
 
 import Controleur.MoteurJeu;
-import Modele.Action;
-import Modele.Jeu;
+import Modele.Actions.Action;
+import Modele.Jeu.Jeu;
 
 public abstract class IHM {
 

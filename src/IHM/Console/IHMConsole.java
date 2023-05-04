@@ -2,7 +2,11 @@ package IHM.Console;
 
 import Controleur.MoteurJeu;
 import IHM.IHM;
-import Modele.*;
+import Modele.Actions.*;
+import Modele.Coord;
+import Modele.Coups.CoupAjout;
+import Modele.Coups.CoupDeplacement;
+import Modele.Jeu.Jeu;
 
 import java.util.Scanner;
 
@@ -24,7 +28,7 @@ public class IHMConsole extends IHM {
     public Action attendreActionJoueur() {
         int numJoueur = moteurJeu.getJoueurActif().id;
         Action action = null;
-        
+
         do {
             System.out.println("Joueur " + (numJoueur + 1) + " quelle action voulez-vous faire (jouer, annuler, refaire, sauvegarder) ?");
             String actionSouhaitee = input.nextLine();

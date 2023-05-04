@@ -4,8 +4,12 @@ import Controleur.MoteurJeu;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.EcranJeu;
 import IHM.IHM;
-import Modele.Action;
-import Modele.*;
+import Modele.Actions.Action;
+import Modele.Actions.ActionCoup;
+import Modele.Coord;
+import Modele.Coups.CoupAjout;
+import Modele.Coups.CoupDeplacement;
+import Modele.Jeu.Jeu;
 import com.sun.istack.internal.NotNull;
 
 import javax.sound.sampled.Clip;
@@ -59,9 +63,6 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
 
     @Override
     public void updateAffichage(Jeu jeu) {
-        actionJoueur = null;
-        selection = null;
-
         plateauGraphique.setJeu(jeu);
         if (moteurJeu.estPhasePlacementPions()) {
             plateauGraphique.setTuilesSurbrillance(jeu.placememntPionValide());
@@ -73,6 +74,8 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
 
     @Override
     public Action attendreActionJoueur() {
+        actionJoueur = null;
+        selection = null;
         Thread thread = new Thread(this);
         thread.start();
         try {
@@ -149,7 +152,7 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         if (moteurJeu.estPhasePlacementPions()) {
             selection = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
             actionJoueur = new ActionCoup(new CoupAjout(selection, moteurJeu.getJoueurActif().id));
-        } else {
+        } else if (actionJoueur == null) {
             if (selection == null) {
                 selection = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
 
@@ -168,7 +171,7 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
 
                 if (moteurJeu.getJeu().getPlateau().estCoordValide(cible) && !moteurJeu.getJeu().estPion(cible)) {
                     actionJoueur = new ActionCoup(new CoupDeplacement(selection, cible, moteurJeu.getJoueurActif().id));
-                } else {
+                } else if (moteurJeu.getJeu().joueurDePion(cible) == moteurJeu.getJoueurActif().id) {
                     selection = cible;
                     plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection));
                     plateauGraphique.repaint();

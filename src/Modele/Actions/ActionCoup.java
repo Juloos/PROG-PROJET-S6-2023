@@ -1,6 +1,7 @@
-package Modele;
+package Modele.Actions;
 
 import Controleur.MoteurJeu;
+import Modele.Coups.Coup;
 
 public class ActionCoup implements Action {
     Coup coup;

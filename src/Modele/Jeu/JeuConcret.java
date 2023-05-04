@@ -1,4 +1,11 @@
-package Modele;
+package Modele.Jeu;
+
+import Modele.Coord;
+import Modele.Coups.Coup;
+import Modele.Coups.CoupAjout;
+import Modele.Coups.CoupDeplacement;
+import Modele.Coups.CoupTerminaison;
+import Modele.Joueurs.Joueur;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -22,6 +29,14 @@ public class JeuConcret extends Jeu {
         future = new Stack<>();
     }
 
+    public Stack<Coup> getPasse() {
+        return passe;
+    }
+
+    public Stack<Coup> getFuture() {
+        return future;
+    }
+
     public void jouer(Coup c) {
         super.jouer(c);
         passe.push(c);
@@ -29,21 +44,21 @@ public class JeuConcret extends Jeu {
     }
 
     public void annuler() {
-        if(!passe.empty()){
+        if (!passe.empty()) {
             Coup c = passe.pop();
             c.annuler(this);
             future.push(c);
-        }else{
+        } else {
             System.out.println("Aucune action a annuler");
         }
     }
 
     public void refaire() {
-        if(!future.empty()){
+        if (!future.empty()) {
             Coup c = future.pop();
             super.jouer(c);
             passe.push(c);
-        }else{
+        } else {
             System.out.println("Aucune action a refaire");
         }
     }

@@ -4,7 +4,13 @@ import Global.Config;
 import IHM.Console.IHMConsole;
 import IHM.Graphique.IHMGraphique;
 import IHM.IHM;
-import Modele.*;
+import Modele.Actions.Action;
+import Modele.Coups.Coup;
+import Modele.Coups.CoupTerminaison;
+import Modele.Jeu.JeuConcret;
+import Modele.Joueurs.Joueur;
+import Modele.Joueurs.JoueurHumain;
+import Modele.Joueurs.JoueurIA;
 
 public class MoteurJeu implements Runnable {
 

@@ -1,4 +1,4 @@
-package Modele;
+package Modele.Actions;
 
 import Controleur.MoteurJeu;
 

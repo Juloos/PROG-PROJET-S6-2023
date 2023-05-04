@@ -1,4 +1,4 @@
-package Modele;
+package Modele.Actions;
 
 import Controleur.MoteurJeu;
 
@@ -10,6 +10,6 @@ public class ActionAnnuler implements Action {
 
     @Override
     public boolean peutAppliquer(MoteurJeu mt) {
-        return !mt.getJeu().passe.empty();
+        return !mt.getJeu().getPasse().empty();
     }
 }

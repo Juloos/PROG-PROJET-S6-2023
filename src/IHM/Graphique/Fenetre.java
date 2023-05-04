@@ -24,6 +24,11 @@ public abstract class Fenetre {
         retour = new JButton("Retour");
     }
 
+    /**
+     * Lorsque la fenêtre est ouverte
+     *
+     * @param ihm : l'IHM graphique sur laquelle est affichée la fenêtre
+     */
     public void open(IHMGraphique ihm) {
         ihm.frame.setTitle(title);
         retour.addActionListener(new ActionListener() {
@@ -34,6 +39,11 @@ public abstract class Fenetre {
         });
     }
 
+    /**
+     * Lorsque la fenêtre est fermée
+     *
+     * @param ihm : l'IHM graphique sur laquelle est affichée la fenêtre
+     */
     public void close(IHMGraphique ihm) {
     }
 }

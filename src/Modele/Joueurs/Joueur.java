@@ -1,6 +1,9 @@
-package Modele;
+package Modele.Joueurs;
 
 import Controleur.MoteurJeu;
+import Modele.Actions.Action;
+import Modele.Coord;
+import Modele.Jeu.Jeu;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -53,10 +56,22 @@ public abstract class Joueur implements Comparable<Joueur> {
         this.tuiles += 1;
     }
 
+    public void supprimerTuile() {
+        this.tuiles--;
+    }
+
+    public void decrementerScore(int val) {
+        this.score -= val;
+    }
+
     public void ajouterPion(Coord c) {
         if (pions.containsKey(c))
             throw new IllegalArgumentException("Pion déjà présent");
         pions.put(c, false);
+    }
+
+    public void replacerPion(Coord source, boolean val) {
+        pions.replace(source, val);
     }
 
     public void supprimerPion(Coord c) {

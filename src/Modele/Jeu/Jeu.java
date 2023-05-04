@@ -1,4 +1,10 @@
-package Modele;
+package Modele.Jeu;
+
+import Modele.Coord;
+import Modele.Coups.Coup;
+import Modele.Joueurs.Joueur;
+import Modele.Joueurs.JoueurIA;
+import Modele.Plateau;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -221,13 +227,13 @@ public abstract class Jeu {
         // Même format que Plateau.toString() mais en mettant en couleur les pions des différents joueurs,
         // et une Ligne de score à la fin.
         StringBuilder str = new StringBuilder();
-        for (int r = 0; r < plateau.rMax; r++) {
+        for (int r = 0; r < plateau.getNbRows(); r++) {
             if (r % 2 == 0)
                 str.append(" ");
-            for (int q = 0; q < plateau.qMax; q++) {
+            for (int q = 0; q < plateau.getNbColumns(); q++) {
                 Coord c = new Coord(q, r);
                 str.append(COULEURS[joueurDePion(c) + 1]);
-                str.append(plateau.get(c) != Plateau.VIDE ? plateau.get(c) : (r % 2 == 0 && q == plateau.qMax - 1 ? " " : "."));
+                str.append(plateau.get(c) != Plateau.VIDE ? plateau.get(c) : (r % 2 == 0 && q == plateau.getNbColumns() - 1 ? " " : "."));
                 str.append(" ");
             }
             str.append("\n");

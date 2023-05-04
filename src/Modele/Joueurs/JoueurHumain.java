@@ -1,6 +1,8 @@
-package Modele;
+package Modele.Joueurs;
 
 import Controleur.MoteurJeu;
+import Modele.Actions.Action;
+import Modele.Coord;
 
 import java.util.HashMap;
 

@@ -1,7 +1,10 @@
-package Modele;
+package Modele.Joueurs;
 
 import Controleur.MoteurJeu;
-import IA.*;
+import Modele.Actions.Action;
+import Modele.Actions.ActionCoup;
+import Modele.Coord;
+import Modele.IA.*;
 
 import java.util.HashMap;
 
