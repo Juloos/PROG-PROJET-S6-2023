@@ -4,6 +4,7 @@ import Controleur.MoteurJeu;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.Ecrans.EcranJeu;
 import IHM.IHM;
+import Modele.Action;
 import Modele.Jeu;
 import com.sun.istack.internal.NotNull;
 
@@ -58,8 +59,8 @@ public class IHMGraphique extends IHM implements MouseListener {
     }
 
     @Override
-    public void attendreActionJoueur() {
-
+    public Action attendreActionJoueur() {
+        return null;
     }
 
     @Override

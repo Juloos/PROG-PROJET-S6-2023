@@ -30,7 +30,7 @@ public abstract class Joueur implements Comparable<Joueur> {
         this.termine = termine;
     }
 
-    public abstract Coup reflechir(MoteurJeu mt);
+    public abstract Action reflechir(MoteurJeu mt);
 
     @Override
     public abstract Joueur clone();

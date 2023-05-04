@@ -77,6 +77,12 @@ public class MoteurJeu implements Runnable {
         }
     }
 
+    public void appliquerAction(Action action) {
+        if (!action.peutAppliquer(this))
+            throw new IllegalArgumentException("Action non applicable");
+        action.appliquer(this);
+    }
+
     @Override
     public void run() {
         if (ihm != null)
@@ -84,12 +90,12 @@ public class MoteurJeu implements Runnable {
 
         nbPionsPlaces = 0;
         while (nbPionsPlaces < jeu.getNbJoueurs() * jeu.getNbPions()) {
-            jeu.getJoueur().reflechir(this);
+            appliquerAction(jeu.getJoueur().reflechir(this));
         }
 
         while (!jeu.estTermine()) {
             while (jeu.peutJouer())
-                jeu.jouer(jeu.getJoueur().reflechir(this));
+                appliquerAction(jeu.getJoueur().reflechir(this));
             jeu.jouer(new CoupTerminaison(jeu.getJoueur().id));
         }
     }
