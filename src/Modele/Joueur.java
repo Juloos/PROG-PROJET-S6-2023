@@ -22,6 +22,13 @@ public abstract class Joueur implements Comparable<Joueur> {
         pions = new HashMap<>();
         termine = false;
     }
+    public Joueur(int id, int score, int tuiles, HashMap<Coord,Boolean> pions, boolean termine) {
+        this.id = id;
+        this.score = score;
+        this.tuiles = tuiles;
+        this.pions = pions;
+        this.termine = termine;
+    }
 
     public Joueur(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, boolean termine) {
         this.id = id;
@@ -95,6 +102,15 @@ public abstract class Joueur implements Comparable<Joueur> {
 
     public boolean estPion(Coord c) {
         return pions.containsKey(c);
+    }
+
+    public String toString() {
+        String dataHash = "";
+        Coord[] tempL = pions.keySet().toArray(new Coord[pions.size()]);
+        for (int j = 0; j < pions.size(); j++) {
+            dataHash += " " + tempL[j].q + " " + tempL[j].r;
+        }
+        return id + " " + 0 + " " + score + " " + tuiles + " " + pions.size() + pions;
     }
 
     @Override

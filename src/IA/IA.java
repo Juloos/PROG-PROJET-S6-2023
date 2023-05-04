@@ -7,9 +7,9 @@ public interface IA {
     public IA.Difficulte getDifficulte();
 
     public static enum Difficulte {
-        ALEATOIRE,
-        FACILE,
-        MOYEN,
-        DIFFICILE
+        ALEATOIRE, // identifiant : 0
+        FACILE,    // identifiant : 1
+        MOYEN,     // identifiant : 2
+        DIFFICILE  // identifiant : 3
     }
 }
