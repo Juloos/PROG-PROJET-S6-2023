@@ -31,8 +31,13 @@ public class CoupTerminaison implements Coup {
             (source, oldVal) -> {
                 j.getPlateau().set(source, oldVal);
                 j.getJoueur(joueur).ajouterPion(source);
+                j.getJoueur(joueur).pions.replace(source,true);
+                j.getJoueur(joueur).tuiles--;
+                j.getJoueur(joueur).score -= oldVal;
             }
         );
+
+
     }
 
     public int getJoueur() {
