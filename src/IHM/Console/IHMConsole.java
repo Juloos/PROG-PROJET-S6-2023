@@ -1,8 +1,6 @@
 package IHM.Console;
 
 import Controleur.MoteurJeu;
-import IHM.Actions.ActionIHM;
-import IHM.Actions.ActionJouerCoup;
 import IHM.IHM;
 import Modele.*;
 
@@ -28,9 +26,9 @@ public class IHMConsole extends IHM {
 
         System.out.println("Joueur " + (numJoueur + 1) + " quelle action voulez-vous faire (jouer, annuler, refaire, sauvegarder) ?");
 
-        String actionSouhaitee = input.nextLine();
-
         do {
+            String actionSouhaitee = input.nextLine();
+
             switch (actionSouhaitee.toLowerCase()) {
                 case "jouer":
                     if (moteurJeu.estPhasePlacementPions()) {
@@ -48,7 +46,7 @@ public class IHMConsole extends IHM {
                     System.out.println("Mais t'es con ou quoi fréro ?");
                     break;
             }
-        } while(true);
+        } while (true);
     }
 
     private Action attendrePlacementPion() {

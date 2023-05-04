@@ -15,6 +15,9 @@ public class MoteurJeu implements Runnable {
     int nbPionsPlaces;
 
     public MoteurJeu() {
+        Joueur[] joueurs = new Joueur[]{new JoueurHumain(0), new JoueurHumain(1)};
+        jeu = new JeuConcret(joueurs);
+
         switch (Config.TYPE_IHM) {
             case CONSOLE:
                 ihm = new IHMConsole(this);
@@ -27,8 +30,9 @@ public class MoteurJeu implements Runnable {
                 break;
         }
 
-        Joueur[] joueurs = new Joueur[] {new JoueurHumain(0), new JoueurHumain(1)};
-        jeu = new JeuConcret(joueurs);
+        if (ihm != null) {
+            ihm.updateAffichage(jeu);
+        }
     }
 
     public IHM getIHM() {
@@ -51,6 +55,7 @@ public class MoteurJeu implements Runnable {
         if (coup.estJouable(jeu)) {
             jeu.jouer(coup);
             nbPionsPlaces++;
+            System.out.println("Nouveau pion placé");
             if (ihm != null)
                 ihm.updateAffichage(jeu);
         } else if (ihm != null)
@@ -77,9 +82,11 @@ public class MoteurJeu implements Runnable {
     }
 
     public void appliquerAction(Action action) {
-        if (!action.peutAppliquer(this))
-            throw new IllegalArgumentException("Action non applicable");
-        action.appliquer(this);
+        if (!action.peutAppliquer(this)) {
+            ihm.afficherMessage("Action non applicable");
+        } else {
+            action.appliquer(this);
+        }
     }
 
     @Override
