@@ -33,6 +33,11 @@ public class IAFacile implements IA {
             return new CoupTerminaison(joueur.id);
     }
 
+    @Override
+    public Difficulte getDifficulte() {
+        return Difficulte.FACILE;
+    }
+
     private CoupAjout randomAjout(Jeu j) {
         Coord c = new Coord();
         do {
