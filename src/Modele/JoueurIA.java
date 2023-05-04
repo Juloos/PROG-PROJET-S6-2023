@@ -11,9 +11,9 @@ public class JoueurIA extends Joueur {
         this.ia = new IAAleatoire(this);
     }
 
-    public JoueurIA(int id, IA.Difficulte difficulte) {
+    public JoueurIA(int id, IA.Difficulte d) {
         super(id);
-        switch (difficulte) {
+        switch (d) {
             case ALEATOIRE:
                 ia = new IAAleatoire(this);
                 break;
@@ -27,7 +27,7 @@ public class JoueurIA extends Joueur {
                 ia = new IADifficile(this);
                 break;
             default:
-                throw new IllegalArgumentException("Difficulté inconnue : " + difficulte);
+                throw new IllegalArgumentException("Difficulté inconnue : " + d);
         }
     }
 

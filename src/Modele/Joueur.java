@@ -5,8 +5,7 @@ import Controleur.MoteurJeu;
 import java.util.HashMap;
 import java.util.Set;
 
-import static Global.Config.TAILLE_PLATEAU_X;
-import static Global.Config.TAILLE_PLATEAU_Y;
+import static Global.Config.*;
 
 public abstract class Joueur implements Comparable<Joueur> {
     public final int id;

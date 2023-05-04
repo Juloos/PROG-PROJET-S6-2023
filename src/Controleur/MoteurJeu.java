@@ -5,6 +5,7 @@ import IHM.Console.IHMConsole;
 import IHM.Graphique.IHMGraphique;
 import IHM.IHM;
 import Modele.*;
+import IA.*;
 
 public class MoteurJeu implements Runnable {
 
@@ -27,7 +28,7 @@ public class MoteurJeu implements Runnable {
                 break;
         }
 
-        Joueur[] joueurs = new Joueur[] {new JoueurHumain(0), new JoueurHumain(1)};
+        Joueur[] joueurs = new Joueur[] {new JoueurHumain(0), new JoueurIA(1, IA.Difficulte.DIFFICILE)};
         jeu = new JeuConcret(joueurs);
     }
 

@@ -21,6 +21,7 @@ public class JoueurHumain extends Joueur {
         return null;
     }
 
+    @Override
     public JoueurHumain clone() {
         JoueurHumain j = new JoueurHumain(id, nom);
         j.score = score;

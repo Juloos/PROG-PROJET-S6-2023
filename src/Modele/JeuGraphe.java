@@ -24,6 +24,8 @@ public class JeuGraphe extends Jeu {
     }
 
     public void calculerFils() {
+        if (estTermine() || !fils.isEmpty())
+            return;
         Coup coup;
         if (joueurs[joueurCourant].getPions().size() < nbPions) {
             for (int r = 0; r < plateau.rMax; r++)
