@@ -21,6 +21,14 @@ public class JoueurHumain extends Joueur {
         return null;
     }
 
+    public JoueurHumain clone() {
+        JoueurHumain j = new JoueurHumain(id, nom);
+        j.score = score;
+        j.tuiles = tuiles;
+        j.termine = termine;
+        return j;
+    }
+
     public String getNom() {
         return nom;
     }

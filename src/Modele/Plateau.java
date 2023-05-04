@@ -2,20 +2,27 @@ package Modele;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
-import static Global.Config.TAILLE_PLATEAU_X;
-import static Global.Config.TAILLE_PLATEAU_Y;
+import static Global.Config.*;
 
 public class Plateau {
-    public final static int VIDE = 0;  // Après avoir mangé une case
     boolean[][][] grille;
     int qMax, rMax;
 
-    public Plateau() {
+    public final static int VIDE = 0;  // Après avoir mangé une case
+
+    public Plateau(boolean random) {
         qMax = TAILLE_PLATEAU_X;
         rMax = TAILLE_PLATEAU_Y;
         grille = new boolean[rMax][qMax][2];
+        if (random)
+            randomInit();
+    }
 
+    public Plateau() {
+        this(true);
+    }
+
+    private void randomInit() {
         ArrayList<Integer> weights = new ArrayList<>();
         for (int i = 0; i < 30; i++)
             weights.add(1);
@@ -32,7 +39,7 @@ public class Plateau {
     }
 
     private boolean[] int2booleans(int i) {
-        return new boolean[]{i % 2 == 1, i / 2 == 1};
+        return new boolean[] {i % 2 == 1, i / 2 == 1};
     }
 
     private int booleans2int(boolean[] b) {
@@ -74,5 +81,15 @@ public class Plateau {
             str.append("\n");
         }
         return str.toString();
+    }
+
+    @Override
+    public Plateau clone() {
+        Plateau p = new Plateau(false);
+        Coord c = new Coord();
+        for (c.r = 0; c.r < rMax; c.r++)
+            for (c.q = 0; c.q < qMax; c.q++)
+                p.set(c, get(c));
+        return p;
     }
 }
