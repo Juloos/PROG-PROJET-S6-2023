@@ -2,13 +2,14 @@ package Modele;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import static Global.Config.*;
+
+import static Global.Config.TAILLE_PLATEAU_X;
+import static Global.Config.TAILLE_PLATEAU_Y;
 
 public class Plateau {
+    public final static int VIDE = 0;  // Après avoir mangé une case
     boolean[][][] grille;
     int qMax, rMax;
-
-    public final static int VIDE = 0;  // Après avoir mangé une case
 
     public Plateau() {
         qMax = TAILLE_PLATEAU_X;
@@ -31,7 +32,7 @@ public class Plateau {
     }
 
     private boolean[] int2booleans(int i) {
-        return new boolean[] {i % 2 == 1, i / 2 == 1};
+        return new boolean[]{i % 2 == 1, i / 2 == 1};
     }
 
     private int booleans2int(boolean[] b) {
@@ -43,6 +44,15 @@ public class Plateau {
             throw new IllegalArgumentException("Coordonnées invalides : " + c + ".");
         grille[c.r][c.q] = int2booleans(val);
     }
+
+    public int getNbColumns() {
+        return qMax;
+    }
+
+    public int getNbRows() {
+        return rMax;
+    }
+
 
     public int get(Coord c) {
         if (!estCoordValide(c))

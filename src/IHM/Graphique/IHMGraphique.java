@@ -1,7 +1,7 @@
 package IHM.Graphique;
 
 import Controleur.MoteurJeu;
-import IHM.Graphique.Ecrans.EcranAccueil;
+import IHM.Graphique.Ecrans.EcranJeu;
 import IHM.IHM;
 import Modele.Jeu;
 import com.sun.istack.internal.NotNull;
@@ -21,7 +21,7 @@ public class IHMGraphique extends IHM {
 
         frame = new JFrame("");
 
-        ouvrirFenetre(new EcranAccueil());
+        ouvrirFenetre(new EcranJeu());
 
         frame.setSize(1500, 1000);
         frame.setLocationRelativeTo(null);
@@ -31,7 +31,10 @@ public class IHMGraphique extends IHM {
 
     @Override
     public void updateAffichage(Jeu jeu) {
-
+        if (fenetres.peek() instanceof EcranJeu) {
+            System.out.println("On met à jour");
+            ((EcranJeu) fenetres.peek()).updatePlateau(jeu.getPlateau());
+        }
     }
 
     @Override
@@ -42,6 +45,10 @@ public class IHMGraphique extends IHM {
     @Override
     public void afficherMessage(String message) {
 
+    }
+
+    public MoteurJeu getMoteurJeu() {
+        return moteurJeu;
     }
 
     public JFrame getFrame() {

@@ -1,7 +1,10 @@
 package IHM.Graphique.Ecrans;
 
+import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.IHMGraphique;
-import IHM.Graphique.PlateauGraphique;
+import Modele.Plateau;
+
+import java.awt.*;
 
 public class EcranJeu extends Ecran {
 
@@ -9,16 +12,21 @@ public class EcranJeu extends Ecran {
 
     public EcranJeu() {
         super("Partie en cours");
-
-        plateauGraphique = new PlateauGraphique();
     }
 
     @Override
     public void open(IHMGraphique ihm) {
         super.open(ihm);
+        panel.setLayout(new BorderLayout());
 
-        ihm.getFrame().add(plateauGraphique);
+        if (plateauGraphique == null) {
+            plateauGraphique = new PlateauGraphique();
+        }
 
-        ihm.getFrame().revalidate();
+        panel.add(plateauGraphique, BorderLayout.CENTER);
+    }
+
+    public void updatePlateau(Plateau plateau) {
+        plateauGraphique.setPlateau(plateau);
     }
 }
