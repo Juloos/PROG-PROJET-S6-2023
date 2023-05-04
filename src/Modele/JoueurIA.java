@@ -3,6 +3,8 @@ package Modele;
 import Controleur.MoteurJeu;
 import IA.*;
 
+import java.util.HashMap;
+
 public class JoueurIA extends Joueur {
     IA ia;
 
@@ -11,9 +13,18 @@ public class JoueurIA extends Joueur {
         this.ia = new IAAleatoire(this);
     }
 
-    public JoueurIA(int id, IA.Difficulte difficulte) {
+    public JoueurIA(int id, IA.Difficulte d) {
         super(id);
-        switch (difficulte) {
+        assignerIA(d);
+    }
+
+    public JoueurIA(int id, int score, int tuiles, HashMap<Coord,Boolean> pions, boolean termine, IA.Difficulte d){
+        super(id, score, tuiles, pions, termine);
+        assignerIA(d);
+    }
+
+    private void assignerIA(IA.Difficulte d) {
+        switch (d) {
             case ALEATOIRE:
                 ia = new IAAleatoire(this);
                 break;
@@ -27,7 +38,7 @@ public class JoueurIA extends Joueur {
                 ia = new IADifficile(this);
                 break;
             default:
-                throw new IllegalArgumentException("Difficulté inconnue : " + difficulte);
+                throw new IllegalArgumentException("Difficulté inconnue : " + d);
         }
     }
 
@@ -40,11 +51,6 @@ public class JoueurIA extends Joueur {
 
     @Override
     public JoueurIA clone() {
-        JoueurIA j = new JoueurIA(id);
-        j.score = score;
-        j.tuiles = tuiles;
-        j.termine = termine;
-        j.ia = ia;
-        return j;
+        return new JoueurIA(id, score, tuiles, new HashMap<>(pions), termine, ia.getDifficulte());
     }
 }

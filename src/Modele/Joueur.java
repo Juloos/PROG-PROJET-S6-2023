@@ -23,6 +23,14 @@ public abstract class Joueur implements Comparable<Joueur> {
         termine = false;
     }
 
+    public Joueur(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, boolean termine) {
+        this.id = id;
+        this.score = score;
+        this.tuiles = tuiles;
+        this.pions = pions;
+        this.termine = termine;
+    }
+
     public abstract Coup reflechir(MoteurJeu mt);
 
     @Override
