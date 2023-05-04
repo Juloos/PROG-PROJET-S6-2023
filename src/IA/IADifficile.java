@@ -3,6 +3,7 @@ package IA;
 import Modele.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
@@ -51,6 +52,11 @@ public class IADifficile implements IA {
     public Coup reflechir(Jeu j) {
         graphe = new JeuGraphe(j);
         parcourirArbre(graphe, profondeurMax);
-        return null;
+        return graphe.fils.stream().max(Comparator.comparingInt(fils -> fils.valeur)).get().coup;
+    }
+
+    @Override
+    public Difficulte getDifficulte() {
+        return Difficulte.DIFFICILE;
     }
 }

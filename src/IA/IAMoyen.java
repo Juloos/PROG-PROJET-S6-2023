@@ -33,6 +33,11 @@ public class IAMoyen implements IA {
             return new CoupTerminaison(joueur.id);
     }
 
+    @Override
+    public Difficulte getDifficulte() {
+        return Difficulte.MOYEN;
+    }
+
     private CoupAjout randomAjout(Jeu j) {
         Coord c = new Coord();
         do {
