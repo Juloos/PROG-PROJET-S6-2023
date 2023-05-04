@@ -52,6 +52,15 @@ public class Plateau {
         grille[c.r][c.q] = int2booleans(val);
     }
 
+    public int getNbColumns() {
+        return qMax;
+    }
+
+    public int getNbRows() {
+        return rMax;
+    }
+
+
     public int get(Coord c) {
         if (!estCoordValide(c))
             throw new IllegalArgumentException("Coordonnées invalides : " + c + ".");
