@@ -10,6 +10,7 @@ public abstract class Fenetre {
     protected JPanel panel;
     protected JButton retour;
     protected Image backgroundImage;
+    protected boolean estCree;
     String title;
 
     public Fenetre(String title) {
@@ -31,6 +32,12 @@ public abstract class Fenetre {
      */
     public void open(IHMGraphique ihm) {
         ihm.frame.setTitle(title);
+
+        if (!estCree) {
+            estCree = true;
+            creation(ihm);
+        }
+
         retour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -38,6 +45,8 @@ public abstract class Fenetre {
             }
         });
     }
+
+    public abstract void creation(IHMGraphique ihm);
 
     /**
      * Lorsque la fenêtre est fermée
@@ -57,8 +66,6 @@ public abstract class Fenetre {
 
     /**
      * Met à jour les dimensions des éléments de la fenêtre lorsqu'elle est ouverte
-     *
-     * @param ihm : l'IHM graphique sur laquelle est affichée la fenêtre
      */
     public void resized() {
     }

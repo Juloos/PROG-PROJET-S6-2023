@@ -146,6 +146,10 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
      */
     @NotNull()
     public void ouvrirFenetre(Fenetre fenetre) {
+        if (!fenetres.empty()) {
+            fenetres.peek().close(this);
+        }
+
         fenetres.push(fenetre);
         fenetre.open(this);
         System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);

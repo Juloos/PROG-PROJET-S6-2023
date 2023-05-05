@@ -24,7 +24,11 @@ public class EcranCreationPartie extends Ecran {
     @Override
     public void open(IHMGraphique ihm) {
         super.open(ihm);
-//        panel.setLayout(new BorderLayout());
+    }
+
+    @Override
+    public void creation(IHMGraphique ihm) {
+        panel.setLayout(new BorderLayout());
         ImageIcon icon = new ImageIcon("res/fonds/background2.jpg");
         this.backgroundImage = icon.getImage();
 
