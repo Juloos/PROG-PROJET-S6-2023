@@ -24,6 +24,7 @@ public abstract class PopUp extends Fenetre {
     public void open(IHMGraphique ihm) {
 //        retour.setFont(new Font("Impact", Font.PLAIN, 48));
 //        retour.setBackground(Color.RED);
+        ihm.getMoteurJeu().pauseGame(true);
 
         if (!estCree) {
             estCree = true;
@@ -46,5 +47,6 @@ public abstract class PopUp extends Fenetre {
     public void close(IHMGraphique ihm) {
         frame.setEnabled(false);
         frame.setVisible(false);
+        ihm.getMoteurJeu().pauseGame(false);
     }
 }

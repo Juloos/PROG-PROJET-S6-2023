@@ -49,7 +49,7 @@ public class IHMConsole extends IHM {
                         action = new ActionRefaire();
                         break;
                     case "sauvegarder":
-                        action = new ActionSauvegarder();
+                        action = new ActionSauvegarder("test");
                         break;
                     default:
                         System.out.println("Mais t'es con ou quoi fréro ?");
