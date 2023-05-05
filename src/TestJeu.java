@@ -1,4 +1,5 @@
-import Modele.*;
+import Modele.Jeu.JeuConcret;
+import Modele.Jeu.JeuGraphe;
 
 public class TestJeu {
     public static void main(String[] args) {

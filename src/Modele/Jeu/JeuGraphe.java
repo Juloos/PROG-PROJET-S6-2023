@@ -1,12 +1,18 @@
-package Modele;
+package Modele.Jeu;
+
+import Modele.Coord;
+import Modele.Coups.Coup;
+import Modele.Coups.CoupAjout;
+import Modele.Coups.CoupDeplacement;
+import Modele.Joueurs.Joueur;
 
 import java.util.ArrayList;
 
 public class JeuGraphe extends Jeu {
+    //    public final JeuGraphe parent;
+    public final ArrayList<JeuGraphe> fils;
     public int valeur;
     public Coup coup;
-//    public final JeuGraphe parent;
-    public final ArrayList<JeuGraphe> fils;
 
     public JeuGraphe(Jeu j) {
         super(new Joueur[j.joueurs.length], j.plateau.clone());
@@ -36,8 +42,8 @@ public class JeuGraphe extends Jeu {
     public void calculerFils() {
         Coup coup;
         if (joueurs[joueurCourant].getPions().size() < nbPions) {
-            for (int r = 0; r < plateau.rMax; r++)
-                for (int q = 0; q < plateau.qMax; q++)
+            for (int r = 0; r < plateau.getNbRows(); r++)
+                for (int q = 0; q < plateau.getNbColumns(); q++)
                     if ((coup = new CoupAjout(new Coord(q, r), joueurCourant)).estJouable(this))
                         ajouterFils(coup);
         } else {

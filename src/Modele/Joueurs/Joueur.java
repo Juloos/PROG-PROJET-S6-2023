@@ -1,6 +1,9 @@
-package Modele;
+package Modele.Joueurs;
 
 import Controleur.MoteurJeu;
+import Modele.Actions.Action;
+import Modele.Coord;
+import Modele.Jeu.Jeu;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -15,19 +18,15 @@ public abstract class Joueur implements Comparable<Joueur> {
     int tuiles;
     boolean termine;
 
+    String nom;
+
     public Joueur(int id) {
         this.id = id;
         score = 0;
         tuiles = 0;
         pions = new HashMap<>();
         termine = false;
-    }
-    public Joueur(int id, int score, int tuiles, HashMap<Coord,Boolean> pions, boolean termine) {
-        this.id = id;
-        this.score = score;
-        this.tuiles = tuiles;
-        this.pions = pions;
-        this.termine = termine;
+        nom = "Joueur " + id;
     }
 
     public Joueur(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, boolean termine) {
@@ -38,10 +37,14 @@ public abstract class Joueur implements Comparable<Joueur> {
         this.termine = termine;
     }
 
-    public abstract Coup reflechir(MoteurJeu mt);
+    public abstract Action reflechir(MoteurJeu mt);
 
     @Override
     public abstract Joueur clone();
+
+    public int getID() {
+        return id;
+    }
 
     public int getScore() {
         return score;
@@ -55,15 +58,31 @@ public abstract class Joueur implements Comparable<Joueur> {
         return pions.keySet();
     }
 
+    public String getNom() {
+        return nom;
+    }
+
     public void ajouterTuile(int score) {
         this.score += score;
         this.tuiles += 1;
+    }
+
+    public void supprimerTuile() {
+        this.tuiles--;
+    }
+
+    public void decrementerScore(int val) {
+        this.score -= val;
     }
 
     public void ajouterPion(Coord c) {
         if (pions.containsKey(c))
             throw new IllegalArgumentException("Pion déjà présent");
         pions.put(c, false);
+    }
+
+    public void replacerPion(Coord source, boolean val) {
+        pions.replace(source, val);
     }
 
     public void supprimerPion(Coord c) {
@@ -110,7 +129,7 @@ public abstract class Joueur implements Comparable<Joueur> {
         for (int j = 0; j < pions.size(); j++) {
             dataHash += " " + tempL[j].q + " " + tempL[j].r;
         }
-        return id + " " + 0 + " " + score + " " + tuiles + " " + pions.size() + pions;
+        return id + " " + 0 + " " + score + " " + tuiles + " " + pions.size() + dataHash;
     }
 
     @Override

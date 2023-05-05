@@ -1,21 +1,29 @@
-package IA;
-import Modele.*;
+package Modele.IA;
+
+import Modele.Coord;
+import Modele.Coups.Coup;
+import Modele.Coups.CoupAjout;
+import Modele.Coups.CoupDeplacement;
+import Modele.Coups.CoupTerminaison;
+import Modele.Jeu.Jeu;
+import Modele.Joueurs.Joueur;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import static Global.Config.*;
+import static Global.Config.TAILLE_PLATEAU_X;
+import static Global.Config.TAILLE_PLATEAU_Y;
 
-public class IAAleatoire implements IA {
+public class IAMoyen implements IA {
     Random rand;
     Joueur joueur;
 
-    public IAAleatoire(Joueur j) {
+    public IAMoyen(Joueur j) {
         joueur = j;
         rand = new Random();
     }
 
-    public IAAleatoire(Joueur j, int seed) {
+    public IAMoyen(Joueur j, int seed) {
         joueur = j;
         rand = new Random(seed);
     }
@@ -33,7 +41,7 @@ public class IAAleatoire implements IA {
 
     @Override
     public Difficulte getDifficulte() {
-        return Difficulte.ALEATOIRE;
+        return Difficulte.MOYEN;
     }
 
     private CoupAjout randomAjout(Jeu j) {

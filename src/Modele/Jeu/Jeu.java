@@ -1,4 +1,10 @@
-package Modele;
+package Modele.Jeu;
+
+import Modele.Coord;
+import Modele.Coups.Coup;
+import Modele.Joueurs.Joueur;
+import Modele.Joueurs.JoueurIA;
+import Modele.Plateau;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,7 +108,7 @@ public abstract class Jeu {
 
     public ArrayList<Coord> deplacementsPion(Coord c) {
         ArrayList<Coord> liste = new ArrayList<>();
-        if (Arrays.stream(joueurs).anyMatch(j -> j.estPion(c))) {
+        if (true) {
             for (int dir = 0; dir < 6; dir++) {
                 Coord curr = c.decale(dir);
                 while (plateau.estCoordValide(curr) && plateau.get(curr) != Plateau.VIDE && !estPion(curr)) {
@@ -115,12 +121,31 @@ public abstract class Jeu {
             return null;
     }
 
-    public ArrayList<Coord> placememntPionValide(){
+    public void annulerDeplacerPion(int j, Coord c1, Coord c2) {
+        if (!deplacementsPion(c1).contains(c2))
+            throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
+        joueurs[j].deplacerPion(c1, c2);
+        c1.voisins().forEach(
+                voisin -> {
+                    if (estPion(voisin) && estPionBloque(voisin))
+                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                }
+        );
+        c2.voisins().forEach(
+                voisin -> {
+                    if (estPion(voisin) && estPionBloque(voisin))
+                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                }
+        );
+        joueurSuivant();
+    }
+
+    public ArrayList<Coord> placememntPionValide() {
         ArrayList<Coord> liste = new ArrayList<>();
         for (int i = 0; i < plateau.getNbColumns(); i++) {
             for (int j = 0; j < plateau.getNbRows(); j++) {
-                Coord check = new Coord(i,j);
-                if(plateau.estCoordValide(check) && plateau.get(check) == 1){
+                Coord check = new Coord(i, j);
+                if (plateau.estCoordValide(check) && plateau.get(check) == 1 && !estPion(check)) {
                     liste.add(check);
                 }
             }
@@ -202,13 +227,13 @@ public abstract class Jeu {
         // Même format que Plateau.toString() mais en mettant en couleur les pions des différents joueurs,
         // et une Ligne de score à la fin.
         StringBuilder str = new StringBuilder();
-        for (int r = 0; r < plateau.rMax; r++) {
+        for (int r = 0; r < plateau.getNbRows(); r++) {
             if (r % 2 == 0)
                 str.append(" ");
-            for (int q = 0; q < plateau.qMax; q++) {
+            for (int q = 0; q < plateau.getNbColumns(); q++) {
                 Coord c = new Coord(q, r);
                 str.append(COULEURS[joueurDePion(c) + 1]);
-                str.append(plateau.get(c) != Plateau.VIDE ? plateau.get(c) : (r % 2 == 0 && q == plateau.qMax - 1 ? " " : "."));
+                str.append(plateau.get(c) != Plateau.VIDE ? plateau.get(c) : (r % 2 == 0 && q == plateau.getNbColumns() - 1 ? " " : "."));
                 str.append(" ");
             }
             str.append("\n");

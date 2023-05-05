@@ -1,6 +1,8 @@
-package Modele;
+package Modele.Joueurs;
 
 import Controleur.MoteurJeu;
+import Modele.Actions.Action;
+import Modele.Coord;
 
 import java.util.HashMap;
 
@@ -27,9 +29,8 @@ public class JoueurHumain extends Joueur {
     }
 
     @Override
-    public Coup reflechir(MoteurJeu mt) {
-        mt.getIHM().attendreActionJoueur();
-        return null;
+    public Action reflechir(MoteurJeu mt) {
+        return mt.getIHM().attendreActionJoueur();
     }
 
     public JoueurHumain clone() {
@@ -48,5 +49,15 @@ public class JoueurHumain extends Joueur {
 
     public String getNom() {
         return nom;
+    }
+
+    @Override
+    public String toString() {
+        String dataHash = "";
+        Coord[] tempL = pions.keySet().toArray(new Coord[pions.size()]);
+        for (int j = 0; j < pions.size(); j++) {
+            dataHash += " " + tempL[j].q + " " + tempL[j].r;
+        }
+        return id + " " + 1 + " " + nom + " " + score + " " + tuiles + " " + pions.size() + dataHash;
     }
 }

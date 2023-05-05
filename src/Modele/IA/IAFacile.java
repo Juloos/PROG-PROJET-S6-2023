@@ -1,6 +1,12 @@
-package IA;
+package Modele.IA;
 
-import Modele.*;
+import Modele.Coord;
+import Modele.Coups.Coup;
+import Modele.Coups.CoupAjout;
+import Modele.Coups.CoupDeplacement;
+import Modele.Coups.CoupTerminaison;
+import Modele.Jeu.Jeu;
+import Modele.Joueurs.Joueur;
 
 import java.util.ArrayList;
 import java.util.Random;

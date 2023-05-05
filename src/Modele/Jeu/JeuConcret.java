@@ -1,13 +1,17 @@
-package Modele;
+package Modele.Jeu;
+
+import Modele.Coord;
+import Modele.Coups.Coup;
+import Modele.Coups.CoupAjout;
+import Modele.Coups.CoupDeplacement;
+import Modele.Coups.CoupTerminaison;
+import Modele.Joueurs.Joueur;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Stack;
-
-import static Global.Config.*;
-
 
 public class JeuConcret extends Jeu {
     Stack<Coup> passe;
@@ -25,6 +29,14 @@ public class JeuConcret extends Jeu {
         future = new Stack<>();
     }
 
+    public Stack<Coup> getPasse() {
+        return passe;
+    }
+
+    public Stack<Coup> getFuture() {
+        return future;
+    }
+
     public void jouer(Coup c) {
         super.jouer(c);
         passe.push(c);
@@ -32,25 +44,24 @@ public class JeuConcret extends Jeu {
     }
 
     public void annuler() {
-        if(!passe.empty()){
+        if (!passe.empty()) {
             Coup c = passe.pop();
             c.annuler(this);
             future.push(c);
-        }else{
+        } else {
             System.out.println("Aucune action a annuler");
         }
     }
 
     public void refaire() {
-        if(!future.empty()){
+        if (!future.empty()) {
             Coup c = future.pop();
             super.jouer(c);
             passe.push(c);
-        }else{
+        } else {
             System.out.println("Aucune action a refaire");
         }
     }
-
     public void sauvegarder(String fichier) throws Exception {
         // Init fichier
         File f = new File(fichier);
@@ -64,17 +75,7 @@ public class JeuConcret extends Jeu {
 
         // Sauvegarde les a l'instant de la sauvegarde
         for (int i = 0; i < nbJoueurs; i++) {
-            Joueur jou = super.getJoueur(i);
-            Coord[] tempL = jou.getPions().toArray(new Coord[jou.getPions().size()]);
-            for (int j = 0; j < jou.getPions().size(); j++) {
-                sauv_data += " " + tempL[j].q + " " + tempL[j].r;
-            }
-            if (jou.getClass().getName() == "JoueurHumain"){
-                w_f.println(i + " " + 1 + " " + jou.getNom() + " " + jou.getScore() + " " + jou.getTuiles() + " " + jou.getPions().size() + sauv_data);
-            }else{
-                w_f.println(i + " " + 1 + " " + jou.getDifficulte() + " " + jou.getScore() + " " + jou.getTuiles() + " " + jou.getPions().size() + sauv_data);
-            }
-            sauv_data = "";
+            w_f.println(joueurs[i].toString());
         }
 
         // Sauvegarde le plateau a l'instant de la sauvegarde
@@ -82,21 +83,27 @@ public class JeuConcret extends Jeu {
 
 
         //On creer le String de data de sauvegarde (i.e la liste des coup réaliser)
+        int compt = 0;
         while (!passe.empty()) {
+            compt++;
             elem_hist = passe.pop();
             sauv_data += elem_hist.getSaveString() + " ";
+            future.push(elem_hist);
+        }
+        // Cela sert a ne pas vider l'historique lorsque l'on sauvegarde
+        while(compt!=0){
+            compt--;
+            passe.push(future.pop());
         }
         w_f.println(sauv_data);
         w_f.close();
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static void charger(String fichier) {
+    public void charger(String fichier) {
         int test, jou, val;
         HashMap<Coord, Integer> tempHash;
         Coord tempCoord1, tempCoord2;
         Coup tempCoup;
-        Joueur tempJoueur[] = new Joueur[NB_JOUEUR];
 
         Scanner sc_f;
 
@@ -110,25 +117,17 @@ public class JeuConcret extends Jeu {
 
         // Tant que le fichier n'est pas vide, vérifie que le fichier est comforme et joue si il trouve un coup
         try {
-
-                //charge joueur
-
-                //charge plateau
-                Coord c = new Coord();
-                for (c.r = 0; c.r < TAILLE_PLATEAU_X; c.r++){
-                    for (c.q = 0; c.q < TAILLE_PLATEAU_Y; c.q++){
-                        p.set(c, sc_f.nextInt());
-                    }
-                }
-                test = sc_f.nextInt();
             while (sc_f.hasNext()) {
+                //sauve plateau
+                //sauve joueur
+                test = sc_f.nextInt();
                 // repére le type du coup
                 switch (test) {
                     case -1:
                         jou = sc_f.nextInt();
                         tempCoord1 = new Coord(sc_f.nextInt(), sc_f.nextInt());
                         tempCoup = new CoupAjout(tempCoord1, jou);
-                        future.push(tempCoup);
+                        passe.push(tempCoup);
                         break;
                     case -2:
                         jou = sc_f.nextInt();
@@ -136,7 +135,7 @@ public class JeuConcret extends Jeu {
                         tempCoord2 = new Coord(sc_f.nextInt(), sc_f.nextInt());
                         val = sc_f.nextInt();
                         tempCoup = new CoupDeplacement(tempCoord1, tempCoord2, val, jou);
-                        future.push(tempCoup);
+                        passe.push(tempCoup);
                         break;
                     case -3:
                         jou = sc_f.nextInt();
@@ -146,14 +145,11 @@ public class JeuConcret extends Jeu {
                             tempHash.put(tempCoord1, sc_f.nextInt());
                         }
                         tempCoup = new CoupTerminaison(tempHash, jou);
-                        future.push(tempCoup);
+                        passe.push(tempCoup);
                         break;
                     default:
                         throw new Exception();
                 }
-            }
-            while(future.empty()){
-                passe.push(future.pop());
             }
         } catch (Exception E) {
             System.out.println(fichier + " isn't a save file");

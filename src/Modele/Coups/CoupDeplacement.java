@@ -1,4 +1,8 @@
-package Modele;
+package Modele.Coups;
+
+import Modele.Coord;
+import Modele.Jeu.Jeu;
+import Modele.Plateau;
 
 public class CoupDeplacement implements Coup {
     Coord source;
@@ -13,7 +17,7 @@ public class CoupDeplacement implements Coup {
         this.joueur = joueur;
     }
 
-    public CoupDeplacement(Coord source, Coord destination,int oldVal, int joueur) {
+    public CoupDeplacement(Coord source, Coord destination, int oldVal, int joueur) {
         this.source = source;
         this.destination = destination;
         this.oldVal = oldVal;
@@ -31,15 +35,17 @@ public class CoupDeplacement implements Coup {
 
     public void annuler(Jeu j) {
         j.getPlateau().set(source, oldVal);
-        j.getJoueur(joueur).deplacerPion(destination, source);
+        j.annulerDeplacerPion(joueur, destination, source);
+        j.getJoueur(joueur).decrementerScore(oldVal);
+        j.getJoueur(joueur).supprimerTuile();
     }
 
     public int getJoueur() {
         return joueur;
     }
 
-    public String getSaveString(){
-        return "-2 "+joueur+" "+source.q+" "+source.r+" "+destination.q+" "+destination.r+" "+oldVal;
+    public String getSaveString() {
+        return "-2 " + joueur + " " + source.q + " " + source.r + " " + destination.q + " " + destination.r + " " + oldVal;
     }
 
     @Override

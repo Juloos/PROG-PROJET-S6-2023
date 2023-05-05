@@ -18,6 +18,11 @@ public class PopUpConfirmation extends PopUp {
     @Override
     public void open(IHMGraphique ihm) {
         super.open(ihm);
+        frame.setVisible(true);
+    }
+
+    @Override
+    public void creation(IHMGraphique ihm) {
         panel.setLayout(new BorderLayout());
 
         JLabel label = new JLabel("Voulez vous quitter ?");
@@ -34,7 +39,6 @@ public class PopUpConfirmation extends PopUp {
         panel.add(confirmation, BorderLayout.SOUTH);
 
         frame.setContentPane(panel);
-        frame.setVisible(true);
     }
 
     @Override

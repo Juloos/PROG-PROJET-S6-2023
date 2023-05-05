@@ -1,14 +1,12 @@
-package IA;
+package Modele.IA;
 
-import Modele.*;
+import Modele.Coups.Coup;
+import Modele.Jeu.Jeu;
+import Modele.Jeu.JeuGraphe;
+import Modele.Joueurs.Joueur;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
-import java.util.concurrent.Callable;
-import java.util.function.Consumer;
-
-import static Global.Config.*;
 
 public class IADifficile implements IA {
     Random rand;

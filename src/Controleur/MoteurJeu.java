@@ -4,7 +4,13 @@ import Global.Config;
 import IHM.Console.IHMConsole;
 import IHM.Graphique.IHMGraphique;
 import IHM.IHM;
-import Modele.*;
+import Modele.Actions.Action;
+import Modele.Coups.Coup;
+import Modele.Coups.CoupTerminaison;
+import Modele.Jeu.JeuConcret;
+import Modele.Joueurs.Joueur;
+import Modele.Joueurs.JoueurHumain;
+import Modele.Joueurs.JoueurIA;
 
 public class MoteurJeu implements Runnable {
 
@@ -15,6 +21,9 @@ public class MoteurJeu implements Runnable {
     int nbPionsPlaces;
 
     public MoteurJeu() {
+        Joueur[] joueurs = new Joueur[]{new JoueurHumain(0), new JoueurIA(1), new JoueurIA(2), new JoueurIA(3)};
+        jeu = new JeuConcret(joueurs);
+
         switch (Config.TYPE_IHM) {
             case CONSOLE:
                 ihm = new IHMConsole(this);
@@ -26,9 +35,6 @@ public class MoteurJeu implements Runnable {
                 ihm = null;
                 break;
         }
-
-        Joueur[] joueurs = new Joueur[] {new JoueurHumain(0), new JoueurHumain(1)};
-        jeu = new JeuConcret(joueurs);
     }
 
     public IHM getIHM() {
@@ -59,11 +65,13 @@ public class MoteurJeu implements Runnable {
 
     public void annulerCoup() {
         System.out.println("Annulation du dernier coup joué");
+        nbPionsPlaces--;
         jeu.annuler();
     }
 
     public void refaireCoup() {
         System.out.println("Refaison du dernier coup annulé");
+        nbPionsPlaces++;
         jeu.refaire();
     }
 
@@ -76,20 +84,37 @@ public class MoteurJeu implements Runnable {
         }
     }
 
+    public void appliquerAction(Action action) {
+        if (!action.peutAppliquer(this)) {
+            ihm.afficherMessage("Action non applicable");
+        } else {
+            action.appliquer(this);
+        }
+
+        if (ihm != null) {
+            ihm.updateAffichage(jeu);
+        }
+    }
+
     @Override
     public void run() {
         if (ihm != null)
             ihm.updateAffichage(jeu);
 
         nbPionsPlaces = 0;
-        while (nbPionsPlaces < jeu.getNbJoueurs() * jeu.getNbPions()) {
-            jeu.getJoueur().reflechir(this);
+        while (estPhasePlacementPions()) {
+            appliquerAction(jeu.getJoueur().reflechir(this));
         }
 
+        System.out.println("Fin de la phase de placements des pions");
+
         while (!jeu.estTermine()) {
-            while (jeu.peutJouer())
-                jeu.jouer(jeu.getJoueur().reflechir(this));
+            while (jeu.peutJouer()) {
+                appliquerAction(jeu.getJoueur().reflechir(this));
+            }
             jeu.jouer(new CoupTerminaison(jeu.getJoueur().id));
         }
+
+        System.out.println("Fin de jeu");
     }
 }
