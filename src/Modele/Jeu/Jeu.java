@@ -183,10 +183,10 @@ public abstract class Jeu {
         if (joueurs[joueurCourant].peutJouer(this))
             throw new RuntimeException("Le joueur " + joueurCourant + " peut encore jouer.");
         joueurs[joueurCourant].terminer();
-        for (Coord c : joueurs[joueurCourant].getPions()) {
+        for (Coord c : joueurs[joueurCourant].getPions())
             manger(c);
-            joueurs[joueurCourant].supprimerPion(c);
-        }
+
+        joueurs[joueurCourant].getPions().clear();
         joueurSuivant();
     }
 
