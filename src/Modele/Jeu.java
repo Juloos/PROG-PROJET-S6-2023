@@ -83,7 +83,7 @@ public abstract class Jeu {
     }
 
     public boolean estPionBloque(Coord c) {
-        return estPion(c) && c.voisins().stream().allMatch(
+        return c.voisins().stream().allMatch(
                 v -> !plateau.estCoordValide(v) || plateau.get(v) == Plateau.VIDE || estPion(v)
         );
     }
@@ -147,13 +147,13 @@ public abstract class Jeu {
             joueurs[joueurCourant].bloquerPion(c2);
         c1.voisins().forEach(
                 voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
+                    if (estPionBloque(voisin))
                         joueurs[joueurDePion(voisin)].bloquerPion(voisin);
                 }
         );
         c2.voisins().forEach(
                 voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
+                    if (estPionBloque(voisin))
                         joueurs[joueurDePion(voisin)].bloquerPion(voisin);
                 }
         );

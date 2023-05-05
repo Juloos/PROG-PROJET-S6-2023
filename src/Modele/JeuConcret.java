@@ -2,6 +2,7 @@ package Modele;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Stack;
@@ -20,6 +21,22 @@ public class JeuConcret extends Jeu {
         super(joueurs);
         passe = new Stack<>();
         future = new Stack<>();
+    }
+
+    public JeuConcret(Joueur[] joueurs, Plateau plateau) {
+        super(joueurs, plateau);
+        passe = new Stack<>();
+        future = new Stack<>();
+    }
+
+    public ArrayList<Coup> historique(int joueur) {
+        int dernierCoup = passe.size() - 1;
+        while (passe.get(dernierCoup).getJoueur() != joueur)
+            dernierCoup--;
+        ArrayList<Coup> coups = new ArrayList<>();
+        for (int i = dernierCoup; i < passe.size(); i++)
+            coups.add(passe.get(i));
+        return coups;
     }
 
     public void jouer(Coup c) {

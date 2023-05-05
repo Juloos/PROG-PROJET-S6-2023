@@ -26,12 +26,12 @@ public class CoupTerminaison implements Coup {
         return !j.peutJouer(joueur);
     }
 
-    public void annuler(Jeu j){
+    public void annuler(Jeu j) {
         oldVals.forEach(
-            (source, oldVal) -> {
-                j.getPlateau().set(source, oldVal);
-                j.getJoueur(joueur).ajouterPion(source);
-            }
+                (source, oldVal) -> {
+                    j.getPlateau().set(source, oldVal);
+                    j.getJoueur(joueur).ajouterPion(source);
+                }
         );
     }
 
@@ -39,20 +39,29 @@ public class CoupTerminaison implements Coup {
         return joueur;
     }
 
-    public String getSaveString(){
+    public String getSaveString() {
         StringBuilder save = new StringBuilder();
         final String[] temp = new String[1];
         oldVals.forEach(
                 (source, oldVal) -> {
-                    temp[0] = " "+source.q+" "+source.r+" "+oldVal;
+                    temp[0] = " " + source.q + " " + source.r + " " + oldVal;
                     save.append(temp[0]);
                 }
         );
-        return "-3 "+joueur+save;
+        return "-3 " + joueur + save;
     }
 
     @Override
     public String toString() {
         return "CoupTerminaison{" + "oldVals=" + oldVals + ", joueur=" + joueur + '}';
+    }
+
+    @Override
+    public boolean equals(Object c) {
+        if (c instanceof CoupTerminaison) {
+            CoupTerminaison ct = (CoupTerminaison) c;
+            return ct.oldVals.equals(oldVals) && ct.joueur == joueur;
+        }
+        return false;
     }
 }

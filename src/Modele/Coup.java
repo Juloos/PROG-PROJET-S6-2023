@@ -8,4 +8,6 @@ public interface Coup {
     public String getSaveString();
     @Override
     public String toString();
+    @Override
+    public boolean equals(Object c);
 }

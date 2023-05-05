@@ -3,50 +3,26 @@ package Modele;
 import java.util.ArrayList;
 
 public class JeuGraphe extends Jeu {
-    public int valeur;
-    public Coup coup;
-//    public final JeuGraphe parent;
-    public final ArrayList<JeuGraphe> fils;
-
     public JeuGraphe(Jeu j) {
         super(new Joueur[j.joueurs.length], j.plateau.clone());
         for (int i = 0; i < nbJoueurs; i++)
             joueurs[i] = j.joueurs[i].clone();
         joueurCourant = j.joueurCourant;
-        valeur = 0;
-        coup = null;
-//        if (j instanceof JeuGraphe)
-//            parent = (JeuGraphe) j;
-//        else
-//            parent = null;
-        fils = new ArrayList<>();
     }
 
-    public JeuGraphe(Jeu j, Coup coup) {
-        this(j);
-        this.coup = coup;
-    }
-
-    private void ajouterFils(Coup c) {
-        JeuGraphe j = new JeuGraphe(this, c);
-        j.jouer(c);
-        fils.add(j);
-    }
-
-    public void calculerFils() {
-        if (estTermine() || !fils.isEmpty())
-            return;
+    public ArrayList<Coup> coupsPossibles() {
+        ArrayList<Coup> coups = new ArrayList<>();
         Coup coup;
-        if (joueurs[joueurCourant].getPions().size() < nbPions) {
-            for (int r = 0; r < plateau.rMax; r++)
-                for (int q = 0; q < plateau.qMax; q++)
-                    if ((coup = new CoupAjout(new Coord(q, r), joueurCourant)).estJouable(this))
-                        ajouterFils(coup);
-        } else {
-            for (Coord s : joueurs[joueurCourant].getPions())
+        if (getJoueur().getPions().size() < nbPions) {
+            for (Coord c : placememntPionValide())
+                coups.add(new CoupAjout(c, joueurCourant));
+        } else if (peutJouer()) {
+            for (Coord s : getJoueur().getPions())
                 for (Coord d : deplacementsPion(s))
                     if ((coup = new CoupDeplacement(s.clone(), d, joueurCourant)).estJouable(this))
-                        ajouterFils(coup);
-        }
+                        coups.add(coup);
+        } else if (!getJoueur().estTermine())
+            coups.add(new CoupTerminaison(joueurCourant));
+        return coups;
     }
 }

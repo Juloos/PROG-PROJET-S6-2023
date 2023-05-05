@@ -17,7 +17,7 @@ public class CoupAjout implements Coup {
         return j.getPlateau().get(cible) == 1 && !j.estPion(cible) && j.getJoueur(joueur).getPions().size() < j.getNbPions();
     }
 
-    public void annuler(Jeu j){
+    public void annuler(Jeu j) {
         j.getJoueur(joueur).supprimerPion(cible);
     }
 
@@ -25,12 +25,21 @@ public class CoupAjout implements Coup {
         return joueur;
     }
 
-    public String getSaveString(){
-        return "-1 "+joueur+" "+cible.q+" "+cible.r;
+    public String getSaveString() {
+        return "-1 " + joueur + " " + cible.q + " " + cible.r;
     }
 
     @Override
     public String toString() {
         return "CoupAjout{" + "cible=" + cible + ", joueur=" + joueur + '}';
+    }
+
+    @Override
+    public boolean equals(Object c) {
+        if (c instanceof CoupAjout) {
+            CoupAjout ca = (CoupAjout) c;
+            return ca.cible.equals(cible) && ca.joueur == joueur;
+        }
+        return false;
     }
 }

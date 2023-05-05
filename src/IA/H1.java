@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class H1 implements Heuristique {
     @Override
-    public int evaluer(Jeu j, int pdvJoueur) {
+    public double evaluer(Jeu j, int pdvJoueur) {
         if (j.estTermine()) {
             ArrayList<Integer> winners = j.getWinner();
             if (winners.contains(pdvJoueur))

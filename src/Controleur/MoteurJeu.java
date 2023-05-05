@@ -5,7 +5,6 @@ import IHM.Console.IHMConsole;
 import IHM.Graphique.IHMGraphique;
 import IHM.IHM;
 import Modele.*;
-import IA.*;
 
 public class MoteurJeu implements Runnable {
 
@@ -15,7 +14,7 @@ public class MoteurJeu implements Runnable {
 
     int nbPionsPlaces;
 
-    public MoteurJeu() {
+    public MoteurJeu(Joueur[] joueurs) {
         switch (Config.TYPE_IHM) {
             case CONSOLE:
                 ihm = new IHMConsole(this);
@@ -27,9 +26,11 @@ public class MoteurJeu implements Runnable {
                 ihm = null;
                 break;
         }
-
-        Joueur[] joueurs = new Joueur[] {new JoueurHumain(0), new JoueurIA(1, IA.Difficulte.DIFFICILE)};
         jeu = new JeuConcret(joueurs);
+    }
+
+    public MoteurJeu() {
+        this(new Joueur[] {new JoueurHumain(0), new JoueurHumain(1)});
     }
 
     public IHM getIHM() {
@@ -89,10 +90,6 @@ public class MoteurJeu implements Runnable {
             ihm.updateAffichage(jeu);
 
         nbPionsPlaces = 0;
-        while (nbPionsPlaces < jeu.getNbJoueurs() * jeu.getNbPions()) {
-            appliquerAction(jeu.getJoueur().reflechir(this));
-        }
-
         while (!jeu.estTermine()) {
             while (jeu.peutJouer())
                 appliquerAction(jeu.getJoueur().reflechir(this));
