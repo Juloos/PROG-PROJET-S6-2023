@@ -2,6 +2,7 @@ package Modele.Coups;
 
 import Modele.Coord;
 import Modele.Jeu.Jeu;
+import Modele.Jeu.JeuConcret;
 import Modele.Plateau;
 
 public class CoupDeplacement implements Coup {
@@ -33,9 +34,9 @@ public class CoupDeplacement implements Coup {
         return j.peutJouer(joueur) && j.getJoueur(joueur).estPion(source) && j.deplacementsPion(source).contains(destination);
     }
 
-    public void annuler(Jeu j) {
+    public void annuler(JeuConcret j) {
         j.getPlateau().set(source, oldVal);
-        j.annulerDeplacerPion(joueur, destination, source);
+        j.annulerDeplacer(joueur, destination, source);
         j.getJoueur(joueur).decrementerScore(oldVal);
         j.getJoueur(joueur).supprimerTuile();
     }

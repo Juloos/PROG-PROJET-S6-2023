@@ -1,13 +1,14 @@
 package Modele.Coups;
 
 import Modele.Jeu.Jeu;
+import Modele.Jeu.JeuConcret;
 
 public interface Coup {
     public void jouer(Jeu j);
 
     public boolean estJouable(Jeu j);
 
-    public void annuler(Jeu j);
+    public void annuler(JeuConcret j);
 
     public int getJoueur();
 

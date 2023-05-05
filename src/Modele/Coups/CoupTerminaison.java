@@ -2,6 +2,7 @@ package Modele.Coups;
 
 import Modele.Coord;
 import Modele.Jeu.Jeu;
+import Modele.Jeu.JeuConcret;
 
 import java.util.HashMap;
 
@@ -29,7 +30,7 @@ public class CoupTerminaison implements Coup {
         return !j.peutJouer(joueur);
     }
 
-    public void annuler(Jeu j) {
+    public void annuler(JeuConcret j) {
         oldVals.forEach(
                 (source, oldVal) -> {
                     j.getPlateau().set(source, oldVal);
@@ -37,6 +38,7 @@ public class CoupTerminaison implements Coup {
                     j.getJoueur(joueur).replacerPion(source, true);
                     j.getJoueur(joueur).supprimerTuile();
                     j.getJoueur(joueur).decrementerScore(oldVal);
+                    j.getJoueur(joueur).reAnimer();
                 }
         );
 

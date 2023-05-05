@@ -2,6 +2,7 @@ package Modele.Coups;
 
 import Modele.Coord;
 import Modele.Jeu.Jeu;
+import Modele.Jeu.JeuConcret;
 
 public class CoupAjout implements Coup {
     Coord cible;
@@ -20,8 +21,8 @@ public class CoupAjout implements Coup {
         return j.getPlateau().get(cible) == 1 && !j.estPion(cible) && j.getJoueur(joueur).getPions().size() < j.getNbPions();
     }
 
-    public void annuler(Jeu j) {
-        j.getJoueur(joueur).supprimerPion(cible);
+    public void annuler(JeuConcret j) {
+        j.annulerAjout(joueur,cible);
     }
 
     public int getJoueur() {

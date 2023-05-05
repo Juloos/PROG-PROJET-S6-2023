@@ -62,6 +62,31 @@ public class JeuConcret extends Jeu {
             System.out.println("Aucune action a refaire");
         }
     }
+
+    public void annulerDeplacer(int j, Coord c1, Coord c2) {
+        if (!deplacementsPion(c1).contains(c2))
+            throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
+        joueurs[j].deplacerPion(c1, c2);
+        c1.voisins().forEach(
+                voisin -> {
+                    if (estPion(voisin) && estPionBloque(voisin))
+                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                }
+        );
+        c2.voisins().forEach(
+                voisin -> {
+                    if (estPion(voisin) && estPionBloque(voisin))
+                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                }
+        );
+        this.joueurCourant = j;
+    }
+
+    public void annulerAjout(int j, Coord cible){
+        this.getJoueur(j).supprimerPion(cible);
+        this.joueurCourant = j;
+    }
+
     public void sauvegarder(String fichier) throws Exception {
         // Init fichier
         File f = new File(fichier);

@@ -121,24 +121,7 @@ public abstract class Jeu {
             return null;
     }
 
-    public void annulerDeplacerPion(int j, Coord c1, Coord c2) {
-        if (!deplacementsPion(c1).contains(c2))
-            throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
-        joueurs[j].deplacerPion(c1, c2);
-        c1.voisins().forEach(
-                voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
-                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
-                }
-        );
-        c2.voisins().forEach(
-                voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
-                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
-                }
-        );
-        joueurSuivant();
-    }
+
 
     public ArrayList<Coord> placememntPionValide() {
         ArrayList<Coord> liste = new ArrayList<>();
@@ -200,8 +183,10 @@ public abstract class Jeu {
         if (joueurs[joueurCourant].peutJouer(this))
             throw new RuntimeException("Le joueur " + joueurCourant + " peut encore jouer.");
         joueurs[joueurCourant].terminer();
-        for (Coord c : joueurs[joueurCourant].getPions())
+        for (Coord c : joueurs[joueurCourant].getPions()) {
             manger(c);
+            joueurs[joueurCourant].supprimerPion(c);
+        }
         joueurSuivant();
     }
 
