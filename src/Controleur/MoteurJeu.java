@@ -85,17 +85,16 @@ public class MoteurJeu implements Runnable {
         jeu.refaire();
     }
 
-    public synchronized void sauvegarder() {
+    public synchronized void sauvegarder(String nomSave) {
         System.out.println("Sauvegarde de la partie");
         try {
-            jeu.sauvegarder("sauvegarde.txt");
+            jeu.sauvegarder(nomSave + ".txt");
         } catch (Exception e) {
             System.out.println("Erreur lors de la sauvegarde");
         }
     }
 
     public void appliquerAction(Action action) {
-        waitPause();
 //        System.out.println("Action en cours de traitement " + action.toString());
         if (!action.peutAppliquer(this)) {
             ihm.afficherMessage("Action non applicable");
@@ -110,12 +109,6 @@ public class MoteurJeu implements Runnable {
 
     @Override
     public void run() {
-//        try {
-//            threadIHM.wait();
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-
         if (ihm != null)
             ihm.updateAffichage(jeu);
 

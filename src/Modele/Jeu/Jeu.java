@@ -191,7 +191,29 @@ public abstract class Jeu {
             throw new IllegalArgumentException("Mauvaise selection du joueur du coup : " + c + ".");
         c.jouer(this);
     }
+    public void annulerDeplacer(int j, Coord c1, Coord c2) {
+        if (!deplacementsPion(c1).contains(c2))
+            throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
+        joueurs[j].deplacerPion(c1, c2);
+        c1.voisins().forEach(
+                voisin -> {
+                    if (estPion(voisin) && estPionBloque(voisin))
+                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                }
+        );
+        c2.voisins().forEach(
+                voisin -> {
+                    if (estPion(voisin) && estPionBloque(voisin))
+                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                }
+        );
+        this.joueurCourant = j;
+    }
 
+    public void annulerAjout(int j, Coord cible){
+        this.getJoueur(j).supprimerPion(cible);
+        this.joueurCourant = j;
+    }
     public ArrayList<Integer> getWinner() {
         ArrayList<Integer> winners = new ArrayList<>();
         Joueur max = Arrays.stream(joueurs).max(Joueur::compareTo).get();

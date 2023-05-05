@@ -3,6 +3,7 @@ package IHM.Graphique;
 import Controleur.MoteurJeu;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.EcranJeu;
+import IHM.Graphique.PopUp.PopUpFinPartie;
 import IHM.IHM;
 import Modele.Actions.Action;
 import Modele.Actions.ActionCoup;
@@ -75,13 +76,17 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         fenetres.peek().update(this);
 
         plateauGraphique.setJeu(jeu);
-        if (moteurJeu.estPhasePlacementPions()) {
-            plateauGraphique.setTuilesSurbrillance(jeu.placememntPionValide());
+        if (jeu.estTermine()) {
+            ouvrirFenetre(new PopUpFinPartie());
         } else {
-            plateauGraphique.setTuilesSurbrillance(null);
+            if (moteurJeu.estPhasePlacementPions()) {
+                plateauGraphique.setTuilesSurbrillance(jeu.placememntPionValide());
+            } else {
+                plateauGraphique.setTuilesSurbrillance(null);
+            }
+            plateauGraphique.repaint();
+            frame.revalidate();
         }
-        plateauGraphique.repaint();
-        frame.revalidate();
     }
 
     @Override
