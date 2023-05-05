@@ -123,6 +123,15 @@ public abstract class Joueur implements Comparable<Joueur> {
         return pions.containsKey(c);
     }
 
+    public String toString() {
+        String dataHash = "";
+        Coord[] tempL = pions.keySet().toArray(new Coord[pions.size()]);
+        for (int j = 0; j < pions.size(); j++) {
+            dataHash += " " + tempL[j].q + " " + tempL[j].r;
+        }
+        return id + " " + 0 + " " + score + " " + tuiles + " " + pions.size() + dataHash;
+    }
+
     @Override
     public int compareTo(Joueur j) {
         return TAILLE_PLATEAU_X * TAILLE_PLATEAU_Y * (score - j.score) + (tuiles - j.tuiles);

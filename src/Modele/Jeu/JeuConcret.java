@@ -62,7 +62,6 @@ public class JeuConcret extends Jeu {
             System.out.println("Aucune action a refaire");
         }
     }
-
     public void sauvegarder(String fichier) throws Exception {
         // Init fichier
         File f = new File(fichier);
@@ -74,24 +73,27 @@ public class JeuConcret extends Jeu {
         String sauv_data = "";
         Coup elem_hist;
 
+        // Sauvegarde les a l'instant de la sauvegarde
+        for (int i = 0; i < nbJoueurs; i++) {
+            w_f.println(joueurs[i].toString());
+        }
+
         // Sauvegarde le plateau a l'instant de la sauvegarde
         w_f.print(plateau);
 
-        // Sauvegarde les a l'instant de la sauvegarde
-        for (int i = 0; i < nbJoueurs; i++) {
-            Joueur jou = super.getJoueur(i);
-            Coord[] tempL = jou.getPions().toArray(new Coord[nbPions]);
-            for (int j = 0; j < jou.getPions().size(); j++) {
-                sauv_data += " " + tempL[j].q + " " + tempL[j].r;
-            }
-            w_f.println(i + " " + jou.getScore() + " " + jou.getTuiles() + sauv_data);
-        }
 
-        sauv_data = "";
         //On creer le String de data de sauvegarde (i.e la liste des coup réaliser)
+        int compt = 0;
         while (!passe.empty()) {
+            compt++;
             elem_hist = passe.pop();
             sauv_data += elem_hist.getSaveString() + " ";
+            future.push(elem_hist);
+        }
+        // Cela sert a ne pas vider l'historique lorsque l'on sauvegarde
+        while(compt!=0){
+            compt--;
+            passe.push(future.pop());
         }
         w_f.println(sauv_data);
         w_f.close();

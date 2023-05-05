@@ -3,7 +3,7 @@ package Global;
 import IHM.TypeIHM;
 
 public class Config {
-    public final static TypeIHM TYPE_IHM = TypeIHM.GRAPHIQUE;
+    public final static TypeIHM TYPE_IHM = TypeIHM.CONSOLE;
     public final static boolean DEBUG = false;
     public final static int TAILLE_PLATEAU_X = 8;
     public final static int TAILLE_PLATEAU_Y = 8;
