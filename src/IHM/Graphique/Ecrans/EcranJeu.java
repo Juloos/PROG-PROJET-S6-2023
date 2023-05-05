@@ -77,6 +77,7 @@ public class EcranJeu extends Ecran {
         options.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                ihm.getMoteurJeu().pauseGame(true);
                 ihm.ouvrirFenetre(new PopUpMenu());
             }
         });

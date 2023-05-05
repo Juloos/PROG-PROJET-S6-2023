@@ -12,7 +12,9 @@ public class ActionCoup implements Action {
 
     @Override
     public void appliquer(MoteurJeu mt) {
-        mt.jouerCoup(coup);
+        if (peutAppliquer(mt)) {
+            mt.jouerCoup(coup);
+        }
     }
 
     @Override

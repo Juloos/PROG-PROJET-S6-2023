@@ -74,8 +74,8 @@ public class PlateauGraphique extends JComponent {
 
         drawable.clearRect(0, 0, getWidth(), getHeight());
 
-        Plateau plateau = jeu.getPlateau();
         if (jeu != null) {
+            Plateau plateau = jeu.getPlateau();
             final int NB_ROWS = plateau.getNbRows();
             TAILLE_CASES = Math.floor((Math.min(getHeight(), getWidth() - (getWidth() / 7)) * 4.0 / (3.0 * NB_ROWS)) - 1.0);
             Y_OFFSET = TAILLE_CASES / NB_ROWS;
