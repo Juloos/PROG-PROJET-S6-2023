@@ -42,6 +42,8 @@ public class JeuConcret extends Jeu {
         return future;
     }
 
+    public void setPasse(Stack<Coup> passe) { this.passe = passe; }
+
     public void jouer(Coup c) {
         super.jouer(c);
         passe.push(c);
@@ -67,7 +69,6 @@ public class JeuConcret extends Jeu {
             System.out.println("Aucune action a refaire");
         }
     }
-
 
 
     public void sauvegarder(String fichier) throws Exception {
@@ -200,7 +201,7 @@ public class JeuConcret extends Jeu {
             }
 
             //Creation du jeu
-            Jeu jeu = new JeuConcret(joueurs);
+            JeuConcret jeu = new JeuConcret(joueurs);
 
             //charge plateau
             Coord c = new Coord();
@@ -246,6 +247,7 @@ public class JeuConcret extends Jeu {
             while(tempFutur.empty()){
                 tempPasse.push(tempFutur.pop());
             }
+            jeu.setPasse(tempPasse);
 
             //terminaison
             sc_f.close();
