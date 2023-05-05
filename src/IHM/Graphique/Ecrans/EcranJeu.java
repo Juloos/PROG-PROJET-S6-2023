@@ -106,11 +106,6 @@ public class EcranJeu extends Ecran {
     @Override
     public void afficherMessage(String message) {
         this.message.setText(message);
-        try {
-            Thread.sleep(3000);
-        } catch (Exception e) {
-        }
-        this.message.setText("");
     }
 
     @Override

@@ -110,7 +110,8 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
 
     @Override
     public synchronized void afficherMessage(String message) {
-        fenetres.peek().afficherMessage(message);
+        Thread thread = new Thread(new AfficherMessage(this, message));
+        thread.start();
     }
 
     public synchronized MoteurJeu getMoteurJeu() {
@@ -276,6 +277,26 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
                     throw new RuntimeException(e);
                 }
             }
+        }
+    }
+
+    private class AfficherMessage implements Runnable {
+        IHMGraphique ihm;
+        String message;
+
+        public AfficherMessage(IHMGraphique ihm, String message) {
+            this.ihm = ihm;
+            this.message = message;
+        }
+
+        @Override
+        public void run() {
+            ihm.fenetres.peek().afficherMessage(message);
+            try {
+                Thread.sleep(3000);
+            } catch (Exception e) {
+            }
+            ihm.fenetres.peek().afficherMessage("");
         }
     }
 }
