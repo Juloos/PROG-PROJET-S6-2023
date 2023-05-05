@@ -18,12 +18,15 @@ public abstract class Joueur implements Comparable<Joueur> {
     int tuiles;
     boolean termine;
 
+    String nom;
+
     public Joueur(int id) {
         this.id = id;
         score = 0;
         tuiles = 0;
         pions = new HashMap<>();
         termine = false;
+        nom = "Joueur " + id;
     }
 
     public Joueur(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, boolean termine) {
@@ -39,6 +42,10 @@ public abstract class Joueur implements Comparable<Joueur> {
     @Override
     public abstract Joueur clone();
 
+    public int getID() {
+        return id;
+    }
+
     public int getScore() {
         return score;
     }
@@ -49,6 +56,10 @@ public abstract class Joueur implements Comparable<Joueur> {
 
     public Set<Coord> getPions() {
         return pions.keySet();
+    }
+
+    public String getNom() {
+        return nom;
     }
 
     public void ajouterTuile(int score) {

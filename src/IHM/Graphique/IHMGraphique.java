@@ -15,6 +15,8 @@ import com.sun.istack.internal.NotNull;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.swing.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Stack;
@@ -54,6 +56,13 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
 
         ouvrirFenetre(new EcranJeu());
 
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent componentEvent) {
+                fenetres.peek().resized();
+            }
+        });
+
         frame.addMouseListener(this);
         frame.setSize(1500, 1000);
         frame.setLocationRelativeTo(null);
@@ -63,6 +72,8 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
 
     @Override
     public void updateAffichage(Jeu jeu) {
+        fenetres.peek().update(this);
+
         plateauGraphique.setJeu(jeu);
         if (moteurJeu.estPhasePlacementPions()) {
             plateauGraphique.setTuilesSurbrillance(jeu.placememntPionValide());
@@ -76,6 +87,7 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
     public Action attendreActionJoueur() {
         actionJoueur = null;
         selection = null;
+
         Thread thread = new Thread(this);
         thread.start();
         try {
@@ -88,7 +100,7 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
 
     @Override
     public void afficherMessage(String message) {
-        System.out.println(message);
+        fenetres.peek().afficherMessage(message);
     }
 
     public MoteurJeu getMoteurJeu() {
@@ -149,35 +161,39 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
      */
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
-        if (moteurJeu.estPhasePlacementPions()) {
-            selection = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
-            actionJoueur = new ActionCoup(new CoupAjout(selection, moteurJeu.getJoueurActif().id));
-        } else if (actionJoueur == null) {
-            if (selection == null) {
-                selection = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
+        Coord coord = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
+        if (moteurJeu.getJeu().getPlateau().estCoordValide(coord)) {
+            if (moteurJeu.estPhasePlacementPions()) {
+                selection = coord;
+                actionJoueur = new ActionCoup(new CoupAjout(selection, moteurJeu.getJoueurActif().id));
+            } else if (actionJoueur == null) {
+                if (selection == null) {
+                    selection = coord;
+                    if (moteurJeu.getJeu().getPlateau().estCoordValide(selection) && moteurJeu.getJeu().estPion(selection)
+                            && moteurJeu.getJeu().joueurDePion(selection) == moteurJeu.getJoueurActif().id) {
+                        System.out.println("Selection");
+                        plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection));
+                        plateauGraphique.repaint();
+                    } else {
+                        selection = null;
+                    }
 
-                if (moteurJeu.getJeu().getPlateau().estCoordValide(selection) && moteurJeu.getJeu().estPion(selection)
-                        && moteurJeu.getJeu().joueurDePion(selection) == moteurJeu.getJoueurActif().id) {
-                    System.out.println("Selection");
-                    plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection));
-                    plateauGraphique.repaint();
                 } else {
-                    selection = null;
+                    Coord cible = coord;
+                    System.out.println("Cible");
+
+                    if (moteurJeu.getJeu().getPlateau().estCoordValide(cible) && !moteurJeu.getJeu().estPion(cible)) {
+                        actionJoueur = new ActionCoup(new CoupDeplacement(selection, cible, moteurJeu.getJoueurActif().id));
+                    } else if (moteurJeu.getJeu().joueurDePion(cible) == moteurJeu.getJoueurActif().id) {
+                        selection = cible;
+                        plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection));
+                        plateauGraphique.repaint();
+                    }
+
                 }
-
-            } else {
-                Coord cible = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
-                System.out.println("Cible");
-
-                if (moteurJeu.getJeu().getPlateau().estCoordValide(cible) && !moteurJeu.getJeu().estPion(cible)) {
-                    actionJoueur = new ActionCoup(new CoupDeplacement(selection, cible, moteurJeu.getJoueurActif().id));
-                } else if (moteurJeu.getJeu().joueurDePion(cible) == moteurJeu.getJoueurActif().id) {
-                    selection = cible;
-                    plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection));
-                    plateauGraphique.repaint();
-                }
-
             }
+        } else {
+            afficherMessage("Coordonées invalide");
         }
     }
 

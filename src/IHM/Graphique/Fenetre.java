@@ -46,4 +46,28 @@ public abstract class Fenetre {
      */
     public void close(IHMGraphique ihm) {
     }
+
+    /**
+     * Met à jour la fenêtre lorqu'elle est ouverte
+     *
+     * @param ihm : l'IHM graphique sur laquelle est affichée la fenêtre
+     */
+    public void update(IHMGraphique ihm) {
+    }
+
+    /**
+     * Met à jour les dimensions des éléments de la fenêtre lorsqu'elle est ouverte
+     *
+     * @param ihm : l'IHM graphique sur laquelle est affichée la fenêtre
+     */
+    public void resized() {
+    }
+
+    /**
+     * Permet d'afficher le message reçu par l'IHM
+     *
+     * @param message : le message à afficher
+     */
+    public void afficherMessage(String message) {
+    }
 }

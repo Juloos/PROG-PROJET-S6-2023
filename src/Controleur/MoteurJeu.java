@@ -65,11 +65,13 @@ public class MoteurJeu implements Runnable {
 
     public void annulerCoup() {
         System.out.println("Annulation du dernier coup joué");
+        nbPionsPlaces--;
         jeu.annuler();
     }
 
     public void refaireCoup() {
         System.out.println("Refaison du dernier coup annulé");
+        nbPionsPlaces++;
         jeu.refaire();
     }
 
@@ -85,12 +87,12 @@ public class MoteurJeu implements Runnable {
     public void appliquerAction(Action action) {
         if (!action.peutAppliquer(this)) {
             ihm.afficherMessage("Action non applicable");
-            ihm.updateAffichage(jeu);
         } else {
             action.appliquer(this);
-            if (ihm != null) {
-                ihm.updateAffichage(jeu);
-            }
+        }
+
+        if (ihm != null) {
+            ihm.updateAffichage(jeu);
         }
     }
 
@@ -107,8 +109,9 @@ public class MoteurJeu implements Runnable {
         System.out.println("Fin de la phase de placements des pions");
 
         while (!jeu.estTermine()) {
-            while (jeu.peutJouer())
+            while (jeu.peutJouer()) {
                 appliquerAction(jeu.getJoueur().reflechir(this));
+            }
             jeu.jouer(new CoupTerminaison(jeu.getJoueur().id));
         }
 
