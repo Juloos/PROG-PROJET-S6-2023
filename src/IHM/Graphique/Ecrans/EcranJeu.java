@@ -1,7 +1,7 @@
 package IHM.Graphique.Ecrans;
 
-import IHM.Composants.InfoJoueur;
-import IHM.Composants.JButtonIcon;
+import IHM.Graphique.Composants.InfoJoueur;
+import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.PopUp.PopUpMenu;
 import Modele.Actions.ActionAnnuler;
@@ -49,7 +49,7 @@ public class EcranJeu extends Ecran {
         message = new JLabel("", SwingConstants.CENTER);
         menu.add(message);
 
-        JPanel annulerRefaire = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel annulerRefaire = new JPanel(new GridLayout(1, 0));
 
         annuler = new JButtonIcon(new ImageIcon("res/arrow_left.png"), 100);
         annuler.addActionListener(new ActionListener() {
