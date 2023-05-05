@@ -29,12 +29,11 @@ public abstract class Joueur implements Comparable<Joueur> {
         nom = "Joueur " + id;
     }
 
-    public Joueur(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, boolean termine) {
+    public Joueur(int id, int score, int tuiles, HashMap<Coord, Boolean> pions) {
         this.id = id;
         this.score = score;
         this.tuiles = tuiles;
         this.pions = pions;
-        this.termine = termine;
     }
 
     public abstract Action reflechir(MoteurJeu mt);
@@ -129,7 +128,7 @@ public abstract class Joueur implements Comparable<Joueur> {
         for (int j = 0; j < pions.size(); j++) {
             dataHash += " " + tempL[j].q + " " + tempL[j].r;
         }
-        return id + " " + 0 + " " + score + " " + tuiles + " " + pions.size() + dataHash;
+        return 0 + " " + id + " " + score + " " + tuiles + " " + pions.size() + dataHash;
     }
 
     @Override

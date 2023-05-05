@@ -5,13 +5,18 @@ import Modele.Coups.Coup;
 import Modele.Coups.CoupAjout;
 import Modele.Coups.CoupDeplacement;
 import Modele.Coups.CoupTerminaison;
+import Modele.IA.IA;
 import Modele.Joueurs.Joueur;
+import Modele.Joueurs.JoueurHumain;
+import Modele.Joueurs.JoueurIA;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Stack;
+
+import static Global.Config.*;
 
 public class JeuConcret extends Jeu {
     Stack<Coup> passe;
@@ -73,7 +78,8 @@ public class JeuConcret extends Jeu {
         String sauv_data = "";
         Coup elem_hist;
 
-        // Sauvegarde les a l'instant de la sauvegarde
+        // Sauvegarde des joueurs a l'instant de la sauvegarde
+        w_f.println(nbJoueurs);
         for (int i = 0; i < nbJoueurs; i++) {
             w_f.println(joueurs[i].toString());
         }
@@ -99,8 +105,15 @@ public class JeuConcret extends Jeu {
         w_f.close();
     }
 
-    public void charger(String fichier) {
-        int test, jou, val;
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static Jeu charger(String fichier) {
+
+        int test, jou, val, nbJoueurs, testType;
+        int id, score, tuile, r, q;
+        HashMap<Coord,Boolean> pions;
+        Stack<Coup> tempFutur = new Stack<>(), tempPasse = new Stack<>();
+        IA.Difficulte difficulte = IA.Difficulte.ALEATOIRE;
+        String temp, nom = "";
         HashMap<Coord, Integer> tempHash;
         Coord tempCoord1, tempCoord2;
         Coup tempCoup;
@@ -112,22 +125,98 @@ public class JeuConcret extends Jeu {
             sc_f = new Scanner(new File(fichier));
         } catch (Exception E) {
             System.out.println(fichier + " isn't accesible");
-            return;
+            return null;
         }
 
         // Tant que le fichier n'est pas vide, vérifie que le fichier est comforme et joue si il trouve un coup
         try {
+
+            //charge joueur
+            nbJoueurs = sc_f.nextInt();
+            Joueur[] joueurs = new Joueur[nbJoueurs];
+            for(int i = 0; i<nbJoueurs; i++){
+                testType = sc_f.nextInt();
+                id = sc_f.nextInt();
+                switch(testType){
+                    case 0 :
+                        System.out.println(" erreur : Joueur non typé");
+                        throw new Exception();
+                    case 1 :
+                        nom = "";
+                        temp = sc_f.next();
+                        while(temp.equals("\0")){
+                            nom += temp;
+                            temp= sc_f.next();
+                        }
+                        break;
+                    case 2 :
+                        nom = "";
+                        temp = sc_f.next();
+                        while(temp.equals("\0")){
+                            nom += temp;
+                            temp= sc_f.next();
+                        }
+                        switch (nom){
+                            case "ALEATOIRE":
+                                difficulte = IA.Difficulte.ALEATOIRE;
+                                break;
+                            case "FACILE":
+                                difficulte = IA.Difficulte.FACILE;
+                                break;
+                            case "MOYEN":
+                                difficulte = IA.Difficulte.MOYEN;
+                                break;
+                            case "DIFFICILE":
+                                difficulte = IA.Difficulte.DIFFICILE;
+                                break;
+                            default:
+                                System.out.println(fichier + " isn't a save file");
+                                throw new Exception();
+                        };
+                        break;
+                    default:
+                        System.out.println(fichier + " isn't a save file");
+                        throw new Exception();
+                }
+                score = sc_f.nextInt();
+                tuile = sc_f.nextInt();
+                pions = new HashMap<>();
+                for(int j = 0; j < sc_f.nextInt(); j++){
+                    q=sc_f.nextInt();
+                    r=sc_f.nextInt();
+                    pions.put(new Coord(q,r) , false);
+                }
+                switch(testType){
+                    case 1 :
+                        joueurs[i]= new JoueurHumain(id,score,tuile,pions,nom);
+                        break;
+                    case 2 :
+                        joueurs[i]= new JoueurIA(id,score,tuile,pions,difficulte);
+                        break;
+                }
+            }
+
+            //Creation du jeu
+            Jeu jeu = new JeuConcret(joueurs);
+
+            //charge plateau
+            Coord c = new Coord();
+            for (c.r = 0; c.r < TAILLE_PLATEAU_X; c.r++){
+                for (c.q = 0; c.q < TAILLE_PLATEAU_Y; c.q++){
+                    jeu.getPlateau().set(c, sc_f.nextInt());
+                }
+            }
+
+            //Charge historique
+            test = sc_f.nextInt();
             while (sc_f.hasNext()) {
-                //sauve plateau
-                //sauve joueur
-                test = sc_f.nextInt();
                 // repére le type du coup
                 switch (test) {
                     case -1:
                         jou = sc_f.nextInt();
                         tempCoord1 = new Coord(sc_f.nextInt(), sc_f.nextInt());
                         tempCoup = new CoupAjout(tempCoord1, jou);
-                        passe.push(tempCoup);
+                        tempFutur.push(tempCoup);
                         break;
                     case -2:
                         jou = sc_f.nextInt();
@@ -135,28 +224,32 @@ public class JeuConcret extends Jeu {
                         tempCoord2 = new Coord(sc_f.nextInt(), sc_f.nextInt());
                         val = sc_f.nextInt();
                         tempCoup = new CoupDeplacement(tempCoord1, tempCoord2, val, jou);
-                        passe.push(tempCoup);
+                        tempFutur.push(tempCoup);
                         break;
                     case -3:
                         jou = sc_f.nextInt();
                         tempHash = new HashMap<>();
-                        for (int j = 0; j < nbPions; j++) {
+                        for (int j = 0; j < sc_f.nextInt(); j++) {
                             tempCoord1 = new Coord(sc_f.nextInt(), sc_f.nextInt());
                             tempHash.put(tempCoord1, sc_f.nextInt());
                         }
                         tempCoup = new CoupTerminaison(tempHash, jou);
-                        passe.push(tempCoup);
+                        tempFutur.push(tempCoup);
                         break;
                     default:
                         throw new Exception();
                 }
             }
+            while(tempFutur.empty()){
+                tempPasse.push(tempFutur.pop());
+            }
+
+            //terminaison
+            sc_f.close();
+            return jeu;
         } catch (Exception E) {
             System.out.println(fichier + " isn't a save file");
-            return;
+            return null;
         }
-
-        sc_f.close();
-
     }
 }

@@ -21,8 +21,8 @@ public class JoueurIA extends Joueur {
         assignerIA(d);
     }
 
-    public JoueurIA(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, boolean termine, IA.Difficulte d) {
-        super(id, score, tuiles, pions, termine);
+    public JoueurIA(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, IA.Difficulte d) {
+        super(id, score, tuiles, pions);
         assignerIA(d);
     }
 
@@ -59,7 +59,7 @@ public class JoueurIA extends Joueur {
 
     @Override
     public JoueurIA clone() {
-        return new JoueurIA(id, score, tuiles, new HashMap<>(pions), termine, ia.getDifficulte());
+        return new JoueurIA(id, score, tuiles, new HashMap<>(pions), ia.getDifficulte());
     }
 
     @Override
@@ -69,6 +69,6 @@ public class JoueurIA extends Joueur {
         for (int j = 0; j < pions.size(); j++) {
             dataHash += " " + tempL[j].q + " " + tempL[j].r;
         }
-        return id + " " + 2 + " " + ia.getDifficulte() + " " + score + " " + tuiles + " " + pions.size() + dataHash;
+        return 2 + " " + id + " " + ia.getDifficulte() + "\0 " + score + " " + tuiles + " " + pions.size() + dataHash;
     }
 }

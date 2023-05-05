@@ -11,11 +11,11 @@ public class JoueurHumain extends Joueur {
 
     public JoueurHumain(int id) {
         super(id);
-        this.nom = Integer.toString(id);
+        this.nom = "Joueur "+id;
     }
-    public JoueurHumain(int id, int score, int tuiles, HashMap<Coord,Boolean> pions, boolean termine){
-        super(id, score, tuiles, pions, termine);
-        this.nom = Integer.toString(id);
+    public JoueurHumain(int id, int score, int tuiles, HashMap<Coord,Boolean> pions){
+        super(id, score, tuiles, pions);
+        this.nom = "Joueur "+id;
     }
 
     public JoueurHumain(int id, String nom) {
@@ -23,8 +23,8 @@ public class JoueurHumain extends Joueur {
         this.nom = nom;
     }
 
-    public JoueurHumain(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, boolean termine, String nom) {
-        super(id, score, tuiles, pions, termine);
+    public JoueurHumain(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, String nom) {
+        super(id, score, tuiles, pions);
         this.nom = nom;
     }
 
@@ -34,17 +34,7 @@ public class JoueurHumain extends Joueur {
     }
 
     public JoueurHumain clone() {
-        return new JoueurHumain(id, score, tuiles, new HashMap<>(pions), termine, nom);
-    }
-
-    @Override
-    public String toString() {
-        String dataHash = "";
-        Coord[] tempL = pions.keySet().toArray(new Coord[pions.size()]);
-        for (int j = 0; j < pions.size(); j++) {
-            dataHash += " " + tempL[j].q + " " + tempL[j].r;
-        }
-        return id + " " + 1 + " " + nom + " " + score + " " + tuiles + " " + pions.size() + pions;
+        return new JoueurHumain(id, score, tuiles, new HashMap<>(pions), nom);
     }
 
     public String getNom() {
@@ -58,6 +48,6 @@ public class JoueurHumain extends Joueur {
         for (int j = 0; j < pions.size(); j++) {
             dataHash += " " + tempL[j].q + " " + tempL[j].r;
         }
-        return id + " " + 1 + " " + nom + " " + score + " " + tuiles + " " + pions.size() + dataHash;
+        return 1 + " " + id + " " + nom + "\0 " + score + " " + tuiles + " " + pions.size() + dataHash;
     }
 }

@@ -56,7 +56,7 @@ public class CoupTerminaison implements Coup {
                     save.append(temp[0]);
                 }
         );
-        return "-3 " + joueur + save;
+        return "-3 " + joueur + " " + oldVals.size()+ save;
     }
 
     @Override
