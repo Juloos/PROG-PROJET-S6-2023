@@ -36,4 +36,14 @@ public class JoueurHumain extends Joueur {
     public String getNom() {
         return nom;
     }
+
+    @Override
+    public String toString() {
+        String dataHash = "";
+        Coord[] tempL = pions.keySet().toArray(new Coord[pions.size()]);
+        for (int j = 0; j < pions.size(); j++) {
+            dataHash += " " + tempL[j].q + " " + tempL[j].r;
+        }
+        return id + " " + 1 + " " + nom + " " + score + " " + tuiles + " " + pions.size() + dataHash;
+    }
 }
