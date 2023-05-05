@@ -3,6 +3,7 @@ package IHM.Graphique.Ecrans;
 import IHM.Composants.InfoJoueur;
 import IHM.Composants.JButtonIcon;
 import IHM.Graphique.IHMGraphique;
+import IHM.Graphique.PopUp.PopUpMenu;
 import Modele.Actions.ActionAnnuler;
 import Modele.Actions.ActionRefaire;
 
@@ -29,6 +30,10 @@ public class EcranJeu extends Ecran {
     @Override
     public void open(IHMGraphique ihm) {
         super.open(ihm);
+    }
+
+    @Override
+    public void creation(IHMGraphique ihm) {
         panel.setLayout(new BorderLayout());
 
         joueurs = new ArrayList<>();
@@ -69,6 +74,12 @@ public class EcranJeu extends Ecran {
         JPanel optionsPanel = new JPanel(new BorderLayout());
 
         options = new JButtonIcon(new ImageIcon("res/gear.png"), 70);
+        options.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                ihm.ouvrirFenetre(new PopUpMenu());
+            }
+        });
 
         JPanel horizontal = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         horizontal.add(options);

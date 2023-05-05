@@ -19,4 +19,5 @@ public abstract class Ecran extends Fenetre {
 
         ihm.getFrame().setContentPane(panel);
     }
+
 }
