@@ -83,7 +83,7 @@ public abstract class Jeu {
     }
 
     public boolean estPionBloque(Coord c) {
-        return c.voisins().stream().allMatch(
+        return estPion(c) && c.voisins().stream().allMatch(
                 v -> !plateau.estCoordValide(v) || plateau.get(v) == Plateau.VIDE || estPion(v)
         );
     }
@@ -115,12 +115,12 @@ public abstract class Jeu {
             return null;
     }
 
-    public ArrayList<Coord> placememntPionValide(){
+    public ArrayList<Coord> placememntPionValide() {
         ArrayList<Coord> liste = new ArrayList<>();
         for (int i = 0; i < plateau.getNbColumns(); i++) {
             for (int j = 0; j < plateau.getNbRows(); j++) {
-                Coord check = new Coord(i,j);
-                if(plateau.estCoordValide(check) && plateau.get(check) == 1){
+                Coord check = new Coord(i, j);
+                if (plateau.estCoordValide(check) && plateau.get(check) == 1 && !estPion(check)) {
                     liste.add(check);
                 }
             }

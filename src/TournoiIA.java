@@ -7,10 +7,9 @@ import java.util.Arrays;
 
 public class TournoiIA {
     public static void main(String[] args) {
-        Joueur[] joueurs = new Joueur[] {new JoueurIA(0, IA.Difficulte.ALEATOIRE), new JoueurIA(1, IA.Difficulte.DIFFICILE)};
-        int[] winnersRate = new int[joueurs.length];
+        int[] winnersRate = new int[JOUEURS_TOURNOI.length];
         for (int i = 0; i < NB_PARTIES; i++) {
-            MoteurJeu moteurJeu = new MoteurJeu(Arrays.stream(joueurs).map(Joueur::clone).toArray(Joueur[]::new));
+            MoteurJeu moteurJeu = new MoteurJeu(Arrays.stream(JOUEURS_TOURNOI).map(Joueur::clone).toArray(Joueur[]::new));
             moteurJeu.run();
             for (int j : moteurJeu.getJeu().getWinner())
                 winnersRate[j]++;
