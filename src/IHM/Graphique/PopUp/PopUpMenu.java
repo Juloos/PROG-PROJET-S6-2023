@@ -22,7 +22,7 @@ public class PopUpMenu extends PopUp {
 
     @Override
     public void creation(IHMGraphique ihm) {
-        panel.setLayout(new GridLayout(0, 1));
+        panel.setLayout(new GridLayout(0, 1, 0, 30));
 
         retour.setText("Retour au jeu");
         panel.add(retour);
@@ -53,5 +53,12 @@ public class PopUpMenu extends PopUp {
             }
         });
         panel.add(quitter);
+    }
+
+    @Override
+    public void close(IHMGraphique ihm) {
+        ihm.getMoteurJeu().pauseGame(false);
+        System.out.println("Fermeture");
+        super.close(ihm);
     }
 }

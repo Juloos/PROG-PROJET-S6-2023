@@ -4,7 +4,7 @@ import Controleur.MoteurJeu;
 import Modele.Actions.Action;
 import Modele.Jeu.Jeu;
 
-public abstract class IHM {
+public abstract class IHM implements Runnable {
 
     protected MoteurJeu moteurJeu;
 

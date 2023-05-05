@@ -68,11 +68,10 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         frame.setSize(1000, 700);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
     }
 
     @Override
-    public void updateAffichage(Jeu jeu) {
+    public synchronized void updateAffichage(Jeu jeu) {
         fenetres.peek().update(this);
 
         plateauGraphique.setJeu(jeu);
@@ -90,37 +89,41 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         actionJoueur = null;
         selection = null;
 
-        Thread thread = new Thread(this);
+        System.out.println("En attente d'une action du joueur actif");
+
+        Thread thread = new Thread(new WaitActionJoueur(this));
         thread.start();
         try {
             thread.join();
         } catch (Exception e) {
         }
+
+        System.out.println("Action reçue");
         return actionJoueur;
     }
 
 
     @Override
-    public void afficherMessage(String message) {
+    public synchronized void afficherMessage(String message) {
         fenetres.peek().afficherMessage(message);
     }
 
-    public MoteurJeu getMoteurJeu() {
+    public synchronized MoteurJeu getMoteurJeu() {
         return moteurJeu;
     }
 
-    public JFrame getFrame() {
+    public synchronized JFrame getFrame() {
         return frame;
     }
 
-    public PlateauGraphique getPlateauGraphique() {
+    public synchronized PlateauGraphique getPlateauGraphique() {
         return plateauGraphique;
     }
 
     /**
      * Détruit toutes les fenêtres de l'IHM et retourne au menu d'accueil
      */
-    public void fermerFenetres() {
+    public synchronized void fermerFenetres() {
         for (Fenetre fenetre : fenetres) {
             fenetre.close(this);
         }
@@ -130,13 +133,14 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
     /**
      * Retourne à la fenêtre précédente et détruit la fenêtre actuelle
      */
-    public void retournerPrecedenteFenetre() {
+    public synchronized void retournerPrecedenteFenetre() {
         fenetres.peek().close(this);
         System.out.println("Fermeture de la fenetre : " + fenetres.peek().title);
         fenetres.pop();
         fenetres.peek().open(this);
         fenetres.peek().resized();
         System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
+        frame.revalidate();
 
         enJeu = fenetres.peek() instanceof EcranJeu;
     }
@@ -147,7 +151,7 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
      * @param fenetre La nouvelle fenêtre à ouvrir
      */
     @NotNull()
-    public void ouvrirFenetre(Fenetre fenetre) {
+    public synchronized void ouvrirFenetre(Fenetre fenetre) {
         if (!fenetres.empty()) {
             fenetres.peek().close(this);
         }
@@ -156,6 +160,7 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         fenetre.open(this);
         fenetres.peek().resized();
         System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
+        frame.revalidate();
 
         enJeu = fenetres.peek() instanceof EcranJeu;
     }
@@ -166,7 +171,7 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
      * @param mouseEvent
      */
     @Override
-    public void mouseClicked(MouseEvent mouseEvent) {
+    public synchronized void mouseClicked(MouseEvent mouseEvent) {
         Coord coord = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
         if (moteurJeu.getJeu().getPlateau().estCoordValide(coord)) {
             if (moteurJeu.estPhasePlacementPions()) {
@@ -241,11 +246,30 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
      */
     @Override
     public void run() {
-        while (actionJoueur == null) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+        System.out.println("Lancement IHM");
+
+        frame.setVisible(true);
+    }
+
+    synchronized Action getActionJoueur() {
+        return actionJoueur;
+    }
+
+    private class WaitActionJoueur implements Runnable {
+        IHMGraphique ihm;
+
+        public WaitActionJoueur(IHMGraphique ihm) {
+            this.ihm = ihm;
+        }
+
+        @Override
+        public void run() {
+            while (ihm.getActionJoueur() == null) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

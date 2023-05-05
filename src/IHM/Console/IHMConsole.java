@@ -108,4 +108,9 @@ public class IHMConsole extends IHM {
 
         return valeurs;
     }
+
+    @Override
+    public void run() {
+
+    }
 }
