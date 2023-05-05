@@ -37,7 +37,7 @@ public abstract class PopUp extends Fenetre {
             creation(ihm);
         }
 
-        frame.add(panel);
+        frame.setContentPane(panel);
         frame.setEnabled(true);
         frame.setVisible(true);
     }

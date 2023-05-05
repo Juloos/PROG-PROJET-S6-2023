@@ -19,6 +19,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class IHMGraphique extends IHM implements MouseListener, Runnable {
@@ -64,7 +65,7 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         });
 
         frame.addMouseListener(this);
-        frame.setSize(1500, 1000);
+        frame.setSize(1000, 700);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
@@ -81,6 +82,7 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
             plateauGraphique.setTuilesSurbrillance(null);
         }
         plateauGraphique.repaint();
+        frame.revalidate();
     }
 
     @Override
@@ -133,8 +135,8 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         System.out.println("Fermeture de la fenetre : " + fenetres.peek().title);
         fenetres.pop();
         fenetres.peek().open(this);
+        fenetres.peek().resized();
         System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
-        frame.revalidate();
 
         enJeu = fenetres.peek() instanceof EcranJeu;
     }
@@ -152,8 +154,8 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
 
         fenetres.push(fenetre);
         fenetre.open(this);
+        fenetres.peek().resized();
         System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
-        frame.revalidate();
 
         enJeu = fenetres.peek() instanceof EcranJeu;
     }
@@ -176,7 +178,10 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
                     if (moteurJeu.getJeu().getPlateau().estCoordValide(selection) && moteurJeu.getJeu().estPion(selection)
                             && moteurJeu.getJeu().joueurDePion(selection) == moteurJeu.getJoueurActif().id) {
                         System.out.println("Selection");
-                        plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection));
+
+                        ArrayList<Coord> coords = moteurJeu.getJeu().deplacementsPion(selection);
+                        coords.add(selection);
+                        plateauGraphique.setTuilesSurbrillance(coords);
                         plateauGraphique.repaint();
                     } else {
                         selection = null;
@@ -190,7 +195,10 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
                         actionJoueur = new ActionCoup(new CoupDeplacement(selection, cible, moteurJeu.getJoueurActif().id));
                     } else if (moteurJeu.getJeu().joueurDePion(cible) == moteurJeu.getJoueurActif().id) {
                         selection = cible;
-                        plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection));
+
+                        ArrayList<Coord> coords = moteurJeu.getJeu().deplacementsPion(selection);
+                        coords.add(selection);
+                        plateauGraphique.setTuilesSurbrillance(coords);
                         plateauGraphique.repaint();
                     }
 

@@ -9,7 +9,6 @@ import Modele.Coups.Coup;
 import Modele.Coups.CoupTerminaison;
 import Modele.Jeu.JeuConcret;
 import Modele.Joueurs.Joueur;
-import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
 
 public class MoteurJeu implements Runnable {
@@ -21,7 +20,7 @@ public class MoteurJeu implements Runnable {
     int nbPionsPlaces;
 
     public MoteurJeu() {
-        Joueur[] joueurs = new Joueur[]{new JoueurHumain(0), new JoueurIA(1), new JoueurIA(2), new JoueurIA(3)};
+        Joueur[] joueurs = new Joueur[]{new JoueurIA(0), new JoueurIA(1)};
         jeu = new JeuConcret(joueurs);
 
         switch (Config.TYPE_IHM) {
@@ -112,8 +111,14 @@ public class MoteurJeu implements Runnable {
             while (jeu.peutJouer()) {
                 appliquerAction(jeu.getJoueur().reflechir(this));
             }
+            try {
+                Thread.sleep(100);
+            } catch (Exception e) {
+            }
             jeu.jouer(new CoupTerminaison(jeu.getJoueur().id));
         }
+
+        ihm.updateAffichage(jeu);
 
         System.out.println("Fin de jeu");
     }

@@ -89,24 +89,33 @@ public class EcranJeu extends Ecran {
 
         panel.add(menu, BorderLayout.EAST);
         panel.add(ihm.getPlateauGraphique(), BorderLayout.CENTER);
+
+        update(ihm);
     }
 
     @Override
     public void update(IHMGraphique ihm) {
+        resized();
         for (InfoJoueur joueur : joueurs) {
             joueur.update(joueur.getJoueurID() == ihm.getMoteurJeu().getJoueurActif().getID());
-            panel.repaint();
         }
+        panel.repaint();
     }
 
     @Override
     public void afficherMessage(String message) {
         this.message.setText(message);
+        try {
+            Thread.sleep(3000);
+        } catch (Exception e) {
+        }
+        this.message.setText("");
     }
 
     @Override
     public void resized() {
         final int menuWidth = panel.getWidth() * 2 / 7;
         menu.setPreferredSize(new Dimension(menuWidth, panel.getHeight()));
+        panel.revalidate();
     }
 }
