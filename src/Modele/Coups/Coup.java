@@ -8,7 +8,7 @@ public interface Coup {
 
     public boolean estJouable(Jeu j);
 
-    public void annuler(JeuConcret j);
+    public void annuler(Jeu j);
 
     public int getJoueur();
 
