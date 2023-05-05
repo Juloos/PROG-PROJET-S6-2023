@@ -3,7 +3,11 @@ package IHM.Graphique.Ecrans;
 import IHM.Graphique.Fenetre;
 import IHM.Graphique.IHMGraphique;
 
+import java.awt.*;
+
 public abstract class Ecran extends Fenetre {
+
+    protected static final Color TRANSPARENT = new Color(0, 0, 0, 0);
 
     public Ecran(String title) {
         super(title);
@@ -13,9 +17,7 @@ public abstract class Ecran extends Fenetre {
     public void open(IHMGraphique ihm) {
         super.open(ihm);
 
-        ihm.getFrame().getContentPane().removeAll();
-        ihm.getFrame().getContentPane().add(panel);
-
-        panel.removeAll();
+        ihm.getFrame().setContentPane(panel);
     }
+
 }

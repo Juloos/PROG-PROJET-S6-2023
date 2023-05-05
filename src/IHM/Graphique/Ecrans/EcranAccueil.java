@@ -16,6 +16,10 @@ public class EcranAccueil extends Ecran {
     @Override
     public void open(IHMGraphique ihm) {
         super.open(ihm);
+    }
+
+    @Override
+    public void creation(IHMGraphique ihm) {
         panel.setLayout(new GridBagLayout());
         // Chargement de l'image de fond
         ImageIcon icon = new ImageIcon("res\\background.png");
