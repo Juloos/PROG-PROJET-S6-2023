@@ -30,7 +30,7 @@ public class CoupTerminaison implements Coup {
         return !j.peutJouer(joueur);
     }
 
-    public void annuler(JeuConcret j) {
+    public void annuler(Jeu j) {
         oldVals.forEach(
                 (source, oldVal) -> {
                     j.getPlateau().set(source, oldVal);

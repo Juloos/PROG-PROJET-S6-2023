@@ -21,7 +21,7 @@ public class CoupAjout implements Coup {
         return j.getPlateau().get(cible) == 1 && !j.estPion(cible) && j.getJoueur(joueur).getPions().size() < j.getNbPions();
     }
 
-    public void annuler(JeuConcret j) {
+    public void annuler(Jeu j) {
         j.annulerAjout(joueur,cible);
     }
 
