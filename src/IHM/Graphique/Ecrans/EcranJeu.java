@@ -1,7 +1,7 @@
 package IHM.Graphique.Ecrans;
 
-import IHM.Composants.InfoJoueur;
-import IHM.Composants.JButtonIcon;
+import IHM.Graphique.Composants.InfoJoueur;
+import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.PopUp.PopUpMenu;
 import Modele.Actions.ActionAnnuler;
@@ -49,7 +49,7 @@ public class EcranJeu extends Ecran {
         message = new JLabel("", SwingConstants.CENTER);
         menu.add(message);
 
-        JPanel annulerRefaire = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel annulerRefaire = new JPanel(new GridLayout(1, 0));
 
         annuler = new JButtonIcon(new ImageIcon("res/arrow_left.png"), 100);
         annuler.addActionListener(new ActionListener() {
@@ -77,6 +77,7 @@ public class EcranJeu extends Ecran {
         options.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                ihm.getMoteurJeu().pauseGame(true);
                 ihm.ouvrirFenetre(new PopUpMenu());
             }
         });
@@ -89,14 +90,17 @@ public class EcranJeu extends Ecran {
 
         panel.add(menu, BorderLayout.EAST);
         panel.add(ihm.getPlateauGraphique(), BorderLayout.CENTER);
+
+        update(ihm);
     }
 
     @Override
     public void update(IHMGraphique ihm) {
+        resized();
         for (InfoJoueur joueur : joueurs) {
             joueur.update(joueur.getJoueurID() == ihm.getMoteurJeu().getJoueurActif().getID());
-            panel.repaint();
         }
+        panel.repaint();
     }
 
     @Override
@@ -108,5 +112,6 @@ public class EcranJeu extends Ecran {
     public void resized() {
         final int menuWidth = panel.getWidth() * 2 / 7;
         menu.setPreferredSize(new Dimension(menuWidth, panel.getHeight()));
+        panel.revalidate();
     }
 }

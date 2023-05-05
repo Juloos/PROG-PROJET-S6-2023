@@ -20,8 +20,11 @@ public class MoteurJeu implements Runnable {
 
     int nbPionsPlaces;
 
+    boolean pause;
+    Thread threadIHM;
+
     public MoteurJeu() {
-        Joueur[] joueurs = new Joueur[]{new JoueurHumain(0), new JoueurIA(1), new JoueurIA(2), new JoueurIA(3)};
+        Joueur[] joueurs = new Joueur[]{new JoueurHumain(0), new JoueurIA(1)};
         jeu = new JeuConcret(joueurs);
 
         switch (Config.TYPE_IHM) {
@@ -35,25 +38,30 @@ public class MoteurJeu implements Runnable {
                 ihm = null;
                 break;
         }
+
+        if (ihm != null) {
+            threadIHM = new Thread(ihm);
+            threadIHM.start();
+        }
     }
 
-    public IHM getIHM() {
+    public synchronized IHM getIHM() {
         return ihm;
     }
 
-    public JeuConcret getJeu() {
+    public synchronized JeuConcret getJeu() {
         return jeu;
     }
 
-    public Joueur getJoueurActif() {
+    public synchronized Joueur getJoueurActif() {
         return jeu.getJoueur();
     }
 
-    public boolean estPhasePlacementPions() {
+    public synchronized boolean estPhasePlacementPions() {
         return nbPionsPlaces < jeu.getNbJoueurs() * jeu.getNbPions();
     }
 
-    public void jouerCoup(Coup coup) {
+    public synchronized void jouerCoup(Coup coup) {
         if (coup.estJouable(jeu)) {
             jeu.jouer(coup);
             nbPionsPlaces++;
@@ -63,28 +71,29 @@ public class MoteurJeu implements Runnable {
             ihm.afficherMessage("Coup injouable");
     }
 
-    public void annulerCoup() {
+    public synchronized void annulerCoup() {
         System.out.println("Annulation du dernier coup joué");
         nbPionsPlaces--;
         jeu.annuler();
     }
 
-    public void refaireCoup() {
+    public synchronized void refaireCoup() {
         System.out.println("Refaison du dernier coup annulé");
         nbPionsPlaces++;
         jeu.refaire();
     }
 
-    public void sauvegarder() {
+    public synchronized void sauvegarder(String nomSave) {
         System.out.println("Sauvegarde de la partie");
         try {
-            jeu.sauvegarder("sauvegarde.txt");
+            jeu.sauvegarder(nomSave + ".txt");
         } catch (Exception e) {
             System.out.println("Erreur lors de la sauvegarde");
         }
     }
 
     public void appliquerAction(Action action) {
+//        System.out.println("Action en cours de traitement " + action.toString());
         if (!action.peutAppliquer(this)) {
             ihm.afficherMessage("Action non applicable");
         } else {
@@ -101,20 +110,51 @@ public class MoteurJeu implements Runnable {
         if (ihm != null)
             ihm.updateAffichage(jeu);
 
+        pause = false;
         nbPionsPlaces = 0;
         while (estPhasePlacementPions()) {
+            waitPause();
             appliquerAction(jeu.getJoueur().reflechir(this));
+            System.out.println("On a traitée l'action");
         }
 
         System.out.println("Fin de la phase de placements des pions");
 
         while (!jeu.estTermine()) {
+            waitPause();
             while (jeu.peutJouer()) {
+                waitPause();
                 appliquerAction(jeu.getJoueur().reflechir(this));
+                System.out.println("Coup joué");
+            }
+            try {
+                Thread.sleep(100);
+            } catch (Exception e) {
             }
             jeu.jouer(new CoupTerminaison(jeu.getJoueur().id));
         }
 
+        ihm.updateAffichage(jeu);
+
         System.out.println("Fin de jeu");
+    }
+
+    public synchronized boolean isPaused() {
+        return pause;
+    }
+
+    public synchronized void pauseGame(boolean pause) {
+        System.out.println("Jeu en pause " + pause);
+        this.pause = pause;
+    }
+
+    private void waitPause() {
+        while (pause) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

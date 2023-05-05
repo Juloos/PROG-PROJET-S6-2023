@@ -1,4 +1,4 @@
-package IHM.Composants;
+package IHM.Graphique.Composants;
 
 import javax.swing.*;
 import java.awt.*;

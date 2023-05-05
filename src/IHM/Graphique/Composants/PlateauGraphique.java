@@ -14,6 +14,7 @@ import java.util.List;
 public class PlateauGraphique extends JComponent {
 
     final Color SURBRIANLLANCE = new Color(0.5f, 0.8f, 0.5f, 0.45f);
+    final Color SURBRIANLLANCE_PION = new Color(0.75f, 0.25f, 0.75f, 0.45f);
     int BORDURES_X = 2, BORDURES_Y = 1;
     Image[][] sprites;
     double TAILLE_CASES, Y_OFFSET, ESPACEMENT_TUILES;
@@ -73,8 +74,8 @@ public class PlateauGraphique extends JComponent {
 
         drawable.clearRect(0, 0, getWidth(), getHeight());
 
-        Plateau plateau = jeu.getPlateau();
         if (jeu != null) {
+            Plateau plateau = jeu.getPlateau();
             final int NB_ROWS = plateau.getNbRows();
             TAILLE_CASES = Math.floor((Math.min(getHeight(), getWidth() - (getWidth() / 7)) * 4.0 / (3.0 * NB_ROWS)) - 1.0);
             Y_OFFSET = TAILLE_CASES / NB_ROWS;
@@ -97,7 +98,7 @@ public class PlateauGraphique extends JComponent {
                     drawable.drawImage(img, x, y, (int) TAILLE_CASES, (int) TAILLE_CASES, null);
 
                     if (tuilesSurbrillance != null && tuilesSurbrillance.contains(coord)) {
-                        ajouterSurbrillance(drawable, q, r, SURBRIANLLANCE);
+                        ajouterSurbrillance(drawable, q, r, jeu.estPion(coord) ? SURBRIANLLANCE_PION : SURBRIANLLANCE);
                     }
                 }
             }

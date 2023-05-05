@@ -1,6 +1,7 @@
 package Modele.Coups;
 
 import Modele.Jeu.Jeu;
+import Modele.Jeu.JeuConcret;
 
 public interface Coup {
     public void jouer(Jeu j);

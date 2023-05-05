@@ -73,7 +73,9 @@ public abstract class Joueur implements Comparable<Joueur> {
     public void decrementerScore(int val) {
         this.score -= val;
     }
-
+    public void reAnimer(){
+        this.termine = false;
+    }
     public void ajouterPion(Coord c) {
         if (pions.containsKey(c))
             throw new IllegalArgumentException("Pion déjà présent");

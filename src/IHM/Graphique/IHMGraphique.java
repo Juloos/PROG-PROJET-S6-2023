@@ -3,6 +3,7 @@ package IHM.Graphique;
 import Controleur.MoteurJeu;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.EcranJeu;
+import IHM.Graphique.PopUp.PopUpFinPartie;
 import IHM.IHM;
 import Modele.Actions.Action;
 import Modele.Actions.ActionCoup;
@@ -19,6 +20,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class IHMGraphique extends IHM implements MouseListener, Runnable {
@@ -64,23 +66,27 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         });
 
         frame.addMouseListener(this);
-        frame.setSize(1500, 1000);
+        frame.setSize(1000, 700);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
     }
 
     @Override
-    public void updateAffichage(Jeu jeu) {
+    public synchronized void updateAffichage(Jeu jeu) {
         fenetres.peek().update(this);
 
         plateauGraphique.setJeu(jeu);
-        if (moteurJeu.estPhasePlacementPions()) {
-            plateauGraphique.setTuilesSurbrillance(jeu.placememntPionValide());
+        if (jeu.estTermine()) {
+            ouvrirFenetre(new PopUpFinPartie());
         } else {
-            plateauGraphique.setTuilesSurbrillance(null);
+            if (moteurJeu.estPhasePlacementPions()) {
+                plateauGraphique.setTuilesSurbrillance(jeu.placememntPionValide());
+            } else {
+                plateauGraphique.setTuilesSurbrillance(null);
+            }
+            plateauGraphique.repaint();
+            frame.revalidate();
         }
-        plateauGraphique.repaint();
     }
 
     @Override
@@ -88,37 +94,42 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         actionJoueur = null;
         selection = null;
 
-        Thread thread = new Thread(this);
+        System.out.println("En attente d'une action du joueur actif");
+
+        Thread thread = new Thread(new WaitActionJoueur(this));
         thread.start();
         try {
             thread.join();
         } catch (Exception e) {
         }
+
+        System.out.println("Action reçue");
         return actionJoueur;
     }
 
 
     @Override
-    public void afficherMessage(String message) {
-        fenetres.peek().afficherMessage(message);
+    public synchronized void afficherMessage(String message) {
+        Thread thread = new Thread(new AfficherMessage(this, message));
+        thread.start();
     }
 
-    public MoteurJeu getMoteurJeu() {
+    public synchronized MoteurJeu getMoteurJeu() {
         return moteurJeu;
     }
 
-    public JFrame getFrame() {
+    public synchronized JFrame getFrame() {
         return frame;
     }
 
-    public PlateauGraphique getPlateauGraphique() {
+    public synchronized PlateauGraphique getPlateauGraphique() {
         return plateauGraphique;
     }
 
     /**
      * Détruit toutes les fenêtres de l'IHM et retourne au menu d'accueil
      */
-    public void fermerFenetres() {
+    public synchronized void fermerFenetres() {
         for (Fenetre fenetre : fenetres) {
             fenetre.close(this);
         }
@@ -128,11 +139,12 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
     /**
      * Retourne à la fenêtre précédente et détruit la fenêtre actuelle
      */
-    public void retournerPrecedenteFenetre() {
+    public synchronized void retournerPrecedenteFenetre() {
         fenetres.peek().close(this);
         System.out.println("Fermeture de la fenetre : " + fenetres.peek().title);
         fenetres.pop();
         fenetres.peek().open(this);
+        fenetres.peek().resized();
         System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
         frame.revalidate();
 
@@ -145,13 +157,14 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
      * @param fenetre La nouvelle fenêtre à ouvrir
      */
     @NotNull()
-    public void ouvrirFenetre(Fenetre fenetre) {
+    public synchronized void ouvrirFenetre(Fenetre fenetre) {
         if (!fenetres.empty()) {
             fenetres.peek().close(this);
         }
 
         fenetres.push(fenetre);
         fenetre.open(this);
+        fenetres.peek().resized();
         System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
         frame.revalidate();
 
@@ -164,7 +177,7 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
      * @param mouseEvent
      */
     @Override
-    public void mouseClicked(MouseEvent mouseEvent) {
+    public synchronized void mouseClicked(MouseEvent mouseEvent) {
         Coord coord = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
         if (moteurJeu.getJeu().getPlateau().estCoordValide(coord)) {
             if (moteurJeu.estPhasePlacementPions()) {
@@ -176,7 +189,10 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
                     if (moteurJeu.getJeu().getPlateau().estCoordValide(selection) && moteurJeu.getJeu().estPion(selection)
                             && moteurJeu.getJeu().joueurDePion(selection) == moteurJeu.getJoueurActif().id) {
                         System.out.println("Selection");
-                        plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection));
+
+                        ArrayList<Coord> coords = moteurJeu.getJeu().deplacementsPion(selection);
+                        coords.add(selection);
+                        plateauGraphique.setTuilesSurbrillance(coords);
                         plateauGraphique.repaint();
                     } else {
                         selection = null;
@@ -190,7 +206,10 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
                         actionJoueur = new ActionCoup(new CoupDeplacement(selection, cible, moteurJeu.getJoueurActif().id));
                     } else if (moteurJeu.getJeu().joueurDePion(cible) == moteurJeu.getJoueurActif().id) {
                         selection = cible;
-                        plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection));
+
+                        ArrayList<Coord> coords = moteurJeu.getJeu().deplacementsPion(selection);
+                        coords.add(selection);
+                        plateauGraphique.setTuilesSurbrillance(coords);
                         plateauGraphique.repaint();
                     }
 
@@ -233,12 +252,51 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
      */
     @Override
     public void run() {
-        while (actionJoueur == null) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+        System.out.println("Lancement IHM");
+
+        frame.setVisible(true);
+    }
+
+    synchronized Action getActionJoueur() {
+        return actionJoueur;
+    }
+
+    private class WaitActionJoueur implements Runnable {
+        IHMGraphique ihm;
+
+        public WaitActionJoueur(IHMGraphique ihm) {
+            this.ihm = ihm;
+        }
+
+        @Override
+        public void run() {
+            while (ihm.getActionJoueur() == null) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
+        }
+    }
+
+    private class AfficherMessage implements Runnable {
+        IHMGraphique ihm;
+        String message;
+
+        public AfficherMessage(IHMGraphique ihm, String message) {
+            this.ihm = ihm;
+            this.message = message;
+        }
+
+        @Override
+        public void run() {
+            ihm.fenetres.peek().afficherMessage(message);
+            try {
+                Thread.sleep(3000);
+            } catch (Exception e) {
+            }
+            ihm.fenetres.peek().afficherMessage("");
         }
     }
 }
