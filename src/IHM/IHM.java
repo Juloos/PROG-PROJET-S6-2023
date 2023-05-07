@@ -1,6 +1,7 @@
 package IHM;
 
 import Controleur.MoteurJeu;
+import IHM.Graphique.Animations.Animation;
 import Modele.Actions.Action;
 import Modele.Jeu.Jeu;
 

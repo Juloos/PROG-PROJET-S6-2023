@@ -97,7 +97,7 @@ public class IHMConsole extends IHM {
     public void afficherMessage(String message) {
         System.out.println(message);
     }
-
+    
     private int[] decouperLigne(String ligne) {
         String[] ligne_split = ligne.split(" ");
         int[] valeurs = new int[ligne_split.length];

@@ -28,6 +28,11 @@ public class JeuGraphe extends Jeu {
         fils = new ArrayList<>();
     }
 
+    @Override
+    public Jeu clone() {
+        return null;
+    }
+
     public JeuGraphe(Jeu j, Coup coup) {
         this(j);
         this.coup = coup;

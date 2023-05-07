@@ -1,6 +1,8 @@
 package IHM.Graphique;
 
 import Controleur.MoteurJeu;
+import IHM.Graphique.Animations.Animation;
+import IHM.Graphique.Animations.AnimationDeplacementPion;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.EcranJeu;
 import IHM.Graphique.PopUp.PopUpFinPartie;
@@ -21,9 +23,11 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.Stack;
 
-public class IHMGraphique extends IHM implements MouseListener, Runnable {
+public class IHMGraphique extends IHM implements MouseListener {
 
     // Pile des fenêtres qui ont été ouverte, la fênetre ouverte est au sommet de la pile
     Stack<Fenetre> fenetres;
@@ -36,6 +40,10 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
     Coord selection;
     // L'action que le joueur fait
     Action actionJoueur;
+
+    boolean animationEnCours;
+    Animation animation;
+    WaitActionJoueur waitActionJoueur;
 
     public IHMGraphique(MoteurJeu moteurJeu) {
         super(moteurJeu);
@@ -73,6 +81,12 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
 
     @Override
     public synchronized void updateAffichage(Jeu jeu) {
+        if(animation != null) {
+            plateauGraphique.setTuilesSurbrillance(null);
+            jouerAnimation(animation);
+            animation = null;
+        }
+
         fenetres.peek().update(this);
 
         plateauGraphique.setJeu(jeu);
@@ -84,9 +98,8 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
             } else {
                 plateauGraphique.setTuilesSurbrillance(null);
             }
-            plateauGraphique.repaint();
-            frame.revalidate();
         }
+        plateauGraphique.repaint();
     }
 
     @Override
@@ -94,16 +107,13 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         actionJoueur = null;
         selection = null;
 
-        System.out.println("En attente d'une action du joueur actif");
-
-        Thread thread = new Thread(new WaitActionJoueur(this));
-        thread.start();
+        WaitActionJoueur waitActionJoueur = new WaitActionJoueur();
+        waitActionJoueur.start();
         try {
-            thread.join();
+            waitActionJoueur.join();
         } catch (Exception e) {
         }
 
-        System.out.println("Action reçue");
         return actionJoueur;
     }
 
@@ -112,6 +122,18 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
     public synchronized void afficherMessage(String message) {
         Thread thread = new Thread(new AfficherMessage(this, message));
         thread.start();
+    }
+
+    public synchronized void jouerAnimation(Animation animation) {
+        animation.run();
+//        Thread thread = new Thread(animation);
+//        animationEnCours = true;
+//        try {
+//            thread.start();
+//            thread.join();
+//        } catch (Exception e) {
+//        }
+        animationEnCours = false;
     }
 
     public synchronized MoteurJeu getMoteurJeu() {
@@ -141,11 +163,11 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
      */
     public synchronized void retournerPrecedenteFenetre() {
         fenetres.peek().close(this);
-        System.out.println("Fermeture de la fenetre : " + fenetres.peek().title);
+//        System.out.println("Fermeture de la fenetre : " + fenetres.peek().title);
         fenetres.pop();
         fenetres.peek().open(this);
         fenetres.peek().resized();
-        System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
+//        System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
         frame.revalidate();
 
         enJeu = fenetres.peek() instanceof EcranJeu;
@@ -165,7 +187,7 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         fenetres.push(fenetre);
         fenetre.open(this);
         fenetres.peek().resized();
-        System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
+//        System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
         frame.revalidate();
 
         enJeu = fenetres.peek() instanceof EcranJeu;
@@ -188,7 +210,7 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
                     selection = coord;
                     if (moteurJeu.getJeu().getPlateau().estCoordValide(selection) && moteurJeu.getJeu().estPion(selection)
                             && moteurJeu.getJeu().joueurDePion(selection) == moteurJeu.getJoueurActif().id) {
-                        System.out.println("Selection");
+//                        System.out.println("Selection");
 
                         ArrayList<Coord> coords = moteurJeu.getJeu().deplacementsPion(selection);
                         coords.add(selection);
@@ -200,10 +222,26 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
 
                 } else {
                     Coord cible = coord;
-                    System.out.println("Cible");
+//                    System.out.println("Cible");
 
                     if (moteurJeu.getJeu().getPlateau().estCoordValide(cible) && !moteurJeu.getJeu().estPion(cible)) {
                         actionJoueur = new ActionCoup(new CoupDeplacement(selection, cible, moteurJeu.getJoueurActif().id));
+
+                        if(actionJoueur.peutAppliquer(moteurJeu)) {
+                            List<Coord> coords = new ArrayList<>();
+                            int decalage = selection.getDecalage(cible);
+                            Coord current = new Coord(selection.q, selection.r);
+
+                            while(!current.equals(cible)) {
+                                coords.add(current);
+                                current = current.decale(decalage);
+                            }
+                            coords.add(cible);
+
+                            Coord[] array = new Coord[coords.size()];
+                            animation = new AnimationDeplacementPion(this, coords.toArray(array));
+                        }
+
                     } else if (moteurJeu.getJeu().joueurDePion(cible) == moteurJeu.getJoueurActif().id) {
                         selection = cible;
 
@@ -218,6 +256,7 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         } else {
             afficherMessage("Coordonées invalide");
         }
+        System.out.println();
     }
 
     @Override
@@ -252,7 +291,7 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
      */
     @Override
     public void run() {
-        System.out.println("Lancement IHM");
+//        System.out.println("Lancement IHM");
 
         frame.setVisible(true);
     }
@@ -261,16 +300,10 @@ public class IHMGraphique extends IHM implements MouseListener, Runnable {
         return actionJoueur;
     }
 
-    private class WaitActionJoueur implements Runnable {
-        IHMGraphique ihm;
-
-        public WaitActionJoueur(IHMGraphique ihm) {
-            this.ihm = ihm;
-        }
-
+    private class WaitActionJoueur extends Thread {
         @Override
         public void run() {
-            while (ihm.getActionJoueur() == null) {
+            while(getActionJoueur() == null) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {

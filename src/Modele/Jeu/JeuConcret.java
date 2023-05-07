@@ -34,6 +34,12 @@ public class JeuConcret extends Jeu {
         future = new Stack<>();
     }
 
+    public JeuConcret(JeuConcret jeu) {
+        super(jeu);
+        this.passe = jeu.passe;
+        this.future = jeu.future;
+    }
+
     public Stack<Coup> getPasse() {
         return passe;
     }
@@ -256,5 +262,10 @@ public class JeuConcret extends Jeu {
             System.out.println(fichier + " isn't a save file");
             return null;
         }
+    }
+
+    @Override
+    public Jeu clone() {
+        return new JeuConcret(this);
     }
 }

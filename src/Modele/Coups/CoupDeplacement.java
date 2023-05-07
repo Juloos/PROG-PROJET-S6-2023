@@ -45,6 +45,14 @@ public class CoupDeplacement implements Coup {
         return joueur;
     }
 
+    public Coord getSource() {
+        return source;
+    }
+
+    public Coord getDestination() {
+        return destination;
+    }
+
     public String getSaveString() {
         return "-2 " + joueur + " " + source.q + " " + source.r + " " + destination.q + " " + destination.r + " " + oldVal;
     }

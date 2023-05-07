@@ -1,7 +1,10 @@
 package Modele.Actions;
 
 import Controleur.MoteurJeu;
+import IHM.Graphique.Animations.AnimationDeplacementPion;
+import IHM.Graphique.IHMGraphique;
 import Modele.Coups.Coup;
+import Modele.Coups.CoupDeplacement;
 
 public class ActionCoup implements Action {
     Coup coup;
@@ -12,9 +15,7 @@ public class ActionCoup implements Action {
 
     @Override
     public void appliquer(MoteurJeu mt) {
-        if (peutAppliquer(mt)) {
-            mt.jouerCoup(coup);
-        }
+        mt.jouerCoup(coup);
     }
 
     @Override

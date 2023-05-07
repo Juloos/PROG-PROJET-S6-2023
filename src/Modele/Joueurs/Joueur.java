@@ -11,7 +11,7 @@ import java.util.Set;
 import static Global.Config.TAILLE_PLATEAU_X;
 import static Global.Config.TAILLE_PLATEAU_Y;
 
-public abstract class Joueur implements Comparable<Joueur> {
+public abstract class Joueur implements Cloneable, Comparable<Joueur> {
     public final int id;
     final HashMap<Coord, Boolean> pions;
     int score;

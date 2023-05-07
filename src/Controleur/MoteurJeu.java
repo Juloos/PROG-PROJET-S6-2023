@@ -12,7 +12,7 @@ import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
 
-public class MoteurJeu implements Runnable {
+public class MoteurJeu extends Thread {
 
     IHM ihm;
 
@@ -20,10 +20,11 @@ public class MoteurJeu implements Runnable {
 
     int nbPionsPlaces;
 
-    boolean pause;
+    boolean pause, miseAJourAffichage;
     Thread threadIHM;
 
     public MoteurJeu() {
+        super();
         Joueur[] joueurs = new Joueur[]{new JoueurHumain(0), new JoueurIA(1)};
         jeu = new JeuConcret(joueurs);
 
@@ -65,8 +66,6 @@ public class MoteurJeu implements Runnable {
         if (coup.estJouable(jeu)) {
             jeu.jouer(coup);
             nbPionsPlaces++;
-            if (ihm != null)
-                ihm.updateAffichage(jeu);
         } else if (ihm != null)
             ihm.afficherMessage("Coup injouable");
     }
@@ -93,39 +92,41 @@ public class MoteurJeu implements Runnable {
     }
 
     public void appliquerAction(Action action) {
-//        System.out.println("Action en cours de traitement " + action.toString());
         if (!action.peutAppliquer(this)) {
             ihm.afficherMessage("Action non applicable");
         } else {
             action.appliquer(this);
         }
 
+        updateAffichage();
+    }
+
+    public synchronized void updateAffichage() {
         if (ihm != null) {
             ihm.updateAffichage(jeu);
         }
     }
 
+
     @Override
     public void run() {
-        if (ihm != null)
-            ihm.updateAffichage(jeu);
+        updateAffichage();
 
         pause = false;
         nbPionsPlaces = 0;
         while (estPhasePlacementPions()) {
             waitPause();
             appliquerAction(jeu.getJoueur().reflechir(this));
-            System.out.println("On a traitée l'action");
         }
 
-        System.out.println("Fin de la phase de placements des pions");
+        ihm.afficherMessage("Fin de la phase de placement des pions");
+        updateAffichage();
 
         while (!jeu.estTermine()) {
             waitPause();
             while (jeu.peutJouer()) {
                 waitPause();
                 appliquerAction(jeu.getJoueur().reflechir(this));
-                System.out.println("Coup joué");
             }
             try {
                 Thread.sleep(100);
@@ -134,9 +135,7 @@ public class MoteurJeu implements Runnable {
             jeu.jouer(new CoupTerminaison(jeu.getJoueur().id));
         }
 
-        ihm.updateAffichage(jeu);
-
-        System.out.println("Fin de jeu");
+        updateAffichage();
     }
 
     public synchronized boolean isPaused() {

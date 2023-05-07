@@ -2,6 +2,8 @@ package IHM.Graphique.Composants;
 
 import Modele.Coord;
 import Modele.Jeu.Jeu;
+import Modele.Jeu.JeuConcret;
+import Modele.Joueurs.Joueur;
 import Modele.Plateau;
 
 import javax.imageio.ImageIO;
@@ -10,6 +12,8 @@ import java.awt.*;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 public class PlateauGraphique extends JComponent {
 
@@ -18,7 +22,7 @@ public class PlateauGraphique extends JComponent {
     int BORDURES_X = 2, BORDURES_Y = 1;
     Image[][] sprites;
     double TAILLE_CASES, Y_OFFSET, ESPACEMENT_TUILES;
-    Jeu jeu;
+    public Jeu jeu;
 
     List<Coord> tuilesSurbrillance;
 
@@ -64,15 +68,13 @@ public class PlateauGraphique extends JComponent {
         return null;
     }
 
-    public void setJeu(Jeu jeu) {
-        this.jeu = jeu;
+    public synchronized void setJeu(Jeu jeu) {
+        this.jeu = jeu.clone();
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    public synchronized void paintComponent(Graphics g) {
         Graphics2D drawable = (Graphics2D) g;
-
-        drawable.clearRect(0, 0, getWidth(), getHeight());
 
         if (jeu != null) {
             Plateau plateau = jeu.getPlateau();
@@ -134,7 +136,7 @@ public class PlateauGraphique extends JComponent {
         return (int) (Y_OFFSET + ((TAILLE_CASES / ESPACEMENT_TUILES) * (3.0 / 2.0) * r));
     }
 
-    public Coord getClickedTuile(int x, int y) {
+    public synchronized Coord getClickedTuile(int x, int y) {
         double r = (2.0 / 3.0) * (ESPACEMENT_TUILES / TAILLE_CASES) * (y - Y_OFFSET);
         int rInt = (int) (r - (r % 1 < 0.5 ? 1.0 : 0.0));
         double q = (ESPACEMENT_TUILES / TAILLE_CASES) * (1.0 / Math.sqrt(3.0)) * (x - (TAILLE_CASES / 2.0)) + 0.5 * (rInt & 1);
@@ -142,7 +144,14 @@ public class PlateauGraphique extends JComponent {
         return new Coord((int) q, rInt);
     }
 
-    public void setTuilesSurbrillance(List<Coord> tuilesSurbrillance) {
+    public synchronized void setTuilesSurbrillance(List<Coord> tuilesSurbrillance) {
         this.tuilesSurbrillance = tuilesSurbrillance;
+    }
+
+    public synchronized void deplacerPion(Coord source, Coord dest, boolean mangerSource) {
+        if(mangerSource) {
+            jeu.manger(source);
+        }
+        jeu.getJoueur().deplacerPion(source, dest);
     }
 }

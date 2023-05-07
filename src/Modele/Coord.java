@@ -76,6 +76,44 @@ public class Coord {
         }
     }
 
+    public int getDecalage(Coord cible) {
+        int dq = cible.q - q;
+        if(dq != 0) {
+            dq /= Math.abs(dq);
+        }
+
+        int dr = cible.r - r;
+        if(dr != 0) {
+            dr /= Math.abs(dr);
+        }
+
+        System.out.println("dq : " + dq + ", dr : " + dr);
+
+        if(dr == 0) {
+            if(dq > 0) {
+                return DROITE;
+            } else if(dq < 0) {
+                return GAUCHE;
+            } else {
+                return -1;
+            }
+        } else if(dr < 0) {
+            if(dq > 0) {
+                return HAUT_DROITE;
+            } else if(dq < 0) {
+                return HAUT_GAUCHE;
+            }
+        } else {
+            if(dq > 0) {
+                return BAS_DROITE;
+            } else if(dq < 0) {
+                return BAS_GAUCHE;
+            }
+        }
+
+        return -1;
+    }
+
     public ArrayList<Coord> voisins() {
         ArrayList<Coord> voisins = new ArrayList<>();
         for (int i = 0; i < 6; i++)

@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 import static Global.Config.*;
 
-public abstract class Jeu {
+public abstract class Jeu implements Cloneable {
     final Plateau plateau;
     final Joueur[] joueurs;
     int nbJoueurs;
@@ -46,6 +46,20 @@ public abstract class Jeu {
             throw new IllegalArgumentException("Trop de joueurs");
         joueurCourant = 0;
         nbPions = NB_PIONS / nbJoueurs;
+    }
+
+    public Jeu(Jeu jeu) {
+        this.plateau = jeu.plateau.clone();
+
+        Joueur[] copyJoueurs = new Joueur[jeu.getNbJoueurs()];
+        for(int i = 0; i < jeu.getNbJoueurs(); i++) {
+            copyJoueurs[i] = jeu.getJoueur(i).clone();
+        }
+
+        this.joueurs = copyJoueurs;
+        this.nbJoueurs = jeu.nbJoueurs;
+        this.nbPions = jeu.nbPions;
+        this.joueurCourant = jeu.joueurCourant;
     }
 
     public Joueur getJoueur() {
@@ -101,7 +115,7 @@ public abstract class Jeu {
         return -1;
     }
 
-    void manger(Coord c) {
+    public void manger(Coord c) {
         joueurs[joueurCourant].ajouterTuile(plateau.get(c));
         plateau.set(c, Plateau.VIDE);
     }
@@ -147,6 +161,7 @@ public abstract class Jeu {
     }
 
     public void deplacerPion(Coord c1, Coord c2) {
+        System.out.println("On déplace le pion sur la tuile " + c1);
         if (!deplacementsPion(c1).contains(c2))
             throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
         manger(c1);
@@ -256,4 +271,7 @@ public abstract class Jeu {
         str.delete(str.length() - 3, str.length());
         return str.toString();
     }
+
+    @Override
+    public abstract Jeu clone();
 }
