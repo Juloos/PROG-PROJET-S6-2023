@@ -2,15 +2,21 @@ package Controleur;
 
 import Global.Config;
 import IHM.Console.IHMConsole;
+import IHM.Graphique.Animations.AnimationDeplacementPion;
 import IHM.Graphique.IHMGraphique;
 import IHM.IHM;
+import IHM.TypeIHM;
 import Modele.Actions.Action;
+import Modele.Coord;
 import Modele.Coups.Coup;
+import Modele.Coups.CoupDeplacement;
 import Modele.Coups.CoupTerminaison;
 import Modele.Jeu.JeuConcret;
 import Modele.Joueurs.Joueur;
-import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MoteurJeu extends Thread {
 
@@ -25,7 +31,7 @@ public class MoteurJeu extends Thread {
 
     public MoteurJeu() {
         super();
-        Joueur[] joueurs = new Joueur[]{new JoueurHumain(0), new JoueurIA(1)};
+        Joueur[] joueurs = new Joueur[]{new JoueurIA(0), new JoueurIA(1)};
         jeu = new JeuConcret(joueurs);
 
         switch (Config.TYPE_IHM) {
@@ -66,6 +72,23 @@ public class MoteurJeu extends Thread {
         if (coup.estJouable(jeu)) {
             jeu.jouer(coup);
             nbPionsPlaces++;
+
+            if (Config.TYPE_IHM == TypeIHM.GRAPHIQUE && coup instanceof CoupDeplacement) {
+                CoupDeplacement deplacement = (CoupDeplacement) coup;
+
+                List<Coord> coords = new ArrayList<>();
+                int decalage = deplacement.source.getDecalage(deplacement.destination);
+                System.out.println("Décalage : " + decalage + "\n");
+                Coord current = new Coord(deplacement.source.q, deplacement.source.r);
+
+                while (!current.equals(deplacement.destination)) {
+                    coords.add(current);
+                    current = current.decale(decalage);
+                }
+                coords.add(deplacement.destination);
+                Coord[] array = new Coord[coords.size()];
+                ((IHMGraphique) ihm).setAnimation(new AnimationDeplacementPion(((IHMGraphique) ihm), coords.toArray(array)));
+            }
         } else if (ihm != null)
             ihm.afficherMessage("Coup injouable");
     }
@@ -154,6 +177,14 @@ public class MoteurJeu extends Thread {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+    
+    public synchronized void close() {
+        try {
+            threadIHM.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }

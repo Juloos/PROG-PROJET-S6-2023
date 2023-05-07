@@ -5,8 +5,8 @@ import IHM.Graphique.IHMGraphique;
 public abstract class Animation {
 
     final double TIME_BETWEEN_FRAMES;
-    IHMGraphique ihm;
-    int nbFrames;
+    final int nbFrames;
+    final IHMGraphique ihm;
 
     public Animation(IHMGraphique ihm, double timeBetweenFrame, int nbFrames) {
         this.ihm = ihm;

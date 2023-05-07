@@ -86,6 +86,8 @@ public class Coord {
             dr /= Math.abs(dr);
         }
 
+        System.out.println("Départ : " + this);
+        System.out.println("Arrivée : " + cible);
         System.out.println("dq : " + dq + ", dr : " + dr);
 
         if (dr == 0 && dq == 0) {

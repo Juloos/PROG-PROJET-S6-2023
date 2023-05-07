@@ -2,12 +2,10 @@ package Modele.Coups;
 
 import Modele.Coord;
 import Modele.Jeu.Jeu;
-import Modele.Jeu.JeuConcret;
 import Modele.Plateau;
 
 public class CoupDeplacement implements Coup {
-    Coord source;
-    Coord destination;
+    public final Coord source, destination;
     int oldVal;
     int joueur;
 

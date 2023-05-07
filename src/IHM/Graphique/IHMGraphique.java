@@ -2,7 +2,6 @@ package IHM.Graphique;
 
 import Controleur.MoteurJeu;
 import IHM.Graphique.Animations.Animation;
-import IHM.Graphique.Animations.AnimationDeplacementPion;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.EcranJeu;
 import IHM.Graphique.PopUp.PopUpFinPartie;
@@ -23,8 +22,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.Stack;
 
 public class IHMGraphique extends IHM implements MouseListener {
@@ -81,7 +78,8 @@ public class IHMGraphique extends IHM implements MouseListener {
 
     @Override
     public synchronized void updateAffichage(Jeu jeu) {
-        if(animation != null) {
+        if (animation != null) {
+            System.out.println("Lancement animation");
             plateauGraphique.setTuilesSurbrillance(null);
             jouerAnimation(animation);
             animation = null;
@@ -193,6 +191,10 @@ public class IHMGraphique extends IHM implements MouseListener {
         enJeu = fenetres.peek() instanceof EcranJeu;
     }
 
+    public synchronized void setAnimation(Animation animation) {
+        this.animation = animation;
+    }
+
     /**
      * Lorsqu'un joueur clique sur la fenêtre
      *
@@ -226,22 +228,6 @@ public class IHMGraphique extends IHM implements MouseListener {
 
                     if (moteurJeu.getJeu().getPlateau().estCoordValide(cible) && !moteurJeu.getJeu().estPion(cible)) {
                         actionJoueur = new ActionCoup(new CoupDeplacement(selection, cible, moteurJeu.getJoueurActif().id));
-
-                        if(actionJoueur.peutAppliquer(moteurJeu)) {
-                            List<Coord> coords = new ArrayList<>();
-                            int decalage = selection.getDecalage(cible);
-                            Coord current = new Coord(selection.q, selection.r);
-
-                            while(!current.equals(cible)) {
-                                coords.add(current);
-                                current = current.decale(decalage);
-                            }
-                            coords.add(cible);
-
-                            Coord[] array = new Coord[coords.size()];
-                            animation = new AnimationDeplacementPion(this, coords.toArray(array));
-                        }
-
                     } else if (moteurJeu.getJeu().joueurDePion(cible) == moteurJeu.getJoueurActif().id) {
                         selection = cible;
 
@@ -303,7 +289,7 @@ public class IHMGraphique extends IHM implements MouseListener {
     private class WaitActionJoueur extends Thread {
         @Override
         public void run() {
-            while(getActionJoueur() == null) {
+            while (getActionJoueur() == null) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {

@@ -52,7 +52,7 @@ public abstract class Jeu implements Cloneable {
         this.plateau = jeu.plateau.clone();
 
         Joueur[] copyJoueurs = new Joueur[jeu.getNbJoueurs()];
-        for(int i = 0; i < jeu.getNbJoueurs(); i++) {
+        for (int i = 0; i < jeu.getNbJoueurs(); i++) {
             copyJoueurs[i] = jeu.getJoueur(i).clone();
         }
 
@@ -136,7 +136,6 @@ public abstract class Jeu implements Cloneable {
     }
 
 
-
     public ArrayList<Coord> placememntPionValide() {
         ArrayList<Coord> liste = new ArrayList<>();
         for (int i = 0; i < plateau.getNbColumns(); i++) {
@@ -161,7 +160,6 @@ public abstract class Jeu implements Cloneable {
     }
 
     public void deplacerPion(Coord c1, Coord c2) {
-        System.out.println("On déplace le pion sur la tuile " + c1);
         if (!deplacementsPion(c1).contains(c2))
             throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
         manger(c1);
@@ -212,6 +210,7 @@ public abstract class Jeu implements Cloneable {
             throw new IllegalArgumentException("Mauvaise selection du joueur du coup : " + c + ".");
         c.jouer(this);
     }
+
     public void annulerDeplacer(int j, Coord c1, Coord c2) {
         if (!deplacementsPion(c1).contains(c2))
             throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
@@ -231,10 +230,11 @@ public abstract class Jeu implements Cloneable {
         this.joueurCourant = j;
     }
 
-    public void annulerAjout(int j, Coord cible){
+    public void annulerAjout(int j, Coord cible) {
         this.getJoueur(j).supprimerPion(cible);
         this.joueurCourant = j;
     }
+
     public ArrayList<Integer> getWinner() {
         ArrayList<Integer> winners = new ArrayList<>();
         Joueur max = Arrays.stream(joueurs).max(Joueur::compareTo).get();

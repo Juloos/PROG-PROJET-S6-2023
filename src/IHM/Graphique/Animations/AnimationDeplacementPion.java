@@ -8,12 +8,11 @@ import java.util.Arrays;
 
 public class AnimationDeplacementPion extends Animation {
 
-    private Coord[] coords;
-
-    private PlateauGraphique plateauGraphique;
+    private final PlateauGraphique plateauGraphique;
+    private final Coord[] coords;
 
     public AnimationDeplacementPion(IHMGraphique ihm, Coord[] coords) {
-        super(ihm, 0.3, coords.length - 1);
+        super(ihm, coords.length > 1 ? 0.6 : 1.5, coords.length - 1);
         this.coords = coords;
         this.plateauGraphique = ihm.getPlateauGraphique();
     }
@@ -30,6 +29,10 @@ public class AnimationDeplacementPion extends Animation {
 
     @Override
     void stop() {
-
+        try {
+            Thread.sleep((long) TIME_BETWEEN_FRAMES);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
