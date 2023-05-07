@@ -1,17 +1,16 @@
 package Modele;
 
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Coord {
-    public int q, r;
-
     public final static int HAUT_GAUCHE = 0;
     public final static int HAUT_DROITE = 1;
     public final static int DROITE = 2;
     public final static int BAS_DROITE = 3;
     public final static int BAS_GAUCHE = 4;
     public final static int GAUCHE = 5;
+    public int q, r;
 
     public Coord() {
         this.q = 0;
@@ -78,40 +77,40 @@ public class Coord {
 
     public int getDecalage(Coord cible) {
         int dq = cible.q - q;
-        if(dq != 0) {
+        if (dq != 0) {
             dq /= Math.abs(dq);
         }
 
         int dr = cible.r - r;
-        if(dr != 0) {
+        if (dr != 0) {
             dr /= Math.abs(dr);
         }
 
         System.out.println("dq : " + dq + ", dr : " + dr);
 
-        if(dr == 0) {
-            if(dq > 0) {
-                return DROITE;
-            } else if(dq < 0) {
-                return GAUCHE;
-            } else {
-                return -1;
-            }
-        } else if(dr < 0) {
-            if(dq > 0) {
-                return HAUT_DROITE;
-            } else if(dq < 0) {
-                return HAUT_GAUCHE;
-            }
-        } else {
-            if(dq > 0) {
-                return BAS_DROITE;
-            } else if(dq < 0) {
-                return BAS_GAUCHE;
-            }
+        if (dr == 0 && dq == 0) {
+            return -1;
         }
 
-        return -1;
+        if (r % 2 > 0) {
+            // Pour les lignes impaires
+            if (dr == 0) {
+                return dq > 0 ? DROITE : GAUCHE;
+            } else if (dr > 0) {
+                return dq >= 0 ? BAS_DROITE : BAS_GAUCHE;
+            } else {
+                return dq >= 0 ? HAUT_DROITE : HAUT_GAUCHE;
+            }
+        } else {
+            // Pour les lignes paires
+            if (dr == 0) {
+                return dq > 0 ? DROITE : GAUCHE;
+            } else if (dr > 0) {
+                return dq > 0 ? BAS_DROITE : BAS_GAUCHE;
+            } else {
+                return dq > 0 ? HAUT_DROITE : HAUT_GAUCHE;
+            }
+        }
     }
 
     public ArrayList<Coord> voisins() {

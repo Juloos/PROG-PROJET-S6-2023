@@ -13,7 +13,7 @@ public class AnimationDeplacementPion extends Animation {
     private PlateauGraphique plateauGraphique;
 
     public AnimationDeplacementPion(IHMGraphique ihm, Coord[] coords) {
-        super(ihm, 2, coords.length - 1);
+        super(ihm, 0.3, coords.length - 1);
         this.coords = coords;
         this.plateauGraphique = ihm.getPlateauGraphique();
     }

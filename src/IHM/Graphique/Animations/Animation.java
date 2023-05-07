@@ -4,15 +4,13 @@ import IHM.Graphique.IHMGraphique;
 
 public abstract class Animation {
 
+    final double TIME_BETWEEN_FRAMES;
     IHMGraphique ihm;
-
-    double duration;
-
     int nbFrames;
 
-    public Animation(IHMGraphique ihm, double duration, int nbFrames) {
+    public Animation(IHMGraphique ihm, double timeBetweenFrame, int nbFrames) {
         this.ihm = ihm;
-        this.duration = duration;
+        this.TIME_BETWEEN_FRAMES = timeBetweenFrame;
         this.nbFrames = nbFrames;
     }
 
@@ -23,12 +21,10 @@ public abstract class Animation {
     abstract void stop();
 
     public void run() {
-        final int TIME_BETWEEN_FRAMES = (int) (duration * 1000.0 / nbFrames);
-
         start();
         for (int i = 0; i < nbFrames; i++) {
             try {
-                Thread.sleep(TIME_BETWEEN_FRAMES);
+                Thread.sleep((int) (TIME_BETWEEN_FRAMES * 1000.0));
                 play(i);
                 ihm.getPlateauGraphique().repaint();
             } catch (InterruptedException e) {
