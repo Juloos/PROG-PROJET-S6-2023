@@ -1,56 +1,85 @@
 package Modele.IA;
 
-import Modele.Coups.Coup;
-import Modele.Jeu.Jeu;
-import Modele.Jeu.JeuGraphe;
-import Modele.Joueurs.Joueur;
+import Modele.ArbreCoups;
+import Modele.Coups.*;
+import Modele.Jeux.*;
+import Modele.Joueurs.*;
 
-import java.util.Comparator;
+import static Global.Config.*;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 public class IADifficile implements IA {
     Random rand;
     Joueur joueur;
-    JeuGraphe graphe;
-    int profondeurMax = -1;
-    Heuristique eval;
+    ArbreCoups graphe;
+    JeuGraphe pointeur;
 
     public IADifficile(Joueur j) {
         joueur = j;
         rand = new Random();
         graphe = null;
-        eval = new H1();
+        pointeur = null;
     }
 
     public IADifficile(Joueur j, int seed) {
         joueur = j;
         rand = new Random(seed);
         graphe = null;
-        eval = new H1();
+        pointeur = null;
     }
 
-    private void traiter(JeuGraphe noeud, int profondeur) {
-        if (profondeur == 0 || noeud.fils.isEmpty())
-            noeud.valeur = eval.evaluer(noeud, joueur.id);
-        else if (noeud.getJoueur().id == joueur.id)
-            noeud.valeur = noeud.fils.stream().mapToInt(fils -> fils.valeur).max().orElseGet(() -> Integer.MIN_VALUE);
-        else
-            noeud.valeur = noeud.fils.stream().mapToInt(fils -> fils.valeur).min().orElseGet(() -> Integer.MAX_VALUE);
+    private void parcourirArbre(ArbreCoups noeud, int profondeur) {
+        if (profondeur != 0) {
+            for (Coup c : pointeur.coupsPossibles()) {
+                ArbreCoups fils = new ArbreCoups(noeud, c);
+                noeud.fils.add(fils);
+                pointeur.jouer(c);
+                parcourirArbre(fils, profondeur - 1);
+                c.annuler(pointeur);
+            }
+
+            if (noeud.fils.isEmpty())
+                noeud.valeur = HEURISTIQUE.evaluer(pointeur, joueur.id);
+            else if (pointeur.getJoueur().id == joueur.id)
+                noeud.valeur = noeud.fils.stream().mapToDouble(f -> f.valeur).max().getAsDouble();
+            else
+                noeud.valeur = noeud.fils.stream().mapToDouble(f -> f.valeur).min().getAsDouble();
+        } else
+            noeud.valeur = HEURISTIQUE.evaluer(pointeur, joueur.id);
     }
 
-    private void parcourirArbre(JeuGraphe noeud, int profondeur) {
-        if (profondeur != 0)
-            noeud.calculerFils();
-        for (JeuGraphe fils : noeud.fils)
-            parcourirArbre(fils, profondeur - 1);
-        traiter(noeud, profondeur);
+    private void calculerArbre(Jeu j) {
+        graphe = new ArbreCoups();
+        pointeur = new JeuGraphe(j);
+        if (DEBUG)
+            System.out.println("Je réfléchissionne");
+        parcourirArbre(graphe, NB_COUPS_PREDICTION);
     }
 
     @Override
-    public Coup reflechir(Jeu j) {
-        graphe = new JeuGraphe(j);
-        parcourirArbre(graphe, profondeurMax);
-        return graphe.fils.stream().max(Comparator.comparingInt(fils -> fils.valeur)).get().coup;
+    public Coup reflechir(JeuConcret j) {
+        if (graphe == null)
+            calculerArbre(j);
+        else {
+            ArrayList<Coup> hist = j.historique(joueur.id);
+            do {
+                if (graphe != null)
+                    graphe = graphe.getFils(hist.get(0));
+                pointeur.jouer(hist.get(0));
+                hist.remove(0);
+            } while (pointeur.getJoueur().id != joueur.id);
+            if (graphe == null || graphe.fils.isEmpty())
+                calculerArbre(pointeur);
+        }
+
+        ArrayList<Coup> meilleursCoups = new ArrayList<>();
+        for (ArbreCoups fils : graphe.fils)
+            if (fils.valeur == graphe.valeur)
+                meilleursCoups.add(fils.getCoup());
+
+        return meilleursCoups.get(rand.nextInt(meilleursCoups.size()));
     }
 
     @Override

@@ -1,6 +1,6 @@
 package Modele.IA;
 
-import Modele.Jeu.Jeu;
+import Modele.Jeux.Jeu;
 
 import java.util.ArrayList;
 

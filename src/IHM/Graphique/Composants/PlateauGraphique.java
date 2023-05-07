@@ -1,7 +1,7 @@
 package IHM.Graphique.Composants;
 
 import Modele.Coord;
-import Modele.Jeu.Jeu;
+import Modele.Jeux.Jeu;
 import Modele.Plateau;
 
 import javax.imageio.ImageIO;

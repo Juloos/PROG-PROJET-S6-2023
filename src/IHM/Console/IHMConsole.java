@@ -6,7 +6,7 @@ import Modele.Actions.*;
 import Modele.Coord;
 import Modele.Coups.CoupAjout;
 import Modele.Coups.CoupDeplacement;
-import Modele.Jeu.Jeu;
+import Modele.Jeux.Jeu;
 
 import java.util.Scanner;
 

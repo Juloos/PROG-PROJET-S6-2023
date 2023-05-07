@@ -1,17 +1,12 @@
 package Modele.IA;
 
-import Modele.Coord;
 import Modele.Coups.Coup;
-import Modele.Coups.CoupAjout;
-import Modele.Coups.CoupDeplacement;
-import Modele.Coups.CoupTerminaison;
-import Modele.Jeu.Jeu;
+import Modele.Jeux.JeuConcret;
+import Modele.Jeux.JeuGraphe;
 import Modele.Joueurs.Joueur;
 
 import java.util.ArrayList;
 import java.util.Random;
-
-import static Global.Config.*;
 
 public class IAAleatoire implements IA {
     Random rand;
@@ -28,7 +23,7 @@ public class IAAleatoire implements IA {
     }
 
     @Override
-    public Coup reflechir(Jeu j) {
+    public Coup reflechir(JeuConcret j) {
         JeuGraphe jg = new JeuGraphe(j);
         ArrayList<Coup> coups = jg.coupsPossibles();
         return coups.get(rand.nextInt(coups.size()));

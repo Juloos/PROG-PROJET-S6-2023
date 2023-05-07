@@ -1,9 +1,6 @@
-package IA;
+package Modele.IA;
 
-import Modele.Jeu;
-import Modele.Joueur;
-
-import java.util.ArrayList;
+import Modele.Jeux.*;
 
 public class H2 implements Heuristique {
     @Override

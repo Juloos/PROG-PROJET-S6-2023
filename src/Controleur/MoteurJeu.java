@@ -1,15 +1,16 @@
 package Controleur;
 
-import Global.Config;
 import IHM.Console.IHMConsole;
 import IHM.Graphique.IHMGraphique;
 import IHM.IHM;
 import Modele.Actions.Action;
 import Modele.Coups.Coup;
 import Modele.Coups.CoupTerminaison;
-import Modele.Jeu.JeuConcret;
+import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
-import Modele.Joueurs.JoueurIA;
+import Modele.Joueurs.JoueurHumain;
+
+import static Global.Config.*;
 
 public class MoteurJeu implements Runnable {
 
@@ -25,7 +26,7 @@ public class MoteurJeu implements Runnable {
     public MoteurJeu(Joueur[] joueurs) {
         jeu = new JeuConcret(joueurs);
 
-        switch (Config.TYPE_IHM) {
+        switch (TYPE_IHM) {
             case CONSOLE:
                 ihm = new IHMConsole(this);
                 break;
@@ -74,19 +75,22 @@ public class MoteurJeu implements Runnable {
     }
 
     public synchronized void annulerCoup() {
-        System.out.println("Annulation du dernier coup joué");
+        if (DEBUG)
+            System.out.println("Annulation du dernier coup joué");
         nbPionsPlaces--;
         jeu.annuler();
     }
 
     public synchronized void refaireCoup() {
-        System.out.println("Refaison du dernier coup annulé");
+        if (DEBUG)
+            System.out.println("Refaison du dernier coup annulé");
         nbPionsPlaces++;
         jeu.refaire();
     }
 
     public synchronized void sauvegarder(String nomSave) {
-        System.out.println("Sauvegarde de la partie");
+        if (DEBUG)
+            System.out.println("Sauvegarde de la partie");
         try {
             jeu.sauvegarder(nomSave + ".txt");
         } catch (Exception e) {
@@ -96,15 +100,13 @@ public class MoteurJeu implements Runnable {
 
     public void appliquerAction(Action action) {
 //        System.out.println("Action en cours de traitement " + action.toString());
-        if (!action.peutAppliquer(this)) {
+        if (!action.peutAppliquer(this) && ihm != null)
             ihm.afficherMessage("Action non applicable");
-        } else {
+        else
             action.appliquer(this);
-        }
 
-        if (ihm != null) {
+        if (ihm != null)
             ihm.updateAffichage(jeu);
-        }
     }
 
     @Override
@@ -117,27 +119,34 @@ public class MoteurJeu implements Runnable {
         while (estPhasePlacementPions()) {
             waitPause();
             appliquerAction(jeu.getJoueur().reflechir(this));
-            System.out.println("On a traitée l'action");
+            if (DEBUG)
+                System.out.println("On a traitée l'action");
         }
 
-        System.out.println("Fin de la phase de placements des pions");
+        if (DEBUG)
+            System.out.println("Fin de la phase de placements des pions");
 
         while (!jeu.estTermine()) {
             waitPause();
             while (jeu.peutJouer()) {
                 waitPause();
                 appliquerAction(jeu.getJoueur().reflechir(this));
-                System.out.println("Coup joué");
+                if (DEBUG)
+                    System.out.println("Coup joué");
             }
-            try {
-                Thread.sleep(100);
-            } catch (Exception e) {}
+            if (ihm != null) {
+                try {
+                    Thread.sleep(100);
+                } catch (Exception e) {}
+            }
             jeu.jouer(new CoupTerminaison(jeu.getJoueur().id));
         }
 
-        ihm.updateAffichage(jeu);
+        if (ihm != null)
+            ihm.updateAffichage(jeu);
 
-        System.out.println("Fin de jeu");
+        if (DEBUG)
+            System.out.println("Fin de jeu");
     }
 
     public synchronized boolean isPaused() {
@@ -145,11 +154,14 @@ public class MoteurJeu implements Runnable {
     }
 
     public synchronized void pauseGame(boolean pause) {
-        System.out.println("Jeu en pause " + pause);
+        if (DEBUG)
+            System.out.println("Jeu en pause " + pause);
         this.pause = pause;
     }
 
     private void waitPause() {
+        if (ihm != null)
+            return;
         while (isPaused()) {
             try {
                 Thread.sleep(100);

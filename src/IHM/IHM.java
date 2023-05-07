@@ -2,7 +2,7 @@ package IHM;
 
 import Controleur.MoteurJeu;
 import Modele.Actions.Action;
-import Modele.Jeu.Jeu;
+import Modele.Jeux.Jeu;
 
 public abstract class IHM implements Runnable {
 

@@ -1,7 +1,6 @@
 import Controleur.MoteurJeu;
-import Modele.*;
+import Modele.Joueurs.Joueur;
 import static Global.Config.*;
-import IA.*;
 
 import java.util.Arrays;
 
@@ -15,6 +14,8 @@ public class TournoiIA {
                 winnersRate[j]++;
             if (DEBUG)
                 System.out.println("Gagnant(s) Partie " + (i + 1) + " : " + moteurJeu.getJeu().getWinner());
+            else
+                System.out.print("\rPartie " + (i + 1) + "/" + NB_PARTIES);
         }
         System.out.println("\nRésultats :");
         for (int i = 0; i < winnersRate.length; i++)

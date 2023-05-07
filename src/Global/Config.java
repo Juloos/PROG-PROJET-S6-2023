@@ -1,16 +1,16 @@
 package Global;
 
 import IHM.TypeIHM;
-import IA.*;
-import Modele.*;
+import Modele.IA.*;
+import Modele.Joueurs.*;
 
 public class Config {
     public final static TypeIHM TYPE_IHM = TypeIHM.AUCUNE;
-    public final static Joueur[] JOUEURS_TOURNOI = new Joueur[] {new JoueurIA(0, IA.Difficulte.ALEATOIRE), new JoueurIA(1, IA.Difficulte.ALEATOIRE)};
-    public final static int NB_PARTIES = 1000;
-    public final static int NB_TOURS_PREVISION = 3;
+    public final static Joueur[] JOUEURS_TOURNOI = new Joueur[] {new JoueurIA(0, IA.Difficulte.ALEATOIRE), new JoueurIA(1, IA.Difficulte.DIFFICILE)};
+    public final static int NB_PARTIES = 10;
+    public final static int NB_COUPS_PREDICTION = 4;
     public final static Heuristique HEURISTIQUE = new H2();
-    public final static boolean DEBUG = false;
+    public final static boolean DEBUG = true;
     public final static int TAILLE_PLATEAU_X = 8;
     public final static int TAILLE_PLATEAU_Y = 8;
     public final static int NB_PIONS = 9;

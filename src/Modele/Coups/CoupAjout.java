@@ -1,8 +1,7 @@
 package Modele.Coups;
 
 import Modele.Coord;
-import Modele.Jeu.Jeu;
-import Modele.Jeu.JeuConcret;
+import Modele.Jeux.Jeu;
 
 public class CoupAjout implements Coup {
     Coord cible;

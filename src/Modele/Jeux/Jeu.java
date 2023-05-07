@@ -1,4 +1,4 @@
-package Modele.Jeu;
+package Modele.Jeux;
 
 import Modele.Coord;
 import Modele.Coups.Coup;
@@ -118,7 +118,7 @@ public abstract class Jeu {
         return liste;
     }
 
-    public ArrayList<Coord> placememntPionValide() {
+    public ArrayList<Coord> placementsPionValide() {
         ArrayList<Coord> liste = new ArrayList<>();
         for (int i = 0; i < plateau.getNbColumns(); i++) {
             for (int j = 0; j < plateau.getNbRows(); j++) {

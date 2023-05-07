@@ -1,4 +1,4 @@
-package Modele.Jeu;
+package Modele.Jeux;
 
 import Modele.Coord;
 import Modele.Coups.Coup;
@@ -6,6 +6,7 @@ import Modele.Coups.CoupAjout;
 import Modele.Coups.CoupDeplacement;
 import Modele.Coups.CoupTerminaison;
 import Modele.Joueurs.Joueur;
+import Modele.Plateau;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -36,12 +37,12 @@ public class JeuConcret extends Jeu {
         future = new Stack<>();
     }
 
-    public ArrayList<Coup> historique(int joueur) {
+    public ArrayList<Coup> historique(int jusquaJoueur) {
         int dernierCoup = passe.size() - 1;
-        while (passe.get(dernierCoup).getJoueur() != joueur)
+        while (dernierCoup >= 0 && passe.get(dernierCoup).getJoueur() != jusquaJoueur)
             dernierCoup--;
         ArrayList<Coup> coups = new ArrayList<>();
-        for (int i = dernierCoup; i < passe.size(); i++)
+        for (int i = Integer.max(dernierCoup, 0); i < passe.size(); i++)
             coups.add(passe.get(i));
         return coups;
     }
@@ -79,8 +80,6 @@ public class JeuConcret extends Jeu {
             System.out.println("Aucune action a refaire");
         }
     }
-
-
 
     public void sauvegarder(String fichier) throws Exception {
         // Init fichier

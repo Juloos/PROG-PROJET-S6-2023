@@ -3,7 +3,7 @@ package Modele.Joueurs;
 import Controleur.MoteurJeu;
 import Modele.Actions.Action;
 import Modele.Coord;
-import Modele.Jeu.Jeu;
+import Modele.Jeux.Jeu;
 
 import java.util.HashMap;
 import java.util.Set;
