@@ -2,15 +2,17 @@ package IHM.Graphique;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public abstract class Fenetre {
-
+    
     protected JPanel panel;
+    // Le bouton pour retourner à la fenêtre précédente
     protected JButton retour;
+    // L'image de fond des fenêtres
     protected Image backgroundImage;
+    // Vrai si la création de la fenêtre est terminée
     protected boolean estCree;
+    // Le nom affiché en haut de la frame lorsque la fenêtre est ouverte
     String title;
 
     public Fenetre(String title) {
@@ -38,12 +40,7 @@ public abstract class Fenetre {
             creation(ihm);
         }
 
-        retour.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                ihm.retournerPrecedenteFenetre();
-            }
-        });
+        retour.addActionListener(actionEvent -> ihm.retournerPrecedenteFenetre());
     }
 
     public abstract void creation(IHMGraphique ihm);
@@ -57,7 +54,7 @@ public abstract class Fenetre {
     }
 
     /**
-     * Met à jour la fenêtre lorqu'elle est ouverte
+     * Met à jour la fenêtre lorsqu'elle est ouverte
      *
      * @param ihm : l'IHM graphique sur laquelle est affichée la fenêtre
      */

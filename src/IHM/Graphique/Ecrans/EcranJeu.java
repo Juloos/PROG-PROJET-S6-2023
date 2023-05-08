@@ -16,11 +16,16 @@ import java.util.List;
 
 public class EcranJeu extends Ecran {
 
+    // Les menus des informations des joueurs
     List<InfoJoueur> joueurs;
-
+    // Le menu affiché sur la droite de l'écran
     JPanel menu;
-
+    // Le label pour afficher les messages de l'IHM
     JLabel message;
+    // Les boutons pour :
+    // - mettre le jeu en pause et ouvrir le menu de pause
+    // - annuler le dernier coup joué
+    // - refaire le dernier coup annulé
     JButton options, annuler, refaire;
 
     public EcranJeu() {

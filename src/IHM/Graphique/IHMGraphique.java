@@ -26,21 +26,18 @@ import java.util.Stack;
 
 public class IHMGraphique extends IHM implements MouseListener {
 
-    // Pile des fenêtres qui ont été ouverte, la fênetre ouverte est au sommet de la pile
+    // Pile des fenêtres qui ont été ouverte, la fenêtre ouverte est au sommet de la pile
     Stack<Fenetre> fenetres;
     JFrame frame;
-    boolean enJeu;
     Clip clip;
-    // La réprésentation graphique du plateau
+    // La représentation graphique du plateau
     PlateauGraphique plateauGraphique;
-    // La tuile sélectionné par le joueur
+    // La tuile sélectionnée par le joueur
     Coord selection;
-    // L'action que le joueur fait
+    // L'action que le joueur actif veut faire
     Action actionJoueur;
-
-    boolean animationEnCours;
+    // L'animation qui doit se jouer avant de mettre à jour l'affichage
     Animation animation;
-    WaitActionJoueur waitActionJoueur;
 
     public IHMGraphique(MoteurJeu moteurJeu) {
         super(moteurJeu);
@@ -76,10 +73,10 @@ public class IHMGraphique extends IHM implements MouseListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    /* Méthodes héritées de la classe IHM */
     @Override
     public synchronized void updateAffichage(Jeu jeu) {
         if (animation != null) {
-            System.out.println("Lancement animation");
             plateauGraphique.setTuilesSurbrillance(null);
             jouerAnimation(animation);
             animation = null;
@@ -91,7 +88,7 @@ public class IHMGraphique extends IHM implements MouseListener {
         if (jeu.estTermine()) {
             ouvrirFenetre(new PopUpFinPartie());
         } else {
-            if (moteurJeu.estPhasePlacementPions()) {
+            if (getMoteurJeu().estPhasePlacementPions()) {
                 plateauGraphique.setTuilesSurbrillance(jeu.placememntPionValide());
             } else {
                 plateauGraphique.setTuilesSurbrillance(null);
@@ -105,39 +102,36 @@ public class IHMGraphique extends IHM implements MouseListener {
         actionJoueur = null;
         selection = null;
 
-        WaitActionJoueur waitActionJoueur = new WaitActionJoueur();
-        waitActionJoueur.start();
-        try {
-            waitActionJoueur.join();
-        } catch (Exception e) {
+        while (actionJoueur == null) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         return actionJoueur;
     }
 
-
     @Override
-    public synchronized void afficherMessage(String message) {
+    public void afficherMessage(String message) {
         Thread thread = new Thread(new AfficherMessage(this, message));
         thread.start();
     }
 
-    public synchronized void jouerAnimation(Animation animation) {
-        animation.run();
-//        Thread thread = new Thread(animation);
-//        animationEnCours = true;
-//        try {
-//            thread.start();
-//            thread.join();
-//        } catch (Exception e) {
-//        }
-        animationEnCours = false;
+    @Override
+    public void attendreCreationPartie() {
     }
 
-    public synchronized MoteurJeu getMoteurJeu() {
-        return moteurJeu;
+    /**
+     * Fonction appelée lors du lancement de l'IHM
+     */
+    @Override
+    public void run() {
+        frame.setVisible(true);
     }
 
+    /* Getters */
     public synchronized JFrame getFrame() {
         return frame;
     }
@@ -146,8 +140,41 @@ public class IHMGraphique extends IHM implements MouseListener {
         return plateauGraphique;
     }
 
+    /* Setters */
+
     /**
-     * Détruit toutes les fenêtres de l'IHM et retourne au menu d'accueil
+     * Définit la future animation à jouer lors de la prochaine mise à jour de l'IHM
+     *
+     * @param animation : l'animation à jouer
+     */
+    public synchronized void setAnimation(Animation animation) {
+        this.animation = animation;
+    }
+
+    public void setVolume(float volume) {
+        if (clip != null) {
+            // Récupération du contrôle de volume du clip
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            // Conversion de la valeur de volume donnée en dB (décibels)
+            float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
+            // Réglage du contrôle de volume
+            gainControl.setValue(dB);
+        }
+    }
+
+    /* Méthodes d'instance */
+
+    /**
+     * Joue l'animation en paramètre si une partie est en cours
+     *
+     * @param animation : l'animation à jouée
+     */
+    public synchronized void jouerAnimation(Animation animation) {
+        animation.run();
+    }
+
+    /**
+     * Détruit toutes les fenêtres de l'IHM
      */
     public synchronized void fermerFenetres() {
         for (Fenetre fenetre : fenetres) {
@@ -157,18 +184,19 @@ public class IHMGraphique extends IHM implements MouseListener {
     }
 
     /**
-     * Retourne à la fenêtre précédente et détruit la fenêtre actuelle
+     * Retourne à la fenêtre précédente et détruit la fenêtre courante
      */
     public synchronized void retournerPrecedenteFenetre() {
+        // Fermeture de la fenêtre courante
         fenetres.peek().close(this);
-//        System.out.println("Fermeture de la fenetre : " + fenetres.peek().title);
         fenetres.pop();
+
+        // Ouverture de la fenêtre précédente
         fenetres.peek().open(this);
         fenetres.peek().resized();
-//        System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
-        frame.revalidate();
 
-        enJeu = fenetres.peek() instanceof EcranJeu;
+        // Mise à jour de la frame
+        frame.revalidate();
     }
 
     /**
@@ -179,70 +207,74 @@ public class IHMGraphique extends IHM implements MouseListener {
     @NotNull()
     public synchronized void ouvrirFenetre(Fenetre fenetre) {
         if (!fenetres.empty()) {
+            // On ferme la fenêtre précédente lorsqu'il y en a une
             fenetres.peek().close(this);
         }
 
+        // Ouverture de la nouvelle fenêtre
         fenetres.push(fenetre);
         fenetre.open(this);
         fenetres.peek().resized();
-//        System.out.println("Ouverture de la fenetre : " + fenetres.peek().title);
+
+        // Mise à jour de la frame
         frame.revalidate();
-
-        enJeu = fenetres.peek() instanceof EcranJeu;
-    }
-
-    public synchronized void setAnimation(Animation animation) {
-        this.animation = animation;
     }
 
     /**
      * Lorsqu'un joueur clique sur la fenêtre
      *
-     * @param mouseEvent
+     * @param mouseEvent : l'événement du clic de la souris
      */
     @Override
     public synchronized void mouseClicked(MouseEvent mouseEvent) {
+        // On récupère la coordonnée de la tuile sélectionnée (peut être invalide)
         Coord coord = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
-        if (moteurJeu.getJeu().getPlateau().estCoordValide(coord)) {
-            if (moteurJeu.estPhasePlacementPions()) {
-                selection = coord;
-                actionJoueur = new ActionCoup(new CoupAjout(selection, moteurJeu.getJoueurActif().id));
-            } else if (actionJoueur == null) {
-                if (selection == null) {
-                    selection = coord;
-                    if (moteurJeu.getJeu().getPlateau().estCoordValide(selection) && moteurJeu.getJeu().estPion(selection)
-                            && moteurJeu.getJeu().joueurDePion(selection) == moteurJeu.getJoueurActif().id) {
-//                        System.out.println("Selection");
 
-                        ArrayList<Coord> coords = moteurJeu.getJeu().deplacementsPion(selection);
+        if (getMoteurJeu().getJeu().getPlateau().estCoordValide(coord)) {
+            // Si c'est une coordonnée valide sur le plateau
+            if (getMoteurJeu().estPhasePlacementPions()) {
+                // Si le jeu est dans la phase placement des pions
+                selection = coord;
+                actionJoueur = new ActionCoup(new CoupAjout(selection, getMoteurJeu().getJoueurActif().id));
+            } else if (actionJoueur == null) {
+                // Si le jeu est dans la phase jeu (déplacement des pions jusqu'à fin de la partie)
+                if (selection == null) {
+                    // Le joueur choisi lequel de ses pions, il veut déplacer
+                    selection = coord;
+
+                    if (getMoteurJeu().getJeu().getPlateau().estCoordValide(selection) && getMoteurJeu().getJeu().estPion(selection)
+                            && getMoteurJeu().getJeu().joueurDePion(selection) == getMoteurJeu().getJoueurActif().id) {
+                        // On affiche en surbrillance toutes les tuiles sur lesquelles le pion sélectionné peut aller
+                        ArrayList<Coord> coords = getMoteurJeu().getJeu().deplacementsPion(selection);
                         coords.add(selection);
                         plateauGraphique.setTuilesSurbrillance(coords);
                         plateauGraphique.repaint();
                     } else {
+                        // Le joueur n'a pas choisi un de ses pions
                         selection = null;
                     }
 
                 } else {
+                    // Le joueur choisi sur quelle tuile il veut déplacer le pion qu'il a sélectionné
                     Coord cible = coord;
-//                    System.out.println("Cible");
 
-                    if (moteurJeu.getJeu().getPlateau().estCoordValide(cible) && !moteurJeu.getJeu().estPion(cible)) {
-                        actionJoueur = new ActionCoup(new CoupDeplacement(selection, cible, moteurJeu.getJoueurActif().id));
-                    } else if (moteurJeu.getJeu().joueurDePion(cible) == moteurJeu.getJoueurActif().id) {
+                    if (getMoteurJeu().getJeu().getPlateau().estCoordValide(cible) && !getMoteurJeu().getJeu().estPion(cible)) {
+                        // Le pion va se déplacer
+                        actionJoueur = new ActionCoup(new CoupDeplacement(selection, cible, getMoteurJeu().getJoueurActif().id));
+                    } else if (getMoteurJeu().getJeu().joueurDePion(cible) == getMoteurJeu().getJoueurActif().id) {
+                        // Le joueur a choisi un autre de ses pions
                         selection = cible;
 
-                        ArrayList<Coord> coords = moteurJeu.getJeu().deplacementsPion(selection);
+                        ArrayList<Coord> coords = getMoteurJeu().getJeu().deplacementsPion(selection);
                         coords.add(selection);
                         plateauGraphique.setTuilesSurbrillance(coords);
                         plateauGraphique.repaint();
                     }
-
                 }
             }
         } else {
-            afficherMessage("Coordonées invalide");
+            afficherMessage("Coordonnées invalide");
         }
-        System.out.println();
     }
 
     @Override
@@ -261,44 +293,9 @@ public class IHMGraphique extends IHM implements MouseListener {
     public void mouseExited(MouseEvent mouseEvent) {
     }
 
-    public void setVolume(float volume) {
-        if (clip != null) {
-            // Récupération du contrôle de volume du clip
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            // Conversion de la valeur de volume donnée en dB (décibels)
-            float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
-            // Réglage du contrôle de volume
-            gainControl.setValue(dB);
-        }
-    }
-
     /**
-     * Fonction utilisée pour attendre que le joueur fasse une action sans bloquer l'IHM
+     * Classe servant à afficher un message sur l'IHM sans la bloquer
      */
-    @Override
-    public void run() {
-//        System.out.println("Lancement IHM");
-
-        frame.setVisible(true);
-    }
-
-    synchronized Action getActionJoueur() {
-        return actionJoueur;
-    }
-
-    private class WaitActionJoueur extends Thread {
-        @Override
-        public void run() {
-            while (getActionJoueur() == null) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-    }
-
     private class AfficherMessage implements Runnable {
         IHMGraphique ihm;
         String message;
@@ -310,12 +307,7 @@ public class IHMGraphique extends IHM implements MouseListener {
 
         @Override
         public void run() {
-            ihm.fenetres.peek().afficherMessage(message);
-            try {
-                Thread.sleep(3000);
-            } catch (Exception e) {
-            }
-            ihm.fenetres.peek().afficherMessage("");
+
         }
     }
 }

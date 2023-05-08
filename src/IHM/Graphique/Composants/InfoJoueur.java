@@ -1,5 +1,6 @@
 package IHM.Graphique.Composants;
 
+import IHM.Colors;
 import Modele.Joueurs.Joueur;
 
 import javax.swing.*;
@@ -11,11 +12,7 @@ public class InfoJoueur extends JPanel {
 
     private static final ImageIcon FISH = new ImageIcon("res/fish.png");
     private static final ImageIcon ICE = new ImageIcon("res/ice.png");
-
-    private static final Color[] COLORS = new Color[]{Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW};
-
     JLabel nbPoissons, nbTuiles;
-
     Joueur joueur;
 
     public InfoJoueur(Joueur joueur) {
@@ -32,14 +29,14 @@ public class InfoJoueur extends JPanel {
         infos.setBackground(new Color(0, 0, 0, 0));
         infos.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
-        nbPoissons = new JLabel("Nombre de poissons : " + joueur.getScore());
+        nbPoissons = new JLabel("x " + joueur.getScore());
         nbPoissons.setFont(new Font("Arial", Font.BOLD, 25));
         nbPoissons.setIcon(resizeIcon(FISH, 80, 80));
         infos.add(nbPoissons);
 
         add(Box.createHorizontalGlue());
 
-        nbTuiles = new JLabel("Nombre de tuiles : " + joueur.getTuiles());
+        nbTuiles = new JLabel("x " + joueur.getTuiles());
         nbTuiles.setIcon(resizeIcon(ICE, 30, 30));
         nbTuiles.setFont(new Font("Arial", Font.PLAIN, 20));
         infos.add(nbTuiles);
@@ -58,7 +55,7 @@ public class InfoJoueur extends JPanel {
 
         setBorder(BorderFactory.createCompoundBorder(lineBottom, padding));
 
-        setBackground(estActif ? COLORS[joueur.getID()] : new Color(0, 0, 0, 0));
+        setBackground(estActif ? Colors.JOUEURS[joueur.getID()] : new Color(0, 0, 0, 0));
     }
 
 

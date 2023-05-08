@@ -33,6 +33,7 @@ public class EcranAccueil extends Ecran {
         Color color = Color.decode("#0000BB");
         JButton nouvellePartie = new JButton("Nouvelle partie");
 
+        // Le menu pour ouvrir le menu de création d'une nouvelle partie
         nouvellePartie.setForeground(Color.WHITE);
         nouvellePartie.setFont(new Font("Forte", Font.PLAIN, 50));
         nouvellePartie.setBackground(color);
@@ -43,6 +44,7 @@ public class EcranAccueil extends Ecran {
             }
         });
 
+        // Le bouton pour ouvrir le menu de chargement d'une partie
         JButton chargerPartie = new JButton("Charger partie");
         chargerPartie.setBackground(color);
         chargerPartie.setForeground(Color.WHITE);
@@ -54,6 +56,7 @@ public class EcranAccueil extends Ecran {
             }
         });
 
+        // Le bouton pour ouvrir le menu des options
         JButton options = new JButton("Options");
         options.setBackground(Color.WHITE);
         options.setForeground(color);
@@ -64,6 +67,8 @@ public class EcranAccueil extends Ecran {
                 ihm.ouvrirFenetre(new EcranOptions());
             }
         });
+
+        // Le bouton pour quitter le jeu
         JButton quitter = new JButton("Quitter");
         quitter.setBackground(Color.WHITE);
         quitter.setForeground(color);
@@ -80,6 +85,8 @@ public class EcranAccueil extends Ecran {
                 }));
             }
         });
+
+        // Ajout des éléments de l'écran dans son panel
         panel.add(nouvellePartie, constraints);
         constraints.gridy = 9;
         panel.add(chargerPartie, constraints);

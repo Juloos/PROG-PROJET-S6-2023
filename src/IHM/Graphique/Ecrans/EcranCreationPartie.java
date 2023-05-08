@@ -1,6 +1,7 @@
 package IHM.Graphique.Ecrans;
 
 import Global.Config;
+import IHM.Colors;
 import IHM.Graphique.IHMGraphique;
 
 import javax.swing.*;
@@ -108,7 +109,7 @@ public class EcranCreationPartie extends Ecran {
             super();
 
             setLayout(new GridLayout(0, 1));
-            setBackground(TRANSPARENT);
+            setBackground(Colors.TRANSPARENT);
 
             GridBagConstraints constraints = new GridBagConstraints();
 
@@ -119,7 +120,7 @@ public class EcranCreationPartie extends Ecran {
 
             JPanel panelNom = new JPanel();
             panelNom.setAlignmentX(CENTER_ALIGNMENT);
-            panelNom.setBackground(TRANSPARENT);
+            panelNom.setBackground(Colors.TRANSPARENT);
             JLabel nomLabel = new JLabel("Nom : ");
             JTextField nom = new JTextField("Joueur " + num);
             panelNom.add(nomLabel);

@@ -1,13 +1,19 @@
 package IHM.Console;
 
 import Controleur.MoteurJeu;
+import Global.Config;
 import IHM.IHM;
 import Modele.Actions.*;
 import Modele.Coord;
 import Modele.Coups.CoupAjout;
 import Modele.Coups.CoupDeplacement;
 import Modele.Jeu.Jeu;
+import Modele.Joueurs.Joueur;
+import Modele.Joueurs.JoueurHumain;
+import Modele.Joueurs.JoueurIA;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class IHMConsole extends IHM {
@@ -26,7 +32,7 @@ public class IHMConsole extends IHM {
 
     @Override
     public Action attendreActionJoueur() {
-        int numJoueur = moteurJeu.getJoueurActif().id;
+        int numJoueur = getMoteurJeu().getJoueurActif().id;
         Action action = null;
 
         do {
@@ -36,7 +42,7 @@ public class IHMConsole extends IHM {
             try {
                 switch (actionSouhaitee.toLowerCase()) {
                     case "jouer":
-                        if (moteurJeu.estPhasePlacementPions()) {
+                        if (getMoteurJeu().estPhasePlacementPions()) {
                             action = attendrePlacementPion();
                         } else {
                             action = attendreDeplacementPion();
@@ -59,13 +65,18 @@ public class IHMConsole extends IHM {
                 System.out.println("Mais t'es con ou quoi fréro ?");
                 action = null;
             }
-        } while (action == null || !action.peutAppliquer(moteurJeu));
+        } while (action == null || !action.peutAppliquer(getMoteurJeu()));
 
         return action;
     }
 
-    private Action attendrePlacementPion() {
-        int numJoueur = moteurJeu.getJoueurActif().id;
+    /**
+     * Attend que le joueur actif choisisse une tuile sur laquelle placer un de ses pions
+     *
+     * @return l'action de placement du pion
+     */
+    private ActionCoup attendrePlacementPion() {
+        int numJoueur = getMoteurJeu().getJoueurActif().id;
 
         System.out.println("Veuillez placez un pingouin");
         String ligne = input.nextLine();
@@ -75,8 +86,13 @@ public class IHMConsole extends IHM {
         return new ActionCoup(new CoupAjout(coord, numJoueur));
     }
 
-    private Action attendreDeplacementPion() {
-        int numJoueur = moteurJeu.getJoueurActif().id;
+    /**
+     * Attend que le joueur actif choisisse un pion à déplacer et sur quelle tuile il veut le déplacer
+     *
+     * @return l'action de déplacement du pion
+     */
+    private ActionCoup attendreDeplacementPion() {
+        int numJoueur = getMoteurJeu().getJoueurActif().id;
         System.out.println("Veuillez déplacez un pingouin (source puis destination)");
         // Source
         String ligne = input.nextLine();
@@ -97,7 +113,36 @@ public class IHMConsole extends IHM {
     public void afficherMessage(String message) {
         System.out.println(message);
     }
-    
+
+    @Override
+    public void attendreCreationPartie() {
+        List<Joueur> listJoueurs = new ArrayList<>();
+
+        String ligne;
+        do {
+            ligne = input.next();
+
+            try {
+                switch (ligne.toLowerCase()) {
+                    case "humain":
+                        // On ajoute un joueur humain
+                        listJoueurs.add(new JoueurHumain(listJoueurs.size()));
+                        break;
+                    case "ia":
+                        // On ajoute un joueur IA
+                        // La difficulté de l'IA
+                        String difficulte = ligne.split(" ")[1];
+                        listJoueurs.add(new JoueurIA(listJoueurs.size()));
+                    default:
+                        System.out.println("Mais t'es con ou quoi fréro ?");
+                        break;
+                }
+            } catch (Exception e) {
+                System.out.println("Mais t'es con ou quoi fréro ?");
+            }
+        } while ((!ligne.equals("") || listJoueurs.size() < Config.NB_MIN_JOUEUR) && listJoueurs.size() < Config.NB_MAX_JOUEUR);
+    }
+
     private int[] decouperLigne(String ligne) {
         String[] ligne_split = ligne.split(" ");
         int[] valeurs = new int[ligne_split.length];
@@ -111,6 +156,5 @@ public class IHMConsole extends IHM {
 
     @Override
     public void run() {
-
     }
 }
