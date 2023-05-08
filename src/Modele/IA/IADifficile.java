@@ -30,24 +30,44 @@ public class IADifficile implements IA {
         pointeur = null;
     }
 
-    private void parcourirArbre(ArbreCoups noeud, int profondeur) {
-        if (profondeur != 0) {
-            for (Coup c : pointeur.coupsPossibles()) {
-                ArbreCoups fils = new ArbreCoups(noeud, c);
+    private void parcourirArbre(ArbreCoups noeud, int profondeur, double alpha, double beta) {
+        ArrayList<Coup> coups;
+        if (profondeur == 0 || (coups = pointeur.coupsPossibles()).isEmpty()) {
+            noeud.valeur = HEURISTIQUE.evaluer(pointeur, joueur.id);
+            return;
+        }
+
+        ArbreCoups fils;
+        double minimaxVal;
+        if (pointeur.getJoueur().id != joueur.id) {
+            minimaxVal = Double.MIN_VALUE;
+            for (Coup c : coups) {
+                fils = new ArbreCoups(noeud, c);
                 noeud.fils.add(fils);
                 pointeur.jouer(c);
-                parcourirArbre(fils, profondeur - 1);
+                parcourirArbre(fils, profondeur - 1, alpha, beta);
                 c.annuler(pointeur);
+                minimaxVal = Double.max(minimaxVal, fils.valeur);
+                if (minimaxVal > beta)
+                    break;
+                alpha = Double.max(alpha, minimaxVal);
             }
+        } else {
+            minimaxVal = Double.MAX_VALUE;
+            for (Coup c : coups) {
+                fils = new ArbreCoups(noeud, c);
+                noeud.fils.add(fils);
+                pointeur.jouer(c);
+                parcourirArbre(fils, profondeur - 1, alpha, beta);
+                c.annuler(pointeur);
+                minimaxVal = Double.min(minimaxVal, fils.valeur);
+                if (minimaxVal < alpha)
+                    break;
+                beta = Double.min(beta, minimaxVal);
+            }
+        }
 
-            if (noeud.fils.isEmpty())
-                noeud.valeur = HEURISTIQUE.evaluer(pointeur, joueur.id);
-            else if (pointeur.getJoueur().id == joueur.id)
-                noeud.valeur = noeud.fils.stream().mapToDouble(f -> f.valeur).max().getAsDouble();
-            else
-                noeud.valeur = noeud.fils.stream().mapToDouble(f -> f.valeur).min().getAsDouble();
-        } else
-            noeud.valeur = HEURISTIQUE.evaluer(pointeur, joueur.id);
+        noeud.valeur = minimaxVal;
     }
 
     private void calculerArbre(Jeu j) {
@@ -55,7 +75,7 @@ public class IADifficile implements IA {
         pointeur = new JeuGraphe(j);
         if (DEBUG)
             System.out.println("Je réfléchissionne");
-        parcourirArbre(graphe, NB_COUPS_PREDICTION);
+        parcourirArbre(graphe, NB_COUPS_PREDICTION, Double.MIN_VALUE, Double.MAX_VALUE);
     }
 
     @Override

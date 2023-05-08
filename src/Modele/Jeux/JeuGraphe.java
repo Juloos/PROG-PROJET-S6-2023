@@ -19,15 +19,13 @@ public class JeuGraphe extends Jeu {
 
     public ArrayList<Coup> coupsPossibles() {
         ArrayList<Coup> coups = new ArrayList<>();
-        Coup coup;
         if (getJoueur().getPions().size() < nbPions) {
             for (Coord c : placementsPionValide())
                 coups.add(new CoupAjout(c, joueurCourant));
         } else if (peutJouer()) {
             for (Coord s : joueurs[joueurCourant].getPions())
                 for (Coord d : deplacementsPion(s))
-                    if ((coup = new CoupDeplacement(s.clone(), d, joueurCourant)).estJouable(this))
-                        coups.add(coup);
+                    coups.add(new CoupDeplacement(s.clone(), d, joueurCourant));
         } else if (!getJoueur().estTermine())
             coups.add(new CoupTerminaison(joueurCourant));
         return coups;

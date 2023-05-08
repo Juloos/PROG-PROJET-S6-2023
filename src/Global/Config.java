@@ -7,7 +7,7 @@ import Modele.Joueurs.*;
 public class Config {
     public final static TypeIHM TYPE_IHM = TypeIHM.AUCUNE;
     public final static Joueur[] JOUEURS_TOURNOI = new Joueur[] {new JoueurIA(0, IA.Difficulte.ALEATOIRE), new JoueurIA(1, IA.Difficulte.DIFFICILE)};
-    public final static int NB_PARTIES = 10;
+    public final static int NB_PARTIES = 1;
     public final static int NB_COUPS_PREDICTION = 4;
     public final static Heuristique HEURISTIQUE = new H2();
     public final static boolean DEBUG = true;
