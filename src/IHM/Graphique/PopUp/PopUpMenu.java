@@ -47,6 +47,7 @@ public class PopUpMenu extends PopUp {
                 ihm.ouvrirFenetre(new PopUpConfirmation(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
+                        ihm.getMoteurJeu().arreterPartie();
                         ihm.fermerFenetres();
                         ihm.ouvrirFenetre(new EcranAccueil());
                     }

@@ -3,6 +3,8 @@ package IHM.Graphique.Ecrans;
 import Global.Config;
 import IHM.Colors;
 import IHM.Graphique.IHMGraphique;
+import Modele.Joueurs.Joueur;
+import Modele.Joueurs.JoueurIA;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,6 +75,15 @@ public class EcranCreationPartie extends Ecran {
 //        boutons.add(retour);
 //
 //        panel.add(boutons, BorderLayout.PAGE_END);
+        JButton lancer = new JButton("Lacner partie");
+        lancer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                ihm.getMoteurJeu().lancerPartie(new Joueur[]{new JoueurIA(0), new JoueurIA(1)});
+                ihm.ouvrirFenetre(new EcranJeu());
+            }
+        });
+        panel.add(lancer);
     }
 
     protected void nouveauJoueur() {

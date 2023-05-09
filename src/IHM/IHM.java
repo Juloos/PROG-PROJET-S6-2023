@@ -42,4 +42,9 @@ public abstract class IHM implements Runnable {
      * puis lance une nouvelle partie.
      */
     public abstract void attendreCreationPartie();
+
+    /**
+     * Ferme l'IHM
+     */
+    public abstract void terminer();
 }

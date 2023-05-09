@@ -1,6 +1,6 @@
 package IHM.Graphique.Composants;
 
-import IHM.Colors;
+import IHM.Graphique.Couleurs;
 import Modele.Joueurs.Joueur;
 
 import javax.swing.*;
@@ -55,7 +55,7 @@ public class InfoJoueur extends JPanel {
 
         setBorder(BorderFactory.createCompoundBorder(lineBottom, padding));
 
-        setBackground(estActif ? Colors.JOUEURS[joueur.getID()] : new Color(0, 0, 0, 0));
+        setBackground(estActif ? Couleurs.COULEURS_JOUEURS[joueur.getID()] : Couleurs.TRANSPARENCE);
     }
 
 
