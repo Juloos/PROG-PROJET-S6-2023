@@ -1,4 +1,4 @@
-package Modele.Jeu;
+package Modele.Jeux;
 
 import Modele.Coord;
 import Modele.Coups.Coup;
@@ -122,21 +122,18 @@ public abstract class Jeu implements Cloneable {
 
     public ArrayList<Coord> deplacementsPion(Coord c) {
         ArrayList<Coord> liste = new ArrayList<>();
-        if (true) {
-            for (int dir = 0; dir < 6; dir++) {
-                Coord curr = c.decale(dir);
-                while (plateau.estCoordValide(curr) && plateau.get(curr) != Plateau.VIDE && !estPion(curr)) {
-                    liste.add(curr);
-                    curr = curr.decale(dir);
-                }
+        for (int dir = 0; dir < 6; dir++) {
+            Coord curr = c.decale(dir);
+            while (plateau.estCoordValide(curr) && plateau.get(curr) != Plateau.VIDE && !estPion(curr)) {
+                liste.add(curr);
+                curr = curr.decale(dir);
             }
-            return liste;
-        } else
-            return null;
+        }
+        return liste;
     }
 
 
-    public ArrayList<Coord> placememntPionValide() {
+    public ArrayList<Coord> placementsPionValide() {
         ArrayList<Coord> liste = new ArrayList<>();
         for (int i = 0; i < plateau.getNbColumns(); i++) {
             for (int j = 0; j < plateau.getNbRows(); j++) {
@@ -198,7 +195,6 @@ public abstract class Jeu implements Cloneable {
         joueurs[joueurCourant].terminer();
         for (Coord c : joueurs[joueurCourant].getPions())
             manger(c);
-
         joueurs[joueurCourant].getPions().clear();
         joueurSuivant();
     }

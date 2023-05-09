@@ -11,7 +11,7 @@ import Modele.Actions.ActionCoup;
 import Modele.Coord;
 import Modele.Coups.CoupAjout;
 import Modele.Coups.CoupDeplacement;
-import Modele.Jeu.Jeu;
+import Modele.Jeux.Jeu;
 import com.sun.istack.internal.NotNull;
 
 import javax.sound.sampled.Clip;
@@ -89,7 +89,7 @@ public class IHMGraphique extends IHM implements MouseListener {
             ouvrirFenetre(new PopUpFinPartie());
         } else {
             if (getMoteurJeu().estPhasePlacementPions()) {
-                plateauGraphique.setTuilesSurbrillance(jeu.placememntPionValide());
+                plateauGraphique.setTuilesSurbrillance(jeu.placementsPionValide());
             } else {
                 plateauGraphique.setTuilesSurbrillance(null);
             }

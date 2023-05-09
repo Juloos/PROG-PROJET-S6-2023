@@ -1,7 +1,7 @@
 package Modele.Coups;
 
 import Modele.Coord;
-import Modele.Jeu.Jeu;
+import Modele.Jeux.Jeu;
 import Modele.Plateau;
 
 public class CoupDeplacement implements Coup {
@@ -58,5 +58,14 @@ public class CoupDeplacement implements Coup {
     @Override
     public String toString() {
         return "CoupDeplacement{" + "source=" + source + ", destination=" + destination + ", oldVal=" + oldVal + ", joueur=" + joueur + '}';
+    }
+
+    @Override
+    public boolean equals(Object c) {
+        if (c instanceof CoupDeplacement) {
+            CoupDeplacement cd = (CoupDeplacement) c;
+            return cd.source.equals(source) && cd.destination.equals(destination) && cd.oldVal == oldVal && cd.joueur == joueur;
+        }
+        return false;
     }
 }

@@ -1,8 +1,7 @@
 package Modele.Coups;
 
 import Modele.Coord;
-import Modele.Jeu.Jeu;
-import Modele.Jeu.JeuConcret;
+import Modele.Jeux.Jeu;
 
 public class CoupAjout implements Coup {
     Coord cible;
@@ -36,5 +35,14 @@ public class CoupAjout implements Coup {
     @Override
     public String toString() {
         return "CoupAjout{" + "cible=" + cible + ", joueur=" + joueur + '}';
+    }
+
+    @Override
+    public boolean equals(Object c) {
+        if (c instanceof CoupAjout) {
+            CoupAjout ca = (CoupAjout) c;
+            return ca.cible.equals(cible) && ca.joueur == joueur;
+        }
+        return false;
     }
 }

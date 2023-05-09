@@ -1,7 +1,6 @@
 package Modele.Coups;
 
-import Modele.Jeu.Jeu;
-import Modele.Jeu.JeuConcret;
+import Modele.Jeux.Jeu;
 
 public interface Coup {
     public void jouer(Jeu j);
@@ -16,4 +15,6 @@ public interface Coup {
 
     @Override
     public String toString();
+    @Override
+    public boolean equals(Object c);
 }

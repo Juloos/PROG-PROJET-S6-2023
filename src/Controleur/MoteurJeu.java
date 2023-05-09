@@ -1,6 +1,5 @@
 package Controleur;
 
-import Global.Config;
 import IHM.Console.IHMConsole;
 import IHM.Graphique.Animations.AnimationDeplacementPion;
 import IHM.Graphique.IHMGraphique;
@@ -11,9 +10,11 @@ import Modele.Coord;
 import Modele.Coups.Coup;
 import Modele.Coups.CoupDeplacement;
 import Modele.Coups.CoupTerminaison;
-import Modele.Jeu.JeuConcret;
+import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
-import Modele.Joueurs.JoueurIA;
+import Modele.Joueurs.JoueurHumain;
+
+import static Global.Config.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +30,10 @@ public class MoteurJeu extends Thread {
     boolean pause, miseAJourAffichage;
     Thread threadIHM;
 
-    public MoteurJeu() {
-        super();
-        Joueur[] joueurs = new Joueur[]{new JoueurIA(0), new JoueurIA(1)};
+    public MoteurJeu(Joueur[] joueurs) {
         jeu = new JeuConcret(joueurs);
 
-        switch (Config.TYPE_IHM) {
+        switch (TYPE_IHM) {
             case CONSOLE:
                 ihm = new IHMConsole(this);
                 break;
@@ -50,6 +49,10 @@ public class MoteurJeu extends Thread {
             threadIHM = new Thread(ihm);
             threadIHM.start();
         }
+    }
+
+    public MoteurJeu() {
+        this(new Joueur[] {new JoueurHumain(0), new JoueurHumain(1)});
     }
 
     public synchronized IHM getIHM() {
@@ -94,19 +97,22 @@ public class MoteurJeu extends Thread {
     }
 
     public synchronized void annulerCoup() {
-        System.out.println("Annulation du dernier coup joué");
+        if (DEBUG)
+            System.out.println("Annulation du dernier coup joué");
         nbPionsPlaces--;
         jeu.annuler();
     }
 
     public synchronized void refaireCoup() {
-        System.out.println("Refaison du dernier coup annulé");
+        if (DEBUG)
+            System.out.println("Refaison du dernier coup annulé");
         nbPionsPlaces++;
         jeu.refaire();
     }
 
     public synchronized void sauvegarder(String nomSave) {
-        System.out.println("Sauvegarde de la partie");
+        if (DEBUG)
+            System.out.println("Sauvegarde de la partie");
         try {
             jeu.sauvegarder(nomSave + ".txt");
         } catch (Exception e) {
@@ -115,7 +121,8 @@ public class MoteurJeu extends Thread {
     }
 
     public void appliquerAction(Action action) {
-        if (!action.peutAppliquer(this)) {
+//        System.out.println("Action en cours de traitement " + action.toString());
+        if (!action.peutAppliquer(this) && ihm != null) {
             ihm.afficherMessage("Action non applicable");
         } else {
             action.appliquer(this);
@@ -127,7 +134,6 @@ public class MoteurJeu extends Thread {
     public synchronized void updateAffichage() {
         if (ihm != null) {
             ihm.updateAffichage(jeu);
-        }
     }
 
 
@@ -140,9 +146,12 @@ public class MoteurJeu extends Thread {
         while (estPhasePlacementPions()) {
             waitPause();
             appliquerAction(jeu.getJoueur().reflechir(this));
+            if (DEBUG)
+                System.out.println("On a traitée l'action");
         }
 
-        ihm.afficherMessage("Fin de la phase de placement des pions");
+        if (ihm != null)
+            ihm.afficherMessage("Fin de la phase de placement des pions");
         updateAffichage();
 
         while (!jeu.estTermine()) {
@@ -150,15 +159,20 @@ public class MoteurJeu extends Thread {
             while (jeu.peutJouer()) {
                 waitPause();
                 appliquerAction(jeu.getJoueur().reflechir(this));
+                if (DEBUG)
+                    System.out.println("Coup joué");
             }
-            try {
-                Thread.sleep(100);
-            } catch (Exception e) {
+            if (ihm != null) {
+                try {
+                    Thread.sleep(100);
+                } catch (Exception e) {}
             }
             jeu.jouer(new CoupTerminaison(jeu.getJoueur().id));
         }
 
         updateAffichage();
+        if (DEBUG)
+            System.out.println("Fin de jeu");
     }
 
     public synchronized boolean isPaused() {
@@ -166,11 +180,14 @@ public class MoteurJeu extends Thread {
     }
 
     public synchronized void pauseGame(boolean pause) {
-        System.out.println("Jeu en pause " + pause);
+        if (DEBUG)
+            System.out.println("Jeu en pause " + pause);
         this.pause = pause;
     }
 
     private void waitPause() {
+            if (ihm != null)
+                return;
         while (pause) {
             try {
                 Thread.sleep(100);
@@ -179,7 +196,7 @@ public class MoteurJeu extends Thread {
             }
         }
     }
-    
+
     public synchronized void close() {
         try {
             threadIHM.join();

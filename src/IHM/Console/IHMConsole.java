@@ -1,13 +1,13 @@
 package IHM.Console;
 
 import Controleur.MoteurJeu;
-import Global.Config;
+import Global.Config.*;
 import IHM.IHM;
 import Modele.Actions.*;
 import Modele.Coord;
 import Modele.Coups.CoupAjout;
 import Modele.Coups.CoupDeplacement;
-import Modele.Jeu.Jeu;
+import Modele.Jeux.Jeu;
 import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;

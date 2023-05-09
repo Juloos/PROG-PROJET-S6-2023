@@ -8,6 +8,9 @@ import Modele.IA.*;
 
 import java.util.HashMap;
 
+import static Global.Config.TYPE_IHM;
+import static IHM.TypeIHM.AUCUNE;
+
 public class JoueurIA extends Joueur {
     IA ia;
 
@@ -48,11 +51,13 @@ public class JoueurIA extends Joueur {
     @Override
     public Action reflechir(MoteurJeu mt) {
         if (mt.getJeu().getJoueur().id != id)
-            throw new IllegalArgumentException("Mauvais joueur courant pôur ce joueur : " + mt.getJoueurActif().id);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException("Mauvais joueur courant pour ce joueur : " + mt.getJoueurActif().id);
+        if (TYPE_IHM != AUCUNE) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         return new ActionCoup(ia.reflechir(mt.getJeu()));
     }

@@ -1,4 +1,4 @@
-package Modele.Jeu;
+package Modele.Jeux;
 
 import Modele.Coord;
 import Modele.Coups.Coup;
@@ -9,9 +9,11 @@ import Modele.IA.IA;
 import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
+import Modele.Plateau;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Stack;
@@ -34,10 +36,26 @@ public class JeuConcret extends Jeu {
         future = new Stack<>();
     }
 
+    public JeuConcret(Joueur[] joueurs, Plateau plateau) {
+        super(joueurs, plateau);
+        passe = new Stack<>();
+        future = new Stack<>();
+    }
+
     public JeuConcret(JeuConcret jeu) {
         super(jeu);
         this.passe = jeu.passe;
         this.future = jeu.future;
+    }
+
+    public ArrayList<Coup> historique(int jusquaJoueur) {
+        int dernierCoup = passe.size() - 1;
+        while (dernierCoup >= 0 && passe.get(dernierCoup).getJoueur() != jusquaJoueur)
+            dernierCoup--;
+        ArrayList<Coup> coups = new ArrayList<>();
+        for (int i = Integer.max(dernierCoup, 0); i < passe.size(); i++)
+            coups.add(passe.get(i));
+        return coups;
     }
 
     public Stack<Coup> getPasse() {

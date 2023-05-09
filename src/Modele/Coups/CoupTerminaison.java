@@ -1,8 +1,7 @@
 package Modele.Coups;
 
 import Modele.Coord;
-import Modele.Jeu.Jeu;
-import Modele.Jeu.JeuConcret;
+import Modele.Jeux.Jeu;
 
 import java.util.HashMap;
 
@@ -41,8 +40,6 @@ public class CoupTerminaison implements Coup {
                     j.getJoueur(joueur).reAnimer();
                 }
         );
-
-
     }
 
     public int getJoueur() {
@@ -64,5 +61,14 @@ public class CoupTerminaison implements Coup {
     @Override
     public String toString() {
         return "CoupTerminaison{" + "oldVals=" + oldVals + ", joueur=" + joueur + '}';
+    }
+
+    @Override
+    public boolean equals(Object c) {
+        if (c instanceof CoupTerminaison) {
+            CoupTerminaison ct = (CoupTerminaison) c;
+            return ct.oldVals.equals(oldVals) && ct.joueur == joueur;
+        }
+        return false;
     }
 }
