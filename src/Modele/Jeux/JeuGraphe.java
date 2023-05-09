@@ -33,6 +33,6 @@ public class JeuGraphe extends Jeu {
     }
 
     public boolean estPionIsole(Coord c) {
-        return true;
+        return false;
     }
 }

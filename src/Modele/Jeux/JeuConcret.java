@@ -288,9 +288,4 @@ public class JeuConcret extends Jeu {
             return null;
         }
     }
-
-    @Override
-    public Jeu clone() {
-        return new JeuConcret(this);
-    }
 }

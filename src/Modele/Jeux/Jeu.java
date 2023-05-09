@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 import static Global.Config.*;
 
-public abstract class Jeu implements Cloneable {
+public abstract class Jeu {
     final Plateau plateau;
     final Joueur[] joueurs;
     int nbJoueurs;
@@ -163,6 +163,12 @@ public abstract class Jeu implements Cloneable {
         joueurs[joueurCourant].deplacerPion(c1, c2);
         if (estPionBloque(c2))
             joueurs[joueurCourant].bloquerPion(c2);
+        c1.voisins().forEach(
+                voisin -> {
+                    if (estPion(voisin) && estPionBloque(voisin))
+                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                }
+        );
         c2.voisins().forEach(
                 voisin -> {
                     if (estPion(voisin) && estPionBloque(voisin))
@@ -275,7 +281,4 @@ public abstract class Jeu implements Cloneable {
         str.delete(str.length() - 3, str.length());
         return str.toString();
     }
-
-    @Override
-    public abstract Jeu clone();
 }

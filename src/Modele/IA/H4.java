@@ -1,16 +1,13 @@
 package Modele.IA;
 
 import Modele.Coord;
-import Modele.Jeu;
-import Modele.Joueur;
+import Modele.Jeux.Jeu;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 public class H4 implements Heuristique {
-
-
     @Override
     public double evaluer(Jeu j, int pdvJoueur) {
         return 0;
@@ -24,9 +21,9 @@ public class H4 implements Heuristique {
         while (iterator.hasNext()) {
             Coord element = iterator.next();
             for (Coord v : element.voisins()){
-                if (v estpion)
-                    {return false}
-                if (v casebonne)
+                if (j.estPion(v))
+                    return false;
+                if (j.getPlateau().estCoordValide(v))
                     accessible.add(v);
             }
         }

@@ -11,9 +11,7 @@ import Modele.Coups.Coup;
 import Modele.Coups.CoupDeplacement;
 import Modele.Coups.CoupTerminaison;
 import Modele.Jeux.JeuConcret;
-import Modele.IA.IA;
 import Modele.Joueurs.Joueur;
-import Modele.Joueurs.JoueurHumain;
 
 import static Global.Config.*;
 
@@ -79,7 +77,7 @@ public class MoteurJeu extends Thread {
         jeu.jouer(coup);
         nbPionsPlaces++;
 
-        if (Config.TYPE_IHM == TypeIHM.GRAPHIQUE && coup instanceof CoupDeplacement) {
+        if (TYPE_IHM == TypeIHM.GRAPHIQUE && coup instanceof CoupDeplacement) {
             CoupDeplacement deplacement = (CoupDeplacement) coup;
 
             List<Coord> coords = new ArrayList<>();
@@ -133,7 +131,7 @@ public class MoteurJeu extends Thread {
     }
 
     public void updateAffichage() {
-        if (ihm != null && partieEnCours()) {
+        if (ihm != null && partieEnCours())
             ihm.updateAffichage(jeu);
     }
 
@@ -145,7 +143,8 @@ public class MoteurJeu extends Thread {
     @Override
     public void run() {
         while (etat != EtatMoteurJeu.FIN) {
-            System.out.println("En attente d'une nouvelle partie");
+            if (DEBUG)
+                System.out.println("En attente d'une nouvelle partie");
             while (ihm != null && getEtat() == EtatMoteurJeu.ATTENTE_PARTIE) {
                 ihm.attendreCreationPartie();
             }
@@ -183,7 +182,8 @@ public class MoteurJeu extends Thread {
                     jeu.jouer(new CoupTerminaison(jeu.getJoueur().id));
                 }
             }
-            System.out.println("Fin de la partie");
+            if (DEBUG)
+                System.out.println("Fin de la partie");
             updateAffichage();
 
             if (ihm == null) {

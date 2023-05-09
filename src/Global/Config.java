@@ -6,8 +6,8 @@ import Modele.Joueurs.*;
 
 public class Config {
     public final static TypeIHM TYPE_IHM = TypeIHM.AUCUNE;
-    public final static Joueur[] JOUEURS_TOURNOI = new Joueur[] {new JoueurIA(0, IA.Difficulte.ALEATOIRE), new JoueurIA(1, IA.Difficulte.DIFFICILE)};
-    public final static int NB_PARTIES = 10;
+    public final static Joueur[] JOUEURS_TOURNOI = new Joueur[] {new JoueurIA(0, IA.Difficulte.ALEATOIRE), new JoueurIA(1, IA.Difficulte.ALEATOIRE)};
+    public final static int NB_PARTIES = 1000;
     public final static int NB_COUPS_PREDICTION = 2;
     public final static Heuristique HEURISTIQUE = new H3();
     public final static double HEURISTIQUE_ABSVAL = 1000;
