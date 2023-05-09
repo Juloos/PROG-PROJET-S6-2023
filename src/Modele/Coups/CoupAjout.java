@@ -2,7 +2,6 @@ package Modele.Coups;
 
 import Modele.Coord;
 import Modele.Jeu.Jeu;
-import Modele.Jeu.JeuConcret;
 
 public class CoupAjout implements Coup {
     Coord cible;
@@ -22,7 +21,7 @@ public class CoupAjout implements Coup {
     }
 
     public void annuler(Jeu j) {
-        j.annulerAjout(joueur,cible);
+        j.annulerAjout(joueur, cible);
     }
 
     public int getJoueur() {
@@ -31,6 +30,11 @@ public class CoupAjout implements Coup {
 
     public String getSaveString() {
         return "-1 " + joueur + " " + cible.q + " " + cible.r;
+    }
+
+    @Override
+    public String getMessageErreur() {
+        return "Vous ne pouvez placer un pion que sur des tuiles avec un poisson";
     }
 
     @Override

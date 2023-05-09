@@ -12,4 +12,9 @@ public class ActionAnnuler implements Action {
     public boolean peutAppliquer(MoteurJeu mt) {
         return !mt.getJeu().getPasse().empty();
     }
+
+    @Override
+    public void afficherMessageErreur(MoteurJeu mt) {
+        mt.getIHM().afficherMessage("Aucun coup possible à annuler");
+    }
 }

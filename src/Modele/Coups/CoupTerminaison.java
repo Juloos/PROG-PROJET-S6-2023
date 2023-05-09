@@ -2,7 +2,6 @@ package Modele.Coups;
 
 import Modele.Coord;
 import Modele.Jeu.Jeu;
-import Modele.Jeu.JeuConcret;
 
 import java.util.HashMap;
 
@@ -60,6 +59,11 @@ public class CoupTerminaison implements Coup {
                 }
         );
         return "-3 " + joueur + " " + hSize + save;
+    }
+
+    @Override
+    public String getMessageErreur() {
+        return "";
     }
 
     @Override

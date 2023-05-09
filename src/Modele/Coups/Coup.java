@@ -1,7 +1,6 @@
 package Modele.Coups;
 
 import Modele.Jeu.Jeu;
-import Modele.Jeu.JeuConcret;
 
 public interface Coup {
     public void jouer(Jeu j);
@@ -13,6 +12,8 @@ public interface Coup {
     public int getJoueur();
 
     public String getSaveString();
+
+    public String getMessageErreur();
 
     @Override
     public String toString();
