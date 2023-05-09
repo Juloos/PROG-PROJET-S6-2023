@@ -4,11 +4,12 @@ import Controleur.MoteurJeu;
 import Modele.Actions.Action;
 import Modele.Jeu.Jeu;
 
-public abstract class IHM implements Runnable {
+public abstract class IHM extends Thread {
 
     private MoteurJeu moteurJeu;
 
     public IHM(MoteurJeu moteurJeu) {
+        super();
         this.moteurJeu = moteurJeu;
     }
 
