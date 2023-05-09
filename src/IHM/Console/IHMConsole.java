@@ -115,11 +115,14 @@ public class IHMConsole extends IHM {
     }
 
     @Override
-    public void attendreCreationPartie() {
+    public synchronized void attendreCreationPartie() {
         List<Joueur> listJoueurs = new ArrayList<>();
+        boolean charger = false;
+        String nomficher = "";
 
         String ligne;
         do {
+            System.out.println("Veuillez entrer le type de joueur du joueur n°" + (listJoueurs.size() + 1));
             ligne = input.next();
 
             try {
@@ -134,6 +137,12 @@ public class IHMConsole extends IHM {
 //                        String difficulte = ligne.split(" ")[1];
                         listJoueurs.add(new JoueurIA(listJoueurs.size()));
                     case "fin":
+                    case "stop":
+                        break;
+
+                    case "charger":
+                        charger = true;
+                        nomficher = "test.txt";
                         break;
                     default:
                         System.out.println("Mais t'es con ou quoi fréro ?");
@@ -143,11 +152,15 @@ public class IHMConsole extends IHM {
                 System.out.println("Mais t'es con ou quoi fréro ?");
             }
         } while (!ligne.equals("fin") &&
+                !ligne.equals("stop") &&
+                !charger &&
                 (!ligne.equals("") || listJoueurs.size() < Config.NB_MIN_JOUEUR) &&
                 listJoueurs.size() < Config.NB_MAX_JOUEUR);
 
         if (ligne.equals("fin")) {
             getMoteurJeu().fin();
+        } else if (charger) {
+            getMoteurJeu().lancerPartie(nomficher);
         } else {
             getMoteurJeu().lancerPartie(listJoueurs.toArray(new Joueur[0]));
         }
