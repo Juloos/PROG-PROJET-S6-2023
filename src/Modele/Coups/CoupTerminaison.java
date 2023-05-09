@@ -33,12 +33,7 @@ public class CoupTerminaison implements Coup {
     public void annuler(Jeu j) {
         oldVals.forEach(
                 (source, oldVal) -> {
-                    j.getPlateau().set(source, oldVal);
-                    j.getJoueur(joueur).ajouterPion(source);
-                    j.getJoueur(joueur).replacerPion(source, true);
-                    j.getJoueur(joueur).supprimerTuile();
-                    j.getJoueur(joueur).decrementerScore(oldVal);
-                    j.getJoueur(joueur).reAnimer();
+                    j.annulerTerminaison(joueur,source,oldVal);
                 }
         );
 
