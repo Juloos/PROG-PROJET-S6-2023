@@ -79,8 +79,7 @@ public class EcranAccueil extends Ecran {
                 ihm.ouvrirFenetre(new PopUpConfirmation(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
-                        ihm.retournerPrecedenteFenetre();
-                        System.exit(0);
+                        ihm.getMoteurJeu().fin();
                     }
                 }));
             }

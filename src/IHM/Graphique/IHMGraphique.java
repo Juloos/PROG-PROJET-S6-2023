@@ -3,7 +3,7 @@ package IHM.Graphique;
 import Controleur.MoteurJeu;
 import IHM.Graphique.Animations.Animation;
 import IHM.Graphique.Composants.PlateauGraphique;
-import IHM.Graphique.Ecrans.EcranJeu;
+import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.PopUp.PopUpFinPartie;
 import IHM.IHM;
 import Modele.Actions.Action;
@@ -58,7 +58,7 @@ public class IHMGraphique extends IHM implements MouseListener {
 
         plateauGraphique = new PlateauGraphique();
 
-        ouvrirFenetre(new EcranJeu());
+        ouvrirFenetre(new EcranAccueil());
 
         frame.addComponentListener(new ComponentAdapter() {
             @Override
@@ -121,6 +121,12 @@ public class IHMGraphique extends IHM implements MouseListener {
 
     @Override
     public void attendreCreationPartie() {
+    }
+
+    @Override
+    public void terminer() {
+        fermerFenetres();
+        frame.dispose();
     }
 
     /**
