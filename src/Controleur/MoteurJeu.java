@@ -227,7 +227,7 @@ public class MoteurJeu extends Thread {
     public synchronized void lancerPartie(Joueur[] joueurs) {
         this.jeu = new JeuConcret(joueurs);
         this.etat = EtatMoteurJeu.PARTIE_EN_COURS;
-//        System.out.println("Lancemenet d'une nouvelle partie");
+        System.out.println("Lancement d'une nouvelle partie");
     }
 
     public synchronized void lancerPartie(String nomSave) {
