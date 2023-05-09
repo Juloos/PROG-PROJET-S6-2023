@@ -183,6 +183,12 @@ public abstract class Jeu implements Cloneable {
         joueurs[joueurCourant].ajouterPion(c);
         if (estPionBloque(c))
             joueurs[joueurCourant].bloquerPion(c);
+        c.voisins().forEach(
+                voisin -> {
+                    if (estPion(voisin) && estPionBloque(voisin))
+                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                }
+        );
         joueurSuivant();
     }
 
@@ -210,7 +216,7 @@ public abstract class Jeu implements Cloneable {
         c1.voisins().forEach(
                 voisin -> {
                     if (estPion(voisin) && estPionBloque(voisin))
-                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                        joueurs[joueurDePion(voisin)].debloquerPion(voisin);
                 }
         );
         c2.voisins().forEach(
