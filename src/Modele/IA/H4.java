@@ -1,15 +1,14 @@
-package IA;
+package Modele.IA;
 
 import Modele.Coord;
 import Modele.Jeu;
 import Modele.Joueur;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class H3 implements Heuristique {
+public class H4 implements Heuristique {
 
 
     @Override
