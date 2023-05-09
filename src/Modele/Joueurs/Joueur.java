@@ -107,7 +107,11 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
             throw new IllegalArgumentException("Pion inexistant");
         pions.put(c, true);
     }
-
+    public void debloquerPion(Coord c){
+        if (!pions.containsKey(c))
+            throw new IllegalArgumentException("Pion inexistant");
+        pions.put(c, false);
+    }
     public boolean peutJouer(Jeu j) {
         return pions.containsValue(false) || pions.size() < j.getNbPions();
     }
