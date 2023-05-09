@@ -4,6 +4,7 @@ import Global.Config;
 import IHM.Colors;
 import IHM.Graphique.IHMGraphique;
 import Modele.Joueurs.Joueur;
+import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
 
 import javax.swing.*;
@@ -69,6 +70,16 @@ public class EcranCreationPartie extends Ecran {
         lancerPartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                Joueur joueurs[] = new Joueur[nbJoueurs];
+                for (int i = 0; i < nbJoueurs; i++) {
+                    //si le joueur est une IA
+                    if (((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex() != 0) {
+                        joueurs[i] = new JoueurIA(((MenuJoueur) joueursPanel.getComponent(i)).num - 1);
+                    } else {
+                        joueurs[i] = new JoueurHumain(((MenuJoueur) joueursPanel.getComponent(i)).num - 1);
+                    }
+                }
+                ihm.getMoteurJeu().lancerPartie(joueurs);
                 ihm.ouvrirFenetre(new EcranJeu());
             }
         });
@@ -105,13 +116,15 @@ public class EcranCreationPartie extends Ecran {
     private class MenuJoueur extends JPanel {
 
         JLabel numJoueur;
+
+        int num;
         JComboBox<String> difficultesIA;
         Button close;
         ActionListener closeAction;
 
         public MenuJoueur(int num) {
             super();
-
+            this.num = num;
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             setBackground(Colors.TRANSPARENT);
 
