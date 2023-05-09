@@ -66,7 +66,11 @@ public class JeuConcret extends Jeu {
         return future;
     }
 
-    public void setPasse(Stack<Coup> passe) { this.passe = passe; }
+    public void setPasseFromFutur(Stack<Coup> futur) {
+        while(!futur.empty()){
+            this.passe.push(futur.pop());
+        }
+    }
 
     public void jouer(Coup c) {
         super.jouer(c);
@@ -168,12 +172,7 @@ public class JeuConcret extends Jeu {
                         System.err.println(" erreur : Joueur non typé");
                         throw new Exception();
                     case 1:
-                        nom = "";
-                        temp = sc_f.next();
-                        while (!temp.equals("\0")) {
-                            nom += temp;
-                            temp = sc_f.next();
-                        }
+                        nom = sc_f.next();
                         break;
                     case 2:
                         nom = sc_f.next();
@@ -279,10 +278,10 @@ public class JeuConcret extends Jeu {
                         throw new Exception();
                 }
             }
-        while(tempFutur.empty()){
-            tempPasse.push(tempFutur.pop());
-        }
-        jeu.setPasse(tempPasse);
+//        while(tempFutur.empty()){
+//            tempPasse.push(tempFutur.pop());
+//        }
+        jeu.setPasseFromFutur(tempFutur);
 
             //terminaison
             sc_f.close();

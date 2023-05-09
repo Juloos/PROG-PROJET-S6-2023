@@ -49,6 +49,6 @@ public class JoueurHumain extends Joueur {
         for (int j = 0; j < pions.size(); j++) {
             dataHash += " " + tempL[j].q + " " + tempL[j].r;
         }
-        return 1 + " " + id + " " + nom + "\0 " + score + " " + tuiles + " " + pions.size() + dataHash;
+        return 1 + " " + id + " " + nom + " " + score + " " + tuiles + " " + pions.size() + dataHash;
     }
 }

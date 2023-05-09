@@ -50,6 +50,11 @@ public class MoteurJeu extends Thread {
         etat = EtatMoteurJeu.ATTENTE_PARTIE;
     }
 
+    public MoteurJeu(Joueur[] joueurs) {
+        this.jeu = new JeuConcret(joueurs);
+        this.etat = EtatMoteurJeu.PARTIE_EN_COURS;
+    }
+
     public synchronized IHM getIHM() {
         return ihm;
     }
@@ -62,11 +67,11 @@ public class MoteurJeu extends Thread {
         return jeu.getJoueur();
     }
 
-    public synchronized boolean estPhasePlacementPions() {
+    public boolean estPhasePlacementPions() {
         return partieEnCours() && nbPionsPlaces < jeu.getNbJoueurs() * jeu.getNbPions();
     }
 
-    public synchronized boolean estPhaseDeplacementPion() {
+    public boolean estPhaseDeplacementPion() {
         return partieEnCours() && !jeu.estTermine();
     }
 
@@ -90,6 +95,7 @@ public class MoteurJeu extends Thread {
             Coord[] array = new Coord[coords.size()];
             ((IHMGraphique) ihm).setAnimation(new AnimationDeplacementPion(((IHMGraphique) ihm), coords.toArray(array)));
         }
+
     }
 
     public synchronized void annulerCoup() {
@@ -118,7 +124,7 @@ public class MoteurJeu extends Thread {
 
     public void appliquerAction(Action action) {
         if (!action.peutAppliquer(this)) {
-            action.afficherMessageErreur(this);
+//            action.afficherMessageErreur(this);
         } else {
             action.appliquer(this);
         }
@@ -126,7 +132,7 @@ public class MoteurJeu extends Thread {
         updateAffichage();
     }
 
-    public synchronized void updateAffichage() {
+    public void updateAffichage() {
         if (ihm != null && partieEnCours()) {
             ihm.updateAffichage(jeu);
     }
@@ -139,8 +145,9 @@ public class MoteurJeu extends Thread {
     @Override
     public void run() {
         while (etat != EtatMoteurJeu.FIN) {
-            etat = EtatMoteurJeu.ATTENTE_PARTIE;
-            ihm.attendreCreationPartie();
+            if (ihm != null) {
+                ihm.attendreCreationPartie();
+            }
             System.out.println("En attente d'une nouvelle partie");
             while (getEtat() == EtatMoteurJeu.ATTENTE_PARTIE) ;
 
@@ -155,22 +162,36 @@ public class MoteurJeu extends Thread {
             }
 
             System.out.println("Fin de la phase de placement des pions");
-            ihm.afficherMessage("Fin de la phase de placement des pions");
+
+            if (ihm != null) {
+                ihm.afficherMessage("Fin de la phase de placement des pions");
+            }
+
             updateAffichage();
 
             while (estPhaseDeplacementPion()) {
+//            while (true) {
+
                 waitPause();
                 while (partieEnCours() && jeu.peutJouer()) {
+//                    while (partieEnCours()) {
+
                     waitPause();
                     appliquerAction(jeu.getJoueur().reflechir(this));
                 }
-                waitTime(100);
+//                waitTime(100);
                 if (partieEnCours()) {
                     jeu.jouer(new CoupTerminaison(jeu.getJoueur().id));
                 }
             }
             System.out.println("Fin de la partie");
             updateAffichage();
+
+            if (ihm == null) {
+                etat = EtatMoteurJeu.FIN;
+            } else {
+                etat = EtatMoteurJeu.ATTENTE_PARTIE;
+            }
         }
         System.out.println("Fin du moteur de jeu");
     }
@@ -200,7 +221,7 @@ public class MoteurJeu extends Thread {
     }
 
     private void waitPause() {
-        while (partieEnPause()) {
+        while (ihm != null && partieEnPause()) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
