@@ -16,4 +16,9 @@ public class ActionSauvegarder implements Action {
     public boolean peutAppliquer(MoteurJeu mt) {
         return true;
     }
+
+    @Override
+    public void afficherMessageErreur(MoteurJeu mt) {
+        mt.getIHM().afficherMessage("Erreur lors de la sauvegarde");
+    }
 }

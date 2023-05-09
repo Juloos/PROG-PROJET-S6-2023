@@ -222,6 +222,15 @@ public abstract class Jeu implements Cloneable {
         this.getJoueur(j).supprimerPion(cible);
         this.joueurCourant = j;
     }
+    public void annulerTerminaison(int joueur,Coord source, int oldVal){
+        this.getPlateau().set(source, oldVal);
+        this.getJoueur(joueur).ajouterPion(source);
+        this.getJoueur(joueur).replacerPion(source, true);
+        this.getJoueur(joueur).supprimerTuile();
+        this.getJoueur(joueur).decrementerScore(oldVal);
+        this.getJoueur(joueur).reAnimer();
+        this.joueurCourant = joueur;
+    }
 
     public ArrayList<Integer> getWinner() {
         ArrayList<Integer> winners = new ArrayList<>();

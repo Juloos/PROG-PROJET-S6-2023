@@ -13,6 +13,8 @@ public interface Coup {
 
     public String getSaveString();
 
+    public String getMessageErreur();
+
     @Override
     public String toString();
     @Override

@@ -1,10 +1,7 @@
 package Modele.Actions;
 
 import Controleur.MoteurJeu;
-import IHM.Graphique.Animations.AnimationDeplacementPion;
-import IHM.Graphique.IHMGraphique;
 import Modele.Coups.Coup;
-import Modele.Coups.CoupDeplacement;
 
 public class ActionCoup implements Action {
     Coup coup;
@@ -21,5 +18,10 @@ public class ActionCoup implements Action {
     @Override
     public boolean peutAppliquer(MoteurJeu mt) {
         return coup.estJouable(mt.getJeu());
+    }
+
+    @Override
+    public void afficherMessageErreur(MoteurJeu mt) {
+        mt.getIHM().afficherMessage(coup.getMessageErreur());
     }
 }
