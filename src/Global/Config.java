@@ -19,6 +19,8 @@ public class Config {
     public final static int NB_JOUEUR = 4;
     public final static int NB_MIN_JOUEUR = 2;
     public final static int NB_MAX_JOUEUR = 4;
+
+    public static final double ANIMATION_DURATION = 2.0;
     public final static String[] COULEURS = {"\033[0m", "\033[34m", "\033[31m", "\033[32m", "\033[33m"};  // index 0: reset, indexe i+1: couleur du joueur i
 //    public final static String[] COULEURS = {"", "0*", "1*", "2*", "3*"};
 }
