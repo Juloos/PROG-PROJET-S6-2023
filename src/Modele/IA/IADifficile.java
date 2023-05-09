@@ -48,7 +48,7 @@ public class IADifficile implements IA {
                 parcourirArbre(fils, profondeur - 1, alpha, beta);
                 c.annuler(pointeur);
                 minimaxVal = Double.max(minimaxVal, fils.valeur);
-                if (minimaxVal > beta)
+                if (minimaxVal > beta || minimaxVal > HEURISTIQUE_ABSVAL)
                     break;
                 alpha = Double.max(alpha, minimaxVal);
             }
@@ -61,7 +61,7 @@ public class IADifficile implements IA {
                 parcourirArbre(fils, profondeur - 1, alpha, beta);
                 c.annuler(pointeur);
                 minimaxVal = Double.min(minimaxVal, fils.valeur);
-                if (minimaxVal < alpha)
+                if (minimaxVal < alpha || -minimaxVal > HEURISTIQUE_ABSVAL)
                     break;
                 beta = Double.min(beta, minimaxVal);
             }

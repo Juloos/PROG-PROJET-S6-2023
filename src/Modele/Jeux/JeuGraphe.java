@@ -24,10 +24,15 @@ public class JeuGraphe extends Jeu {
                 coups.add(new CoupAjout(c, joueurCourant));
         } else if (peutJouer()) {
             for (Coord s : joueurs[joueurCourant].getPions())
-                for (Coord d : deplacementsPion(s))
-                    coups.add(new CoupDeplacement(s.clone(), d, joueurCourant));
+                if (!estPionIsole(s))
+                    for (Coord d : deplacementsPion(s))
+                        coups.add(new CoupDeplacement(s.clone(), d, joueurCourant));
         } else if (!getJoueur().estTermine())
             coups.add(new CoupTerminaison(joueurCourant));
         return coups;
+    }
+
+    public boolean estPionIsole(Coord c) {
+        return true;
     }
 }
