@@ -52,13 +52,14 @@ public class CoupTerminaison implements Coup {
     public String getSaveString() {
         StringBuilder save = new StringBuilder();
         final String[] temp = new String[1];
+        int hSize = oldVals.size();
         oldVals.forEach(
                 (source, oldVal) -> {
                     temp[0] = " " + source.q + " " + source.r + " " + oldVal;
                     save.append(temp[0]);
                 }
         );
-        return "-3 " + joueur + " " + oldVals.size()+ save;
+        return "-3 " + joueur + " " + hSize + save;
     }
 
     @Override

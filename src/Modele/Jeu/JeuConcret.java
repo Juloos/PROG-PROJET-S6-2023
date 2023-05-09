@@ -116,7 +116,7 @@ public class JeuConcret extends Jeu {
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static Jeu charger(String fichier) {
+    public static JeuConcret charger(String fichier) {
 
         int test, jou, val, nbJoueurs, testType;
         int id, score, tuile, r, q;
@@ -134,39 +134,32 @@ public class JeuConcret extends Jeu {
         try {
             sc_f = new Scanner(new File(fichier));
         } catch (Exception E) {
-            System.out.println(fichier + " isn't accesible");
+            System.err.println(fichier + " isn't accesible");
             return null;
         }
 
-        // Tant que le fichier n'est pas vide, vérifie que le fichier est comforme et joue si il trouve un coup
+        //charge joueur
+        nbJoueurs = sc_f.nextInt();
+        Joueur[] joueurs = new Joueur[nbJoueurs];
         try {
-
-            //charge joueur
-            nbJoueurs = sc_f.nextInt();
-            Joueur[] joueurs = new Joueur[nbJoueurs];
-            for(int i = 0; i<nbJoueurs; i++){
+            for (int i = 0; i < nbJoueurs; i++) {
                 testType = sc_f.nextInt();
                 id = sc_f.nextInt();
-                switch(testType){
-                    case 0 :
-                        System.out.println(" erreur : Joueur non typé");
+                switch (testType) {
+                    case 0:
+                        System.err.println(" erreur : Joueur non typé");
                         throw new Exception();
-                    case 1 :
+                    case 1:
                         nom = "";
                         temp = sc_f.next();
-                        while(temp.equals("\0")){
+                        while (!temp.equals("\0")) {
                             nom += temp;
-                            temp= sc_f.next();
+                            temp = sc_f.next();
                         }
                         break;
-                    case 2 :
-                        nom = "";
-                        temp = sc_f.next();
-                        while(temp.equals("\0")){
-                            nom += temp;
-                            temp= sc_f.next();
-                        }
-                        switch (nom){
+                    case 2:
+                        nom = sc_f.next();
+                        switch (nom) {
                             case "ALEATOIRE":
                                 difficulte = IA.Difficulte.ALEATOIRE;
                                 break;
@@ -180,46 +173,62 @@ public class JeuConcret extends Jeu {
                                 difficulte = IA.Difficulte.DIFFICILE;
                                 break;
                             default:
-                                System.out.println(fichier + " isn't a save file");
+                                System.err.println(fichier + " isn't a save file : not a valid IA");
                                 throw new Exception();
-                        };
+                        }
                         break;
                     default:
-                        System.out.println(fichier + " isn't a save file");
+                        System.err.println(fichier + " isn't a save file : not a valid player");
                         throw new Exception();
                 }
                 score = sc_f.nextInt();
                 tuile = sc_f.nextInt();
                 pions = new HashMap<>();
-                for(int j = 0; j < sc_f.nextInt(); j++){
-                    q=sc_f.nextInt();
-                    r=sc_f.nextInt();
-                    pions.put(new Coord(q,r) , false);
+                int nbPions = sc_f.nextInt();
+                for (int j = 0; j < nbPions; j++) {
+                    q = sc_f.nextInt();
+                    r = sc_f.nextInt();
+                    pions.put(new Coord(q, r), false);
                 }
-                switch(testType){
-                    case 1 :
-                        joueurs[i]= new JoueurHumain(id,score,tuile,pions,nom);
+                switch (testType) {
+                    case 1:
+                        joueurs[i] = new JoueurHumain(id, score, tuile, pions, nom);
                         break;
-                    case 2 :
-                        joueurs[i]= new JoueurIA(id,score,tuile,pions,difficulte);
+                    case 2:
+                        joueurs[i] = new JoueurIA(id, score, tuile, pions, difficulte);
                         break;
                 }
             }
+        }catch (Exception E) {
+            System.err.println(" error during player setup");
+            return null;
+        }
 
-            //Creation du jeu
-            JeuConcret jeu = new JeuConcret(joueurs);
+        //Creation du jeu
+        JeuConcret jeu = new JeuConcret(joueurs);
+        if (jeu == null) {
+            System.err.println("Error during game creation");
+            return null;
+        }
 
-            //charge plateau
+        // Charge plateau
+        try {
             Coord c = new Coord();
-            for (c.r = 0; c.r < TAILLE_PLATEAU_X; c.r++){
-                for (c.q = 0; c.q < TAILLE_PLATEAU_Y; c.q++){
+            for (c.r = 0; c.r < TAILLE_PLATEAU_X; c.r++) {
+                for (c.q = 0; c.q < TAILLE_PLATEAU_Y; c.q++) {
                     jeu.getPlateau().set(c, sc_f.nextInt());
                 }
             }
+        }catch (Exception E) {
+            System.err.println("Error during board creation");
+            return null;
+        }
 
-            //Charge historique
-            test = sc_f.nextInt();
+        // Charge historique
+        try{
+        // Tant que le fichier n'est pas vide, vérifie que le fichier est comforme et joue si il trouve un coup
             while (sc_f.hasNext()) {
+                test = sc_f.nextInt();
                 // repére le type du coup
                 switch (test) {
                     case -1:
@@ -239,7 +248,8 @@ public class JeuConcret extends Jeu {
                     case -3:
                         jou = sc_f.nextInt();
                         tempHash = new HashMap<>();
-                        for (int j = 0; j < sc_f.nextInt(); j++) {
+                        int nbPions = sc_f.nextInt();
+                        for (int j = 0; j < nbPions; j++) {
                             tempCoord1 = new Coord(sc_f.nextInt(), sc_f.nextInt());
                             tempHash.put(tempCoord1, sc_f.nextInt());
                         }
@@ -247,19 +257,20 @@ public class JeuConcret extends Jeu {
                         tempFutur.push(tempCoup);
                         break;
                     default:
+                        System.err.println(fichier + " isn't a save file : not a valid history");
                         throw new Exception();
                 }
             }
-            while(tempFutur.empty()){
-                tempPasse.push(tempFutur.pop());
-            }
-            jeu.setPasse(tempPasse);
+        while(tempFutur.empty()){
+            tempPasse.push(tempFutur.pop());
+        }
+        jeu.setPasse(tempPasse);
 
             //terminaison
             sc_f.close();
             return jeu;
         } catch (Exception E) {
-            System.out.println(fichier + " isn't a save file");
+            System.err.println("Error during history creation");
             return null;
         }
     }
