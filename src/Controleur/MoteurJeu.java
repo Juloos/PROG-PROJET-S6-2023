@@ -118,7 +118,7 @@ public class MoteurJeu extends Thread {
 
     public void appliquerAction(Action action) {
         if (!action.peutAppliquer(this)) {
-            action.afficherMessageErreur(this);
+//            action.afficherMessageErreur(this);
         } else {
             action.appliquer(this);
         }
@@ -165,8 +165,12 @@ public class MoteurJeu extends Thread {
             updateAffichage();
 
             while (estPhaseDeplacementPion()) {
+//            while (true) {
+
                 waitPause();
                 while (partieEnCours() && jeu.peutJouer()) {
+//                    while (partieEnCours()) {
+
                     waitPause();
                     appliquerAction(jeu.getJoueur().reflechir(this));
                 }
