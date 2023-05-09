@@ -89,7 +89,7 @@ public class IHMGraphique extends IHM implements MouseListener {
             ouvrirFenetre(new PopUpFinPartie());
         } else {
             if (getMoteurJeu().estPhasePlacementPions()) {
-                plateauGraphique.setTuilesSurbrillance(jeu.placememntPionValide());
+                plateauGraphique.setTuilesSurbrillance(jeu.placementPionValide());
             } else {
                 plateauGraphique.setTuilesSurbrillance(null);
             }

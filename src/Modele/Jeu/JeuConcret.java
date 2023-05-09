@@ -260,9 +260,6 @@ public class JeuConcret extends Jeu {
                         throw new Exception();
                 }
             }
-//        while(tempFutur.empty()){
-//            tempPasse.push(tempFutur.pop());
-//        }
         jeu.setPasseFromFutur(tempFutur);
 
             //terminaison

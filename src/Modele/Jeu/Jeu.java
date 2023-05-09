@@ -136,7 +136,7 @@ public abstract class Jeu implements Cloneable {
     }
 
 
-    public ArrayList<Coord> placememntPionValide() {
+    public ArrayList<Coord> placementPionValide() {
         ArrayList<Coord> liste = new ArrayList<>();
         for (int i = 0; i < plateau.getNbColumns(); i++) {
             for (int j = 0; j < plateau.getNbRows(); j++) {

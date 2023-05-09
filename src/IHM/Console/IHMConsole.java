@@ -142,7 +142,7 @@ public class IHMConsole extends IHM {
 
                     case "charger":
                         charger = true;
-                        nomficher = "test.txt";
+                        nomficher = "sauvegarde.txt";
                         break;
                     default:
                         System.out.println("Mais t'es con ou quoi fréro ?");
