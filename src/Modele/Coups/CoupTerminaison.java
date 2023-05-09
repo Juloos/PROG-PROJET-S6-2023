@@ -33,6 +33,7 @@ public class CoupTerminaison implements Coup {
         oldVals.forEach(
                 (source, oldVal) -> {
                     j.annulerTerminaison(joueur,source,oldVal);
+
                 }
         );
     }
