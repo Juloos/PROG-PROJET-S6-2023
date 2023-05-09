@@ -166,12 +166,7 @@ public abstract class Jeu implements Cloneable {
         joueurs[joueurCourant].deplacerPion(c1, c2);
         if (estPionBloque(c2))
             joueurs[joueurCourant].bloquerPion(c2);
-        c1.voisins().forEach(
-                voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
-                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
-                }
-        );
+
         c2.voisins().forEach(
                 voisin -> {
                     if (estPion(voisin) && estPionBloque(voisin))
@@ -204,8 +199,6 @@ public abstract class Jeu implements Cloneable {
     }
 
     public void jouer(Coup c) {
-        if (!c.estJouable(this))
-            throw new IllegalArgumentException("Ce coup n'est pas possible : " + c + ".");
         if (c.getJoueur() != joueurCourant)
             throw new IllegalArgumentException("Mauvaise selection du joueur du coup : " + c + ".");
         c.jouer(this);

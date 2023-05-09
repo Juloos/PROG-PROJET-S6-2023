@@ -116,7 +116,7 @@ public class JeuConcret extends Jeu {
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static Jeu charger(String fichier) {
+    public static JeuConcret charger(String fichier) {
 
         int test, jou, val, nbJoueurs, testType;
         int id, score, tuile, r, q;
@@ -180,12 +180,12 @@ public class JeuConcret extends Jeu {
                                 difficulte = IA.Difficulte.DIFFICILE;
                                 break;
                             default:
-                                System.out.println(fichier + " isn't a save file");
+                                System.err.println(fichier + " isn't a save file : not valid for IA");
                                 throw new Exception();
                         };
                         break;
                     default:
-                        System.out.println(fichier + " isn't a save file");
+                        System.out.println(fichier + " isn't a save file : not valid player");
                         throw new Exception();
                 }
                 score = sc_f.nextInt();
@@ -259,7 +259,7 @@ public class JeuConcret extends Jeu {
             sc_f.close();
             return jeu;
         } catch (Exception E) {
-            System.out.println(fichier + " isn't a save file");
+            System.out.println(fichier + " isn't a save file : not a valid history");
             return null;
         }
     }

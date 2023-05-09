@@ -11,8 +11,10 @@ import Modele.Coord;
 import Modele.Coups.Coup;
 import Modele.Coups.CoupDeplacement;
 import Modele.Coups.CoupTerminaison;
+import Modele.IA.IA;
 import Modele.Jeu.JeuConcret;
 import Modele.Joueurs.Joueur;
+import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
 
 import java.util.ArrayList;
@@ -69,7 +71,6 @@ public class MoteurJeu extends Thread {
     }
 
     public synchronized void jouerCoup(Coup coup) {
-        if (coup.estJouable(jeu)) {
             jeu.jouer(coup);
             nbPionsPlaces++;
 
@@ -89,8 +90,7 @@ public class MoteurJeu extends Thread {
                 Coord[] array = new Coord[coords.size()];
                 ((IHMGraphique) ihm).setAnimation(new AnimationDeplacementPion(((IHMGraphique) ihm), coords.toArray(array)));
             }
-        } else if (ihm != null)
-            ihm.afficherMessage("Coup injouable");
+
     }
 
     public synchronized void annulerCoup() {
