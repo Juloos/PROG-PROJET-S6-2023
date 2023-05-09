@@ -3,6 +3,7 @@ package IHM.Graphique;
 import Controleur.MoteurJeu;
 import IHM.Graphique.Animations.Animation;
 import IHM.Graphique.Composants.PlateauGraphique;
+import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.Ecrans.EcranJeu;
 import IHM.Graphique.PopUp.PopUpFinPartie;
 import IHM.IHM;
@@ -14,6 +15,8 @@ import Modele.Coups.CoupDeplacement;
 import Modele.Jeu.Jeu;
 import com.sun.istack.internal.NotNull;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.swing.*;
@@ -55,10 +58,9 @@ public class IHMGraphique extends IHM implements MouseListener {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-
         plateauGraphique = new PlateauGraphique();
 
-        ouvrirFenetre(new EcranJeu());
+        ouvrirFenetre(new EcranAccueil());
 
         frame.addComponentListener(new ComponentAdapter() {
             @Override
@@ -291,6 +293,9 @@ public class IHMGraphique extends IHM implements MouseListener {
 
     @Override
     public void mouseExited(MouseEvent mouseEvent) {
+    }
+
+    public void addComponentListener(ComponentAdapter componentAdapter) {
     }
 
     /**

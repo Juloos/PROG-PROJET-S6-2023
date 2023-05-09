@@ -5,6 +5,8 @@ import IHM.Colors;
 import IHM.Graphique.IHMGraphique;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +15,7 @@ public class EcranCreationPartie extends Ecran {
 
     int nbJoueurs;
 
-    JButton ajouterJoueur;
+    Button ajouterJoueur;
 
     JPanel joueursPanel;
 
@@ -30,49 +32,47 @@ public class EcranCreationPartie extends Ecran {
     @Override
     public void creation(IHMGraphique ihm) {
         panel.setLayout(new BorderLayout());
-        ImageIcon icon = new ImageIcon("res/fonds/background2.jpg");
+        ImageIcon icon = new ImageIcon("res/background2.jpg");
         this.backgroundImage = icon.getImage();
 
-//        JLabel label = new JLabel("Nouvelle Partie", SwingConstants.CENTER);
-//        label.setFont(new Font("Impact", Font.PLAIN, 48));
-//        label.setBorder(new EmptyBorder(20, 20, 20, 20));
-//        panel.add(label, BorderLayout.PAGE_START);
-//
-//        joueursPanel = new JPanel(new GridLayout(0, Config.NB_MAX_JOUEUR));
-//        joueursPanel.setAlignmentX(JScrollPane.CENTER_ALIGNMENT);
-//
-//        joueursPanel.setBackground(TRANSPARENT);
-//        joueursPanel.setOpaque(true);
-//        for (int i = 0; i < nbJoueurs; i++) {
-//            joueursPanel.add(new MenuJoueur(i + 1), i);
-//        }
-//
-//        panel.add(joueursPanel, BorderLayout.CENTER);
-//
-//        JPanel boutons = new JPanel();
-//        SpringLayout layout = new SpringLayout();
-//        boutons.setLayout(layout);
-//        boutons.setBackground(Color.RED);
-//        boutons.setSize(200, 200);
-//
-//        ajouterJoueur = new JButton("Ajouter un joueur");
-//        ajouterJoueur.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent actionEvent) {
-//                nouveauJoueur();
-//            }
-//        });
-//        boutons.add(ajouterJoueur);
-//
-//        JButton lancerPartie = new JButton("Lancer partie");
-//        boutons.add(lancerPartie);
-//
-//        layout.putConstraint(SpringLayout.SOUTH, ajouterJoueur, 20, SpringLayout.NORTH, lancerPartie);
-//
-//        retour.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        boutons.add(retour);
-//
-//        panel.add(boutons, BorderLayout.PAGE_END);
+        JLabel label = new JLabel("Nouvelle Partie", SwingConstants.CENTER);
+        label.setFont(new Font("Impact", Font.PLAIN, 48));
+        panel.add(label, BorderLayout.PAGE_START);
+
+        joueursPanel = new JPanel(new GridLayout(0, Config.NB_MAX_JOUEUR));
+        joueursPanel.setAlignmentX(JScrollPane.CENTER_ALIGNMENT);
+
+        joueursPanel.setBackground(Colors.TRANSPARENT);
+        for (int i = 0; i < nbJoueurs; i++) {
+            joueursPanel.add(new MenuJoueur(i + 1), i);
+        }
+
+        panel.add(joueursPanel, BorderLayout.CENTER);
+
+        JPanel buttons = new JPanel(new FlowLayout());
+        buttons.setBackground(Colors.TRANSPARENT);
+        ajouterJoueur = new Button("Ajouter un joueur");
+        ajouterJoueur.setPreferredSize(new Dimension(200, 50));
+        ajouterJoueur.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                nouveauJoueur();
+            }
+        });
+        buttons.add(ajouterJoueur);
+
+        Button lancerPartie = new Button("Lancer partie");
+        lancerPartie.setPreferredSize(new Dimension(200, 50));
+        buttons.add(lancerPartie);
+        lancerPartie.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                ihm.ouvrirFenetre(new EcranJeu());
+            }
+        });
+        buttons.add(retour);
+
+        panel.add(buttons, BorderLayout.PAGE_END);
     }
 
     protected void nouveauJoueur() {
@@ -82,6 +82,8 @@ public class EcranCreationPartie extends Ecran {
         }
 
         joueursPanel.add(new MenuJoueur(nbJoueurs), nbJoueurs - 1);
+        panel.repaint();
+        panel.revalidate();
     }
 
     protected void supprimerJoueur(int num) {
@@ -102,43 +104,128 @@ public class EcranCreationPartie extends Ecran {
 
         JLabel numJoueur;
         JComboBox<String> difficultesIA;
-        JButton close;
+        Button close;
         ActionListener closeAction;
 
         public MenuJoueur(int num) {
             super();
 
-            setLayout(new GridLayout(0, 1));
+            setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             setBackground(Colors.TRANSPARENT);
 
-            GridBagConstraints constraints = new GridBagConstraints();
-
             numJoueur = new JLabel("Joueur " + num, SwingConstants.CENTER);
-            numJoueur.setFont(new Font("Impact", Font.PLAIN, 24));
+            if (num == 1) {
+                numJoueur.setForeground(Color.RED);
+            }
+            else if (num == 2) {
+                numJoueur.setForeground(Color.BLUE);
+            }
+            else if (num == 3) {
+                numJoueur.setForeground(Color.GREEN);
+            }
+            else if (num == 4) {
+                numJoueur.setForeground(Color.YELLOW);
+            }
+            else {
+                numJoueur.setForeground(Color.BLACK);
+            }
+            numJoueur.setFont(new Font("Impact", Font.PLAIN, 50));
             numJoueur.setAlignmentX(CENTER_ALIGNMENT);
             add(numJoueur);
 
-            JPanel panelNom = new JPanel();
-            panelNom.setAlignmentX(CENTER_ALIGNMENT);
-            panelNom.setBackground(Colors.TRANSPARENT);
+            JPanel panelnom = new JPanel();
+            panelnom.setBackground(Colors.TRANSPARENT);
+            panelnom.setLayout(new BoxLayout(panelnom, BoxLayout.X_AXIS));
             JLabel nomLabel = new JLabel("Nom : ");
+            nomLabel.setFont(new Font("Impact", Font.PLAIN, 20));
             JTextField nom = new JTextField("Joueur " + num);
-            panelNom.add(nomLabel);
-            panelNom.add(nom);
+            nom.setMaximumSize(new Dimension(200, 40));
+            panelnom.add(nomLabel);
+            panelnom.add(nom);
+            add(panelnom);
 
-            add(panelNom);
-
+            JPanel panelia = new JPanel();
+            panelia.setLayout(new BoxLayout(panelia, BoxLayout.Y_AXIS));
             difficultesIA = new JComboBox<>();
+            // Ajouter l'écouteur à la JComboBox
+            difficultesIA.addPopupMenuListener(new PopupMenuListener() {
+                @Override
+                public void popupMenuWillBecomeVisible(PopupMenuEvent popupMenuEvent) {
+                    // Ne rien faire
+                }
+
+                @Override
+                public void popupMenuWillBecomeInvisible(PopupMenuEvent popupMenuEvent) {
+                    panel.repaint(); // Redessiner le panneau
+                }
+
+                @Override
+                public void popupMenuCanceled(PopupMenuEvent popupMenuEvent) {
+                    // Ne rien faire
+                }
+            });
+            difficultesIA.setOpaque(false);
+            difficultesIA.setAlignmentX(CENTER_ALIGNMENT);
             difficultesIA.addItem("Joueur");
             difficultesIA.addItem("Facile");
             difficultesIA.addItem("Moyenne");
             difficultesIA.addItem("Difficile");
+            difficultesIA.setSelectedIndex(0);
+            difficultesIA.setMaximumSize(new Dimension(300, 50));
+            //Personnalisation de l'affichage de la JComboBox
+            DefaultListCellRenderer renderer = new DefaultListCellRenderer() {
+                @Override
+                public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                    super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                    setForeground(Color.BLACK); //couleur du texte
+                    setBackground(Colors.TRANSPARENT); //couleur de fond
+                    setHorizontalAlignment(DefaultListCellRenderer.CENTER);
+                    return this;
+                }
+            };
+            difficultesIA.setRenderer(renderer);
+            difficultesIA.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    int selected = difficultesIA.getSelectedIndex();
+                    if (selected != 0) {
+                        ImageIcon image = new ImageIcon("res/ia.png");
+                        image.setDescription(" " + difficultesIA.getSelectedItem());
 
-            add(difficultesIA);
+// création du label contenant l'image
+                        JLabel label = new JLabel(image);
+                        label.setAlignmentX(CENTER_ALIGNMENT);
+
+// création du panel contenant le label
+                        JPanel iaPanel = new JPanel();
+                        iaPanel.setOpaque(false);
+                        iaPanel.setLayout(new BorderLayout());
+                        iaPanel.add(Box.createHorizontalStrut(10), BorderLayout.WEST); // ajout d'un espace avant l'image
+                        iaPanel.add(label, BorderLayout.CENTER);
+
+// ajout du panel contenant l'image au panel principal
+                        panelia.add(iaPanel);
+                        panelia.setOpaque(false);
+
+// rafraîchissement du panel
+                        panelia.repaint();
+                        panelia.revalidate();
+
+                    }
+                    else {
+                        panelia.remove(1);
+                        panelia.repaint();
+                        panelia.revalidate();
+                    }
+                }
+            });
+
+            panelia.add(difficultesIA);
+            add(panelia);
 
             if (num > Config.NB_JOUEUR) {
-                close = new JButton("X");
-
+                close = new Button("X");
+                close.setSize(40, 40);
                 closeAction = new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
@@ -146,6 +233,7 @@ public class EcranCreationPartie extends Ecran {
                     }
                 };
                 close.addActionListener(closeAction);
+                close.setAlignmentX(CENTER_ALIGNMENT);
                 add(close);
             }
         }
