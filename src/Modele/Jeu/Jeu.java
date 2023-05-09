@@ -136,7 +136,7 @@ public abstract class Jeu implements Cloneable {
     }
 
 
-    public ArrayList<Coord> placememntPionValide() {
+    public ArrayList<Coord> placementPionValide() {
         ArrayList<Coord> liste = new ArrayList<>();
         for (int i = 0; i < plateau.getNbColumns(); i++) {
             for (int j = 0; j < plateau.getNbRows(); j++) {
@@ -166,12 +166,6 @@ public abstract class Jeu implements Cloneable {
         joueurs[joueurCourant].deplacerPion(c1, c2);
         if (estPionBloque(c2))
             joueurs[joueurCourant].bloquerPion(c2);
-        c1.voisins().forEach(
-                voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
-                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
-                }
-        );
         c2.voisins().forEach(
                 voisin -> {
                     if (estPion(voisin) && estPionBloque(voisin))
@@ -204,8 +198,6 @@ public abstract class Jeu implements Cloneable {
     }
 
     public void jouer(Coup c) {
-        if (!c.estJouable(this))
-            throw new IllegalArgumentException("Ce coup n'est pas possible : " + c + ".");
         if (c.getJoueur() != joueurCourant)
             throw new IllegalArgumentException("Mauvaise selection du joueur du coup : " + c + ".");
         c.jouer(this);
@@ -233,6 +225,16 @@ public abstract class Jeu implements Cloneable {
     public void annulerAjout(int j, Coord cible) {
         this.getJoueur(j).supprimerPion(cible);
         this.joueurCourant = j;
+    }
+    public void annulerTerminaison(int joueur,Coord source, int oldVal){
+        this.getPlateau().set(source, oldVal);
+        this.getJoueur(joueur).ajouterPion(source);
+        this.getJoueur(joueur).replacerPion(source, true);
+        this.getJoueur(joueur).supprimerTuile();
+        this.getJoueur(joueur).decrementerScore(oldVal);
+        this.getJoueur(joueur).reAnimer();
+        this.joueurCourant = joueur;
+
     }
 
     public ArrayList<Integer> getWinner() {

@@ -3,6 +3,8 @@ package IHM.Graphique.Ecrans;
 import Global.Config;
 import IHM.Colors;
 import IHM.Graphique.IHMGraphique;
+import Modele.Joueurs.Joueur;
+import Modele.Joueurs.JoueurIA;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;

@@ -21,7 +21,8 @@ public class EcranJeu extends Ecran {
     // Le menu affiché sur la droite de l'écran
     JPanel menu;
     // Le label pour afficher les messages de l'IHM
-    JLabel message;
+    // Le label pour afficher ce que doit faire le joueur actif
+    JLabel message, infoTour;
     // Les boutons pour :
     // - mettre le jeu en pause et ouvrir le menu de pause
     // - annuler le dernier coup joué
@@ -53,6 +54,10 @@ public class EcranJeu extends Ecran {
 
         message = new JLabel("", SwingConstants.CENTER);
         menu.add(message);
+
+        infoTour = new JLabel("", SwingConstants.CENTER);
+        infoTour.setFont(new Font("", Font.PLAIN, 20));
+        menu.add(infoTour);
 
         JPanel annulerRefaire = new JPanel(new GridLayout(1, 0));
 
@@ -102,6 +107,13 @@ public class EcranJeu extends Ecran {
     @Override
     public void update(IHMGraphique ihm) {
         resized();
+
+        if (ihm.getMoteurJeu().estPhasePlacementPions()) {
+            infoTour.setText("Joueur " + (ihm.getMoteurJeu().getJoueurActif().getID() + 1) + " veuillez placer un pion");
+        } else {
+            infoTour.setText("Joueur " + (ihm.getMoteurJeu().getJoueurActif().getID() + 1) + " veuillez déplacer un de vos pions");
+        }
+
         for (InfoJoueur joueur : joueurs) {
             joueur.update(joueur.getJoueurID() == ihm.getMoteurJeu().getJoueurActif().getID());
         }

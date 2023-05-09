@@ -58,6 +58,7 @@ public class IHMGraphique extends IHM implements MouseListener {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+
         plateauGraphique = new PlateauGraphique();
 
         ouvrirFenetre(new EcranAccueil());
@@ -91,7 +92,7 @@ public class IHMGraphique extends IHM implements MouseListener {
             ouvrirFenetre(new PopUpFinPartie());
         } else {
             if (getMoteurJeu().estPhasePlacementPions()) {
-                plateauGraphique.setTuilesSurbrillance(jeu.placememntPionValide());
+                plateauGraphique.setTuilesSurbrillance(jeu.placementPionValide());
             } else {
                 plateauGraphique.setTuilesSurbrillance(null);
             }
@@ -123,6 +124,12 @@ public class IHMGraphique extends IHM implements MouseListener {
 
     @Override
     public void attendreCreationPartie() {
+    }
+
+    @Override
+    public void terminer() {
+        fermerFenetres();
+        frame.dispose();
     }
 
     /**

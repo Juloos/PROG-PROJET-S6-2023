@@ -56,6 +56,11 @@ public class CoupDeplacement implements Coup {
     }
 
     @Override
+    public String getMessageErreur() {
+        return "Impossible de déplacer ce pion";
+    }
+
+    @Override
     public String toString() {
         return "CoupDeplacement{" + "source=" + source + ", destination=" + destination + ", oldVal=" + oldVal + ", joueur=" + joueur + '}';
     }

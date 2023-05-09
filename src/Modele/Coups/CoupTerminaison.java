@@ -2,7 +2,6 @@ package Modele.Coups;
 
 import Modele.Coord;
 import Modele.Jeu.Jeu;
-import Modele.Jeu.JeuConcret;
 
 import java.util.HashMap;
 
@@ -33,12 +32,8 @@ public class CoupTerminaison implements Coup {
     public void annuler(Jeu j) {
         oldVals.forEach(
                 (source, oldVal) -> {
-                    j.getPlateau().set(source, oldVal);
-                    j.getJoueur(joueur).ajouterPion(source);
-                    j.getJoueur(joueur).replacerPion(source, true);
-                    j.getJoueur(joueur).supprimerTuile();
-                    j.getJoueur(joueur).decrementerScore(oldVal);
-                    j.getJoueur(joueur).reAnimer();
+                    j.annulerTerminaison(joueur,source,oldVal);
+
                 }
         );
 
@@ -52,13 +47,19 @@ public class CoupTerminaison implements Coup {
     public String getSaveString() {
         StringBuilder save = new StringBuilder();
         final String[] temp = new String[1];
+        int hSize = oldVals.size();
         oldVals.forEach(
                 (source, oldVal) -> {
                     temp[0] = " " + source.q + " " + source.r + " " + oldVal;
                     save.append(temp[0]);
                 }
         );
-        return "-3 " + joueur + " " + oldVals.size()+ save;
+        return "-3 " + joueur + " " + hSize + save;
+    }
+
+    @Override
+    public String getMessageErreur() {
+        return "";
     }
 
     @Override

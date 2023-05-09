@@ -4,13 +4,13 @@ import IHM.Graphique.IHMGraphique;
 
 public abstract class Animation {
 
-    final double TIME_BETWEEN_FRAMES;
+    final double DURATION;
     final int nbFrames;
     final IHMGraphique ihm;
 
-    public Animation(IHMGraphique ihm, double timeBetweenFrame, int nbFrames) {
+    public Animation(IHMGraphique ihm, double duration, int nbFrames) {
         this.ihm = ihm;
-        this.TIME_BETWEEN_FRAMES = timeBetweenFrame;
+        this.DURATION = duration;
         this.nbFrames = nbFrames;
     }
 
@@ -21,6 +21,7 @@ public abstract class Animation {
     abstract void stop();
 
     public void run() {
+        double TIME_BETWEEN_FRAMES = DURATION / nbFrames;
         start();
         for (int i = 0; i < nbFrames; i++) {
             try {
