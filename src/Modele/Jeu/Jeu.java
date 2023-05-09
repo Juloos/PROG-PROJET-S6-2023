@@ -234,6 +234,7 @@ public abstract class Jeu implements Cloneable {
         this.getJoueur(joueur).decrementerScore(oldVal);
         this.getJoueur(joueur).reAnimer();
         this.joueurCourant = joueur;
+
     }
 
     public ArrayList<Integer> getWinner() {
