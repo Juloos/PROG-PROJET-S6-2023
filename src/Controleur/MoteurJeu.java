@@ -26,9 +26,6 @@ public class MoteurJeu extends Thread {
 
     int nbPionsPlaces;
 
-    boolean pause, miseAJourAffichage;
-    Thread threadIHM;
-
     EtatMoteurJeu etat;
 
 
@@ -41,13 +38,12 @@ public class MoteurJeu extends Thread {
                 break;
             case GRAPHIQUE:
                 ihm = new IHMGraphique(this);
-                break;
-            default:
-                throw new RuntimeException("Besoin d'une IHM");
         }
 
-        threadIHM = new Thread(ihm);
-        threadIHM.start();
+        if (ihm != null) {
+            ihm.start();
+            System.out.println("Lancement IHM");
+        }
 
         etat = EtatMoteurJeu.ATTENTE_PARTIE;
     }
@@ -118,7 +114,7 @@ public class MoteurJeu extends Thread {
 
     public void appliquerAction(Action action) {
         if (!action.peutAppliquer(this)) {
-            ihm.afficherMessage("Action non applicable");
+            action.afficherMessageErreur(this);
         } else {
             action.appliquer(this);
         }
@@ -216,6 +212,11 @@ public class MoteurJeu extends Thread {
         System.out.println("Lancemenet d'une nouvelle partie");
     }
 
+    public synchronized void lancerPartie(String nomSave) {
+        this.jeu = JeuConcret.charger(nomSave);
+        this.etat = EtatMoteurJeu.PARTIE_EN_COURS;
+    }
+
     public synchronized void arreterPartie() {
         if (partieEnCours()) {
             ihm.updateAffichage(jeu);
@@ -226,7 +227,7 @@ public class MoteurJeu extends Thread {
     public synchronized void fin() {
         try {
             ihm.terminer();
-            threadIHM.join();
+            ihm.join();
         } catch (Exception e) {
         }
         etat = EtatMoteurJeu.FIN;

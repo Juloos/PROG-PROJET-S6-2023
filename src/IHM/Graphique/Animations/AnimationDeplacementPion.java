@@ -1,5 +1,6 @@
 package IHM.Graphique.Animations;
 
+import Global.Config;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.IHMGraphique;
 import Modele.Coord;
@@ -12,7 +13,7 @@ public class AnimationDeplacementPion extends Animation {
     private final Coord[] coords;
 
     public AnimationDeplacementPion(IHMGraphique ihm, Coord[] coords) {
-        super(ihm, 2, coords.length - 1);
+        super(ihm, Config.ANIMATION_DURATION, coords.length - 1);
         this.coords = coords;
         this.plateauGraphique = ihm.getPlateauGraphique();
     }
