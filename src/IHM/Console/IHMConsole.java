@@ -131,7 +131,7 @@ public class IHMConsole extends IHM {
                     case "ia":
                         // On ajoute un joueur IA
                         // La difficulté de l'IA
-                        String difficulte = ligne.split(" ")[1];
+//                        String difficulte = ligne.split(" ")[1];
                         listJoueurs.add(new JoueurIA(listJoueurs.size()));
                     case "fin":
                         break;
