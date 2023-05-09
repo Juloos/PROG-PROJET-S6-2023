@@ -1,5 +1,6 @@
 package IHM.Graphique.Composants;
 
+import IHM.Graphique.Couleurs;
 import Modele.Coord;
 import Modele.Jeu.Jeu;
 import Modele.Plateau;
@@ -13,8 +14,6 @@ import java.util.List;
 
 public class PlateauGraphique extends JComponent {
 
-    final Color SURBRIANLLANCE = new Color(0.5f, 0.8f, 0.5f, 0.45f);
-    final Color SURBRIANLLANCE_PION = new Color(0.75f, 0.25f, 0.75f, 0.45f);
     public Jeu jeu;
     int BORDURES_X = 2, BORDURES_Y = 1;
     Image[][] sprites;
@@ -95,7 +94,7 @@ public class PlateauGraphique extends JComponent {
                     drawable.drawImage(img, x, y, (int) TAILLE_CASES, (int) TAILLE_CASES, null);
 
                     if (tuilesSurbrillance != null && tuilesSurbrillance.contains(coord)) {
-                        ajouterSurbrillance(drawable, q, r, jeu.estPion(coord) ? SURBRIANLLANCE_PION : SURBRIANLLANCE);
+                        ajouterSurbrillance(drawable, q, r, jeu.estPion(coord) ? Couleurs.SURBRILLANCE_PION : Couleurs.SURBRILLANCE);
                     }
                 }
             }
@@ -143,7 +142,7 @@ public class PlateauGraphique extends JComponent {
         this.tuilesSurbrillance = tuilesSurbrillance;
     }
 
-    public synchronized void deplacerPion(Coord source, Coord dest, boolean mangerSource) {
+    public void deplacerPion(Coord source, Coord dest, boolean mangerSource) {
         if (mangerSource) {
             jeu.manger(source);
         }
