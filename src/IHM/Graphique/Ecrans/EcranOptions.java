@@ -13,7 +13,7 @@ public class EcranOptions extends Ecran {
 
     public EcranOptions() {
         super("Options");
-        volumeSlider = new JCheckBox("Activer le son", true);
+        volumeSlider = new JCheckBox("Activer le son", false);
         volumeSlider.setHorizontalTextPosition(SwingConstants.LEFT);
         //Centrer le texte
         volumeSlider.setHorizontalAlignment(SwingConstants.CENTER);

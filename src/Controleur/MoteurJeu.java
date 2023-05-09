@@ -41,7 +41,7 @@ public class MoteurJeu extends Thread {
 
         if (ihm != null) {
             ihm.start();
-            System.out.println("Lancement IHM");
+//            System.out.println("Lancement IHM");
         }
 
         etat = EtatMoteurJeu.ATTENTE_PARTIE;
@@ -140,13 +140,12 @@ public class MoteurJeu extends Thread {
     @Override
     public void run() {
         while (etat != EtatMoteurJeu.FIN) {
-            if (ihm != null) {
+            System.out.println("En attente d'une nouvelle partie");
+            while (ihm != null && getEtat() == EtatMoteurJeu.ATTENTE_PARTIE) {
                 ihm.attendreCreationPartie();
             }
-            System.out.println("En attente d'une nouvelle partie");
-            while (getEtat() == EtatMoteurJeu.ATTENTE_PARTIE) ;
 
-            System.out.println("Début de la partie");
+//            System.out.println("Début de la partie");
 
             updateAffichage();
 
@@ -156,7 +155,7 @@ public class MoteurJeu extends Thread {
                 appliquerAction(jeu.getJoueur().reflechir(this));
             }
 
-            System.out.println("Fin de la phase de placement des pions");
+//            System.out.println("Fin de la phase de placement des pions");
 
             if (ihm != null) {
                 ihm.afficherMessage("Fin de la phase de placement des pions");
@@ -184,11 +183,11 @@ public class MoteurJeu extends Thread {
 
             if (ihm == null) {
                 etat = EtatMoteurJeu.FIN;
-            } else {
+            } else if (getEtat() != EtatMoteurJeu.FIN) {
                 etat = EtatMoteurJeu.ATTENTE_PARTIE;
             }
         }
-        System.out.println("Fin du moteur de jeu");
+//        System.out.println("Fin du moteur de jeu");
     }
 
     private void waitTime(int time) {
@@ -228,7 +227,7 @@ public class MoteurJeu extends Thread {
     public synchronized void lancerPartie(Joueur[] joueurs) {
         this.jeu = new JeuConcret(joueurs);
         this.etat = EtatMoteurJeu.PARTIE_EN_COURS;
-        System.out.println("Lancemenet d'une nouvelle partie");
+//        System.out.println("Lancemenet d'une nouvelle partie");
     }
 
     public synchronized void lancerPartie(String nomSave) {
