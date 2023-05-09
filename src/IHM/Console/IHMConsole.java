@@ -27,7 +27,7 @@ public class IHMConsole extends IHM {
 
     @Override
     public void updateAffichage(Jeu jeu) {
-        System.out.println(jeu.toString());
+        System.out.println(jeu.toString() + "\n");
     }
 
     @Override
@@ -78,7 +78,7 @@ public class IHMConsole extends IHM {
     private ActionCoup attendrePlacementPion() {
         int numJoueur = getMoteurJeu().getJoueurActif().id;
 
-        System.out.println("Veuillez placez un pingouin");
+        System.out.println("Veuillez placez un pingouin (colonne ligne)");
         String ligne = input.nextLine();
         int[] valeurs = decouperLigne(ligne);
 
@@ -95,12 +95,14 @@ public class IHMConsole extends IHM {
         int numJoueur = getMoteurJeu().getJoueurActif().id;
         System.out.println("Veuillez déplacez un pingouin (source puis destination)");
         // Source
+        System.out.println("Source (colonne ligne)");
         String ligne = input.nextLine();
         int[] valeurs = decouperLigne(ligne);
 
         Coord source = new Coord(valeurs[0], valeurs[1]);
 
         // Destination
+        System.out.println("Destination (colonne ligne)");
         ligne = input.nextLine();
         valeurs = decouperLigne(ligne);
 
@@ -116,54 +118,68 @@ public class IHMConsole extends IHM {
 
     @Override
     public synchronized void attendreCreationPartie() {
-        List<Joueur> listJoueurs = new ArrayList<>();
-        boolean charger = false;
-        String nomficher = "";
+        String ligne = "";
+        boolean choix = false;
+        boolean creationTerminee = false;
 
-        String ligne;
         do {
-            System.out.println("Veuillez entrer le type de joueur du joueur n°" + (listJoueurs.size() + 1));
-            ligne = input.next();
+            do {
+                System.out.println("Choix possibles : \n" +
+                        "choisir -> créer une partie en choissant les joueurs" +
+                        "\ncharger -> charger une partie depuis un fichier de sauvegarde" +
+                        "\nstop -> quitter le programme");
+                ligne = input.nextLine();
+                ligne = ligne.toLowerCase();
 
-            try {
-                switch (ligne.toLowerCase()) {
-                    case "humain":
-                        // On ajoute un joueur humain
-                        listJoueurs.add(new JoueurHumain(listJoueurs.size()));
-                        break;
-                    case "ia":
-                        // On ajoute un joueur IA
-                        // La difficulté de l'IA
-//                        String difficulte = ligne.split(" ")[1];
-                        listJoueurs.add(new JoueurIA(listJoueurs.size()));
-                    case "fin":
-                    case "stop":
-                        break;
+                choix = ligne.equals("stop") || ligne.equals("charger") || ligne.equals("choisir");
+            } while (!choix);
 
-                    case "charger":
-                        charger = true;
-                        nomficher = "sauvegarde.txt";
-                        break;
-                    default:
-                        System.out.println("Mais t'es con ou quoi fréro ?");
-                        break;
-                }
-            } catch (Exception e) {
-                System.out.println("Mais t'es con ou quoi fréro ?");
+            switch (ligne) {
+                case "charger":
+                    // Chargement depuis un fichier de sauvegardes
+                    do {
+                        System.out.println("Entrez le nom de la sauvegarde que vous voulez");
+                        ligne = input.nextLine();
+                    } while (!ligne.equals("retour") && !ligne.equals(""));
+
+                    if (!ligne.equals("retour")) {
+                        getMoteurJeu().lancerPartie(ligne);
+                        creationTerminee = true;
+                    }
+                    break;
+                case "choisir":
+                    // Choix des types des joueurs
+                    List<Joueur> joueurs = new ArrayList<>();
+                    do {
+                        afficherMessage("Entrez le type du joueur n°" + (joueurs.size() + 1) + " (humain ou ia ou ligne vide pour arrêter)");
+                        ligne = input.nextLine();
+                        ligne = ligne.toLowerCase();
+
+                        switch (ligne) {
+                            case "humain":
+                                joueurs.add(new JoueurHumain(joueurs.size()));
+                                break;
+                            case "ia":
+                                joueurs.add(new JoueurIA(joueurs.size()));
+                                break;
+                        }
+
+                    } while (!ligne.equals("retour") &&
+                            (!ligne.equals("") || joueurs.size() < Config.NB_MIN_JOUEUR) &&
+                            joueurs.size() < Config.NB_MAX_JOUEUR);
+
+                    if (!ligne.equals("retour")) {
+                        getMoteurJeu().lancerPartie(joueurs.toArray(new Joueur[0]));
+                        creationTerminee = true;
+                    }
+                    break;
+                default:
+                    // Arrêt du moteur de jeu
+                    getMoteurJeu().fin();
+                    creationTerminee = true;
+                    break;
             }
-        } while (!ligne.equals("fin") &&
-                !ligne.equals("stop") &&
-                !charger &&
-                (!ligne.equals("") || listJoueurs.size() < Config.NB_MIN_JOUEUR) &&
-                listJoueurs.size() < Config.NB_MAX_JOUEUR);
-
-        if (ligne.equals("fin")) {
-            getMoteurJeu().fin();
-        } else if (charger) {
-            getMoteurJeu().lancerPartie(nomficher);
-        } else {
-            getMoteurJeu().lancerPartie(listJoueurs.toArray(new Joueur[0]));
-        }
+        } while (!creationTerminee);
     }
 
     @Override

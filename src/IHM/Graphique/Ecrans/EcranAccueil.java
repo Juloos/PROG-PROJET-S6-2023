@@ -5,10 +5,17 @@ import IHM.Graphique.PopUp.PopUpConfirmation;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+
+import static com.sun.java.accessibility.util.AWTEventMonitor.addComponentListener;
 
 public class EcranAccueil extends Ecran {
+
+    Button nouvellePartie;
+    Button chargerPartie;
+    Button options;
+    Button quitter;
+
     public EcranAccueil() {
         super("Accueil");
     }
@@ -16,6 +23,18 @@ public class EcranAccueil extends Ecran {
     @Override
     public void open(IHMGraphique ihm) {
         super.open(ihm);
+        ihm.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                int newButtonWidth = (int) Math.round(0.2 * e.getComponent().getWidth());
+                nouvellePartie.setPreferredSize(new Dimension(newButtonWidth, nouvellePartie.getHeight()));
+                chargerPartie.setPreferredSize(new Dimension(newButtonWidth, chargerPartie.getHeight()));
+                options.setPreferredSize(new Dimension(newButtonWidth, options.getHeight()));
+                quitter.setPreferredSize(new Dimension(newButtonWidth, quitter.getHeight()));
+                panel.revalidate();
+            }
+        });
+        int initialButtonWidth = (int) Math.round(0.2 * ihm.getFrame().getWidth());
     }
 
     @Override
@@ -26,53 +45,56 @@ public class EcranAccueil extends Ecran {
         this.backgroundImage = icon.getImage();
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridx = 10;
-        constraints.gridy = 8;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
         constraints.gridwidth = 2;
         constraints.insets = new Insets(0, 0, 30, 0);
         Color color = Color.decode("#0000BB");
-        JButton nouvellePartie = new JButton("Nouvelle partie");
 
         // Le menu pour ouvrir le menu de création d'une nouvelle partie
-        nouvellePartie.setForeground(Color.WHITE);
-        nouvellePartie.setFont(new Font("Forte", Font.PLAIN, 50));
-        nouvellePartie.setBackground(color);
+        nouvellePartie = new Button("Nouvelle partie");
+        nouvellePartie.setForeground(color);
+        nouvellePartie.setFont(new Font("Forte", Font.PLAIN, 25));
         nouvellePartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 ihm.ouvrirFenetre(new EcranCreationPartie());
             }
         });
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        panel.add(nouvellePartie, constraints);
 
         // Le bouton pour ouvrir le menu de chargement d'une partie
-        JButton chargerPartie = new JButton("Charger partie");
-        chargerPartie.setBackground(color);
-        chargerPartie.setForeground(Color.WHITE);
-        chargerPartie.setFont(new Font("Forte", Font.PLAIN, 50));
+        chargerPartie = new Button("Charger partie");
+        chargerPartie.setForeground(color);
+        chargerPartie.setFont(new Font("Forte", Font.PLAIN, 25));
         chargerPartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 ihm.ouvrirFenetre(new EcranChargerPartie());
             }
         });
+        constraints.gridy = 1;
+        panel.add(chargerPartie, constraints);
 
         // Le bouton pour ouvrir le menu des options
-        JButton options = new JButton("Options");
-        options.setBackground(Color.WHITE);
+        options = new Button("Options");
         options.setForeground(color);
-        options.setFont(new Font("Forte", Font.PLAIN, 50));
+        options.setFont(new Font("Forte", Font.PLAIN, 25));
         options.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 ihm.ouvrirFenetre(new EcranOptions());
             }
         });
+        constraints.gridy = 2;
+        panel.add(options, constraints);
 
         // Le bouton pour quitter le jeu
-        JButton quitter = new JButton("Quitter");
-        quitter.setBackground(Color.WHITE);
+        quitter = new Button("Quitter");
         quitter.setForeground(color);
-        quitter.setFont(new Font("Forte", Font.PLAIN, 50));
+        quitter.setFont(new Font("Forte", Font.PLAIN, 25));
         quitter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -84,14 +106,7 @@ public class EcranAccueil extends Ecran {
                 }));
             }
         });
-
-        // Ajout des éléments de l'écran dans son panel
-        panel.add(nouvellePartie, constraints);
-        constraints.gridy = 9;
-        panel.add(chargerPartie, constraints);
-        constraints.gridy = 10;
-        panel.add(options, constraints);
-        constraints.gridy = 11;
+        constraints.gridy = 3;
         panel.add(quitter, constraints);
         panel.repaint();
         panel.revalidate();
