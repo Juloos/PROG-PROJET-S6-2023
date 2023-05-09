@@ -166,7 +166,6 @@ public abstract class Jeu implements Cloneable {
         joueurs[joueurCourant].deplacerPion(c1, c2);
         if (estPionBloque(c2))
             joueurs[joueurCourant].bloquerPion(c2);
-
         c2.voisins().forEach(
                 voisin -> {
                     if (estPion(voisin) && estPionBloque(voisin))

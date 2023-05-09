@@ -183,7 +183,7 @@ public class MoteurJeu extends Thread {
             } catch (Exception e) {
             }
         }
-
+    }
 
     public boolean partieEnPause() {
         return etat == EtatMoteurJeu.PAUSE;

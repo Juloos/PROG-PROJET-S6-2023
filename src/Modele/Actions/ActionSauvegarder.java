@@ -10,7 +10,7 @@ public class ActionSauvegarder implements Action {
     }
 
     @Override
-    public void appliquer(MoteurJeu mt) {mt.sauvegarder(nomSave);}
+    public void appliquer(MoteurJeu mt) {mt.sauvegarder(nomSave); }
 
     @Override
     public boolean peutAppliquer(MoteurJeu mt) {
