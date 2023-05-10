@@ -41,7 +41,7 @@ public class EcranAccueil extends Ecran {
     public void creation(IHMGraphique ihm) {
         panel.setLayout(new GridBagLayout());
         // Chargement de l'image de fond
-        ImageIcon icon = new ImageIcon("res\\background.png");
+        ImageIcon icon = new ImageIcon("res/background.png");
         this.backgroundImage = icon.getImage();
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;

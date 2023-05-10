@@ -17,6 +17,7 @@ import static Global.Config.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class MoteurJeu extends Thread {
 
@@ -154,12 +155,13 @@ public class MoteurJeu extends Thread {
             updateAffichage();
 
             nbPionsPlaces = 0;
-            while (estPhasePlacementPions()) {
+            Stack<Coup> passe = jeu.getPasse();
+            while (estPhasePlacementPions() && (jeu.getPasse().empty() || jeu.getPasse().peek().toString().contains("CoupAjout")) ){
                 waitPause();
                 appliquerAction(jeu.getJoueur().reflechir(this));
             }
 
-//            System.out.println("Fin de la phase de placement des pions");
+            System.out.println("Fin de la phase de placement des pions");
 
             if (ihm != null) {
                 ihm.afficherMessage("Fin de la phase de placement des pions");
@@ -168,12 +170,9 @@ public class MoteurJeu extends Thread {
             updateAffichage();
 
             while (estPhaseDeplacementPion()) {
-//            while (true) {
 
                 waitPause();
                 while (partieEnCours() && jeu.peutJouer()) {
-//                    while (partieEnCours()) {
-
                     waitPause();
                     appliquerAction(jeu.getJoueur().reflechir(this));
                 }
