@@ -93,7 +93,7 @@ public class EcranCreationPartie extends Ecran {
 
     protected void nouveauJoueur() {
         nbJoueurs++;
-        if (nbJoueurs == Config.NB_MAX_JOUEUR) {
+        if (nbJoueurs >= Config.NB_MAX_JOUEUR) {
             ajouterJoueur.setVisible(false);
         }
 
