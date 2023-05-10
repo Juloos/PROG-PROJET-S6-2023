@@ -1,5 +1,6 @@
 package IHM.Graphique.Ecrans;
 
+import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.PopUp.PopUpConfirmation;
 
@@ -23,18 +24,7 @@ public class EcranAccueil extends Ecran {
     @Override
     public void open(IHMGraphique ihm) {
         super.open(ihm);
-        ihm.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                int newButtonWidth = (int) Math.round(0.2 * e.getComponent().getWidth());
-                nouvellePartie.setPreferredSize(new Dimension(newButtonWidth, nouvellePartie.getHeight()));
-                chargerPartie.setPreferredSize(new Dimension(newButtonWidth, chargerPartie.getHeight()));
-                options.setPreferredSize(new Dimension(newButtonWidth, options.getHeight()));
-                quitter.setPreferredSize(new Dimension(newButtonWidth, quitter.getHeight()));
-                panel.revalidate();
-            }
-        });
-        int initialButtonWidth = (int) Math.round(0.2 * ihm.getFrame().getWidth());
+        ihm.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     @Override
@@ -45,16 +35,22 @@ public class EcranAccueil extends Ecran {
         this.backgroundImage = icon.getImage();
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.gridwidth = 2;
         constraints.insets = new Insets(0, 0, 30, 0);
+        constraints.gridx = 0;
+        constraints.gridy = 2;
         Color color = Color.decode("#0000BB");
 
         // Le menu pour ouvrir le menu de création d'une nouvelle partie
         nouvellePartie = new Button("Nouvelle partie");
         nouvellePartie.setForeground(color);
         nouvellePartie.setFont(new Font("Forte", Font.PLAIN, 25));
+
+        // Centrer le texte sur l'icône
+        nouvellePartie.setHorizontalTextPosition(JButton.CENTER);
+        nouvellePartie.setVerticalTextPosition(JButton.CENTER);
+
+        nouvellePartie.setContentAreaFilled(false);
+
         nouvellePartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -109,6 +105,33 @@ public class EcranAccueil extends Ecran {
         constraints.gridy = 3;
         panel.add(quitter, constraints);
         panel.repaint();
+        panel.revalidate();
+        addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent componentEvent) {
+                resized();
+            }
+        });
+    }
+    @Override
+    public void resized(){
+        int width = panel.getWidth();
+        int height = panel.getHeight();
+        int buttonWidth = (int)(width * 0.3);
+        int buttonHeight = (int)(height * 0.06);
+        Font buttonFont = new Font("Forte", Font.PLAIN, (int)(height * 0.04));
+
+        nouvellePartie.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+        nouvellePartie.setFont(buttonFont);
+
+        chargerPartie.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+        chargerPartie.setFont(buttonFont);
+
+        options.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+        options.setFont(buttonFont);
+
+        quitter.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
+        quitter.setFont(buttonFont);
+
         panel.revalidate();
     }
 }

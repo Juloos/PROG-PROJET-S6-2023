@@ -17,7 +17,7 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
     int tuiles;
     boolean termine;
 
-    String nom;
+    public String nom;
 
     public Joueur(int id) {
         this.id = id;

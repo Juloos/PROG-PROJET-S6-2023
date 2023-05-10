@@ -48,16 +48,17 @@ public class IHMGraphique extends IHM implements MouseListener {
         fenetres = new Stack<>();
 
         frame = new JFrame("");
-//        try {
-//            // chargement du fichier audio
-//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("Wallpaper.wav")); // "res/Wallpaper.wav
-//            // création du Clip
-//            clip = AudioSystem.getClip();
-//            clip.open(audioInputStream);
-//            clip.loop(Clip.LOOP_CONTINUOUSLY); // boucle infinie
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            // chargement du fichier audio
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("soundtrack.wav")); // "res/Wallpaper.wav
+            // création du Clip
+            clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.loop(Clip.LOOP_CONTINUOUSLY); // boucle infinie
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        setVolume(0);
 
         plateauGraphique = new PlateauGraphique();
 
@@ -71,9 +72,8 @@ public class IHMGraphique extends IHM implements MouseListener {
         });
 
         frame.addMouseListener(this);
-        frame.setSize(1000, 700);
+        frame.setSize(1500, 900);
         frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     /* Méthodes héritées de la classe IHM */

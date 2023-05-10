@@ -118,6 +118,7 @@ public class EcranJeu extends Ecran {
             joueur.update(joueur.getJoueurID() == ihm.getMoteurJeu().getJoueurActif().getID());
         }
         panel.repaint();
+        panel.revalidate();
     }
 
     @Override
