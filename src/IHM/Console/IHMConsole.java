@@ -1,13 +1,13 @@
 package IHM.Console;
 
 import Controleur.MoteurJeu;
-import Global.Config;
+import static Global.Config.*;
 import IHM.IHM;
 import Modele.Actions.*;
 import Modele.Coord;
 import Modele.Coups.CoupAjout;
 import Modele.Coups.CoupDeplacement;
-import Modele.Jeu.Jeu;
+import Modele.Jeux.Jeu;
 import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
@@ -165,8 +165,8 @@ public class IHMConsole extends IHM {
                         }
 
                     } while (!ligne.equals("retour") &&
-                            (!ligne.equals("") || joueurs.size() < Config.NB_MIN_JOUEUR) &&
-                            joueurs.size() < Config.NB_MAX_JOUEUR);
+                            (!ligne.equals("") || joueurs.size() < NB_MIN_JOUEUR) &&
+                            joueurs.size() < NB_MAX_JOUEUR);
 
                     if (!ligne.equals("retour")) {
                         getMoteurJeu().lancerPartie(joueurs.toArray(new Joueur[0]));

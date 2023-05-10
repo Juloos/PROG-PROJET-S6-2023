@@ -2,7 +2,8 @@ package IHM.Graphique.Composants;
 
 import IHM.Graphique.Couleurs;
 import Modele.Coord;
-import Modele.Jeu.Jeu;
+import Modele.Jeux.Jeu;
+import Modele.Jeux.JeuGraphe;
 import Modele.Plateau;
 
 import javax.imageio.ImageIO;
@@ -43,7 +44,7 @@ public class PlateauGraphique extends JComponent implements Runnable {
     }
 
     public synchronized void setJeu(Jeu jeu) {
-        this.jeu = jeu.clone();
+        this.jeu = new JeuGraphe(jeu);
     }
 
     @Override

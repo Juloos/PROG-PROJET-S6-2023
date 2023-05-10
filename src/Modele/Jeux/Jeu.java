@@ -1,4 +1,4 @@
-package Modele.Jeu;
+package Modele.Jeux;
 
 import Modele.Coord;
 import Modele.Coups.Coup;
@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 import static Global.Config.*;
 
-public abstract class Jeu implements Cloneable {
+public abstract class Jeu {
     final Plateau plateau;
     final Joueur[] joueurs;
     int nbJoueurs;
@@ -25,7 +25,7 @@ public abstract class Jeu implements Cloneable {
             joueurs[i] = new JoueurIA(i);
         joueurCourant = 0;
         nbJoueurs = NB_JOUEUR;
-        nbPions = NB_PIONS / nbJoueurs;
+        nbPions = NB_PIONS_TOTAL / nbJoueurs;
     }
 
     public Jeu(Joueur[] joueurs) {
@@ -35,7 +35,7 @@ public abstract class Jeu implements Cloneable {
         if (nbJoueurs > NB_MAX_JOUEUR)
             throw new IllegalArgumentException("Trop de joueurs");
         joueurCourant = 0;
-        nbPions = NB_PIONS / nbJoueurs;
+        nbPions = NB_PIONS_TOTAL / nbJoueurs;
     }
 
     public Jeu(Joueur[] joueurs, Plateau plateau) {
@@ -45,7 +45,7 @@ public abstract class Jeu implements Cloneable {
         if (nbJoueurs > NB_MAX_JOUEUR)
             throw new IllegalArgumentException("Trop de joueurs");
         joueurCourant = 0;
-        nbPions = NB_PIONS / nbJoueurs;
+        nbPions = NB_PIONS_TOTAL / nbJoueurs;
     }
 
     public Jeu(Jeu jeu) {
@@ -122,21 +122,18 @@ public abstract class Jeu implements Cloneable {
 
     public ArrayList<Coord> deplacementsPion(Coord c) {
         ArrayList<Coord> liste = new ArrayList<>();
-        if (true) {
-            for (int dir = 0; dir < 6; dir++) {
-                Coord curr = c.decale(dir);
-                while (plateau.estCoordValide(curr) && plateau.get(curr) != Plateau.VIDE && !estPion(curr)) {
-                    liste.add(curr);
-                    curr = curr.decale(dir);
-                }
+        for (int dir = 0; dir < 6; dir++) {
+            Coord curr = c.decale(dir);
+            while (plateau.estCoordValide(curr) && plateau.get(curr) != Plateau.VIDE && !estPion(curr)) {
+                liste.add(curr);
+                curr = curr.decale(dir);
             }
-            return liste;
-        } else
-            return null;
+        }
+        return liste;
     }
 
 
-    public ArrayList<Coord> placementPionValide() {
+    public ArrayList<Coord> placementsPionValide() {
         ArrayList<Coord> liste = new ArrayList<>();
         for (int i = 0; i < plateau.getNbColumns(); i++) {
             for (int j = 0; j < plateau.getNbRows(); j++) {
@@ -166,6 +163,12 @@ public abstract class Jeu implements Cloneable {
         joueurs[joueurCourant].deplacerPion(c1, c2);
         if (estPionBloque(c2))
             joueurs[joueurCourant].bloquerPion(c2);
+        c1.voisins().forEach(
+                voisin -> {
+                    if (estPion(voisin) && estPionBloque(voisin))
+                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                }
+        );
         c2.voisins().forEach(
                 voisin -> {
                     if (estPion(voisin) && estPionBloque(voisin))
@@ -183,6 +186,12 @@ public abstract class Jeu implements Cloneable {
         joueurs[joueurCourant].ajouterPion(c);
         if (estPionBloque(c))
             joueurs[joueurCourant].bloquerPion(c);
+        c.voisins().forEach(
+                voisin -> {
+                    if (estPion(voisin) && estPionBloque(voisin))
+                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                }
+        );
         joueurSuivant();
     }
 
@@ -192,7 +201,6 @@ public abstract class Jeu implements Cloneable {
         joueurs[joueurCourant].terminer();
         for (Coord c : joueurs[joueurCourant].getPions())
             manger(c);
-
         joueurs[joueurCourant].getPions().clear();
         joueurSuivant();
     }
@@ -210,7 +218,7 @@ public abstract class Jeu implements Cloneable {
         c1.voisins().forEach(
                 voisin -> {
                     if (estPion(voisin) && estPionBloque(voisin))
-                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                        joueurs[joueurDePion(voisin)].debloquerPion(voisin);
                 }
         );
         c2.voisins().forEach(
@@ -273,7 +281,4 @@ public abstract class Jeu implements Cloneable {
         str.delete(str.length() - 3, str.length());
         return str.toString();
     }
-
-    @Override
-    public abstract Jeu clone();
 }

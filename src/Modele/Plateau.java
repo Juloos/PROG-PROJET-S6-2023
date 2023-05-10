@@ -24,12 +24,13 @@ public class Plateau {
     }
 
     private void randomInit() {
+        int nbCases = qMax * rMax - (rMax / 2);
         ArrayList<Integer> weights = new ArrayList<>();
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < nbCases / 2; i++)
             weights.add(1);
-        for (int i = 30; i < 50; i++)
+        for (int i = nbCases / 2; i < nbCases * 5 / 6; i++)
             weights.add(2);
-        for (int i = 50; i < 60; i++)
+        for (int i = nbCases * 5 / 6; i < nbCases; i++)
             weights.add(3);
         Collections.shuffle(weights);
         Coord c = new Coord();

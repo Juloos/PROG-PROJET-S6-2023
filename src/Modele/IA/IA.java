@@ -1,10 +1,10 @@
 package Modele.IA;
 
 import Modele.Coups.Coup;
-import Modele.Jeu.Jeu;
+import Modele.Jeux.JeuConcret;
 
 public interface IA {
-    public Coup reflechir(Jeu j);
+    public Coup reflechir(JeuConcret j);
 
     public IA.Difficulte getDifficulte();
 

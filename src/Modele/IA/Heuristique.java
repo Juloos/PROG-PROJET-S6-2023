@@ -1,7 +1,7 @@
 package Modele.IA;
 
-import Modele.Jeu.Jeu;
+import Modele.Jeux.Jeu;
 
 public interface Heuristique {
-    public int evaluer(Jeu j, int pdvJoueur);
+    public double evaluer(Jeu j, int pdvJoueur);
 }

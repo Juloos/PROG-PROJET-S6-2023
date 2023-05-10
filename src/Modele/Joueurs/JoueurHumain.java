@@ -33,6 +33,7 @@ public class JoueurHumain extends Joueur {
         return mt.getIHM().attendreActionJoueur();
     }
 
+    @Override
     public JoueurHumain clone() {
         return new JoueurHumain(id, score, tuiles, new HashMap<>(pions), nom);
     }
