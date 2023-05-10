@@ -9,7 +9,7 @@ import IHM.TypeIHM;
 import Modele.Actions.Action;
 import Modele.Coups.Coup;
 import Modele.Coups.CoupDeplacement;
-import Modele.Jeu.JeuConcret;
+import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 
 public class MoteurJeu extends Thread {
@@ -94,7 +94,7 @@ public class MoteurJeu extends Thread {
 
     public void appliquerAction(Action action) {
         if (!action.peutAppliquer(this)) {
-//            action.afficherMessageErreur(this);
+            action.afficherMessageErreur(this);
         } else {
             action.appliquer(this);
         }
@@ -169,11 +169,11 @@ public class MoteurJeu extends Thread {
         this.etat = pause ? EtatMoteurJeu.PAUSE : EtatMoteurJeu.PARTIE_EN_COURS;
         if (pause) {
             ihm.pause();
-//            try {
-//                gestionnairePartie.wait();
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
+            try {
+                gestionnairePartie.wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         } else {
             ihm.resume();
             notifyAll();

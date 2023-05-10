@@ -2,7 +2,7 @@ package Controleur;
 
 import Modele.Coups.Coup;
 import Modele.Coups.CoupTerminaison;
-import Modele.Jeu.JeuConcret;
+import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 
 public class GestionnairePartie extends Thread {

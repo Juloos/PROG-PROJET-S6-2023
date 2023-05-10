@@ -4,6 +4,7 @@ import IHM.Graphique.Composants.InfoJoueur;
 import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.PopUp.PopUpMenu;
+import Modele.Actions.ActionRefaire;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,7 +72,7 @@ public class EcranJeu extends Ecran {
         refaire.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-//                ihm.getMoteurJeu().appliquerAction(new ActionRefaire());
+                ihm.getMoteurJeu().appliquerAction(new ActionRefaire());
             }
         });
 

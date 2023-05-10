@@ -3,6 +3,7 @@ package IHM.Graphique.Ecrans;
 import Global.Config;
 import IHM.Colors;
 import IHM.Graphique.IHMGraphique;
+import Modele.IA.IA;
 import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
@@ -70,14 +71,20 @@ public class EcranCreationPartie extends Ecran {
         lancerPartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-//                Joueur[] joueurs = new Joueur[joueursPanel.getComponentCount()];
-//                ihm.getMoteurJeu().debug("Nombre de joueurs : " + joueursPanel.getComponentCount());
-//
-//                for (int i = 0; i < joueursPanel.getComponentCount(); i++) {
-//                    joueurs[i] = ((MenuJoueur) joueursPanel.getComponent(i)).getJoueur();
-//                }
+                Joueur joueurs[] = new Joueur[nbJoueurs];
+                for (int i = 0; i < nbJoueurs; i++) {
+                    //si le joueur est une IA
+                    if (((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex() != 0) {
+                        IA.Difficulte diff = IA.Difficulte.values()[((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex()];
+                        System.out.println(diff);
+                        joueurs[i] = new JoueurIA(((MenuJoueur) joueursPanel.getComponent(i)).num - 1,diff);
+                    } else {
+                        joueurs[i] = new JoueurHumain(((MenuJoueur) joueursPanel.getComponent(i)).num - 1);
+                    }
+                }
+                ihm.getMoteurJeu().lancerPartie(joueurs);
 //                ihm.getMoteurJeu().lancerPartie(new Joueur[]{new JoueurIA(0), new JoueurIA(1)});
-                ihm.getMoteurJeu().lancerPartie(new Joueur[]{new JoueurHumain(0), new JoueurIA(1), new JoueurIA(2)});
+//                ihm.getMoteurJeu().lancerPartie(new Joueur[]{new JoueurHumain(0), new JoueurIA(1), new JoueurIA(2)});
                 System.out.println("Fin lancement partie");
                 ihm.ouvrirFenetre(new EcranJeu());
             }
@@ -89,7 +96,7 @@ public class EcranCreationPartie extends Ecran {
 
     protected void nouveauJoueur() {
         nbJoueurs++;
-        if (nbJoueurs == Config.NB_MAX_JOUEUR) {
+        if (nbJoueurs >= Config.NB_MAX_JOUEUR) {
             ajouterJoueur.setVisible(false);
         }
 
@@ -128,20 +135,24 @@ public class EcranCreationPartie extends Ecran {
 
         public MenuJoueur(int num) {
             super();
-
+            this.num = num;
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             setBackground(Colors.TRANSPARENT);
 
             numJoueur = new JLabel("Joueur " + num, SwingConstants.CENTER);
             if (num == 1) {
                 numJoueur.setForeground(Color.RED);
-            } else if (num == 2) {
+            }
+            else if (num == 2) {
                 numJoueur.setForeground(Color.BLUE);
-            } else if (num == 3) {
+            }
+            else if (num == 3) {
                 numJoueur.setForeground(Color.GREEN);
-            } else if (num == 4) {
+            }
+            else if (num == 4) {
                 numJoueur.setForeground(Color.YELLOW);
-            } else {
+            }
+            else {
                 numJoueur.setForeground(Color.BLACK);
             }
             numJoueur.setFont(new Font("Impact", Font.PLAIN, 50));
