@@ -37,7 +37,6 @@ public class MoteurJeu extends Thread {
 
         this.gestionnairePartie = new GestionnairePartie(this);
         this.gestionnairePartie.start();
-
         etat = EtatMoteurJeu.ATTENTE_PARTIE;
     }
 
@@ -121,11 +120,12 @@ public class MoteurJeu extends Thread {
 
     public synchronized void sauvegarder(String nomSave) {
         debug("Sauvegarde de la partie");
+        jeu = gestionnairePartie.getJeu();
         try {
             jeu.sauvegarder(nomSave + ".txt");
         } catch (Exception e) {
-            ihm.afficherMessage("Erreur lors de la sauvegarde");
-            debug("Erreur lors de la sauvegarde");
+            ihm.afficherMessage("Erreur dans ihm lors de la sauvegarde");
+            debug("Erreur dans ihm lors de la sauvegarde");
         }
     }
 

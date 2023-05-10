@@ -7,6 +7,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+œimport java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+
+import static com.sun.java.accessibility.util.AWTEventMonitor.addComponentListener;
 
 public class EcranAccueil extends Ecran {
 
@@ -95,7 +100,7 @@ public class EcranAccueil extends Ecran {
                 ihm.ouvrirFenetre(new PopUpConfirmation(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
-                        ihm.getMoteurJeu().fin();
+                        ihm.getMoteurJeu().terminer();
                     }
                 }));
             }

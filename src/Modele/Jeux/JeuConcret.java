@@ -99,12 +99,19 @@ public class JeuConcret extends Jeu {
     }
 
 
-    public void sauvegarder(String fichier) throws Exception {
+    public void sauvegarder(String fichier) {
         // Init fichier
-        File f = new File(fichier);
-        f.setReadable(true);
-        f.setWritable(true);
-        PrintWriter w_f = new PrintWriter(f);
+        PrintWriter w_f;
+        File f;
+        try {
+            f = new File(fichier);
+            f.setReadable(true);
+            f.setWritable(true);
+            w_f = new PrintWriter(f);
+        }catch (Exception E){
+            System.out.println("Erreur : creation fichier de sauvegarde");
+            return;
+        }
 
         // Init var
         String sauv_data = "";
@@ -172,10 +179,10 @@ public class JeuConcret extends Jeu {
                         System.err.println(" erreur : Joueur non typé");
                         throw new Exception();
                     case 1:
-                        nom = sc_f.next();
+                        nom = sc_f.nextLine();
                         break;
                     case 2:
-                        nom = sc_f.next();
+                        nom = sc_f.nextLine();
                         switch (nom) {
                             case "ALEATOIRE":
                                 difficulte = IA.Difficulte.ALEATOIRE;

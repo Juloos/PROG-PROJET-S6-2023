@@ -71,6 +71,6 @@ public class JoueurIA extends Joueur {
         for (int j = 0; j < pions.size(); j++) {
             dataHash += " " + tempL[j].q + " " + tempL[j].r;
         }
-        return 2 + " " + id + " " + ia.getDifficulte() + " " + score + " " + tuiles + " " + pions.size() + dataHash;
+        return 2 + " " + id + " \n" + ia.getDifficulte() + "\n " + score + " " + tuiles + " " + pions.size() + dataHash;
     }
 }

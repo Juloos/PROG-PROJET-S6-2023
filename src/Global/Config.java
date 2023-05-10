@@ -5,14 +5,14 @@ import Modele.IA.*;
 import Modele.Joueurs.*;
 
 public class Config {
-    public final static TypeIHM TYPE_IHM = TypeIHM.AUCUNE;
-    public final static Joueur[] JOUEURS_TOURNOI = new Joueur[] {new JoueurIA(0, IA.Difficulte.ALEATOIRE), new JoueurIA(1, IA.Difficulte.DIFFICILE)};
-    public final static int NB_PARTIES = 10;
-    public final static int NB_COUPS_PREDICTION = 4;
-    public final static Heuristique HEURISTIQUE = new H2();
+    public final static TypeIHM TYPE_IHM = TypeIHM.GRAPHIQUE;
+    public final static Joueur[] JOUEURS_TOURNOI = new Joueur[] {new JoueurIA(0, IA.Difficulte.ALEATOIRE), new JoueurIA(1, IA.Difficulte.ALEATOIRE)};
+    public final static int NB_PARTIES = 1000;
+    public final static int NB_COUPS_PREDICTION = 2;
+    public final static Heuristique HEURISTIQUE = new H3();
     public final static double HEURISTIQUE_ABSVAL = 1000;
     public final static int MONTE_CARLO_NB_SIMULE = 10;
-    public final static boolean DEBUG = false;
+    public final static boolean DEBUG = true;
     public final static int TAILLE_PLATEAU_X = 8;
     public final static int TAILLE_PLATEAU_Y = 8;
     public final static int NB_PIONS_TOTAL = 9;

@@ -84,7 +84,7 @@ public class GestionnairePartie extends Thread {
             moteurJeu.debug("Début de la partie");
 
             nbPionsPlaces = 0;
-            while (estPhasePlacementPions()) {
+            while (estPhasePlacementPions() && (jeu.getPasse().empty() || jeu.getPasse().peek().toString().contains("CoupAjout"))) {
                 while (phasePartie == PhasesPartie.PAUSE) ;
                 moteurJeu.appliquerAction(jeu.getJoueur().reflechir(moteurJeu));
             }
@@ -136,4 +136,5 @@ public class GestionnairePartie extends Thread {
         this.isAlive = false;
         this.interrupt();
     }
+
 }

@@ -81,6 +81,7 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         frame.addMouseMotionListener(this);
         frame.setSize(1000, 700);
         frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
 
     /* Méthodes héritées de la classe IHM */
