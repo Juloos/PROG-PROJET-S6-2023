@@ -169,11 +169,11 @@ public class MoteurJeu extends Thread {
         this.etat = pause ? EtatMoteurJeu.PAUSE : EtatMoteurJeu.PARTIE_EN_COURS;
         if (pause) {
             ihm.pause();
-            try {
-                gestionnairePartie.wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+//            try {
+//                gestionnairePartie.wait();
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
         } else {
             ihm.resume();
             notifyAll();

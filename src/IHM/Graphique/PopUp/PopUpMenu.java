@@ -22,7 +22,7 @@ public class PopUpMenu extends PopUp {
         retour.setText("Retour au jeu");
         panel.add(retour);
 
-        JButton sauvegarder = new JButton("Sauvegarder");
+        Button sauvegarder = new Button("Sauvegarder");
         sauvegarder.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -31,7 +31,7 @@ public class PopUpMenu extends PopUp {
         });
         panel.add(sauvegarder);
 
-        JButton options = new JButton("Options");
+        Button options = new Button("Options");
         options.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -40,7 +40,7 @@ public class PopUpMenu extends PopUp {
         });
         panel.add(options);
 
-        JButton quitter = new JButton("Quitter");
+        Button quitter = new Button("Quitter");
         quitter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

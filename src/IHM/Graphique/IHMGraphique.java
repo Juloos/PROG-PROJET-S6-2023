@@ -4,6 +4,7 @@ import Controleur.MoteurJeu;
 import IHM.Graphique.Animations.Animation;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.EcranAccueil;
+import IHM.Graphique.Ecrans.EcranJeu;
 import IHM.Graphique.PopUp.PopUpFinPartie;
 import IHM.IHM;
 import Modele.Actions.Action;
@@ -15,6 +16,8 @@ import Modele.Jeux.Jeu;
 import Modele.Joueurs.JoueurHumain;
 import com.sun.istack.internal.NotNull;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.swing.*;
@@ -45,19 +48,20 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         fenetres = new Stack<>();
 
         frame = new JFrame("");
-//        try {
-//            // chargement du fichier audio
-//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("Wallpaper.wav")); // "res/Wallpaper.wav
-//            // création du Clip
-//            clip = AudioSystem.getClip();
-//            clip.open(audioInputStream);
-//            clip.loop(Clip.LOOP_CONTINUOUSLY); // boucle infinie
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            // chargement du fichier audio
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("soundtrack.wav")); // "res/Wallpaper.wav
+            // création du Clip
+            clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.loop(Clip.LOOP_CONTINUOUSLY); // boucle infinie
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        setVolume(0);
 
         plateauGraphique = new PlateauGraphique();
-        Thread pgt = new Thread(plateauGraphique);
+        Thread pgt = new Thread((Runnable) plateauGraphique);
         pgt.start();
 
         updateAffichage = new UpdateAffichage(this);
@@ -73,11 +77,10 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         });
 
         frame.addMouseListener(this);
+        frame.setSize(1500, 900);
         frame.addMouseMotionListener(this);
         frame.setSize(1000, 700);
         frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
     }
 
     /* Méthodes héritées de la classe IHM */
@@ -110,6 +113,7 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
 

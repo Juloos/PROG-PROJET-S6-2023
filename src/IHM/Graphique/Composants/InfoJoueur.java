@@ -20,7 +20,7 @@ public class InfoJoueur extends JPanel {
         this.joueur = joueur;
         setLayout(new BorderLayout());
 
-        JLabel nom = new JLabel("Joueur " + (joueur.getID() + 1));
+        JLabel nom = new JLabel(joueur.nom);
         nom.setFont(new Font("Arial", Font.PLAIN, 35));
         add(nom, BorderLayout.NORTH);
 
