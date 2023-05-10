@@ -76,6 +76,7 @@ public class EcranCreationPartie extends Ecran {
                     //si le joueur est une IA
                     if (((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex() != 0) {
                         IA.Difficulte diff = IA.Difficulte.values()[((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex()];
+                        System.out.println(diff);
                         joueurs[i] = new JoueurIA(((MenuJoueur) joueursPanel.getComponent(i)).num - 1,diff);
                         joueurs[i].nom = "IA " + diff;
                     } else {
@@ -115,6 +116,12 @@ public class EcranCreationPartie extends Ecran {
         }
 
         panel.repaint();
+    }
+
+    @Override
+    public void close(IHMGraphique ihm) {
+        super.close(ihm);
+        System.out.println("Fermeture fenetre");
     }
 
     private class MenuJoueur extends JPanel {
@@ -265,6 +272,7 @@ public class EcranCreationPartie extends Ecran {
         }
 
         private void updateNumJoueur(int num) {
+            this.num = num;
             close.removeActionListener(closeAction);
             closeAction = new ActionListener() {
                 @Override
@@ -273,6 +281,14 @@ public class EcranCreationPartie extends Ecran {
                 }
             };
             close.addActionListener(closeAction);
+        }
+
+        public Joueur getJoueur() {
+            if (difficultesIA.getSelectedIndex() == 0) {
+                return new JoueurHumain(num);
+            } else {
+                return new JoueurIA(num);
+            }
         }
     }
 }

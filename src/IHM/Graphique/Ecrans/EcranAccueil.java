@@ -1,14 +1,12 @@
 package IHM.Graphique.Ecrans;
 
-import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.PopUp.PopUpConfirmation;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-
-import static com.sun.java.accessibility.util.AWTEventMonitor.addComponentListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class EcranAccueil extends Ecran {
 

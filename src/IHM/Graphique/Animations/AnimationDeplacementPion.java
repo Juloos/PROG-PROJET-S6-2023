@@ -4,36 +4,69 @@ import Global.Config;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.IHMGraphique;
 import Modele.Coord;
+import Modele.Coups.CoupDeplacement;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
-public class AnimationDeplacementPion extends Animation {
+public class AnimationDeplacementPion implements Animation {
 
     private final PlateauGraphique plateauGraphique;
-    private final Coord[] coords;
+    private final CoupDeplacement deplacement;
+    private boolean paused;
 
-    public AnimationDeplacementPion(IHMGraphique ihm, Coord[] coords) {
-        super(ihm, Config.ANIMATION_DURATION, coords.length - 1);
-        this.coords = coords;
+    public AnimationDeplacementPion(IHMGraphique ihm, CoupDeplacement deplacement) {
         this.plateauGraphique = ihm.getPlateauGraphique();
+        this.deplacement = deplacement;
     }
 
     @Override
-    void start() {
-        ihm.getPlateauGraphique().setTuilesSurbrillance(Arrays.asList(coords));
+    public void start() {
     }
 
     @Override
-    void play(int frameNumber) {
-        plateauGraphique.deplacerPion(coords[frameNumber], coords[frameNumber + 1], frameNumber == 0);
+    public void play(int frameNumber) {
     }
 
     @Override
-    void stop() {
+    public void stop() {
         try {
             Thread.sleep(200);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void play() {
+        List<Coord> coords = new ArrayList<>();
+        int decalage = deplacement.source.getDecalage(deplacement.destination);
+        Coord current = deplacement.source.clone();
+
+        while (!current.equals(deplacement.destination)) {
+            coords.add(current);
+            current = current.decale(decalage);
+        }
+        coords.add(deplacement.destination);
+
+        plateauGraphique.setTuilesSurbrillance(coords);
+
+        try {
+            Thread.sleep(Math.round(Config.ANIMATION_DURATION * 1000.0));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        plateauGraphique.setTuilesSurbrillance(null);
+    }
+
+    @Override
+    public void pause() {
+        this.paused = true;
+    }
+
+    @Override
+    public void resume() {
+        this.paused = false;
     }
 }

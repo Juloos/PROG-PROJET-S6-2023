@@ -173,10 +173,12 @@ public class IHMConsole extends IHM {
                         creationTerminee = true;
                     }
                     break;
-                default:
+                case "stop":
                     // Arrêt du moteur de jeu
-                    getMoteurJeu().fin();
+                    getMoteurJeu().terminer();
                     creationTerminee = true;
+                    break;
+                default:
                     break;
             }
         } while (!creationTerminee);
@@ -196,9 +198,5 @@ public class IHMConsole extends IHM {
         }
 
         return valeurs;
-    }
-
-    @Override
-    public void run() {
     }
 }
