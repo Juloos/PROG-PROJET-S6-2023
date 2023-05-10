@@ -25,7 +25,7 @@ public abstract class Jeu {
             joueurs[i] = new JoueurIA(i);
         joueurCourant = 0;
         nbJoueurs = NB_JOUEUR;
-        nbPions = NB_PIONS / nbJoueurs;
+        nbPions = NB_PIONS_TOTAL / nbJoueurs;
     }
 
     public Jeu(Joueur[] joueurs) {
@@ -35,7 +35,7 @@ public abstract class Jeu {
         if (nbJoueurs > NB_MAX_JOUEUR)
             throw new IllegalArgumentException("Trop de joueurs");
         joueurCourant = 0;
-        nbPions = NB_PIONS / nbJoueurs;
+        nbPions = NB_PIONS_TOTAL / nbJoueurs;
     }
 
     public Jeu(Joueur[] joueurs, Plateau plateau) {
@@ -45,7 +45,7 @@ public abstract class Jeu {
         if (nbJoueurs > NB_MAX_JOUEUR)
             throw new IllegalArgumentException("Trop de joueurs");
         joueurCourant = 0;
-        nbPions = NB_PIONS / nbJoueurs;
+        nbPions = NB_PIONS_TOTAL / nbJoueurs;
     }
 
     public Jeu(Jeu jeu) {
