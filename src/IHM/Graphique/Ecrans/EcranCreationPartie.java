@@ -3,6 +3,7 @@ package IHM.Graphique.Ecrans;
 import Global.Config;
 import IHM.Colors;
 import IHM.Graphique.IHMGraphique;
+import Modele.IA.IA;
 import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
@@ -74,7 +75,9 @@ public class EcranCreationPartie extends Ecran {
                 for (int i = 0; i < nbJoueurs; i++) {
                     //si le joueur est une IA
                     if (((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex() != 0) {
-                        joueurs[i] = new JoueurIA(((MenuJoueur) joueursPanel.getComponent(i)).num - 1);
+                        IA.Difficulte diff = IA.Difficulte.values()[((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex()];
+                        System.out.println(diff);
+                        joueurs[i] = new JoueurIA(((MenuJoueur) joueursPanel.getComponent(i)).num - 1,diff);
                     } else {
                         joueurs[i] = new JoueurHumain(((MenuJoueur) joueursPanel.getComponent(i)).num - 1);
                     }
@@ -244,7 +247,7 @@ public class EcranCreationPartie extends Ecran {
                 closeAction = new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
-                        supprimerJoueur(num - 1);
+                        supprimerJoueur(num);
                     }
                 };
                 close.addActionListener(closeAction);
