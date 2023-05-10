@@ -122,9 +122,11 @@ public class MoteurJeu extends Thread {
 
     public void appliquerAction(Action action) {
         if (!action.peutAppliquer(this)) {
-//            action.afficherMessageErreur(this);
+            action.afficherMessageErreur(this);
         } else {
             action.appliquer(this);
+            if (DEBUG)
+                System.out.println("Action jouée");
         }
 
         updateAffichage();
@@ -149,7 +151,8 @@ public class MoteurJeu extends Thread {
                 ihm.attendreCreationPartie();
             }
 
-//            System.out.println("Début de la partie");
+            if (DEBUG)
+                System.out.println("Début de la partie");
 
             updateAffichage();
 
@@ -159,7 +162,8 @@ public class MoteurJeu extends Thread {
                 appliquerAction(jeu.getJoueur().reflechir(this));
             }
 
-//            System.out.println("Fin de la phase de placement des pions");
+            if (DEBUG)
+                System.out.println("Fin de la phase de placement des pions");
 
             if (ihm != null) {
                 ihm.afficherMessage("Fin de la phase de placement des pions");
@@ -175,6 +179,8 @@ public class MoteurJeu extends Thread {
 //                    while (partieEnCours()) {
 
                     waitPause();
+                    if (DEBUG)
+                        System.out.println("Tour du joueur " + jeu.getJoueur().id);
                     appliquerAction(jeu.getJoueur().reflechir(this));
                 }
 //                waitTime(100);
