@@ -4,6 +4,7 @@ import IHM.Graphique.Composants.InfoJoueur;
 import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.PopUp.PopUpMenu;
+import Modele.Actions.ActionAnnuler;
 import Modele.Actions.ActionRefaire;
 
 import javax.swing.*;
@@ -64,7 +65,7 @@ public class EcranJeu extends Ecran {
         annuler.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-//                ihm.getMoteurJeu().appliquerAction(new ActionAnnuler());
+                ihm.getMoteurJeu().appliquerAction(new ActionAnnuler());
             }
         });
 

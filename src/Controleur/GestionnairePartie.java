@@ -50,12 +50,14 @@ public class GestionnairePartie extends Thread {
         moteurJeu.debug("Annulation du dernier coup joué");
         nbPionsPlaces--;
         jeu.annuler();
+        updateAffichage();
     }
 
     public synchronized void refaireCoup() {
         moteurJeu.debug("Refaison du dernier coup annulé");
         nbPionsPlaces++;
         jeu.refaire();
+        updateAffichage();
     }
 
     @Override

@@ -4,6 +4,7 @@ import Controleur.MoteurJeu;
 import IHM.Graphique.Animations.Animation;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.EcranAccueil;
+import IHM.Graphique.Ecrans.EcranJeu;
 import IHM.Graphique.PopUp.PopUpFinPartie;
 import IHM.IHM;
 import Modele.Actions.Action;
@@ -110,6 +111,7 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
 
