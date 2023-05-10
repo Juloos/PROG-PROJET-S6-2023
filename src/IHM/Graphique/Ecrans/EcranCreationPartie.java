@@ -4,6 +4,7 @@ import Global.Config;
 import IHM.Colors;
 import IHM.Graphique.IHMGraphique;
 import Modele.Joueurs.Joueur;
+import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
 
 import javax.swing.*;
@@ -69,6 +70,15 @@ public class EcranCreationPartie extends Ecran {
         lancerPartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+//                Joueur[] joueurs = new Joueur[joueursPanel.getComponentCount()];
+//                ihm.getMoteurJeu().debug("Nombre de joueurs : " + joueursPanel.getComponentCount());
+//
+//                for (int i = 0; i < joueursPanel.getComponentCount(); i++) {
+//                    joueurs[i] = ((MenuJoueur) joueursPanel.getComponent(i)).getJoueur();
+//                }
+//                ihm.getMoteurJeu().lancerPartie(new Joueur[]{new JoueurIA(0), new JoueurIA(1)});
+                ihm.getMoteurJeu().lancerPartie(new Joueur[]{new JoueurHumain(0), new JoueurIA(1), new JoueurIA(2)});
+                System.out.println("Fin lancement partie");
                 ihm.ouvrirFenetre(new EcranJeu());
             }
         });
@@ -102,9 +112,16 @@ public class EcranCreationPartie extends Ecran {
         panel.repaint();
     }
 
+    @Override
+    public void close(IHMGraphique ihm) {
+        super.close(ihm);
+        System.out.println("Fermeture fenetre");
+    }
+
     private class MenuJoueur extends JPanel {
 
         JLabel numJoueur;
+        int num;
         JComboBox<String> difficultesIA;
         Button close;
         ActionListener closeAction;
@@ -118,17 +135,13 @@ public class EcranCreationPartie extends Ecran {
             numJoueur = new JLabel("Joueur " + num, SwingConstants.CENTER);
             if (num == 1) {
                 numJoueur.setForeground(Color.RED);
-            }
-            else if (num == 2) {
+            } else if (num == 2) {
                 numJoueur.setForeground(Color.BLUE);
-            }
-            else if (num == 3) {
+            } else if (num == 3) {
                 numJoueur.setForeground(Color.GREEN);
-            }
-            else if (num == 4) {
+            } else if (num == 4) {
                 numJoueur.setForeground(Color.YELLOW);
-            }
-            else {
+            } else {
                 numJoueur.setForeground(Color.BLACK);
             }
             numJoueur.setFont(new Font("Impact", Font.PLAIN, 50));
@@ -213,8 +226,7 @@ public class EcranCreationPartie extends Ecran {
                         panelia.repaint();
                         panelia.revalidate();
 
-                    }
-                    else {
+                    } else {
                         panelia.remove(1);
                         panelia.repaint();
                         panelia.revalidate();
@@ -241,6 +253,7 @@ public class EcranCreationPartie extends Ecran {
         }
 
         private void updateNumJoueur(int num) {
+            this.num = num;
             close.removeActionListener(closeAction);
             closeAction = new ActionListener() {
                 @Override
@@ -249,6 +262,14 @@ public class EcranCreationPartie extends Ecran {
                 }
             };
             close.addActionListener(closeAction);
+        }
+
+        public Joueur getJoueur() {
+            if (difficultesIA.getSelectedIndex() == 0) {
+                return new JoueurHumain(num);
+            } else {
+                return new JoueurIA(num);
+            }
         }
     }
 }

@@ -4,16 +4,16 @@ import Controleur.MoteurJeu;
 import Modele.Actions.Action;
 import Modele.Jeu.Jeu;
 
-public abstract class IHM extends Thread {
+public abstract class IHM {
 
-    private MoteurJeu moteurJeu;
+    protected final MoteurJeu moteurJeu;
 
     public IHM(MoteurJeu moteurJeu) {
         super();
         this.moteurJeu = moteurJeu;
     }
 
-    public synchronized MoteurJeu getMoteurJeu() {
+    public MoteurJeu getMoteurJeu() {
         return moteurJeu;
     }
 
@@ -48,4 +48,10 @@ public abstract class IHM extends Thread {
      * Ferme l'IHM
      */
     public abstract void terminer();
+
+    public void pause() {
+    }
+
+    public void resume() {
+    }
 }

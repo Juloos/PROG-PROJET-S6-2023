@@ -1,7 +1,6 @@
 package IHM.Graphique.PopUp;
 
 import IHM.Graphique.IHMGraphique;
-import Modele.Actions.ActionSauvegarder;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -19,7 +18,7 @@ public class PopUpSauvegarder extends PopUp {
         valider.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                ihm.getMoteurJeu().appliquerAction(new ActionSauvegarder("test"));
+//                ihm.getMoteurJeu().appliquerAction(new ActionSauvegarder("test"));
                 ihm.retournerPrecedenteFenetre();
             }
         });

@@ -4,8 +4,6 @@ import IHM.Graphique.Composants.InfoJoueur;
 import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.PopUp.PopUpMenu;
-import Modele.Actions.ActionAnnuler;
-import Modele.Actions.ActionRefaire;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,7 +63,7 @@ public class EcranJeu extends Ecran {
         annuler.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                ihm.getMoteurJeu().appliquerAction(new ActionAnnuler());
+//                ihm.getMoteurJeu().appliquerAction(new ActionAnnuler());
             }
         });
 
@@ -73,7 +71,7 @@ public class EcranJeu extends Ecran {
         refaire.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                ihm.getMoteurJeu().appliquerAction(new ActionRefaire());
+//                ihm.getMoteurJeu().appliquerAction(new ActionRefaire());
             }
         });
 
@@ -87,6 +85,7 @@ public class EcranJeu extends Ecran {
         options.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                System.out.println("Je te click tu me clicks");
                 ihm.getMoteurJeu().pauseGame(true);
                 ihm.ouvrirFenetre(new PopUpMenu());
             }
@@ -100,12 +99,10 @@ public class EcranJeu extends Ecran {
 
         panel.add(menu, BorderLayout.EAST);
         panel.add(ihm.getPlateauGraphique(), BorderLayout.CENTER);
-
-        update(ihm);
     }
 
     @Override
-    public void update(IHMGraphique ihm) {
+    public synchronized void update(IHMGraphique ihm) {
         resized();
 
         if (ihm.getMoteurJeu().estPhasePlacementPions()) {
@@ -121,8 +118,15 @@ public class EcranJeu extends Ecran {
     }
 
     @Override
-    public void afficherMessage(String message) {
-        this.message.setText(message);
+    public void afficherMessage(String mess) {
+        this.message.setText(mess);
+        Timer timer = new Timer(3000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                message.setText("");
+            }
+        });
+        timer.start();
     }
 
     @Override

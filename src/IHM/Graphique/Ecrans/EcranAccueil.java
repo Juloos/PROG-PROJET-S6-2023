@@ -5,9 +5,8 @@ import IHM.Graphique.PopUp.PopUpConfirmation;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-
-import static com.sun.java.accessibility.util.AWTEventMonitor.addComponentListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class EcranAccueil extends Ecran {
 
@@ -23,17 +22,6 @@ public class EcranAccueil extends Ecran {
     @Override
     public void open(IHMGraphique ihm) {
         super.open(ihm);
-        ihm.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                int newButtonWidth = (int) Math.round(0.2 * e.getComponent().getWidth());
-                nouvellePartie.setPreferredSize(new Dimension(newButtonWidth, nouvellePartie.getHeight()));
-                chargerPartie.setPreferredSize(new Dimension(newButtonWidth, chargerPartie.getHeight()));
-                options.setPreferredSize(new Dimension(newButtonWidth, options.getHeight()));
-                quitter.setPreferredSize(new Dimension(newButtonWidth, quitter.getHeight()));
-                panel.revalidate();
-            }
-        });
         int initialButtonWidth = (int) Math.round(0.2 * ihm.getFrame().getWidth());
     }
 
@@ -41,7 +29,7 @@ public class EcranAccueil extends Ecran {
     public void creation(IHMGraphique ihm) {
         panel.setLayout(new GridBagLayout());
         // Chargement de l'image de fond
-        ImageIcon icon = new ImageIcon("res\\background.png");
+        ImageIcon icon = new ImageIcon("res/background.png");
         this.backgroundImage = icon.getImage();
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -101,14 +89,22 @@ public class EcranAccueil extends Ecran {
                 ihm.ouvrirFenetre(new PopUpConfirmation(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
-                        ihm.getMoteurJeu().fin();
+                        ihm.getMoteurJeu().terminer();
                     }
                 }));
             }
         });
         constraints.gridy = 3;
         panel.add(quitter, constraints);
-        panel.repaint();
-        panel.revalidate();
+    }
+
+    @Override
+    public void resized() {
+        super.resized();
+//        int newButtonWidth = (int) Math.round(0.2 * panel.getWidth());
+//        nouvellePartie.setPreferredSize(new Dimension(newButtonWidth, nouvellePartie.getHeight()));
+//        chargerPartie.setPreferredSize(new Dimension(newButtonWidth, chargerPartie.getHeight()));
+//        options.setPreferredSize(new Dimension(newButtonWidth, options.getHeight()));
+//        quitter.setPreferredSize(new Dimension(newButtonWidth, quitter.getHeight()));
     }
 }

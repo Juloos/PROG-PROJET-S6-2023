@@ -73,9 +73,11 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
     public void decrementerScore(int val) {
         this.score -= val;
     }
-    public void reAnimer(){
+
+    public void reAnimer() {
         this.termine = false;
     }
+
     public void ajouterPion(Coord c) {
         if (pions.containsKey(c))
             throw new IllegalArgumentException("Pion déjà présent");
@@ -93,7 +95,7 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
     }
 
 
-    public void deplacerPion(Coord source, Coord destination) {
+    public synchronized void deplacerPion(Coord source, Coord destination) {
         if (!pions.containsKey(source))
             throw new IllegalArgumentException("Pion inexistant");
         if (pions.containsKey(destination))

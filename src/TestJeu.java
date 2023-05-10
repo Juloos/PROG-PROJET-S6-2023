@@ -1,14 +1,19 @@
-import Modele.Jeu.JeuConcret;
-import Modele.Jeu.JeuGraphe;
+import Controleur.MoteurJeu;
+import Modele.Joueurs.Joueur;
+import Modele.Joueurs.JoueurIA;
 
 public class TestJeu {
     public static void main(String[] args) {
-        JeuConcret j = new JeuConcret();
-        JeuGraphe jg = new JeuGraphe(j);
-        jg.calculerFils();
+        for (int i = 0; i < 200; i++) {
+            MoteurJeu moteurJeu = new MoteurJeu(new Joueur[]{new JoueurIA(0), new JoueurIA(1)});
+            moteurJeu.start();
 
-        System.out.println(jg + "\n\n");
-        for (JeuGraphe jg2 : jg.fils)
-            System.out.println(jg2 + "\n");
+            try {
+                moteurJeu.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("Fin de la partie " + i);
+        }
     }
 }

@@ -1,37 +1,16 @@
 package IHM.Graphique.Animations;
 
-import IHM.Graphique.IHMGraphique;
+public interface Animation {
 
-public abstract class Animation {
+    void start();
 
-    final double DURATION;
-    final int nbFrames;
-    final IHMGraphique ihm;
+    void play(int frameNumber);
 
-    public Animation(IHMGraphique ihm, double duration, int nbFrames) {
-        this.ihm = ihm;
-        this.DURATION = duration;
-        this.nbFrames = nbFrames;
-    }
+    void stop();
 
-    abstract void start();
+    void play();
 
-    abstract void play(int frameNumber);
+    void pause();
 
-    abstract void stop();
-
-    public void run() {
-        double TIME_BETWEEN_FRAMES = DURATION / nbFrames;
-        start();
-        for (int i = 0; i < nbFrames; i++) {
-            try {
-                Thread.sleep((int) (TIME_BETWEEN_FRAMES * 1000.0));
-                play(i);
-                ihm.getPlateauGraphique().repaint();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        stop();
-    }
+    void resume();
 }
