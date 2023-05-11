@@ -17,13 +17,16 @@ public class PopUpSauvegarder extends PopUp {
 
     @Override
     public void creation(IHMGraphique ihm) {
+        // Initialisation de la zone d'écriture pour le nom de sauvegarde
         JButton valider = new JButton("Sauvegarder");
         JLabel nomLabel = new JLabel("Nom sauvegarde : ");
         nomLabel.setFont(new Font("Impact", Font.PLAIN, 20));
-        JTextField nom = new JTextField("Sauv 1");
-        nom.setMaximumSize(new Dimension(200, 40));
+        JTextField nom = new JTextField("Entrer un nom de sauvegarde");
+        nom.setMaximumSize(new Dimension(500, 40));
         panel.add(nomLabel);
         panel.add(nom);
+
+        //Creation de la sauvegarde
         valider.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

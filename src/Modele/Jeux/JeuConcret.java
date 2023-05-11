@@ -158,7 +158,7 @@ public class JeuConcret extends Jeu {
         HashMap<Coord,Boolean> pions;
         Stack<Coup> tempFutur = new Stack<>(), tempPasse = new Stack<>();
         IA.Difficulte difficulte = IA.Difficulte.ALEATOIRE;
-        String temp, nom = "";
+        String nom = "";
         HashMap<Coord, Integer> tempHash;
         Coord tempCoord1, tempCoord2;
         Coup tempCoup;
@@ -293,8 +293,8 @@ public class JeuConcret extends Jeu {
                         throw new Exception();
                 }
             }
-        jeu.setPasseFromFutur(tempFutur);
-        jeu.updateJoueurFromeHist();
+            jeu.setPasseFromFutur(tempFutur);
+            jeu.updateJoueurFromeHist();
             //terminaison
             sc_f.close();
             return jeu;
