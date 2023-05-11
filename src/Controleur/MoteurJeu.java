@@ -28,19 +28,11 @@ public class MoteurJeu extends Thread {
             case GRAPHIQUE:
                 ihm = new IHMGraphique(this);
                 break;
-            case AUCUNE:
+            default:
                 ihm = null;
-                throw new RuntimeException("Il faut une IHM dans ce cas");
         }
 
         etat = EtatMoteurJeu.ATTENTE_PARTIE;
-    }
-
-    public MoteurJeu(Joueur[] joueurs) {
-        this.ihm = null;
-        this.etat = EtatMoteurJeu.PARTIE_EN_COURS;
-
-        lancerPartie(joueurs);
     }
 
     public void debug(String message) {
@@ -160,18 +152,28 @@ public class MoteurJeu extends Thread {
     }
 
     public void debutDePartie() {
-        ihm.debutDePartie();
+        if (hasIHM()) {
+            ihm.debutDePartie();
+        }
     }
 
     public void finDePartie() {
-        ihm.finDePartie();
+        if (hasIHM()) {
+            ihm.finDePartie();
+        }
     }
 
     public synchronized void lancerPartie(Joueur[] joueurs) {
-        this.gestionnairePartie = new GestionnairePartie(this);
-        this.gestionnairePartie.start();
-        debug("Lancement d'une nouvelle partie");
-        gestionnairePartie.lancerPartie(joueurs);
+        if (hasIHM()) {
+            this.gestionnairePartie = new GestionnairePartie(this);
+            this.gestionnairePartie.start();
+            debug("Lancement d'une nouvelle partie");
+            gestionnairePartie.lancerPartie(joueurs);
+        } else {
+            this.gestionnairePartie = new GestionnairePartie(this);
+            this.gestionnairePartie.lancerPartie(joueurs);
+            this.gestionnairePartie.start();
+        }
     }
 
     public synchronized void lancerPartie(String nomSave) {
