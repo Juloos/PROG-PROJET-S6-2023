@@ -21,7 +21,7 @@ public class PopUpSauvegarder extends PopUp {
         JButton valider = new JButton("Sauvegarder");
         JLabel nomLabel = new JLabel("Nom sauvegarde : ");
         nomLabel.setFont(new Font("Impact", Font.PLAIN, 20));
-        JTextField nom = new JTextField("Entrer un nom de sauvegarde");
+        JTextField nom = new JTextField("");
         nom.setMaximumSize(new Dimension(500, 40));
         panel.add(nomLabel);
         panel.add(nom);
