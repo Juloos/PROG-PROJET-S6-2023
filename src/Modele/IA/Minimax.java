@@ -4,6 +4,8 @@ import Modele.Coups.Coup;
 import Modele.Jeux.Jeu;
 import Modele.Jeux.JeuGraphe;
 
+import static Global.Config.*;
+
 public abstract class Minimax {
     Coup coup;
     JeuGraphe pointeur;
@@ -63,7 +65,11 @@ public abstract class Minimax {
     public Coup calculerCoup(Jeu jeu) {
         pointeur = new JeuGraphe(jeu);
         coup = null;
+        if (DEBUG)
+            System.out.println("Minimax réfléchissionne...");
         parcourirArbre(PROFONDEUR_MAX, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+        if (DEBUG)
+            System.out.println("Minimax terminé.");
         return coup;
     }
 }

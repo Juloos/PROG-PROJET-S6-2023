@@ -2,31 +2,30 @@ package Modele.IA;
 
 import Modele.Coups.Coup;
 import Modele.Jeux.Jeu;
-import Modele.Jeux.JeuGraphe;
-import Modele.Joueurs.Joueur;
 
-import java.util.ArrayList;
 import java.util.Random;
 
-public class IAFacile implements IA {
+import static Global.Config.*;
+
+public class IAFacile extends Minimax implements IA {
     Random rand;
     int joueur;
 
     public IAFacile(int joueur) {
+        super(joueur, IA_FACILE_HEURISTIQUE, IA_FACILE_PROFONDEUR,  IA_FACILE_THRESHOLD);
         this.joueur = joueur;
         rand = new Random();
     }
 
     public IAFacile(int joueur, int seed) {
+        super(joueur, IA_FACILE_HEURISTIQUE, IA_FACILE_PROFONDEUR,  IA_FACILE_THRESHOLD);
         this.joueur = joueur;
         rand = new Random(seed);
     }
 
     @Override
     public Coup reflechir(Jeu j) {
-        JeuGraphe jg = new JeuGraphe(j);
-        ArrayList<Coup> coups = jg.coupsPossibles();
-        return coups.get(rand.nextInt(coups.size()));
+        return calculerCoup(j);
     }
 
     @Override
