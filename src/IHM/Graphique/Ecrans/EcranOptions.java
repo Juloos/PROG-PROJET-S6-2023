@@ -10,9 +10,10 @@ public class EcranOptions extends Ecran {
     IHMGraphique ihhm;
 
     private JCheckBox volumeSlider;
+
     public EcranOptions() {
         super("Options");
-        volumeSlider = new JCheckBox("Activer le son",true);
+        volumeSlider = new JCheckBox("Activer le son", true);
         volumeSlider.setHorizontalTextPosition(SwingConstants.LEFT);
         //Centrer le texte
         volumeSlider.setHorizontalAlignment(SwingConstants.CENTER);
@@ -31,7 +32,11 @@ public class EcranOptions extends Ecran {
     @Override
     public void open(IHMGraphique ihm) {
         super.open(ihm);
-        panel.setLayout(new GridLayout(2,2));
+    }
+
+    @Override
+    public void creation(IHMGraphique ihm) {
+        panel.setLayout(new GridLayout(2, 2));
         ImageIcon icon = new ImageIcon("res\\background2.png");
         this.backgroundImage = icon.getImage();
         ihhm = ihm;

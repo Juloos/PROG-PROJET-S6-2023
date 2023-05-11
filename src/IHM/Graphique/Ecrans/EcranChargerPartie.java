@@ -13,7 +13,10 @@ public class EcranChargerPartie extends Ecran {
     @Override
     public void open(IHMGraphique ihm) {
         super.open(ihm);
+    }
 
+    @Override
+    public void creation(IHMGraphique ihm) {
         panel.add(retour, BorderLayout.PAGE_END);
     }
 }

@@ -1,7 +1,7 @@
 package IHM.Actions;
 
 import Controleur.MoteurJeu;
-import Modele.Coup;
+import Modele.Coups.Coup;
 
 public class ActionJouerCoup implements ActionIHM {
 

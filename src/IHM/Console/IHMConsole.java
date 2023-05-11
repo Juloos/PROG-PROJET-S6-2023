@@ -1,10 +1,12 @@
 package IHM.Console;
 
 import Controleur.MoteurJeu;
-import IHM.Actions.ActionIHM;
-import IHM.Actions.ActionJouerCoup;
 import IHM.IHM;
-import Modele.*;
+import Modele.Actions.*;
+import Modele.Coord;
+import Modele.Coups.CoupAjout;
+import Modele.Coups.CoupDeplacement;
+import Modele.Jeux.Jeu;
 
 import java.util.Scanner;
 
@@ -25,30 +27,41 @@ public class IHMConsole extends IHM {
     @Override
     public Action attendreActionJoueur() {
         int numJoueur = moteurJeu.getJoueurActif().id;
-
-        System.out.println("Joueur " + (numJoueur + 1) + " quelle action voulez-vous faire (jouer, annuler, refaire, sauvegarder) ?");
-
-        String actionSouhaitee = input.nextLine();
+        Action action = null;
 
         do {
-            switch (actionSouhaitee.toLowerCase()) {
-                case "jouer":
-                    if (moteurJeu.estPhasePlacementPions()) {
-                        return attendrePlacementPion();
-                    } else {
-                        return attendreDeplacementPion();
-                    }
-                case "annuler":
-                    return new ActionAnnuler();
-                case "refaire":
-                    return new ActionRefaire();
-                case "sauvegarder":
-                    return new ActionSauvegarder();
-                default:
-                    System.out.println("Mais t'es con ou quoi fréro ?");
-                    break;
+            System.out.println("Joueur " + (numJoueur + 1) + " quelle action voulez-vous faire (jouer, annuler, refaire, sauvegarder) ?");
+            String actionSouhaitee = input.nextLine();
+
+            try {
+                switch (actionSouhaitee.toLowerCase()) {
+                    case "jouer":
+                        if (moteurJeu.estPhasePlacementPions()) {
+                            action = attendrePlacementPion();
+                        } else {
+                            action = attendreDeplacementPion();
+                        }
+                        break;
+                    case "annuler":
+                        action = new ActionAnnuler();
+                        break;
+                    case "refaire":
+                        action = new ActionRefaire();
+                        break;
+                    case "sauvegarder":
+                        action = new ActionSauvegarder("test");
+                        break;
+                    default:
+                        System.out.println("Mais t'es con ou quoi fréro ?");
+                        break;
+                }
+            } catch (Exception e) {
+                System.out.println("Mais t'es con ou quoi fréro ?");
+                action = null;
             }
-        } while(true);
+        } while (action == null || !action.peutAppliquer(moteurJeu));
+
+        return action;
     }
 
     private Action attendrePlacementPion() {
@@ -94,5 +107,10 @@ public class IHMConsole extends IHM {
         }
 
         return valeurs;
+    }
+
+    @Override
+    public void run() {
+
     }
 }
