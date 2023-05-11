@@ -40,7 +40,7 @@ public class MoteurJeu extends Thread {
         this.ihm = null;
         this.etat = EtatMoteurJeu.PARTIE_EN_COURS;
 
-        this.gestionnairePartie.lancerPartie(joueurs);
+        lancerPartie(joueurs);
     }
 
     public void debug(String message) {
