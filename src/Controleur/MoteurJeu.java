@@ -164,23 +164,17 @@ public class MoteurJeu extends Thread {
     }
 
     public synchronized void lancerPartie(Joueur[] joueurs) {
-        if (hasIHM()) {
-            this.gestionnairePartie = new GestionnairePartie(this);
-            this.gestionnairePartie.start();
-            debug("Lancement d'une nouvelle partie");
-            gestionnairePartie.lancerPartie(joueurs);
-        } else {
-            this.gestionnairePartie = new GestionnairePartie(this);
-            this.gestionnairePartie.lancerPartie(joueurs);
-            this.gestionnairePartie.start();
-        }
+        this.gestionnairePartie = new GestionnairePartie(this);
+        gestionnairePartie.lancerPartie(joueurs);
+        this.gestionnairePartie.start();
+        debug("Lancement d'une nouvelle partie");
     }
 
     public synchronized void lancerPartie(String nomSave) {
         this.gestionnairePartie = new GestionnairePartie(this);
+        gestionnairePartie.lancerPartie(nomSave);
         this.gestionnairePartie.start();
         debug("Lancement dune nouvelle partie depuis une sauvegarde");
-        gestionnairePartie.lancerPartie(nomSave);
     }
 
     public synchronized void arreterPartie() {
