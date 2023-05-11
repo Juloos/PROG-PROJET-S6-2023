@@ -14,7 +14,6 @@ public class GestionnairePartie extends Thread {
 
     public GestionnairePartie(MoteurJeu moteurJeu) {
         super();
-        this.nbPionsPlaces = 0;
         this.moteurJeu = moteurJeu;
         this.phasePartie = PhasesPartie.ATTENTE_PARTIE;
     }
@@ -25,7 +24,6 @@ public class GestionnairePartie extends Thread {
 
     public synchronized void jouerCoup(Coup coup) {
         jeu.jouer(coup);
-        nbPionsPlaces++;
         updateAffichage();
     }
 
@@ -36,6 +34,10 @@ public class GestionnairePartie extends Thread {
     }
 
     public synchronized boolean estPhasePlacementPions() {
+        nbPionsPlaces = 0;
+        for (int i  = 0; i < jeu.getNbJoueurs(); i++){
+            nbPionsPlaces += jeu.getJoueur(i).getPions().size();
+        }
         return partieEnCours() && nbPionsPlaces < jeu.getNbJoueurs() * jeu.getNbPions();
     }
 
@@ -53,14 +55,12 @@ public class GestionnairePartie extends Thread {
 
     public synchronized void annulerCoup() {
         moteurJeu.debug("Annulation du dernier coup joué");
-        nbPionsPlaces--;
         jeu.annuler();
         updateAffichage();
     }
 
     public synchronized void refaireCoup() {
         moteurJeu.debug("Refaison du dernier coup annulé");
-        nbPionsPlaces++;
         jeu.refaire();
         updateAffichage();
     }

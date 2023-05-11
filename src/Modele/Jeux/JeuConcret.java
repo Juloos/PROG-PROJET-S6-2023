@@ -99,6 +99,11 @@ public class JeuConcret extends Jeu {
         }
     }
 
+    public void updateJoueurFromeHist(){
+        super.joueurCourant = passe.peek().getJoueur();
+        joueurSuivant();
+    }
+
 
     public void sauvegarder(String fichier) {
         // Init fichier
@@ -289,7 +294,7 @@ public class JeuConcret extends Jeu {
                 }
             }
         jeu.setPasseFromFutur(tempFutur);
-
+        jeu.updateJoueurFromeHist();
             //terminaison
             sc_f.close();
             return jeu;
