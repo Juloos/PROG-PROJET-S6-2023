@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-œimport java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
@@ -115,13 +114,14 @@ public class EcranAccueil extends Ecran {
             }
         });
     }
+
     @Override
-    public void resized(){
+    public void resized() {
         int width = panel.getWidth();
         int height = panel.getHeight();
-        int buttonWidth = (int)(width * 0.3);
-        int buttonHeight = (int)(height * 0.06);
-        Font buttonFont = new Font("Forte", Font.PLAIN, (int)(height * 0.04));
+        int buttonWidth = (int) (width * 0.3);
+        int buttonHeight = (int) (height * 0.06);
+        Font buttonFont = new Font("Forte", Font.PLAIN, (int) (height * 0.04));
 
         nouvellePartie.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
         nouvellePartie.setFont(buttonFont);

@@ -1,8 +1,8 @@
 package IHM.Graphique.Ecrans;
 
-import Global.Config;
 import IHM.Graphique.Composants.InfoJoueur;
 import IHM.Graphique.Composants.JButtonIcon;
+import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.PopUp.PopUpMenu;
 import Modele.Actions.ActionAnnuler;
@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 
 public class EcranJeu extends Ecran {
 
+
     // Les menus des informations des joueurs
     InfoJoueur[] joueurs;
     // Le menu affiché sur la droite de l'écran
@@ -30,6 +31,9 @@ public class EcranJeu extends Ecran {
     // - refaire le dernier coup annulé
     JButton options, annuler, refaire;
 
+    PlateauGraphique plateauGraphique;
+    int joueurActif;
+
     public EcranJeu() {
         super("Partie en cours");
     }
@@ -41,14 +45,16 @@ public class EcranJeu extends Ecran {
 
     @Override
     public void creation(IHMGraphique ihm) {
-        panel.setLayout(new BorderLayout());
+        this.plateauGraphique = ihm.getPlateauGraphique();
 
-        joueurs = new InfoJoueur[Config.NB_MAX_JOUEURS];
+        panel.setLayout(new BorderLayout());
 
         menu = new JPanel(new GridLayout(0, 1));
 
+        joueurs = new InfoJoueur[ihm.getMoteurJeu().getJeu().getNbJoueurs()];
+        Joueur[] jeuJoueurs = ihm.getMoteurJeu().getJeu().getJoueurs();
         for (int i = 0; i < joueurs.length; i++) {
-            InfoJoueur infoJoueur = new InfoJoueur();
+            InfoJoueur infoJoueur = new InfoJoueur(jeuJoueurs[i], i == joueurs.length - 1);
             joueurs[i] = infoJoueur;
             menu.add(infoJoueur);
         }
@@ -111,14 +117,13 @@ public class EcranJeu extends Ecran {
         super.update(jeu);
 
         Joueur[] joueursJeu = jeu.getJoueurs();
-        int joueurActif = jeu.getJoueur().getID();
+        joueurActif = jeu.getJoueur().getID();
         for (int i = 0; i < joueurs.length; i++) {
             InfoJoueur joueur = joueurs[i];
+            joueur.update(joueursJeu[i].getID() == joueurActif);
 
-            if (i < joueursJeu.length) {
-                joueur.update(joueursJeu[i]);
-            } else {
-                joueur.setVisible(false);
+            if (joueursJeu[i].getID() == joueurActif) {
+                plateauGraphique.setPositionFlecheJoueurActif(menu.getX() - 110, joueur.getY(), 100, 100);
             }
         }
     }
@@ -144,5 +149,7 @@ public class EcranJeu extends Ecran {
     public void resized() {
         final int menuWidth = panel.getWidth() * 2 / 7;
         menu.setPreferredSize(new Dimension(menuWidth, panel.getHeight()));
+
+        plateauGraphique.setPositionFlecheJoueurActif(menu.getX() - 110, joueurs[joueurActif].getY(), 100, 100);
     }
 }

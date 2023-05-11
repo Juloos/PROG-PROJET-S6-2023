@@ -19,6 +19,8 @@ public class PlateauGraphique extends JComponent implements Runnable {
     Image[][] sprites;
     double TAILLE_CASES, Y_OFFSET, ESPACEMENT_TUILES;
     List<Coord> tuilesSurbrillance;
+    Image ARROW_PLAYER_ACTIVE;
+    int arrow_X, arrow_Y, arrow_Width, arrow_Height;
     private Jeu jeu;
     private volatile int placementPingouinX, placementPingouinY;
 
@@ -93,6 +95,8 @@ public class PlateauGraphique extends JComponent implements Runnable {
                         (int) TAILLE_CASES,
                         null);
             }
+
+            drawable.drawImage(ARROW_PLAYER_ACTIVE, arrow_X, arrow_Y, arrow_Width, arrow_Height, null);
         }
     }
 
@@ -137,6 +141,14 @@ public class PlateauGraphique extends JComponent implements Runnable {
         this.tuilesSurbrillance = tuilesSurbrillance;
     }
 
+    public synchronized void setPositionFlecheJoueurActif(int x, int y, int width, int height) {
+        this.arrow_X = x;
+        this.arrow_Y = y;
+        this.arrow_Width = width;
+        this.arrow_Height = height;
+        System.out.println(arrow_X + " " + arrow_Y);
+    }
+
     public synchronized void setPlacementPingouin(int x, int y) {
         this.placementPingouinX = x;
         this.placementPingouinY = y;
@@ -170,6 +182,13 @@ public class PlateauGraphique extends JComponent implements Runnable {
                 "1PingouinJaune.png", "2PingouinJaune.png", "3PingouinJaune.png"}) {
             sprites[(i / 3) + 1][(i % 3) + 1] = chargerImage(chemin + fileName);
             i++;
+        }
+
+        try {
+            InputStream in = new FileInputStream("res/arrow_player.png");
+            ARROW_PLAYER_ACTIVE = ImageIO.read(in);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

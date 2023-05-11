@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static Global.Config.NB_MAX_JOUEURS;
+import static Global.Config.NB_MAX_JOUEUR;
 import static Global.Config.NB_MIN_JOUEUR;
 
 public class IHMConsole extends IHM {
@@ -168,7 +168,7 @@ public class IHMConsole extends IHM {
 
                     } while (!ligne.equals("retour") &&
                             (!ligne.equals("") || joueurs.size() < NB_MIN_JOUEUR) &&
-                            joueurs.size() < NB_MAX_JOUEURS);
+                            joueurs.size() < NB_MAX_JOUEUR);
 
                     if (!ligne.equals("retour")) {
                         getMoteurJeu().lancerPartie(joueurs.toArray(new Joueur[0]));

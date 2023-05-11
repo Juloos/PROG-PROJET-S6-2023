@@ -55,12 +55,14 @@ public class GestionnairePartie extends Thread {
         moteurJeu.debug("Annulation du dernier coup joué");
         nbPionsPlaces--;
         jeu.annuler();
+        updateAffichage();
     }
 
     public synchronized void refaireCoup() {
         moteurJeu.debug("Refaison du dernier coup annulé");
         nbPionsPlaces++;
         jeu.refaire();
+        updateAffichage();
     }
 
     private boolean peutJouer(Jeu jeu) {
@@ -77,6 +79,11 @@ public class GestionnairePartie extends Thread {
         }
         phasePartie = PhasesPartie.ATTENTE_PARTIE;
         while (phasePartie == PhasesPartie.ATTENTE_PARTIE) ;
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+        }
 
         moteurJeu.debug("Début de la partie");
         updateAffichage();

@@ -3,7 +3,6 @@ package IHM.Graphique;
 import Controleur.MoteurJeu;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.EcranAccueil;
-import IHM.Graphique.Ecrans.EcranJeu;
 import IHM.Graphique.PopUp.PopUpFinPartie;
 import IHM.IHM;
 import Modele.Actions.Action;
@@ -11,13 +10,10 @@ import Modele.Actions.ActionCoup;
 import Modele.Coord;
 import Modele.Coups.CoupAjout;
 import Modele.Coups.CoupDeplacement;
-import Modele.Jeux.Jeu;
 import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.JoueurHumain;
 import com.sun.istack.internal.NotNull;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.swing.*;
@@ -44,17 +40,17 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         fenetres = new Stack<>();
 
         frame = new JFrame("");
-        try {
-            // chargement du fichier audio
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("soundtrack.wav")); // "res/Wallpaper.wav
-            // création du Clip
-            clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.loop(Clip.LOOP_CONTINUOUSLY); // boucle infinie
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        setVolume(0);
+//        try {
+//            // chargement du fichier audio
+//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("res/sons/soundtrack.wav")); // "res/Wallpaper.wav
+//            // création du Clip
+//            clip = AudioSystem.getClip();
+//            clip.open(audioInputStream);
+//            clip.loop(Clip.LOOP_CONTINUOUSLY); // boucle infinie
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        setVolume(0);
 
         plateauGraphique = new PlateauGraphique();
         Thread pgt = new Thread(plateauGraphique);
@@ -81,10 +77,7 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
     public synchronized void updateAffichage(JeuConcret jeu) {
         // Sert uniquement à mettre à jour l'affichage de l'IHM
         try {
-            fenetres.peek().update(this);
-            fenetres.peek().update(jeu);
-            fenetres.peek().resized();
-            plateauGraphique.setJeu(jeu);
+
             if (jeu.estTermine()) {
                 ouvrirFenetre(new PopUpFinPartie());
             } else {
@@ -93,8 +86,14 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
                 } else {
                     plateauGraphique.setTuilesSurbrillance(null);
                 }
+                plateauGraphique.setJeu(jeu);
+                plateauGraphique.repaint();
+
+                fenetres.peek().update(this);
+                fenetres.peek().update(jeu);
+                fenetres.peek().resized();
             }
-            plateauGraphique.repaint();
+
         } catch (Exception e) {
         }
     }
@@ -121,7 +120,6 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
             }
         }
 
@@ -246,10 +244,10 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
                             ArrayList<Coord> coords = getMoteurJeu().getJeu().deplacementsPion(selection);
                             coords.add(selection);
                             plateauGraphique.setTuilesSurbrillance(coords);
-                            plateauGraphique.repaint();
                         } else {
                             // Le joueur n'a pas choisi un de ses pions
                             selection = null;
+                            plateauGraphique.setTuilesSurbrillance(null);
                         }
 
                     } else {
@@ -267,6 +265,8 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
                             coords.add(selection);
                             plateauGraphique.setTuilesSurbrillance(coords);
                             plateauGraphique.repaint();
+                        } else {
+                            plateauGraphique.setTuilesSurbrillance(null);
                         }
                     }
                 }

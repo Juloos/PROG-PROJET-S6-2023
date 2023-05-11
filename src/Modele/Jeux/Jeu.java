@@ -32,7 +32,7 @@ public abstract class Jeu {
         plateau = new Plateau();
         this.joueurs = joueurs;
         nbJoueurs = joueurs.length;
-        if (nbJoueurs > NB_MAX_JOUEURS)
+        if (nbJoueurs > NB_MAX_JOUEUR)
             throw new IllegalArgumentException("Trop de joueurs");
         joueurCourant = 0;
         nbPions = NB_PIONS_TOTAL / nbJoueurs;
@@ -42,7 +42,7 @@ public abstract class Jeu {
         this.plateau = plateau;
         this.joueurs = joueurs;
         nbJoueurs = joueurs.length;
-        if (nbJoueurs > NB_MAX_JOUEURS)
+        if (nbJoueurs > NB_MAX_JOUEUR)
             throw new IllegalArgumentException("Trop de joueurs");
         joueurCourant = 0;
         nbPions = NB_PIONS_TOTAL / nbJoueurs;
