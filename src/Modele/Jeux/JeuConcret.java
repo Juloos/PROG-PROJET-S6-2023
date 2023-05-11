@@ -99,6 +99,11 @@ public class JeuConcret extends Jeu {
         }
     }
 
+    public void updateJoueurFromeHist(){
+        super.joueurCourant = passe.peek().getJoueur();
+        joueurSuivant();
+    }
+
 
     public void sauvegarder(String fichier) {
         // Init fichier
@@ -180,9 +185,11 @@ public class JeuConcret extends Jeu {
                         System.err.println(" erreur : Joueur non typé");
                         throw new Exception();
                     case 1:
+                        sc_f.nextLine();
                         nom = sc_f.nextLine();
                         break;
                     case 2:
+                        sc_f.nextLine();
                         nom = sc_f.nextLine();
                         switch (nom) {
                             case "ALEATOIRE":
@@ -287,7 +294,7 @@ public class JeuConcret extends Jeu {
                 }
             }
         jeu.setPasseFromFutur(tempFutur);
-
+        jeu.updateJoueurFromeHist();
             //terminaison
             sc_f.close();
             return jeu;

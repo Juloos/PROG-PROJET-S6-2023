@@ -13,36 +13,21 @@ public class JoueurIA extends Joueur {
 
     public JoueurIA(int id) {
         super(id);
-        this.ia = new IAAleatoire(this);
+        this.ia = new IAAleatoire(id);
     }
 
     public JoueurIA(int id, IA.Difficulte d) {
         super(id);
-        assignerIA(d);
+        ia = IA.getIA(d, id);
+        if (ia == null)
+            throw new IllegalArgumentException("Difficulté inconnue : " + d);
     }
 
     public JoueurIA(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, IA.Difficulte d) {
         super(id, score, tuiles, pions);
-        assignerIA(d);
-    }
-
-    private void assignerIA(IA.Difficulte d) {
-        switch (d) {
-            case ALEATOIRE:
-                ia = new IAAleatoire(this);
-                break;
-            case FACILE:
-                ia = new IAFacile(this);
-                break;
-            case MOYEN:
-                ia = new IAMoyen(this);
-                break;
-            case DIFFICILE:
-                ia = new IADifficile(this);
-                break;
-            default:
-                throw new IllegalArgumentException("Difficulté inconnue : " + d);
-        }
+        ia = IA.getIA(d, id);
+        if (ia == null)
+            throw new IllegalArgumentException("Difficulté inconnue : " + d);
     }
 
     @Override

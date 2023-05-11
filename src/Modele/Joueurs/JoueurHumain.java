@@ -11,11 +11,11 @@ public class JoueurHumain extends Joueur {
 
     public JoueurHumain(int id) {
         super(id);
-        this.nom = "Joueur "+id;
+        this.nom = "Joueur "+(1+id);
     }
     public JoueurHumain(int id, int score, int tuiles, HashMap<Coord,Boolean> pions){
         super(id, score, tuiles, pions);
-        this.nom = "Joueur "+id;
+        this.nom = "Joueur "+(1+id);
     }
 
     public JoueurHumain(int id, String nom) {
@@ -40,6 +40,10 @@ public class JoueurHumain extends Joueur {
 
     public String getNom() {
         return nom;
+    }
+
+    public void setNom(String nom){
+        this.nom = nom;
     }
 
     @Override

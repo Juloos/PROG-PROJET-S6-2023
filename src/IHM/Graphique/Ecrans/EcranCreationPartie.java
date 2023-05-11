@@ -9,6 +9,7 @@ import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
@@ -77,14 +78,15 @@ public class EcranCreationPartie extends Ecran {
                     if (((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex() != 0) {
                         IA.Difficulte diff = IA.Difficulte.values()[((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex()];
                         System.out.println(diff);
-                        joueurs[i] = new JoueurIA(((MenuJoueur) joueursPanel.getComponent(i)).num - 1, diff);
-                        joueurs[i].nom = "IA " + diff;
+                        joueurs[i] = new JoueurIA(((MenuJoueur) joueursPanel.getComponent(i)).num - 1,diff);
+                        joueurs[i].setNom("IA " + diff);
                     } else {
                         joueurs[i] = new JoueurHumain(((MenuJoueur) joueursPanel.getComponent(i)).num - 1);
-                        joueurs[i].nom = ((MenuJoueur) joueursPanel.getComponent(i)).nom.getText();
+                        joueurs[i].setNom(((MenuJoueur) joueursPanel.getComponent(i)).nom.getText());
                     }
                 }
                 ihm.getMoteurJeu().lancerPartie(joueurs);
+                ihm.ouvrirFenetre(new EcranJeu());
             }
         });
         buttons.add(retour);
@@ -137,6 +139,8 @@ public class EcranCreationPartie extends Ecran {
             this.num = num;
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             setBackground(Colors.TRANSPARENT);
+            Border border = BorderFactory.createMatteBorder(0, 0, 0, 2, Color.BLACK);
+            setBorder(border);
 
             numJoueur = new JLabel("Joueur " + num, SwingConstants.CENTER);
             if (num == 1) {
@@ -210,7 +214,7 @@ public class EcranCreationPartie extends Ecran {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
                     int selected = difficultesIA.getSelectedIndex();
-                    if (selected != 0 && isIA[0] == false) {
+                    if (selected != 0 && !isIA[0]) {
                         remove(nom);
                         ImageIcon image = new ImageIcon("res/ia.png");
                         image.setImage(image.getImage().getScaledInstance(300, 500, Image.SCALE_DEFAULT));
@@ -235,14 +239,13 @@ public class EcranCreationPartie extends Ecran {
                         panelia.revalidate();
                         isIA[0] = true;
 
-                    } else if (selected == 0 && isIA[0] == true) {
-                        panelia.remove(1);
-                        panelia.repaint();
-                        panelia.revalidate();
-                        isIA[0] = false;
-                    } else {
-                        ;
                     }
+                    else if(selected == 0 && isIA[0]) {
+                            panelia.remove(1);
+                            panelia.repaint();
+                            panelia.revalidate();
+                            isIA[0] = false;
+                        }
                 }
             });
 
