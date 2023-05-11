@@ -85,8 +85,7 @@ public class GestionnairePartie extends Thread {
         if (moteurJeu.hasIHM()) {
             moteurJeu.attendreNouvellePartie();
         }
-        phasePartie = PhasesPartie.ATTENTE_PARTIE;
-        while (moteurJeu.hasIHM() && phasePartie == PhasesPartie.ATTENTE_PARTIE) ;
+        while (phasePartie == PhasesPartie.ATTENTE_PARTIE) ;
 
         moteurJeu.debutDePartie();
 
