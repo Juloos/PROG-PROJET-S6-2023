@@ -7,25 +7,31 @@ import Modele.Jeux.JeuGraphe;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static Global.Config.*;
-
 public class H3 implements Heuristique {
     Random rand = new Random();
+
+    final int NB_SIMULE;
+
+    public H3() {
+        this(100);
+    }
+
+    public H3(int nb_simulations) {
+        NB_SIMULE = nb_simulations;
+    }
 
     @Override
     public double evaluer(Jeu j, int pdvJoueur) {
         JeuGraphe jg;
         double nbGagnant = 0;
-        for (int i = 0; i < MONTE_CARLO_NB_SIMULE; i++) {
+        for (int i = 0; i < NB_SIMULE; i++) {
             jg = new JeuGraphe(j);
-            ArrayList<Coup> coups = jg.coupsPossibles();
-            while (!coups.isEmpty()) {
+            ArrayList<Coup> coups;
+            while (!(coups = jg.coupsPossibles()).isEmpty())
                 jg.jouer(coups.get(rand.nextInt(coups.size())));
-                coups = jg.coupsPossibles();
-            }
             if (jg.getWinner().contains(pdvJoueur))
                 nbGagnant++;
         }
-        return 2 * nbGagnant / MONTE_CARLO_NB_SIMULE - 1;
+        return 2 * nbGagnant / NB_SIMULE - 1;
     }
 }

@@ -9,6 +9,7 @@ import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
@@ -138,6 +139,8 @@ public class EcranCreationPartie extends Ecran {
             this.num = num;
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             setBackground(Colors.TRANSPARENT);
+            Border border = BorderFactory.createMatteBorder(0, 0, 0, 2, Color.BLACK);
+            setBorder(border);
 
             numJoueur = new JLabel("Joueur " + num, SwingConstants.CENTER);
             if (num == 1) {
@@ -215,7 +218,7 @@ public class EcranCreationPartie extends Ecran {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
                     int selected = difficultesIA.getSelectedIndex();
-                    if (selected != 0 && isIA[0] == false) {
+                    if (selected != 0 && !isIA[0]) {
                         remove(nom);
                         ImageIcon image = new ImageIcon("res/ia.png");
                         image.setImage(image.getImage().getScaledInstance(300, 500, Image.SCALE_DEFAULT));
@@ -241,15 +244,12 @@ public class EcranCreationPartie extends Ecran {
                         isIA[0] = true;
 
                     }
-                    else if(selected == 0 && isIA[0] == true) {
+                    else if(selected == 0 && isIA[0]) {
                             panelia.remove(1);
                             panelia.repaint();
                             panelia.revalidate();
                             isIA[0] = false;
                         }
-                    else {
-                        ;
-                    }
                 }
             });
 
