@@ -180,9 +180,11 @@ public class JeuConcret extends Jeu {
                         System.err.println(" erreur : Joueur non typé");
                         throw new Exception();
                     case 1:
+                        sc_f.nextLine();
                         nom = sc_f.nextLine();
                         break;
                     case 2:
+                        sc_f.nextLine();
                         nom = sc_f.nextLine();
                         switch (nom) {
                             case "ALEATOIRE":

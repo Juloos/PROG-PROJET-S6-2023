@@ -78,10 +78,10 @@ public class EcranCreationPartie extends Ecran {
                         IA.Difficulte diff = IA.Difficulte.values()[((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex()];
                         System.out.println(diff);
                         joueurs[i] = new JoueurIA(((MenuJoueur) joueursPanel.getComponent(i)).num - 1,diff);
-                        joueurs[i].nom = "IA " + diff;
+                        joueurs[i].setNom("IA " + diff);
                     } else {
                         joueurs[i] = new JoueurHumain(((MenuJoueur) joueursPanel.getComponent(i)).num - 1);
-                        joueurs[i].nom = ((MenuJoueur) joueursPanel.getComponent(i)).nom.getText();
+                        joueurs[i].setNom(((MenuJoueur) joueursPanel.getComponent(i)).nom.getText());
                     }
                 }
                 ihm.getMoteurJeu().lancerPartie(joueurs);

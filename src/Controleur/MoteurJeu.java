@@ -113,6 +113,7 @@ public class MoteurJeu extends Thread {
 
     public synchronized void sauvegarder(String nomSave) {
         debug("Sauvegarde de la partie");
+        jeu = gestionnairePartie.getJeu();
         try {
             jeu.sauvegarder(nomSave + ".txt");
         } catch (Exception e) {

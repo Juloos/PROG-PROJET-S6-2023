@@ -18,7 +18,7 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
     int tuiles;
     boolean termine;
 
-    public String nom;
+    String nom;
 
     volatile Action action;
 
@@ -62,6 +62,8 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
     public String getNom() {
         return nom;
     }
+
+    public void setNom(String nom){ this.nom = nom; }
 
     public void ajouterTuile(int score) {
         this.score += score;

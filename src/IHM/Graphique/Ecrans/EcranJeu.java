@@ -1,5 +1,6 @@
 package IHM.Graphique.Ecrans;
 
+import Global.Config;
 import IHM.Graphique.Composants.InfoJoueur;
 import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.Composants.PlateauGraphique;
@@ -16,7 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class EcranJeu extends Ecran {
-
 
     // Les menus des informations des joueurs
     InfoJoueur[] joueurs;
@@ -48,6 +48,8 @@ public class EcranJeu extends Ecran {
         this.plateauGraphique = ihm.getPlateauGraphique();
 
         panel.setLayout(new BorderLayout());
+
+        joueurs = new InfoJoueur[Config.NB_MAX_JOUEUR];
 
         menu = new JPanel(new GridLayout(0, 1));
 
