@@ -1,17 +1,32 @@
 package Modele.IA;
 
 import Modele.Coups.Coup;
-import Modele.Jeux.JeuConcret;
+import Modele.Jeux.Jeu;
 
 public interface IA {
-    public Coup reflechir(JeuConcret j);
+    Coup reflechir(Jeu j);
 
-    public IA.Difficulte getDifficulte();
+    IA.Difficulte getDifficulte();
 
-    public static enum Difficulte {
+    enum Difficulte {
         ALEATOIRE, // identifiant : 0
         FACILE,    // identifiant : 1
         MOYEN,     // identifiant : 2
         DIFFICILE  // identifiant : 3
+    }
+
+    static IA getIA(Difficulte d, int joueur) {
+        switch (d) {
+            case ALEATOIRE:
+                return new IAAleatoire(joueur);
+            case FACILE:
+                return new IAFacile(joueur);
+            case MOYEN:
+                return new IAMoyen(joueur);
+            case DIFFICILE:
+                return new IADifficile(joueur);
+            default:
+                return null;
+        }
     }
 }

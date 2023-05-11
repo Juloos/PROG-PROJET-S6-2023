@@ -17,10 +17,8 @@ public class H4 implements Heuristique {
 
         Set<Coord> accessible = new HashSet<>();
         accessible.add(pion);
-        Iterator<Coord> iterator = accessible.iterator();
-        while (iterator.hasNext()) {
-            Coord element = iterator.next();
-            for (Coord v : element.voisins()){
+        for (Coord element : accessible) {
+            for (Coord v : element.voisins()) {
                 if (j.estPion(v))
                     return false;
                 if (j.getPlateau().estCoordValide(v))
