@@ -1,10 +1,12 @@
 package IHM.Graphique;
 
+import Modele.Jeux.Jeu;
+
 import javax.swing.*;
 import java.awt.*;
 
 public abstract class Fenetre {
-    
+
     protected JPanel panel;
     // Le bouton pour retourner à la fenêtre précédente
     protected JButton retour;
@@ -59,6 +61,9 @@ public abstract class Fenetre {
      * @param ihm : l'IHM graphique sur laquelle est affichée la fenêtre
      */
     public void update(IHMGraphique ihm) {
+    }
+
+    public void update(Jeu jeu) {
     }
 
     /**

@@ -1,6 +1,5 @@
 package IHM.Graphique.Composants;
 
-import IHM.Graphique.Couleurs;
 import Modele.Joueurs.Joueur;
 
 import javax.swing.*;
@@ -15,12 +14,11 @@ public class InfoJoueur extends JPanel {
     JLabel nbPoissons, nbTuiles;
     Joueur joueur;
 
-    public InfoJoueur(Joueur joueur) {
+    public InfoJoueur() {
         super();
-        this.joueur = joueur;
         setLayout(new BorderLayout());
 
-        JLabel nom = new JLabel("Joueur " + (joueur.getID() + 1));
+        JLabel nom = new JLabel("");
         nom.setFont(new Font("Arial", Font.PLAIN, 35));
         add(nom, BorderLayout.NORTH);
 
@@ -29,14 +27,14 @@ public class InfoJoueur extends JPanel {
         infos.setBackground(new Color(0, 0, 0, 0));
         infos.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
-        nbPoissons = new JLabel("x " + joueur.getScore());
+        nbPoissons = new JLabel("");
         nbPoissons.setFont(new Font("Arial", Font.BOLD, 25));
         nbPoissons.setIcon(resizeIcon(FISH, 80, 80));
         infos.add(nbPoissons);
 
         add(Box.createHorizontalGlue());
 
-        nbTuiles = new JLabel("x " + joueur.getTuiles());
+        nbTuiles = new JLabel("");
         nbTuiles.setIcon(resizeIcon(ICE, 30, 30));
         nbTuiles.setFont(new Font("Arial", Font.PLAIN, 20));
         infos.add(nbTuiles);
@@ -46,7 +44,7 @@ public class InfoJoueur extends JPanel {
         setBorder(new EmptyBorder(0, 20, 0, 0));
     }
 
-    public void update(boolean estActif) {
+    public void update(Joueur joueur) {
         nbPoissons.setText("x " + joueur.getScore());
         nbTuiles.setText("x " + joueur.getTuiles());
 
@@ -54,13 +52,6 @@ public class InfoJoueur extends JPanel {
         Border padding = BorderFactory.createEmptyBorder(15, 20, 0, 0);
 
         setBorder(BorderFactory.createCompoundBorder(lineBottom, padding));
-
-        setBackground(estActif ? Couleurs.COULEURS_JOUEURS[joueur.getID()] : Couleurs.TRANSPARENCE);
-    }
-
-
-    public int getJoueurID() {
-        return joueur.getID();
     }
 
     private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {

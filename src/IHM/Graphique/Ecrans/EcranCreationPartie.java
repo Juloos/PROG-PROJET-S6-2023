@@ -3,6 +3,7 @@ package IHM.Graphique.Ecrans;
 import Global.Config;
 import IHM.Colors;
 import IHM.Graphique.IHMGraphique;
+import Modele.IA.IA;
 import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
@@ -42,7 +43,7 @@ public class EcranCreationPartie extends Ecran {
         label.setFont(new Font("Impact", Font.PLAIN, 48));
         panel.add(label, BorderLayout.PAGE_START);
 
-        joueursPanel = new JPanel(new GridLayout(0, Config.NB_MAX_JOUEUR));
+        joueursPanel = new JPanel(new GridLayout(0, Config.NB_MAX_JOUEURS));
         joueursPanel.setAlignmentX(JScrollPane.CENTER_ALIGNMENT);
 
         joueursPanel.setBackground(Colors.TRANSPARENT);
@@ -70,16 +71,18 @@ public class EcranCreationPartie extends Ecran {
         lancerPartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-//                Joueur[] joueurs = new Joueur[joueursPanel.getComponentCount()];
-//                ihm.getMoteurJeu().debug("Nombre de joueurs : " + joueursPanel.getComponentCount());
-//
-//                for (int i = 0; i < joueursPanel.getComponentCount(); i++) {
-//                    joueurs[i] = ((MenuJoueur) joueursPanel.getComponent(i)).getJoueur();
-//                }
-//                ihm.getMoteurJeu().lancerPartie(new Joueur[]{new JoueurIA(0), new JoueurIA(1)});
-                ihm.getMoteurJeu().lancerPartie(new Joueur[]{new JoueurHumain(0), new JoueurIA(1), new JoueurIA(2)});
-                System.out.println("Fin lancement partie");
+                Joueur joueurs[] = new Joueur[nbJoueurs];
+                for (int i = 0; i < nbJoueurs; i++) {
+                    //si le joueur est une IA
+                    if (((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex() != 0) {
+                        IA.Difficulte diff = IA.Difficulte.values()[((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex()];
+                        joueurs[i] = new JoueurIA(((MenuJoueur) joueursPanel.getComponent(i)).num - 1, diff);
+                    } else {
+                        joueurs[i] = new JoueurHumain(((MenuJoueur) joueursPanel.getComponent(i)).num - 1);
+                    }
+                }
                 ihm.ouvrirFenetre(new EcranJeu());
+                ihm.getMoteurJeu().lancerPartie(joueurs);
             }
         });
         buttons.add(retour);
@@ -89,7 +92,7 @@ public class EcranCreationPartie extends Ecran {
 
     protected void nouveauJoueur() {
         nbJoueurs++;
-        if (nbJoueurs == Config.NB_MAX_JOUEUR) {
+        if (nbJoueurs == Config.NB_MAX_JOUEURS) {
             ajouterJoueur.setVisible(false);
         }
 
@@ -100,7 +103,7 @@ public class EcranCreationPartie extends Ecran {
 
     protected void supprimerJoueur(int num) {
         nbJoueurs--;
-        if (nbJoueurs < Config.NB_MAX_JOUEUR) {
+        if (nbJoueurs < Config.NB_MAX_JOUEURS) {
             ajouterJoueur.setVisible(true);
         }
 
@@ -115,12 +118,12 @@ public class EcranCreationPartie extends Ecran {
     @Override
     public void close(IHMGraphique ihm) {
         super.close(ihm);
-        System.out.println("Fermeture fenetre");
     }
 
     private class MenuJoueur extends JPanel {
 
         JLabel numJoueur;
+
         int num;
         JComboBox<String> difficultesIA;
         Button close;
@@ -128,7 +131,7 @@ public class EcranCreationPartie extends Ecran {
 
         public MenuJoueur(int num) {
             super();
-
+            this.num = num;
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             setBackground(Colors.TRANSPARENT);
 
@@ -243,7 +246,7 @@ public class EcranCreationPartie extends Ecran {
                 closeAction = new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
-                        supprimerJoueur(num - 1);
+                        supprimerJoueur(num);
                     }
                 };
                 close.addActionListener(closeAction);
@@ -253,7 +256,6 @@ public class EcranCreationPartie extends Ecran {
         }
 
         private void updateNumJoueur(int num) {
-            this.num = num;
             close.removeActionListener(closeAction);
             closeAction = new ActionListener() {
                 @Override
@@ -262,14 +264,6 @@ public class EcranCreationPartie extends Ecran {
                 }
             };
             close.addActionListener(closeAction);
-        }
-
-        public Joueur getJoueur() {
-            if (difficultesIA.getSelectedIndex() == 0) {
-                return new JoueurHumain(num);
-            } else {
-                return new JoueurIA(num);
-            }
         }
     }
 }

@@ -32,7 +32,7 @@ public abstract class Jeu {
         plateau = new Plateau();
         this.joueurs = joueurs;
         nbJoueurs = joueurs.length;
-        if (nbJoueurs > NB_MAX_JOUEUR)
+        if (nbJoueurs > NB_MAX_JOUEURS)
             throw new IllegalArgumentException("Trop de joueurs");
         joueurCourant = 0;
         nbPions = NB_PIONS_TOTAL / nbJoueurs;
@@ -42,7 +42,7 @@ public abstract class Jeu {
         this.plateau = plateau;
         this.joueurs = joueurs;
         nbJoueurs = joueurs.length;
-        if (nbJoueurs > NB_MAX_JOUEUR)
+        if (nbJoueurs > NB_MAX_JOUEURS)
             throw new IllegalArgumentException("Trop de joueurs");
         joueurCourant = 0;
         nbPions = NB_PIONS_TOTAL / nbJoueurs;
@@ -60,6 +60,14 @@ public abstract class Jeu {
         this.nbJoueurs = jeu.nbJoueurs;
         this.nbPions = jeu.nbPions;
         this.joueurCourant = jeu.joueurCourant;
+    }
+
+    public Joueur[] getJoueurs() {
+        Joueur[] copyJoueurs = new Joueur[getNbJoueurs()];
+        for (int i = 0; i < getNbJoueurs(); i++) {
+            copyJoueurs[i] = getJoueur(i).clone();
+        }
+        return joueurs;
     }
 
     public Joueur getJoueur() {
@@ -234,7 +242,8 @@ public abstract class Jeu {
         this.getJoueur(j).supprimerPion(cible);
         this.joueurCourant = j;
     }
-    public void annulerTerminaison(int joueur,Coord source, int oldVal){
+
+    public void annulerTerminaison(int joueur, Coord source, int oldVal) {
         this.getPlateau().set(source, oldVal);
         this.getJoueur(joueur).ajouterPion(source);
         this.getJoueur(joueur).replacerPion(source, true);

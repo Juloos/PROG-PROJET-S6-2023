@@ -18,7 +18,8 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Stack;
 
-import static Global.Config.*;
+import static Global.Config.TAILLE_PLATEAU_X;
+import static Global.Config.TAILLE_PLATEAU_Y;
 
 public class JeuConcret extends Jeu {
     Stack<Coup> passe;
@@ -48,101 +49,12 @@ public class JeuConcret extends Jeu {
         this.future = jeu.future;
     }
 
-    public ArrayList<Coup> historique(int jusquaJoueur) {
-        int dernierCoup = passe.size() - 1;
-        while (dernierCoup >= 0 && passe.get(dernierCoup).getJoueur() != jusquaJoueur)
-            dernierCoup--;
-        ArrayList<Coup> coups = new ArrayList<>();
-        for (int i = Integer.max(dernierCoup, 0); i < passe.size(); i++)
-            coups.add(passe.get(i));
-        return coups;
-    }
-
-    public Stack<Coup> getPasse() {
-        return passe;
-    }
-
-    public Stack<Coup> getFuture() {
-        return future;
-    }
-
-    public void setPasseFromFutur(Stack<Coup> futur) {
-        while(!futur.empty()){
-            this.passe.push(futur.pop());
-        }
-    }
-
-    public void jouer(Coup c) {
-        super.jouer(c);
-        passe.push(c);
-        future.clear();  // on doit vider la pile si l'on fait de nouveau coup après avoir reculer
-    }
-
-    public void annuler() {
-        if (!passe.empty()) {
-            Coup c = passe.pop();
-            c.annuler(this);
-            future.push(c);
-        } else {
-            System.out.println("Aucune action a annuler");
-        }
-    }
-
-    public void refaire() {
-        if (!future.empty()) {
-            Coup c = future.pop();
-            super.jouer(c);
-            passe.push(c);
-        } else {
-            System.out.println("Aucune action a refaire");
-        }
-    }
-
-
-    public void sauvegarder(String fichier) throws Exception {
-        // Init fichier
-        File f = new File(fichier);
-        f.setReadable(true);
-        f.setWritable(true);
-        PrintWriter w_f = new PrintWriter(f);
-
-        // Init var
-        String sauv_data = "";
-        Coup elem_hist;
-
-        // Sauvegarde des joueurs a l'instant de la sauvegarde
-        w_f.println(nbJoueurs);
-        for (int i = 0; i < nbJoueurs; i++) {
-            w_f.println(joueurs[i].toString());
-        }
-
-        // Sauvegarde le plateau a l'instant de la sauvegarde
-        w_f.print(plateau);
-
-
-        //On creer le String de data de sauvegarde (i.e la liste des coup réaliser)
-        int compt = 0;
-        while (!passe.empty()) {
-            compt++;
-            elem_hist = passe.pop();
-            sauv_data += elem_hist.getSaveString() + " ";
-            future.push(elem_hist);
-        }
-        // Cela sert a ne pas vider l'historique lorsque l'on sauvegarde
-        while(compt!=0){
-            compt--;
-            passe.push(future.pop());
-        }
-        w_f.println(sauv_data);
-        w_f.close();
-    }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static JeuConcret charger(String fichier) {
 
         int test, jou, val, nbJoueurs, testType;
         int id, score, tuile, r, q;
-        HashMap<Coord,Boolean> pions;
+        HashMap<Coord, Boolean> pions;
         Stack<Coup> tempFutur = new Stack<>(), tempPasse = new Stack<>();
         IA.Difficulte difficulte = IA.Difficulte.ALEATOIRE;
         String temp, nom = "";
@@ -216,7 +128,7 @@ public class JeuConcret extends Jeu {
                         break;
                 }
             }
-        }catch (Exception E) {
+        } catch (Exception E) {
             System.err.println(" error during player setup");
             return null;
         }
@@ -236,14 +148,14 @@ public class JeuConcret extends Jeu {
                     jeu.getPlateau().set(c, sc_f.nextInt());
                 }
             }
-        }catch (Exception E) {
+        } catch (Exception E) {
             System.err.println("Error during board creation");
             return null;
         }
 
         // Charge historique
-        try{
-        // Tant que le fichier n'est pas vide, vérifie que le fichier est comforme et joue si il trouve un coup
+        try {
+            // Tant que le fichier n'est pas vide, vérifie que le fichier est comforme et joue si il trouve un coup
             while (sc_f.hasNext()) {
                 test = sc_f.nextInt();
                 // repére le type du coup
@@ -278,7 +190,7 @@ public class JeuConcret extends Jeu {
                         throw new Exception();
                 }
             }
-        jeu.setPasseFromFutur(tempFutur);
+            jeu.setPasseFromFutur(tempFutur);
 
             //terminaison
             sc_f.close();
@@ -287,5 +199,100 @@ public class JeuConcret extends Jeu {
             System.err.println("Error during history creation");
             return null;
         }
+    }
+
+    public ArrayList<Coup> historique(int jusquaJoueur) {
+        int dernierCoup = passe.size() - 1;
+        while (dernierCoup >= 0 && passe.get(dernierCoup).getJoueur() != jusquaJoueur)
+            dernierCoup--;
+        ArrayList<Coup> coups = new ArrayList<>();
+        for (int i = Integer.max(dernierCoup, 0); i < passe.size(); i++)
+            coups.add(passe.get(i));
+        return coups;
+    }
+
+    public Coup dernierCoupJoue() {
+        if (passe.empty()) {
+            return null;
+        }
+        return passe.peek();
+    }
+
+    public Stack<Coup> getPasse() {
+        return passe;
+    }
+
+    public Stack<Coup> getFuture() {
+        return future;
+    }
+
+    public void setPasseFromFutur(Stack<Coup> futur) {
+        while (!futur.empty()) {
+            this.passe.push(futur.pop());
+        }
+    }
+
+    public void jouer(Coup c) {
+        super.jouer(c);
+        passe.push(c);
+        future.clear();  // on doit vider la pile si l'on fait de nouveau coup après avoir reculer
+    }
+
+    public void annuler() {
+        if (!passe.empty()) {
+            Coup c = passe.pop();
+            c.annuler(this);
+            future.push(c);
+        } else {
+            System.out.println("Aucune action a annuler");
+        }
+    }
+
+    public void refaire() {
+        if (!future.empty()) {
+            Coup c = future.pop();
+            super.jouer(c);
+            passe.push(c);
+        } else {
+            System.out.println("Aucune action a refaire");
+        }
+    }
+
+    public void sauvegarder(String fichier) throws Exception {
+        // Init fichier
+        File f = new File(fichier);
+        f.setReadable(true);
+        f.setWritable(true);
+        PrintWriter w_f = new PrintWriter(f);
+
+        // Init var
+        String sauv_data = "";
+        Coup elem_hist;
+
+        // Sauvegarde des joueurs a l'instant de la sauvegarde
+        w_f.println(nbJoueurs);
+        for (int i = 0; i < nbJoueurs; i++) {
+            w_f.println(joueurs[i].toString());
+        }
+
+        // Sauvegarde le plateau a l'instant de la sauvegarde
+        w_f.print(plateau);
+
+
+        //On creer le String de data de sauvegarde (i.e la liste des coup réaliser)
+        int compt = 0;
+        while (!passe.empty()) {
+            compt++;
+            elem_hist = passe.pop();
+            sauv_data += elem_hist.getSaveString() + " ";
+            future.push(elem_hist);
+        }
+        // Cela sert a ne pas vider l'historique lorsque l'on sauvegarde
+        while (compt != 0) {
+            compt--;
+            passe.push(future.pop());
+        }
+        w_f.println(sauv_data);
+        w_f.close();
     }
 }

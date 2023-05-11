@@ -45,8 +45,8 @@ public abstract class PopUp extends Fenetre {
 
     @Override
     public void close(IHMGraphique ihm) {
-        frame.setEnabled(false);
         frame.setVisible(false);
+        frame.dispose();
         ihm.getMoteurJeu().pauseGame(false);
     }
 }

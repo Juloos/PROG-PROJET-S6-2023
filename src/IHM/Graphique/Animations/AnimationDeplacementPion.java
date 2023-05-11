@@ -13,7 +13,6 @@ public class AnimationDeplacementPion implements Animation {
 
     private final PlateauGraphique plateauGraphique;
     private final CoupDeplacement deplacement;
-    private boolean paused;
 
     public AnimationDeplacementPion(IHMGraphique ihm, CoupDeplacement deplacement) {
         this.plateauGraphique = ihm.getPlateauGraphique();
@@ -52,7 +51,7 @@ public class AnimationDeplacementPion implements Animation {
         plateauGraphique.setTuilesSurbrillance(coords);
 
         try {
-            Thread.sleep(Math.round(Config.ANIMATION_DURATION * 1000.0));
+            Thread.sleep((long) (Config.ANIMATION_DURATION * 1000.0));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -62,11 +61,9 @@ public class AnimationDeplacementPion implements Animation {
 
     @Override
     public void pause() {
-        this.paused = true;
     }
 
     @Override
     public void resume() {
-        this.paused = false;
     }
 }

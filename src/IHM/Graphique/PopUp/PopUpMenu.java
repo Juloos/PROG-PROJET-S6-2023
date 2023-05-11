@@ -60,7 +60,6 @@ public class PopUpMenu extends PopUp {
     @Override
     public void close(IHMGraphique ihm) {
         ihm.getMoteurJeu().pauseGame(false);
-        System.out.println("Fermeture");
         super.close(ihm);
     }
 }

@@ -1,13 +1,12 @@
 package IHM.Console;
 
 import Controleur.MoteurJeu;
-import static Global.Config.*;
 import IHM.IHM;
 import Modele.Actions.*;
 import Modele.Coord;
 import Modele.Coups.CoupAjout;
 import Modele.Coups.CoupDeplacement;
-import Modele.Jeux.Jeu;
+import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
@@ -15,6 +14,9 @@ import Modele.Joueurs.JoueurIA;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import static Global.Config.NB_MAX_JOUEURS;
+import static Global.Config.NB_MIN_JOUEUR;
 
 public class IHMConsole extends IHM {
 
@@ -26,7 +28,7 @@ public class IHMConsole extends IHM {
     }
 
     @Override
-    public void updateAffichage(Jeu jeu) {
+    public void updateAffichage(JeuConcret jeu) {
         System.out.println(jeu.toString() + "\n");
     }
 
@@ -166,7 +168,7 @@ public class IHMConsole extends IHM {
 
                     } while (!ligne.equals("retour") &&
                             (!ligne.equals("") || joueurs.size() < NB_MIN_JOUEUR) &&
-                            joueurs.size() < NB_MAX_JOUEUR);
+                            joueurs.size() < NB_MAX_JOUEURS);
 
                     if (!ligne.equals("retour")) {
                         getMoteurJeu().lancerPartie(joueurs.toArray(new Joueur[0]));

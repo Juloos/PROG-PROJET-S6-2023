@@ -2,7 +2,7 @@ package IHM;
 
 import Controleur.MoteurJeu;
 import Modele.Actions.Action;
-import Modele.Jeux.Jeu;
+import Modele.Jeux.JeuConcret;
 
 public abstract class IHM {
 
@@ -22,7 +22,7 @@ public abstract class IHM {
      *
      * @param jeu : le jeu mit à jour
      */
-    public abstract void updateAffichage(Jeu jeu);
+    public abstract void updateAffichage(JeuConcret jeu);
 
     /**
      * Attend que le joueur actif demande de faire une action

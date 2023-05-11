@@ -1,21 +1,24 @@
 package IHM.Graphique.Ecrans;
 
+import Global.Config;
 import IHM.Graphique.Composants.InfoJoueur;
 import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.PopUp.PopUpMenu;
+import Modele.Actions.ActionAnnuler;
+import Modele.Actions.ActionRefaire;
+import Modele.Jeux.Jeu;
+import Modele.Joueurs.Joueur;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EcranJeu extends Ecran {
 
     // Les menus des informations des joueurs
-    List<InfoJoueur> joueurs;
+    InfoJoueur[] joueurs;
     // Le menu affiché sur la droite de l'écran
     JPanel menu;
     // Le label pour afficher les messages de l'IHM
@@ -40,14 +43,14 @@ public class EcranJeu extends Ecran {
     public void creation(IHMGraphique ihm) {
         panel.setLayout(new BorderLayout());
 
-        joueurs = new ArrayList<>();
+        joueurs = new InfoJoueur[Config.NB_MAX_JOUEURS];
 
         menu = new JPanel(new GridLayout(0, 1));
 
-        for (int i = 0; i < ihm.getMoteurJeu().getJeu().getNbJoueurs(); i++) {
-            InfoJoueur joueur = new InfoJoueur(ihm.getMoteurJeu().getJeu().getJoueur(i));
-            joueurs.add(joueur);
-            menu.add(joueur);
+        for (int i = 0; i < joueurs.length; i++) {
+            InfoJoueur infoJoueur = new InfoJoueur();
+            joueurs[i] = infoJoueur;
+            menu.add(infoJoueur);
         }
 
         message = new JLabel("", SwingConstants.CENTER);
@@ -63,7 +66,7 @@ public class EcranJeu extends Ecran {
         annuler.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-//                ihm.getMoteurJeu().appliquerAction(new ActionAnnuler());
+                ihm.getMoteurJeu().appliquerAction(new ActionAnnuler());
             }
         });
 
@@ -71,7 +74,7 @@ public class EcranJeu extends Ecran {
         refaire.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-//                ihm.getMoteurJeu().appliquerAction(new ActionRefaire());
+                ihm.getMoteurJeu().appliquerAction(new ActionRefaire());
             }
         });
 
@@ -85,7 +88,6 @@ public class EcranJeu extends Ecran {
         options.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                System.out.println("Je te click tu me clicks");
                 ihm.getMoteurJeu().pauseGame(true);
                 ihm.ouvrirFenetre(new PopUpMenu());
             }
@@ -96,25 +98,34 @@ public class EcranJeu extends Ecran {
         optionsPanel.add(horizontal, BorderLayout.SOUTH);
         menu.add(optionsPanel);
 
-
         panel.add(menu, BorderLayout.EAST);
         panel.add(ihm.getPlateauGraphique(), BorderLayout.CENTER);
     }
 
     @Override
-    public synchronized void update(IHMGraphique ihm) {
-        resized();
+    public void update(IHMGraphique ihm) {
+    }
 
-        if (ihm.getMoteurJeu().estPhasePlacementPions()) {
-            infoTour.setText("Joueur " + (ihm.getMoteurJeu().getJoueurActif().getID() + 1) + " veuillez placer un pion");
-        } else {
-            infoTour.setText("Joueur " + (ihm.getMoteurJeu().getJoueurActif().getID() + 1) + " veuillez déplacer un de vos pions");
-        }
+    @Override
+    public void update(Jeu jeu) {
+        super.update(jeu);
 
-        for (InfoJoueur joueur : joueurs) {
-            joueur.update(joueur.getJoueurID() == ihm.getMoteurJeu().getJoueurActif().getID());
+        Joueur[] joueursJeu = jeu.getJoueurs();
+        int joueurActif = jeu.getJoueur().getID();
+        for (int i = 0; i < joueurs.length; i++) {
+            InfoJoueur joueur = joueurs[i];
+
+            if (i < joueursJeu.length) {
+                joueur.update(joueursJeu[i]);
+            } else {
+                joueur.setVisible(false);
+            }
         }
-        panel.repaint();
+    }
+
+    @Override
+    public void close(IHMGraphique ihm) {
+        super.close(ihm);
     }
 
     @Override
@@ -133,6 +144,5 @@ public class EcranJeu extends Ecran {
     public void resized() {
         final int menuWidth = panel.getWidth() * 2 / 7;
         menu.setPreferredSize(new Dimension(menuWidth, panel.getHeight()));
-        panel.revalidate();
     }
 }

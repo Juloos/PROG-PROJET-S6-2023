@@ -2,19 +2,20 @@ package Controleur;
 
 import Modele.Coups.Coup;
 import Modele.Coups.CoupTerminaison;
-import Modele.Jeu.JeuConcret;
+import Modele.Jeux.Jeu;
+import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 
 public class GestionnairePartie extends Thread {
     private final MoteurJeu moteurJeu;
-    private boolean isAlive;
     private JeuConcret jeu;
     private int nbPionsPlaces;
     private volatile PhasesPartie phasePartie;
 
+    private Thread attendreActionJoueur;
+
     public GestionnairePartie(MoteurJeu moteurJeu) {
         super();
-        this.isAlive = true;
         this.nbPionsPlaces = 0;
         this.moteurJeu = moteurJeu;
         this.phasePartie = PhasesPartie.ATTENTE_PARTIE;
@@ -30,16 +31,22 @@ public class GestionnairePartie extends Thread {
         moteurJeu.updateAffichage();
     }
 
-    private void updateAffichage() {
-        moteurJeu.updateAffichage();
+    private synchronized void updateAffichage() {
+        if (partieEnCours()) {
+            moteurJeu.updateAffichage();
+        }
     }
 
     public synchronized boolean estPhasePlacementPions() {
-        return nbPionsPlaces < jeu.getNbJoueurs() * jeu.getNbPions();
+        return partieEnCours() && nbPionsPlaces < jeu.getNbJoueurs() * jeu.getNbPions();
     }
 
-    public boolean estPhaseDeplacementPion() {
-        return !jeu.estTermine();
+    public synchronized boolean partieEnCours() {
+        return phasePartie == PhasesPartie.PARTIE_EN_COURS || phasePartie == PhasesPartie.PAUSE;
+    }
+
+    public synchronized boolean estPhaseDeplacementPion() {
+        return partieEnCours() && !jeu.estTermine();
     }
 
     private void afficherMessage(String message) {
@@ -58,72 +65,62 @@ public class GestionnairePartie extends Thread {
         jeu.refaire();
     }
 
+    private boolean peutJouer(Jeu jeu) {
+        return partieEnCours() && jeu.peutJouer();
+    }
+
     @Override
     public void run() {
         super.run();
-        while (isAlive) {
-            moteurJeu.debug("En attente d'une nouvelle partie");
+        moteurJeu.debug("En attente d'une nouvelle partie");
 
-            if (moteurJeu.hasIHM()) {
-                moteurJeu.attendreNouvellePartie();
-            }
-            while (phasePartie == PhasesPartie.ATTENTE_PARTIE) ;
+        if (moteurJeu.hasIHM()) {
+            moteurJeu.attendreNouvellePartie();
+        }
+        phasePartie = PhasesPartie.ATTENTE_PARTIE;
+        while (phasePartie == PhasesPartie.ATTENTE_PARTIE) ;
 
-            if (moteurJeu.hasIHM()) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+        moteurJeu.debug("Début de la partie");
+        updateAffichage();
 
-            updateAffichage();
+        nbPionsPlaces = 0;
+        while (estPhasePlacementPions()) {
+            moteurJeu.appliquerAction(jeu.getJoueur().reflechir(moteurJeu));
+        }
 
-            moteurJeu.debug("Début de la partie");
+        moteurJeu.debug("Fin de la phase de placement des pions");
+        afficherMessage("Fin de la phase de placement des pions");
 
-            nbPionsPlaces = 0;
-            while (estPhasePlacementPions()) {
-                while (phasePartie == PhasesPartie.PAUSE) ;
+        updateAffichage();
+
+        while (estPhaseDeplacementPion()) {
+            while (peutJouer(jeu)) {
                 moteurJeu.appliquerAction(jeu.getJoueur().reflechir(moteurJeu));
             }
+            jeu.jouer(new CoupTerminaison(jeu.getJoueur().id));
+        }
 
-            moteurJeu.debug("Fin de la phase de placement des pions");
-            afficherMessage("Fin de la phase de placement des pions");
+        updateAffichage();
 
-            updateAffichage();
+        moteurJeu.debug("Fin de la partie");
 
-            while (estPhaseDeplacementPion()) {
-                while (jeu.peutJouer()) {
-                    while (phasePartie == PhasesPartie.PAUSE) ;
-                    moteurJeu.appliquerAction(jeu.getJoueur().reflechir(moteurJeu));
-                }
-                while (phasePartie == PhasesPartie.PAUSE) ;
-                jeu.jouer(new CoupTerminaison(jeu.getJoueur().id));
-            }
-            updateAffichage();
-
-            moteurJeu.debug("Fin de la partie");
-            if (jeu.getWinner().size() == 1) {
-                moteurJeu.afficherMessage("Le joueur " + jeu.getWinner().get(0) + " a gagné!!");
-            }
-
-            if (moteurJeu.hasIHM()) {
-                phasePartie = PhasesPartie.ATTENTE_PARTIE;
-            } else {
-                moteurJeu.terminer();
-            }
+        if (!moteurJeu.hasIHM()) {
+            moteurJeu.terminer();
         }
     }
 
-    public void lancerPartie(Joueur[] joueurs) {
+    public synchronized void lancerPartie(Joueur[] joueurs) {
         this.jeu = new JeuConcret(joueurs);
         this.phasePartie = PhasesPartie.PARTIE_EN_COURS;
-        System.out.println("Lancement partie");
     }
 
-    public void lancerPartie(String nomSave) {
+    public synchronized void lancerPartie(String nomSave) {
         this.jeu = JeuConcret.charger(nomSave);
         this.phasePartie = PhasesPartie.PARTIE_EN_COURS;
+    }
+
+    public synchronized void arreterPartie() {
+        this.phasePartie = PhasesPartie.FIN;
     }
 
     public synchronized void pause(boolean pause) {
@@ -131,7 +128,6 @@ public class GestionnairePartie extends Thread {
     }
 
     public synchronized void terminer() {
-        this.isAlive = false;
         this.interrupt();
     }
 }

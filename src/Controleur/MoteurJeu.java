@@ -2,14 +2,11 @@ package Controleur;
 
 import Global.Config;
 import IHM.Console.IHMConsole;
-import IHM.Graphique.Animations.AnimationDeplacementPion;
 import IHM.Graphique.IHMGraphique;
 import IHM.IHM;
-import IHM.TypeIHM;
 import Modele.Actions.Action;
 import Modele.Coups.Coup;
-import Modele.Coups.CoupDeplacement;
-import Modele.Jeu.JeuConcret;
+import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 
 public class MoteurJeu extends Thread {
@@ -35,9 +32,6 @@ public class MoteurJeu extends Thread {
                 throw new RuntimeException("Il faut une IHM dans ce cas");
         }
 
-        this.gestionnairePartie = new GestionnairePartie(this);
-        this.gestionnairePartie.start();
-
         etat = EtatMoteurJeu.ATTENTE_PARTIE;
     }
 
@@ -45,8 +39,6 @@ public class MoteurJeu extends Thread {
         this.ihm = null;
         this.etat = EtatMoteurJeu.PARTIE_EN_COURS;
 
-        this.gestionnairePartie = new GestionnairePartie(this);
-        this.gestionnairePartie.start();
         this.gestionnairePartie.lancerPartie(joueurs);
     }
 
@@ -65,7 +57,11 @@ public class MoteurJeu extends Thread {
     }
 
     public synchronized JeuConcret getJeu() {
-        return gestionnairePartie.getJeu();
+        try {
+            return gestionnairePartie.getJeu();
+        } catch (Exception e) {
+        }
+        return null;
     }
 
     public synchronized Joueur getJoueurActif() {
@@ -77,7 +73,7 @@ public class MoteurJeu extends Thread {
     }
 
     public boolean estPhaseDeplacementPion() {
-        return partieEnCours() && !jeu.estTermine();
+        return gestionnairePartie.getJeu() != null && gestionnairePartie.estPhaseDeplacementPion();
     }
 
     public void attendreNouvellePartie() {
@@ -93,7 +89,7 @@ public class MoteurJeu extends Thread {
     }
 
     public void appliquerAction(Action action) {
-        if (!action.peutAppliquer(this)) {
+        if (action == null || !action.peutAppliquer(this)) {
 //            action.afficherMessageErreur(this);
         } else {
             action.appliquer(this);
@@ -101,11 +97,6 @@ public class MoteurJeu extends Thread {
     }
 
     public synchronized void jouerCoup(Coup coup) {
-        if (Config.TYPE_IHM == TypeIHM.GRAPHIQUE && coup instanceof CoupDeplacement) {
-            CoupDeplacement deplacement = (CoupDeplacement) coup;
-            ((IHMGraphique) ihm).setAnimation(new AnimationDeplacementPion((IHMGraphique) ihm, deplacement));
-        }
-
         gestionnairePartie.jouerCoup(coup);
     }
 
@@ -130,15 +121,9 @@ public class MoteurJeu extends Thread {
     }
 
     public void updateAffichage() {
-        debug("Mise à jour de l'affichage de l'IHM");
         if (hasIHM()) {
             ihm.updateAffichage(gestionnairePartie.getJeu());
         }
-    }
-
-
-    public synchronized EtatMoteurJeu getEtat() {
-        return etat;
     }
 
     @Override
@@ -161,7 +146,7 @@ public class MoteurJeu extends Thread {
     }
 
     public boolean partieEnCours() {
-        return etat == EtatMoteurJeu.PARTIE_EN_COURS || etat == EtatMoteurJeu.PAUSE;
+        return gestionnairePartie.partieEnCours();
     }
 
     public synchronized void pauseGame(boolean pause) {
@@ -192,27 +177,27 @@ public class MoteurJeu extends Thread {
     }
 
     public synchronized void lancerPartie(Joueur[] joueurs) {
+        this.gestionnairePartie = new GestionnairePartie(this);
+        this.gestionnairePartie.start();
         debug("Lancement d'une nouvelle partie");
         gestionnairePartie.lancerPartie(joueurs);
     }
 
     public synchronized void lancerPartie(String nomSave) {
+        this.gestionnairePartie = new GestionnairePartie(this);
+        this.gestionnairePartie.start();
         debug("Lancement dune nouvelle partie depuis une sauvegarde");
         gestionnairePartie.lancerPartie(nomSave);
     }
 
     public synchronized void arreterPartie() {
-        if (partieEnCours()) {
-            ihm.updateAffichage(jeu);
-            this.etat = EtatMoteurJeu.ATTENTE_PARTIE;
-        }
+        gestionnairePartie.interrupt();
     }
 
     public synchronized void terminer() {
         debug("Arrêt des threads");
         try {
-            gestionnairePartie.terminer();
-            gestionnairePartie.join();
+            gestionnairePartie.interrupt();
             debug("Thread gestionnaire de parties terminé");
         } catch (Exception e) {
             debug("Exception batard");
