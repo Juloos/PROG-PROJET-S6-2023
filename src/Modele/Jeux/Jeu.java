@@ -173,13 +173,13 @@ public abstract class Jeu {
             joueurs[joueurCourant].bloquerPion(c2);
         c1.voisins().forEach(
                 voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
+                    if (estPionBloque(voisin))
                         joueurs[joueurDePion(voisin)].bloquerPion(voisin);
                 }
         );
         c2.voisins().forEach(
                 voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
+                    if (estPionBloque(voisin))
                         joueurs[joueurDePion(voisin)].bloquerPion(voisin);
                 }
         );
@@ -196,7 +196,7 @@ public abstract class Jeu {
             joueurs[joueurCourant].bloquerPion(c);
         c.voisins().forEach(
                 voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
+                    if (estPionBloque(voisin))
                         joueurs[joueurDePion(voisin)].bloquerPion(voisin);
                 }
         );
@@ -225,13 +225,13 @@ public abstract class Jeu {
         joueurs[j].deplacerPion(c1, c2);
         c1.voisins().forEach(
                 voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
+                    if (estPionBloque(voisin))
                         joueurs[joueurDePion(voisin)].debloquerPion(voisin);
                 }
         );
         c2.voisins().forEach(
                 voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
+                    if (estPionBloque(voisin))
                         joueurs[joueurDePion(voisin)].bloquerPion(voisin);
                 }
         );

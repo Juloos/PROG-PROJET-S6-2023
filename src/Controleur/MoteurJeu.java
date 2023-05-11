@@ -6,6 +6,7 @@ import IHM.Graphique.IHMGraphique;
 import IHM.IHM;
 import Modele.Actions.Action;
 import Modele.Coups.Coup;
+import Modele.Coups.CoupDeplacement;
 import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 

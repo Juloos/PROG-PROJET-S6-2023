@@ -18,7 +18,7 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
     int tuiles;
     boolean termine;
 
-    String nom;
+    public String nom;
 
     volatile Action action;
 

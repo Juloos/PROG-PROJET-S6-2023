@@ -12,8 +12,6 @@ public class GestionnairePartie extends Thread {
     private int nbPionsPlaces;
     private volatile PhasesPartie phasePartie;
 
-    private Thread attendreActionJoueur;
-
     public GestionnairePartie(MoteurJeu moteurJeu) {
         super();
         this.nbPionsPlaces = 0;
@@ -28,7 +26,7 @@ public class GestionnairePartie extends Thread {
     public synchronized void jouerCoup(Coup coup) {
         jeu.jouer(coup);
         nbPionsPlaces++;
-        moteurJeu.updateAffichage();
+        updateAffichage();
     }
 
     private synchronized void updateAffichage() {
@@ -97,7 +95,7 @@ public class GestionnairePartie extends Thread {
             while (peutJouer(jeu)) {
                 moteurJeu.appliquerAction(jeu.getJoueur().reflechir(moteurJeu));
             }
-            jeu.jouer(new CoupTerminaison(jeu.getJoueur().id));
+            jeu.jouer(new CoupTerminaison(jeu.getJoueur().getID()));
         }
 
         updateAffichage();
@@ -119,15 +117,8 @@ public class GestionnairePartie extends Thread {
         this.phasePartie = PhasesPartie.PARTIE_EN_COURS;
     }
 
-    public synchronized void arreterPartie() {
-        this.phasePartie = PhasesPartie.FIN;
-    }
-
     public synchronized void pause(boolean pause) {
         this.phasePartie = pause ? PhasesPartie.PAUSE : PhasesPartie.PARTIE_EN_COURS;
     }
 
-    public synchronized void terminer() {
-        this.interrupt();
-    }
 }

@@ -17,7 +17,6 @@ public abstract class PopUp extends Fenetre {
         frame = new JFrame(title);
         frame.setSize(700, 400);
         frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     @Override

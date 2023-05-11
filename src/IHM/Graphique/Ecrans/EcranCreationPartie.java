@@ -43,7 +43,7 @@ public class EcranCreationPartie extends Ecran {
         label.setFont(new Font("Impact", Font.PLAIN, 48));
         panel.add(label, BorderLayout.PAGE_START);
 
-        joueursPanel = new JPanel(new GridLayout(0, Config.NB_MAX_JOUEURS));
+        joueursPanel = new JPanel(new GridLayout(0, Config.NB_MAX_JOUEUR));
         joueursPanel.setAlignmentX(JScrollPane.CENTER_ALIGNMENT);
 
         joueursPanel.setBackground(Colors.TRANSPARENT);
@@ -76,13 +76,16 @@ public class EcranCreationPartie extends Ecran {
                     //si le joueur est une IA
                     if (((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex() != 0) {
                         IA.Difficulte diff = IA.Difficulte.values()[((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex()];
-                        joueurs[i] = new JoueurIA(((MenuJoueur) joueursPanel.getComponent(i)).num - 1, diff);
+                        System.out.println(diff);
+                        joueurs[i] = new JoueurIA(((MenuJoueur) joueursPanel.getComponent(i)).num - 1,diff);
+                        joueurs[i].nom = "IA " + diff;
                     } else {
                         joueurs[i] = new JoueurHumain(((MenuJoueur) joueursPanel.getComponent(i)).num - 1);
+                        joueurs[i].nom = ((MenuJoueur) joueursPanel.getComponent(i)).nom.getText();
                     }
                 }
-                ihm.ouvrirFenetre(new EcranJeu());
                 ihm.getMoteurJeu().lancerPartie(joueurs);
+                ihm.ouvrirFenetre(new EcranJeu());
             }
         });
         buttons.add(retour);
@@ -92,7 +95,7 @@ public class EcranCreationPartie extends Ecran {
 
     protected void nouveauJoueur() {
         nbJoueurs++;
-        if (nbJoueurs == Config.NB_MAX_JOUEURS) {
+        if (nbJoueurs >= Config.NB_MAX_JOUEUR) {
             ajouterJoueur.setVisible(false);
         }
 
@@ -103,7 +106,7 @@ public class EcranCreationPartie extends Ecran {
 
     protected void supprimerJoueur(int num) {
         nbJoueurs--;
-        if (nbJoueurs < Config.NB_MAX_JOUEURS) {
+        if (nbJoueurs < Config.NB_MAX_JOUEUR) {
             ajouterJoueur.setVisible(true);
         }
 
@@ -118,13 +121,14 @@ public class EcranCreationPartie extends Ecran {
     @Override
     public void close(IHMGraphique ihm) {
         super.close(ihm);
+        System.out.println("Fermeture fenetre");
     }
 
     private class MenuJoueur extends JPanel {
 
         JLabel numJoueur;
-
         int num;
+        JTextField nom;
         JComboBox<String> difficultesIA;
         Button close;
         ActionListener closeAction;
@@ -138,13 +142,17 @@ public class EcranCreationPartie extends Ecran {
             numJoueur = new JLabel("Joueur " + num, SwingConstants.CENTER);
             if (num == 1) {
                 numJoueur.setForeground(Color.RED);
-            } else if (num == 2) {
+            }
+            else if (num == 2) {
                 numJoueur.setForeground(Color.BLUE);
-            } else if (num == 3) {
+            }
+            else if (num == 3) {
                 numJoueur.setForeground(Color.GREEN);
-            } else if (num == 4) {
+            }
+            else if (num == 4) {
                 numJoueur.setForeground(Color.YELLOW);
-            } else {
+            }
+            else {
                 numJoueur.setForeground(Color.BLACK);
             }
             numJoueur.setFont(new Font("Impact", Font.PLAIN, 50));
@@ -156,7 +164,7 @@ public class EcranCreationPartie extends Ecran {
             panelnom.setLayout(new BoxLayout(panelnom, BoxLayout.X_AXIS));
             JLabel nomLabel = new JLabel("Nom : ");
             nomLabel.setFont(new Font("Impact", Font.PLAIN, 20));
-            JTextField nom = new JTextField("Joueur " + num);
+            nom = new JTextField("Joueur " + num);
             nom.setMaximumSize(new Dimension(200, 40));
             panelnom.add(nomLabel);
             panelnom.add(nom);
@@ -202,37 +210,45 @@ public class EcranCreationPartie extends Ecran {
                 }
             };
             difficultesIA.setRenderer(renderer);
+            final boolean[] isIA = {false};
             difficultesIA.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
                     int selected = difficultesIA.getSelectedIndex();
-                    if (selected != 0) {
+                    if (selected != 0 && isIA[0] == false) {
+                        remove(nom);
                         ImageIcon image = new ImageIcon("res/ia.png");
+                        image.setImage(image.getImage().getScaledInstance(300, 500, Image.SCALE_DEFAULT));
                         image.setDescription(" " + difficultesIA.getSelectedItem());
 
-// création du label contenant l'image
+                        // création du label contenant l'image
                         JLabel label = new JLabel(image);
                         label.setAlignmentX(CENTER_ALIGNMENT);
 
-// création du panel contenant le label
+                        // création du panel contenant le label
                         JPanel iaPanel = new JPanel();
                         iaPanel.setOpaque(false);
                         iaPanel.setLayout(new BorderLayout());
                         iaPanel.add(Box.createHorizontalStrut(10), BorderLayout.WEST); // ajout d'un espace avant l'image
                         iaPanel.add(label, BorderLayout.CENTER);
-
-// ajout du panel contenant l'image au panel principal
+                        // ajout du panel contenant l'image au panel principal
                         panelia.add(iaPanel);
                         panelia.setOpaque(false);
 
-// rafraîchissement du panel
+                        // rafraîchissement du panel
                         panelia.repaint();
                         panelia.revalidate();
+                        isIA[0] = true;
 
-                    } else {
-                        panelia.remove(1);
-                        panelia.repaint();
-                        panelia.revalidate();
+                    }
+                    else if(selected == 0 && isIA[0] == true) {
+                            panelia.remove(1);
+                            panelia.repaint();
+                            panelia.revalidate();
+                            isIA[0] = false;
+                        }
+                    else {
+                        ;
                     }
                 }
             });
@@ -256,6 +272,7 @@ public class EcranCreationPartie extends Ecran {
         }
 
         private void updateNumJoueur(int num) {
+            this.num = num;
             close.removeActionListener(closeAction);
             closeAction = new ActionListener() {
                 @Override
@@ -264,6 +281,14 @@ public class EcranCreationPartie extends Ecran {
                 }
             };
             close.addActionListener(closeAction);
+        }
+
+        public Joueur getJoueur() {
+            if (difficultesIA.getSelectedIndex() == 0) {
+                return new JoueurHumain(num);
+            } else {
+                return new JoueurIA(num);
+            }
         }
     }
 }
