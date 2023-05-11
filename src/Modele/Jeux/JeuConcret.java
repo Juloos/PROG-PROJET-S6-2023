@@ -18,7 +18,8 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Stack;
 
-import static Global.Config.*;
+import static Global.Config.TAILLE_PLATEAU_X;
+import static Global.Config.TAILLE_PLATEAU_Y;
 
 public class JeuConcret extends Jeu {
     Stack<Coup> passe;
@@ -99,12 +100,19 @@ public class JeuConcret extends Jeu {
     }
 
 
-    public void sauvegarder(String fichier) throws Exception {
+    public void sauvegarder(String fichier) {
         // Init fichier
-        File f = new File(fichier);
-        f.setReadable(true);
-        f.setWritable(true);
-        PrintWriter w_f = new PrintWriter(f);
+        PrintWriter w_f;
+        File f;
+        try {
+            f = new File(fichier);
+            f.setReadable(true);
+            f.setWritable(true);
+            w_f = new PrintWriter(f);
+        }catch (Exception E){
+            System.out.println("Erreur : creation fichier de sauvegarde");
+            return;
+        }
 
         // Init var
         String sauv_data = "";
@@ -172,10 +180,12 @@ public class JeuConcret extends Jeu {
                         System.err.println(" erreur : Joueur non typé");
                         throw new Exception();
                     case 1:
-                        nom = sc_f.next();
+                        sc_f.nextLine();
+                        nom = sc_f.nextLine();
                         break;
                     case 2:
-                        nom = sc_f.next();
+                        sc_f.nextLine();
+                        nom = sc_f.nextLine();
                         switch (nom) {
                             case "ALEATOIRE":
                                 difficulte = IA.Difficulte.ALEATOIRE;
@@ -287,5 +297,12 @@ public class JeuConcret extends Jeu {
             System.err.println("Error during history creation");
             return null;
         }
+    }
+
+    public Coup dernierCoupJoue() {
+        if (passe.empty()) {
+            return null;
+        }
+        return passe.peek();
     }
 }

@@ -34,13 +34,6 @@ public class JoueurIA extends Joueur {
     public Action reflechir(MoteurJeu mt) {
         if (mt.getJeu().getJoueur().id != id)
             throw new IllegalArgumentException("Mauvais joueur courant pôur ce joueur : " + mt.getJoueurActif().id);
-        if (mt.getIHM() != null) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
         return new ActionCoup(ia.reflechir(mt.getJeu()));
     }
 
@@ -56,6 +49,6 @@ public class JoueurIA extends Joueur {
         for (int j = 0; j < pions.size(); j++) {
             dataHash += " " + tempL[j].q + " " + tempL[j].r;
         }
-        return 2 + " " + id + " " + ia.getDifficulte() + " " + score + " " + tuiles + " " + pions.size() + dataHash;
+        return 2 + " " + id + " \n" + ia.getDifficulte() + "\n " + score + " " + tuiles + " " + pions.size() + dataHash;
     }
 }

@@ -1,13 +1,12 @@
 package IHM.Console;
 
 import Controleur.MoteurJeu;
-import static Global.Config.*;
 import IHM.IHM;
 import Modele.Actions.*;
 import Modele.Coord;
 import Modele.Coups.CoupAjout;
 import Modele.Coups.CoupDeplacement;
-import Modele.Jeux.Jeu;
+import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
@@ -15,6 +14,9 @@ import Modele.Joueurs.JoueurIA;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import static Global.Config.NB_MAX_JOUEUR;
+import static Global.Config.NB_MIN_JOUEUR;
 
 public class IHMConsole extends IHM {
 
@@ -26,7 +28,7 @@ public class IHMConsole extends IHM {
     }
 
     @Override
-    public void updateAffichage(Jeu jeu) {
+    public void updateAffichage(JeuConcret jeu) {
         System.out.println(jeu.toString() + "\n");
     }
 
@@ -173,10 +175,12 @@ public class IHMConsole extends IHM {
                         creationTerminee = true;
                     }
                     break;
-                default:
+                case "stop":
                     // Arrêt du moteur de jeu
-                    getMoteurJeu().fin();
+                    getMoteurJeu().terminer();
                     creationTerminee = true;
+                    break;
+                default:
                     break;
             }
         } while (!creationTerminee);
@@ -196,9 +200,5 @@ public class IHMConsole extends IHM {
         }
 
         return valeurs;
-    }
-
-    @Override
-    public void run() {
     }
 }

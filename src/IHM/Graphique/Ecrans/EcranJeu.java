@@ -1,23 +1,25 @@
 package IHM.Graphique.Ecrans;
 
+import Global.Config;
 import IHM.Graphique.Composants.InfoJoueur;
 import IHM.Graphique.Composants.JButtonIcon;
+import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.PopUp.PopUpMenu;
 import Modele.Actions.ActionAnnuler;
 import Modele.Actions.ActionRefaire;
+import Modele.Jeux.Jeu;
+import Modele.Joueurs.Joueur;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EcranJeu extends Ecran {
 
     // Les menus des informations des joueurs
-    List<InfoJoueur> joueurs;
+    InfoJoueur[] joueurs;
     // Le menu affiché sur la droite de l'écran
     JPanel menu;
     // Le label pour afficher les messages de l'IHM
@@ -28,6 +30,9 @@ public class EcranJeu extends Ecran {
     // - annuler le dernier coup joué
     // - refaire le dernier coup annulé
     JButton options, annuler, refaire;
+
+    PlateauGraphique plateauGraphique;
+    int joueurActif;
 
     public EcranJeu() {
         super("Partie en cours");
@@ -40,16 +45,20 @@ public class EcranJeu extends Ecran {
 
     @Override
     public void creation(IHMGraphique ihm) {
+        this.plateauGraphique = ihm.getPlateauGraphique();
+
         panel.setLayout(new BorderLayout());
 
-        joueurs = new ArrayList<>();
+        joueurs = new InfoJoueur[Config.NB_MAX_JOUEUR];
 
         menu = new JPanel(new GridLayout(0, 1));
 
-        for (int i = 0; i < ihm.getMoteurJeu().getJeu().getNbJoueurs(); i++) {
-            InfoJoueur joueur = new InfoJoueur(ihm.getMoteurJeu().getJeu().getJoueur(i));
-            joueurs.add(joueur);
-            menu.add(joueur);
+        joueurs = new InfoJoueur[ihm.getMoteurJeu().getJeu().getNbJoueurs()];
+        Joueur[] jeuJoueurs = ihm.getMoteurJeu().getJeu().getJoueurs();
+        for (int i = 0; i < joueurs.length; i++) {
+            InfoJoueur infoJoueur = new InfoJoueur(jeuJoueurs[i], i == joueurs.length - 1);
+            joueurs[i] = infoJoueur;
+            menu.add(infoJoueur);
         }
 
         message = new JLabel("", SwingConstants.CENTER);
@@ -97,38 +106,52 @@ public class EcranJeu extends Ecran {
         optionsPanel.add(horizontal, BorderLayout.SOUTH);
         menu.add(optionsPanel);
 
-
         panel.add(menu, BorderLayout.EAST);
         panel.add(ihm.getPlateauGraphique(), BorderLayout.CENTER);
-
-        update(ihm);
     }
 
     @Override
     public void update(IHMGraphique ihm) {
-        resized();
-
-        if (ihm.getMoteurJeu().estPhasePlacementPions()) {
-            infoTour.setText("Joueur " + (ihm.getMoteurJeu().getJoueurActif().getID() + 1) + " veuillez placer un pion");
-        } else {
-            infoTour.setText("Joueur " + (ihm.getMoteurJeu().getJoueurActif().getID() + 1) + " veuillez déplacer un de vos pions");
-        }
-
-        for (InfoJoueur joueur : joueurs) {
-            joueur.update(joueur.getJoueurID() == ihm.getMoteurJeu().getJoueurActif().getID());
-        }
-        panel.repaint();
     }
 
     @Override
-    public void afficherMessage(String message) {
-        this.message.setText(message);
+    public void update(Jeu jeu) {
+        super.update(jeu);
+
+        Joueur[] joueursJeu = jeu.getJoueurs();
+        joueurActif = jeu.getJoueur().getID();
+        for (int i = 0; i < joueurs.length; i++) {
+            InfoJoueur joueur = joueurs[i];
+            joueur.update(joueursJeu[i].getID() == joueurActif);
+
+            if (joueursJeu[i].getID() == joueurActif) {
+                plateauGraphique.setPositionFlecheJoueurActif(menu.getX() - 110, joueur.getY(), 100, 100);
+            }
+        }
+    }
+
+    @Override
+    public void close(IHMGraphique ihm) {
+        super.close(ihm);
+    }
+
+    @Override
+    public void afficherMessage(String mess) {
+        this.message.setText(mess);
+        Timer timer = new Timer(3000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                message.setText("");
+            }
+        });
+        timer.start();
     }
 
     @Override
     public void resized() {
         final int menuWidth = panel.getWidth() * 2 / 7;
         menu.setPreferredSize(new Dimension(menuWidth, panel.getHeight()));
-        panel.revalidate();
+
+        plateauGraphique.setPositionFlecheJoueurActif(menu.getX() - 110, joueurs[joueurActif].getY(), 100, 100);
     }
 }

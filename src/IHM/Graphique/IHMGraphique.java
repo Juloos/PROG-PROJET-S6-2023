@@ -1,10 +1,8 @@
 package IHM.Graphique;
 
 import Controleur.MoteurJeu;
-import IHM.Graphique.Animations.Animation;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.EcranAccueil;
-import IHM.Graphique.Ecrans.EcranJeu;
 import IHM.Graphique.PopUp.PopUpFinPartie;
 import IHM.IHM;
 import Modele.Actions.Action;
@@ -12,35 +10,29 @@ import Modele.Actions.ActionCoup;
 import Modele.Coord;
 import Modele.Coups.CoupAjout;
 import Modele.Coups.CoupDeplacement;
-import Modele.Jeux.Jeu;
+import Modele.Jeux.JeuConcret;
+import Modele.Joueurs.JoueurHumain;
 import com.sun.istack.internal.NotNull;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.swing.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class IHMGraphique extends IHM implements MouseListener {
+public class IHMGraphique extends IHM implements MouseListener, MouseMotionListener {
 
+    // La représentation graphique du plateau
+    final PlateauGraphique plateauGraphique;
     // Pile des fenêtres qui ont été ouverte, la fenêtre ouverte est au sommet de la pile
     Stack<Fenetre> fenetres;
     JFrame frame;
     Clip clip;
-    // La représentation graphique du plateau
-    PlateauGraphique plateauGraphique;
     // La tuile sélectionnée par le joueur
     Coord selection;
     // L'action que le joueur actif veut faire
     Action actionJoueur;
-    // L'animation qui doit se jouer avant de mettre à jour l'affichage
-    Animation animation;
 
     public IHMGraphique(MoteurJeu moteurJeu) {
         super(moteurJeu);
@@ -50,7 +42,7 @@ public class IHMGraphique extends IHM implements MouseListener {
         frame = new JFrame("");
 //        try {
 //            // chargement du fichier audio
-//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("Wallpaper.wav")); // "res/Wallpaper.wav
+//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("res/sons/soundtrack.wav")); // "res/Wallpaper.wav
 //            // création du Clip
 //            clip = AudioSystem.getClip();
 //            clip.open(audioInputStream);
@@ -58,8 +50,11 @@ public class IHMGraphique extends IHM implements MouseListener {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+//        setVolume(0);
 
         plateauGraphique = new PlateauGraphique();
+        Thread pgt = new Thread(plateauGraphique);
+        pgt.start();
 
         ouvrirFenetre(new EcranAccueil());
 
@@ -71,33 +66,49 @@ public class IHMGraphique extends IHM implements MouseListener {
         });
 
         frame.addMouseListener(this);
-        frame.setSize(1000, 700);
+        frame.addMouseMotionListener(this);
+        frame.setSize(1500, 900);
         frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
     }
 
     /* Méthodes héritées de la classe IHM */
     @Override
-    public synchronized void updateAffichage(Jeu jeu) {
-        if (animation != null) {
-            plateauGraphique.setTuilesSurbrillance(null);
-            jouerAnimation(animation);
-            animation = null;
-        }
+    public synchronized void updateAffichage(JeuConcret jeu) {
+        // Sert uniquement à mettre à jour l'affichage de l'IHM
+        try {
 
-        fenetres.peek().update(this);
-
-        plateauGraphique.setJeu(jeu);
-        if (jeu.estTermine()) {
-            ouvrirFenetre(new PopUpFinPartie());
-        } else {
-            if (getMoteurJeu().estPhasePlacementPions()) {
-                plateauGraphique.setTuilesSurbrillance(jeu.placementsPionValide());
+            if (jeu.estTermine()) {
+                ouvrirFenetre(new PopUpFinPartie());
             } else {
-                plateauGraphique.setTuilesSurbrillance(null);
+                if (moteurJeu.estPhasePlacementPions()) {
+                    plateauGraphique.setTuilesSurbrillance(jeu.placementsPionValide());
+                } else {
+                    plateauGraphique.setTuilesSurbrillance(null);
+                }
+                plateauGraphique.setJeu(jeu);
+                plateauGraphique.repaint();
+
+                fenetres.peek().update(this);
+                fenetres.peek().update(jeu);
+                fenetres.peek().resized();
             }
+
+        } catch (Exception e) {
         }
-        plateauGraphique.repaint();
+    }
+
+    public void pauseGame() {
+    }
+
+    @Override
+    public void pause() {
+        System.out.println("IHM mise en pause");
+    }
+
+    @Override
+    public void resume() {
+        System.out.println("IHM est reparti");
     }
 
     @Override
@@ -105,11 +116,10 @@ public class IHMGraphique extends IHM implements MouseListener {
         actionJoueur = null;
         selection = null;
 
-        while (actionJoueur == null) {
+        while (actionJoueur == null && moteurJeu.partieEnCours()) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
             }
         }
 
@@ -118,8 +128,7 @@ public class IHMGraphique extends IHM implements MouseListener {
 
     @Override
     public void afficherMessage(String message) {
-        Thread thread = new Thread(new AfficherMessage(this, message));
-        thread.start();
+        fenetres.peek().afficherMessage(message);
     }
 
     @Override
@@ -128,16 +137,11 @@ public class IHMGraphique extends IHM implements MouseListener {
 
     @Override
     public void terminer() {
+        getMoteurJeu().debug("Fermeture de toutes les fenêtres");
         fermerFenetres();
         frame.dispose();
-    }
 
-    /**
-     * Fonction appelée lors du lancement de l'IHM
-     */
-    @Override
-    public void run() {
-        frame.setVisible(true);
+        getMoteurJeu().debug("JFrame fermée");
     }
 
     /* Getters */
@@ -145,20 +149,11 @@ public class IHMGraphique extends IHM implements MouseListener {
         return frame;
     }
 
-    public synchronized PlateauGraphique getPlateauGraphique() {
+    public PlateauGraphique getPlateauGraphique() {
         return plateauGraphique;
     }
 
     /* Setters */
-
-    /**
-     * Définit la future animation à jouer lors de la prochaine mise à jour de l'IHM
-     *
-     * @param animation : l'animation à jouer
-     */
-    public synchronized void setAnimation(Animation animation) {
-        this.animation = animation;
-    }
 
     public void setVolume(float volume) {
         if (clip != null) {
@@ -172,15 +167,6 @@ public class IHMGraphique extends IHM implements MouseListener {
     }
 
     /* Méthodes d'instance */
-
-    /**
-     * Joue l'animation en paramètre si une partie est en cours
-     *
-     * @param animation : l'animation à jouée
-     */
-    public synchronized void jouerAnimation(Animation animation) {
-        animation.run();
-    }
 
     /**
      * Détruit toutes les fenêtres de l'IHM
@@ -235,54 +221,59 @@ public class IHMGraphique extends IHM implements MouseListener {
      * @param mouseEvent : l'événement du clic de la souris
      */
     @Override
-    public synchronized void mouseClicked(MouseEvent mouseEvent) {
+    public void mouseClicked(MouseEvent mouseEvent) {
         // On récupère la coordonnée de la tuile sélectionnée (peut être invalide)
-        Coord coord = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
+        try {
+            Coord coord = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
 
-        if (getMoteurJeu().getJeu().getPlateau().estCoordValide(coord)) {
-            // Si c'est une coordonnée valide sur le plateau
-            if (getMoteurJeu().estPhasePlacementPions()) {
-                // Si le jeu est dans la phase placement des pions
-                selection = coord;
-                actionJoueur = new ActionCoup(new CoupAjout(selection, getMoteurJeu().getJoueurActif().id));
-            } else if (actionJoueur == null) {
-                // Si le jeu est dans la phase jeu (déplacement des pions jusqu'à fin de la partie)
-                if (selection == null) {
-                    // Le joueur choisi lequel de ses pions, il veut déplacer
+            if (getMoteurJeu().getJeu().getPlateau().estCoordValide(coord)) {
+                // Si c'est une coordonnée valide sur le plateau
+                if (getMoteurJeu().estPhasePlacementPions()) {
+                    // Si le jeu est dans la phase placement des pions
                     selection = coord;
+                    actionJoueur = new ActionCoup(new CoupAjout(selection, getMoteurJeu().getJoueurActif().id));
+                } else if (actionJoueur == null) {
+                    // Si le jeu est dans la phase jeu (déplacement des pions jusqu'à fin de la partie)
+                    if (selection == null) {
+                        // Le joueur choisi lequel de ses pions, il veut déplacer
+                        selection = coord;
 
-                    if (getMoteurJeu().getJeu().getPlateau().estCoordValide(selection) && getMoteurJeu().getJeu().estPion(selection)
-                            && getMoteurJeu().getJeu().joueurDePion(selection) == getMoteurJeu().getJoueurActif().id) {
-                        // On affiche en surbrillance toutes les tuiles sur lesquelles le pion sélectionné peut aller
-                        ArrayList<Coord> coords = getMoteurJeu().getJeu().deplacementsPion(selection);
-                        coords.add(selection);
-                        plateauGraphique.setTuilesSurbrillance(coords);
-                        plateauGraphique.repaint();
+                        if (getMoteurJeu().getJeu().getPlateau().estCoordValide(selection) && getMoteurJeu().getJeu().estPion(selection)
+                                && getMoteurJeu().getJeu().joueurDePion(selection) == getMoteurJeu().getJoueurActif().id) {
+                            // On affiche en surbrillance toutes les tuiles sur lesquelles le pion sélectionné peut aller
+                            ArrayList<Coord> coords = getMoteurJeu().getJeu().deplacementsPion(selection);
+                            coords.add(selection);
+                            plateauGraphique.setTuilesSurbrillance(coords);
+                        } else {
+                            // Le joueur n'a pas choisi un de ses pions
+                            selection = null;
+                            plateauGraphique.setTuilesSurbrillance(null);
+                        }
+
                     } else {
-                        // Le joueur n'a pas choisi un de ses pions
-                        selection = null;
-                    }
+                        // Le joueur choisi sur quelle tuile il veut déplacer le pion qu'il a sélectionné
+                        Coord cible = coord;
 
-                } else {
-                    // Le joueur choisi sur quelle tuile il veut déplacer le pion qu'il a sélectionné
-                    Coord cible = coord;
+                        if (getMoteurJeu().getJeu().getPlateau().estCoordValide(cible) && !getMoteurJeu().getJeu().estPion(cible)) {
+                            // Le pion va se déplacer
+                            actionJoueur = new ActionCoup(new CoupDeplacement(selection, cible, getMoteurJeu().getJoueurActif().id));
+                        } else if (getMoteurJeu().getJeu().joueurDePion(cible) == getMoteurJeu().getJoueurActif().id) {
+                            // Le joueur a choisi un autre de ses pions
+                            selection = cible;
 
-                    if (getMoteurJeu().getJeu().getPlateau().estCoordValide(cible) && !getMoteurJeu().getJeu().estPion(cible)) {
-                        // Le pion va se déplacer
-                        actionJoueur = new ActionCoup(new CoupDeplacement(selection, cible, getMoteurJeu().getJoueurActif().id));
-                    } else if (getMoteurJeu().getJeu().joueurDePion(cible) == getMoteurJeu().getJoueurActif().id) {
-                        // Le joueur a choisi un autre de ses pions
-                        selection = cible;
-
-                        ArrayList<Coord> coords = getMoteurJeu().getJeu().deplacementsPion(selection);
-                        coords.add(selection);
-                        plateauGraphique.setTuilesSurbrillance(coords);
-                        plateauGraphique.repaint();
+                            ArrayList<Coord> coords = getMoteurJeu().getJeu().deplacementsPion(selection);
+                            coords.add(selection);
+                            plateauGraphique.setTuilesSurbrillance(coords);
+                            plateauGraphique.repaint();
+                        } else {
+                            plateauGraphique.setTuilesSurbrillance(null);
+                        }
                     }
                 }
+            } else {
+                afficherMessage("Coordonnées invalide");
             }
-        } else {
-            afficherMessage("Coordonnées invalide");
+        } catch (Exception e) {
         }
     }
 
@@ -302,24 +293,17 @@ public class IHMGraphique extends IHM implements MouseListener {
     public void mouseExited(MouseEvent mouseEvent) {
     }
 
-    public void addComponentListener(ComponentAdapter componentAdapter) {
+    @Override
+    public void mouseDragged(MouseEvent mouseEvent) {
+
     }
 
-    /**
-     * Classe servant à afficher un message sur l'IHM sans la bloquer
-     */
-    private class AfficherMessage implements Runnable {
-        IHMGraphique ihm;
-        String message;
-
-        public AfficherMessage(IHMGraphique ihm, String message) {
-            this.ihm = ihm;
-            this.message = message;
-        }
-
-        @Override
-        public void run() {
-
+    @Override
+    public void mouseMoved(MouseEvent mouseEvent) {
+        if (moteurJeu.getJeu() != null && moteurJeu.getJoueurActif() instanceof JoueurHumain && moteurJeu.estPhasePlacementPions()) {
+            plateauGraphique.setPlacementPingouin(mouseEvent.getX(), mouseEvent.getY());
+        } else {
+            plateauGraphique.setPlacementPingouin(-1, -1);
         }
     }
 }

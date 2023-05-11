@@ -19,7 +19,7 @@ public class PopUpFinPartie extends PopUp {
 
         String text = "";
         for (int i : ihm.getMoteurJeu().getJeu().getWinner()) {
-            text += ihm.getMoteurJeu().getJeu().getJoueur(i).toString() + "\n";
+            text += ihm.getMoteurJeu().getJeu().getJoueur(i).getNom() + "\n";
         }
         joueurGagnant.setText(text);
         panel.add(joueurGagnant);

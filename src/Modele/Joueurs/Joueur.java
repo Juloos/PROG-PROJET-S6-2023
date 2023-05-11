@@ -8,7 +8,8 @@ import Modele.Jeux.Jeu;
 import java.util.HashMap;
 import java.util.Set;
 
-import static Global.Config.*;
+import static Global.Config.TAILLE_PLATEAU_X;
+import static Global.Config.TAILLE_PLATEAU_Y;
 
 public abstract class Joueur implements Cloneable, Comparable<Joueur> {
     public final int id;
@@ -18,6 +19,8 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
     boolean termine;
 
     String nom;
+
+    volatile Action action;
 
     public Joueur(int id) {
         this.id = id;
@@ -60,6 +63,8 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
         return nom;
     }
 
+    public void setNom(String nom){ this.nom = nom; }
+
     public void ajouterTuile(int score) {
         this.score += score;
         this.tuiles += 1;
@@ -72,9 +77,11 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
     public void decrementerScore(int val) {
         this.score -= val;
     }
-    public void reAnimer(){
+
+    public void reAnimer() {
         this.termine = false;
     }
+
     public void ajouterPion(Coord c) {
         if (pions.containsKey(c))
             throw new IllegalArgumentException("Pion déjà présent");
@@ -92,7 +99,7 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
     }
 
 
-    public void deplacerPion(Coord source, Coord destination) {
+    public synchronized void deplacerPion(Coord source, Coord destination) {
         if (!pions.containsKey(source))
             throw new IllegalArgumentException("Pion inexistant");
         if (pions.containsKey(destination))
@@ -106,11 +113,13 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
             throw new IllegalArgumentException("Pion inexistant");
         pions.put(c, true);
     }
-    public void debloquerPion(Coord c){
+
+    public void debloquerPion(Coord c) {
         if (!pions.containsKey(c))
             throw new IllegalArgumentException("Pion inexistant");
         pions.put(c, false);
     }
+
     public boolean peutJouer(Jeu j) {
         return pions.containsValue(false) || pions.size() < j.getNbPions();
     }

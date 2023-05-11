@@ -2,18 +2,18 @@ package IHM;
 
 import Controleur.MoteurJeu;
 import Modele.Actions.Action;
-import Modele.Jeux.Jeu;
+import Modele.Jeux.JeuConcret;
 
-public abstract class IHM extends Thread {
+public abstract class IHM {
 
-    private MoteurJeu moteurJeu;
+    protected final MoteurJeu moteurJeu;
 
     public IHM(MoteurJeu moteurJeu) {
         super();
         this.moteurJeu = moteurJeu;
     }
 
-    public synchronized MoteurJeu getMoteurJeu() {
+    public MoteurJeu getMoteurJeu() {
         return moteurJeu;
     }
 
@@ -22,7 +22,7 @@ public abstract class IHM extends Thread {
      *
      * @param jeu : le jeu mit à jour
      */
-    public abstract void updateAffichage(Jeu jeu);
+    public abstract void updateAffichage(JeuConcret jeu);
 
     /**
      * Attend que le joueur actif demande de faire une action
@@ -48,4 +48,10 @@ public abstract class IHM extends Thread {
      * Ferme l'IHM
      */
     public abstract void terminer();
+
+    public void pause() {
+    }
+
+    public void resume() {
+    }
 }

@@ -62,6 +62,14 @@ public abstract class Jeu {
         this.joueurCourant = jeu.joueurCourant;
     }
 
+    public Joueur[] getJoueurs() {
+        Joueur[] copyJoueurs = new Joueur[getNbJoueurs()];
+        for (int i = 0; i < getNbJoueurs(); i++) {
+            copyJoueurs[i] = getJoueur(i).clone();
+        }
+        return joueurs;
+    }
+
     public Joueur getJoueur() {
         return joueurs[joueurCourant];
     }
@@ -165,13 +173,13 @@ public abstract class Jeu {
             joueurs[joueurCourant].bloquerPion(c2);
         c1.voisins().forEach(
                 voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
+                    if (estPionBloque(voisin))
                         joueurs[joueurDePion(voisin)].bloquerPion(voisin);
                 }
         );
         c2.voisins().forEach(
                 voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
+                    if (estPionBloque(voisin))
                         joueurs[joueurDePion(voisin)].bloquerPion(voisin);
                 }
         );
@@ -188,7 +196,7 @@ public abstract class Jeu {
             joueurs[joueurCourant].bloquerPion(c);
         c.voisins().forEach(
                 voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
+                    if (estPionBloque(voisin))
                         joueurs[joueurDePion(voisin)].bloquerPion(voisin);
                 }
         );
@@ -217,13 +225,13 @@ public abstract class Jeu {
         joueurs[j].deplacerPion(c1, c2);
         c1.voisins().forEach(
                 voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
+                    if (estPionBloque(voisin))
                         joueurs[joueurDePion(voisin)].debloquerPion(voisin);
                 }
         );
         c2.voisins().forEach(
                 voisin -> {
-                    if (estPion(voisin) && estPionBloque(voisin))
+                    if (estPionBloque(voisin))
                         joueurs[joueurDePion(voisin)].bloquerPion(voisin);
                 }
         );
@@ -234,7 +242,8 @@ public abstract class Jeu {
         this.getJoueur(j).supprimerPion(cible);
         this.joueurCourant = j;
     }
-    public void annulerTerminaison(int joueur,Coord source, int oldVal){
+
+    public void annulerTerminaison(int joueur, Coord source, int oldVal) {
         this.getPlateau().set(source, oldVal);
         this.getJoueur(joueur).ajouterPion(source);
         this.getJoueur(joueur).replacerPion(source, true);

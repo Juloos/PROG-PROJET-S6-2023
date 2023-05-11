@@ -11,11 +11,11 @@ public class JoueurHumain extends Joueur {
 
     public JoueurHumain(int id) {
         super(id);
-        this.nom = "Joueur "+id;
+        this.nom = "Joueur "+(1+id);
     }
     public JoueurHumain(int id, int score, int tuiles, HashMap<Coord,Boolean> pions){
         super(id, score, tuiles, pions);
-        this.nom = "Joueur "+id;
+        this.nom = "Joueur "+(1+id);
     }
 
     public JoueurHumain(int id, String nom) {
@@ -42,6 +42,10 @@ public class JoueurHumain extends Joueur {
         return nom;
     }
 
+    public void setNom(String nom){
+        this.nom = nom;
+    }
+
     @Override
     public String toString() {
         String dataHash = "";
@@ -49,6 +53,6 @@ public class JoueurHumain extends Joueur {
         for (int j = 0; j < pions.size(); j++) {
             dataHash += " " + tempL[j].q + " " + tempL[j].r;
         }
-        return 1 + " " + id + " " + nom + " " + score + " " + tuiles + " " + pions.size() + dataHash;
+        return 1 + " " + id + " \n" + nom + "\n " + score + " " + tuiles + " " + pions.size() + dataHash;
     }
 }
