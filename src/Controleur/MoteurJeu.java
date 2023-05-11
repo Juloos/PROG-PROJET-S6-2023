@@ -83,7 +83,7 @@ public class MoteurJeu extends Thread {
 
     public void appliquerAction(Action action) {
         if (action == null || !action.peutAppliquer(this)) {
-//            action.afficherMessageErreur(this);
+            action.afficherMessageErreur(this);
         } else {
             action.appliquer(this);
         }
@@ -107,7 +107,7 @@ public class MoteurJeu extends Thread {
         debug("Sauvegarde de la partie");
         jeu = gestionnairePartie.getJeu();
         try {
-            jeu.sauvegarder(nomSave + ".txt");
+            jeu.sauvegarder(nomSave);
         } catch (Exception e) {
             ihm.afficherMessage("Erreur lors de la sauvegarde");
             debug("Erreur lors de la sauvegarde");
