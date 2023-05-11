@@ -30,6 +30,7 @@ public class PopUpFinPartie extends PopUp {
             public void actionPerformed(ActionEvent actionEvent) {
                 ihm.fermerFenetres();
                 ihm.ouvrirFenetre(new EcranAccueil());
+                ihm.updateAffichage();
             }
         });
         panel.add(retourAccueil);

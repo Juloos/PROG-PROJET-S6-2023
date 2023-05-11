@@ -10,7 +10,9 @@ public class GestionnairePartie extends Thread {
     private final MoteurJeu moteurJeu;
     private JeuConcret jeu;
     private int nbPionsPlaces;
-    private volatile PhasesPartie phasePartie;
+    private PhasesPartie phasePartie;
+
+    private boolean isPaused;
 
     public GestionnairePartie(MoteurJeu moteurJeu) {
         super();
@@ -24,6 +26,7 @@ public class GestionnairePartie extends Thread {
     }
 
     public synchronized void jouerCoup(Coup coup) {
+        waitPause();
         jeu.jouer(coup);
         nbPionsPlaces++;
         updateAffichage();
@@ -31,6 +34,7 @@ public class GestionnairePartie extends Thread {
 
     private synchronized void updateAffichage() {
         if (partieEnCours()) {
+            moteurJeu.debug("Mise à jour de l'affichage");
             moteurJeu.updateAffichage();
         }
     }
@@ -80,10 +84,7 @@ public class GestionnairePartie extends Thread {
         phasePartie = PhasesPartie.ATTENTE_PARTIE;
         while (phasePartie == PhasesPartie.ATTENTE_PARTIE) ;
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-        }
+        moteurJeu.debutDePartie();
 
         moteurJeu.debug("Début de la partie");
         updateAffichage();
@@ -105,13 +106,17 @@ public class GestionnairePartie extends Thread {
             jeu.jouer(new CoupTerminaison(jeu.getJoueur().getID()));
         }
 
-        updateAffichage();
+        moteurJeu.finDePartie();
 
         moteurJeu.debug("Fin de la partie");
 
         if (!moteurJeu.hasIHM()) {
             moteurJeu.terminer();
         }
+    }
+
+    public void waitPause() {
+        while (phasePartie == PhasesPartie.PAUSE) ;
     }
 
     public synchronized void lancerPartie(Joueur[] joueurs) {
@@ -124,8 +129,8 @@ public class GestionnairePartie extends Thread {
         this.phasePartie = PhasesPartie.PARTIE_EN_COURS;
     }
 
-    public synchronized void pause(boolean pause) {
+    public synchronized void pauseGame(boolean pause) {
+        moteurJeu.debug("Jeu en pause : " + pause);
         this.phasePartie = pause ? PhasesPartie.PAUSE : PhasesPartie.PARTIE_EN_COURS;
     }
-
 }

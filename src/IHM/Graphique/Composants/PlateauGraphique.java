@@ -18,7 +18,7 @@ public class PlateauGraphique extends JComponent implements Runnable {
     int BORDURES_X = 2, BORDURES_Y = 1;
     Image[][] sprites;
     double TAILLE_CASES, Y_OFFSET, ESPACEMENT_TUILES;
-    List<Coord> tuilesSurbrillance;
+    List<Coord> tuilesSurbrillance, pionsSurbrillance;
     Image ARROW_PLAYER_ACTIVE;
     int arrow_X, arrow_Y, arrow_Width, arrow_Height;
     private Jeu jeu;
@@ -84,6 +84,8 @@ public class PlateauGraphique extends JComponent implements Runnable {
 
                     if (tuilesSurbrillance != null && tuilesSurbrillance.contains(coord)) {
                         ajouterSurbrillance(drawable, q, r, jeu.estPion(coord) ? Couleurs.SURBRILLANCE_PION : Couleurs.SURBRILLANCE);
+                    } else if (pionsSurbrillance != null && pionsSurbrillance.contains(coord)) {
+                        ajouterSurbrillance(drawable, q, r, Couleurs.SURBRILLANCE_PION);
                     }
                 }
             }
@@ -139,6 +141,12 @@ public class PlateauGraphique extends JComponent implements Runnable {
 
     public synchronized void setTuilesSurbrillance(List<Coord> tuilesSurbrillance) {
         this.tuilesSurbrillance = tuilesSurbrillance;
+        repaint();
+    }
+
+    public synchronized void setPionsSurbrillance(List<Coord> pions) {
+        pionsSurbrillance = pions;
+        repaint();
     }
 
     public synchronized void setPositionFlecheJoueurActif(int x, int y, int width, int height) {
@@ -146,7 +154,7 @@ public class PlateauGraphique extends JComponent implements Runnable {
         this.arrow_Y = y;
         this.arrow_Width = width;
         this.arrow_Height = height;
-        System.out.println(arrow_X + " " + arrow_Y);
+        repaint();
     }
 
     public synchronized void setPlacementPingouin(int x, int y) {

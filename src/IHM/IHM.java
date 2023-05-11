@@ -7,6 +7,7 @@ import Modele.Jeux.JeuConcret;
 public abstract class IHM {
 
     protected final MoteurJeu moteurJeu;
+    protected boolean isPaused;
 
     public IHM(MoteurJeu moteurJeu) {
         super();
@@ -44,14 +45,20 @@ public abstract class IHM {
      */
     public abstract void attendreCreationPartie();
 
+    public abstract void debutDePartie();
+
+    public abstract void finDePartie();
+
     /**
      * Ferme l'IHM
      */
     public abstract void terminer();
 
-    public void pause() {
+    public synchronized void pause() {
+        this.isPaused = true;
     }
 
-    public void resume() {
+    public synchronized void resume() {
+        this.isPaused = false;
     }
 }

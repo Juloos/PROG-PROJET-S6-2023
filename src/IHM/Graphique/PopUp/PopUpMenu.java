@@ -4,7 +4,6 @@ import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.Ecrans.EcranOptions;
 import IHM.Graphique.IHMGraphique;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,9 +15,21 @@ public class PopUpMenu extends PopUp {
     }
 
     @Override
+    public void open(IHMGraphique ihm) {
+        super.open(ihm);
+    }
+
+    @Override
     public void creation(IHMGraphique ihm) {
+        System.out.println("Création du pop de menu");
         panel.setLayout(new GridLayout(0, 1, 0, 30));
 
+        retour.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                ihm.getMoteurJeu().pauseGame(false);
+            }
+        });
         retour.setText("Retour au jeu");
         panel.add(retour);
 
@@ -50,16 +61,17 @@ public class PopUpMenu extends PopUp {
                         ihm.getMoteurJeu().arreterPartie();
                         ihm.fermerFenetres();
                         ihm.ouvrirFenetre(new EcranAccueil());
+                        ihm.updateAffichage();
                     }
                 }));
             }
         });
         panel.add(quitter);
+        System.out.println("Fin création");
     }
 
     @Override
     public void close(IHMGraphique ihm) {
-        ihm.getMoteurJeu().pauseGame(false);
         super.close(ihm);
     }
 }
