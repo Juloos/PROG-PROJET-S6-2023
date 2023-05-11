@@ -78,7 +78,7 @@ public class EcranCreationPartie extends Ecran {
                     if (((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex() != 0) {
                         IA.Difficulte diff = IA.Difficulte.values()[((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex()];
                         System.out.println(diff);
-                        joueurs[i] = new JoueurIA(((MenuJoueur) joueursPanel.getComponent(i)).num - 1,diff);
+                        joueurs[i] = new JoueurIA(((MenuJoueur) joueursPanel.getComponent(i)).num - 1, diff);
                         joueurs[i].setNom("IA " + diff);
                     } else {
                         joueurs[i] = new JoueurHumain(((MenuJoueur) joueursPanel.getComponent(i)).num - 1);
@@ -86,7 +86,6 @@ public class EcranCreationPartie extends Ecran {
                     }
                 }
                 ihm.getMoteurJeu().lancerPartie(joueurs);
-                ihm.ouvrirFenetre(new EcranJeu());
             }
         });
         buttons.add(retour);
@@ -145,17 +144,13 @@ public class EcranCreationPartie extends Ecran {
             numJoueur = new JLabel("Joueur " + num, SwingConstants.CENTER);
             if (num == 1) {
                 numJoueur.setForeground(Color.RED);
-            }
-            else if (num == 2) {
+            } else if (num == 2) {
                 numJoueur.setForeground(Color.BLUE);
-            }
-            else if (num == 3) {
+            } else if (num == 3) {
                 numJoueur.setForeground(Color.GREEN);
-            }
-            else if (num == 4) {
+            } else if (num == 4) {
                 numJoueur.setForeground(Color.YELLOW);
-            }
-            else {
+            } else {
                 numJoueur.setForeground(Color.BLACK);
             }
             numJoueur.setFont(new Font("Impact", Font.PLAIN, 50));
@@ -243,13 +238,12 @@ public class EcranCreationPartie extends Ecran {
                         panelia.revalidate();
                         isIA[0] = true;
 
+                    } else if (selected == 0 && isIA[0]) {
+                        panelia.remove(1);
+                        panelia.repaint();
+                        panelia.revalidate();
+                        isIA[0] = false;
                     }
-                    else if(selected == 0 && isIA[0]) {
-                            panelia.remove(1);
-                            panelia.repaint();
-                            panelia.revalidate();
-                            isIA[0] = false;
-                        }
                 }
             });
 

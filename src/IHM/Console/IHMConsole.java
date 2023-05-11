@@ -187,6 +187,16 @@ public class IHMConsole extends IHM {
     }
 
     @Override
+    public void debutDePartie() {
+
+    }
+
+    @Override
+    public void finDePartie() {
+
+    }
+
+    @Override
     public void terminer() {
         input.close();
     }

@@ -6,7 +6,6 @@ import IHM.Graphique.IHMGraphique;
 import IHM.IHM;
 import Modele.Actions.Action;
 import Modele.Coups.Coup;
-import Modele.Coups.CoupDeplacement;
 import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 
@@ -16,6 +15,7 @@ public class MoteurJeu extends Thread {
     JeuConcret jeu;
     GestionnairePartie gestionnairePartie;
     volatile EtatMoteurJeu etat;
+    boolean isPaused;
 
 
     public MoteurJeu() {
@@ -40,7 +40,7 @@ public class MoteurJeu extends Thread {
         this.ihm = null;
         this.etat = EtatMoteurJeu.PARTIE_EN_COURS;
 
-        this.gestionnairePartie.lancerPartie(joueurs);
+        lancerPartie(joueurs);
     }
 
     public void debug(String message) {
@@ -131,7 +131,6 @@ public class MoteurJeu extends Thread {
     @Override
     public void run() {
         while (etat != EtatMoteurJeu.FIN) ;
-        debug("Fin du moteur de jeu");
     }
 
     private void waitTime(int time) {
@@ -152,30 +151,20 @@ public class MoteurJeu extends Thread {
     }
 
     public synchronized void pauseGame(boolean pause) {
-        debug("Jeu en pause : " + pause);
-        this.etat = pause ? EtatMoteurJeu.PAUSE : EtatMoteurJeu.PARTIE_EN_COURS;
+        gestionnairePartie.pauseGame(pause);
         if (pause) {
             ihm.pause();
-//            try {
-//                gestionnairePartie.wait();
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
         } else {
             ihm.resume();
-            notifyAll();
         }
-        gestionnairePartie.pause(pause);
     }
 
-    private void waitPause() {
-        while (ihm != null && partieEnPause()) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    public void debutDePartie() {
+        ihm.debutDePartie();
+    }
+
+    public void finDePartie() {
+        ihm.finDePartie();
     }
 
     public synchronized void lancerPartie(Joueur[] joueurs) {
@@ -194,6 +183,7 @@ public class MoteurJeu extends Thread {
 
     public synchronized void arreterPartie() {
         gestionnairePartie.interrupt();
+        System.out.println("Arrêt de la partie");
     }
 
     public synchronized void terminer() {

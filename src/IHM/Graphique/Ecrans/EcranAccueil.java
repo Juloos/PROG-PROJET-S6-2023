@@ -117,6 +117,7 @@ public class EcranAccueil extends Ecran {
 
     @Override
     public void resized() {
+        System.out.println("on resized");
         int width = panel.getWidth();
         int height = panel.getHeight();
         int buttonWidth = (int) (width * 0.3);

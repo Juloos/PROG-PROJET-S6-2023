@@ -96,8 +96,8 @@ public class EcranJeu extends Ecran {
         options.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                ihm.getMoteurJeu().pauseGame(true);
                 ihm.ouvrirFenetre(new PopUpMenu());
+                ihm.getMoteurJeu().pauseGame(true);
             }
         });
 
@@ -112,12 +112,13 @@ public class EcranJeu extends Ecran {
 
     @Override
     public void update(IHMGraphique ihm) {
+        ihm.getMoteurJeu().debug("Mise à jour de l'écran de jeu");
     }
 
     @Override
     public void update(Jeu jeu) {
         super.update(jeu);
-
+        System.out.println("Mise à jour de l'écran de jeu via jeu");
         Joueur[] joueursJeu = jeu.getJoueurs();
         joueurActif = jeu.getJoueur().getID();
         for (int i = 0; i < joueurs.length; i++) {

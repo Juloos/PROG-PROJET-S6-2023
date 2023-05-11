@@ -214,9 +214,8 @@ public abstract class Jeu {
     }
 
     public void jouer(Coup c) {
-        if (c.getJoueur() != joueurCourant)
-            throw new IllegalArgumentException("Mauvaise selection du joueur du coup : " + c + ".");
-        c.jouer(this);
+        if (c.getJoueur() == joueurCourant)
+            c.jouer(this);
     }
 
     public void annulerDeplacer(int j, Coord c1, Coord c2) {
