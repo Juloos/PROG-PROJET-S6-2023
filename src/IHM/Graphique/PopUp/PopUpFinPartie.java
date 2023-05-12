@@ -17,8 +17,10 @@ public class PopUpFinPartie extends PopUp {
 
     @Override
     public void creation(IHMGraphique ihm) {
+        final String CHEMIN_VICTOIRE = "res/victoire/";
+
         panel.setLayout(new BorderLayout());
-        ImageIcon background = new ImageIcon("res/background_victory.jpeg");
+        ImageIcon background = new ImageIcon("res/fondsEcran/background_victory.jpeg");
         this.backgroundImage = background.getImage();
         JLabel joueurGagnant = new JLabel();
 
@@ -30,7 +32,7 @@ public class PopUpFinPartie extends PopUp {
         for (int i : ihm.getMoteurJeu().getJeu().getWinner()) {
             text += ihm.getMoteurJeu().getJeu().getJoueur(i).getNom() + "   ";
             if (i == 0) {
-                ImageIcon red = new ImageIcon("res/victory_red.png");
+                ImageIcon red = new ImageIcon(CHEMIN_VICTOIRE + "victory_red.png");
                 red.setImage(red.getImage().getScaledInstance(125, 125, Image.SCALE_DEFAULT));
                 JLabel redTrophy = new JLabel(red);
                 trophies.add(redTrophy);
@@ -42,7 +44,7 @@ public class PopUpFinPartie extends PopUp {
                 trophies.add(Box.createRigidArea(new Dimension(30, 0)));
             }
             if (i == 1) {
-                ImageIcon blue = new ImageIcon("res/victory_blue.png");
+                ImageIcon blue = new ImageIcon(CHEMIN_VICTOIRE + "victory_blue.png");
                 blue.setImage(blue.getImage().getScaledInstance(125, 125, Image.SCALE_DEFAULT));
                 JLabel blueTrophy = new JLabel(blue);
                 trophies.add(blueTrophy);
@@ -54,7 +56,7 @@ public class PopUpFinPartie extends PopUp {
                 trophies.add(Box.createRigidArea(new Dimension(30, 0)));
             }
             if (i == 2) {
-                ImageIcon green = new ImageIcon("res/victory_green.png");
+                ImageIcon green = new ImageIcon(CHEMIN_VICTOIRE + "victory_green.png");
                 green.setImage(green.getImage().getScaledInstance(125, 125, Image.SCALE_DEFAULT));
                 JLabel greenTrophy = new JLabel(green);
                 trophies.add(greenTrophy);
@@ -66,7 +68,7 @@ public class PopUpFinPartie extends PopUp {
                 trophies.add(Box.createRigidArea(new Dimension(30, 0)));
             }
             if (i == 3) {
-                ImageIcon yellow = new ImageIcon("res/victory_yellow.png");
+                ImageIcon yellow = new ImageIcon(CHEMIN_VICTOIRE + "victory_yellow.png");
                 yellow.setImage(yellow.getImage().getScaledInstance(125, 125, Image.SCALE_DEFAULT));
                 JLabel yellowTrophy = new JLabel(yellow);
                 trophies.add(yellowTrophy);

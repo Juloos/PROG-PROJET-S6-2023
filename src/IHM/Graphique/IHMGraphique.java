@@ -5,6 +5,7 @@ import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.Ecrans.EcranJeu;
 import IHM.Graphique.PopUp.PopUpFinPartie;
+import IHM.Graphique.Sprites.Sprites;
 import IHM.IHM;
 import Modele.Actions.Action;
 import Modele.Actions.ActionCoup;
@@ -60,7 +61,7 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         plateauGraphique = new PlateauGraphique();
 
         // On charge les sprites des tuiles dans un thread
-        spritesThread = new Thread(plateauGraphique);
+        spritesThread = new Thread(Sprites.getInstance());
         spritesThread.start();
 
         // La fenêtre par défaut est l'écran d'accueil

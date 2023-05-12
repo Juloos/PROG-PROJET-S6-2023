@@ -36,7 +36,7 @@ public class EcranCreationPartie extends Ecran {
     @Override
     public void creation(IHMGraphique ihm) {
         panel.setLayout(new BorderLayout());
-        ImageIcon icon = new ImageIcon("res/background2.jpg");
+        ImageIcon icon = new ImageIcon("res/fondsEcrans/background2.jpg");
         this.backgroundImage = icon.getImage();
 
         JLabel label = new JLabel("Nouvelle Partie", SwingConstants.CENTER);
