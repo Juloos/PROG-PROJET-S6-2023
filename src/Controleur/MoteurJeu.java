@@ -9,6 +9,8 @@ import Modele.Coups.Coup;
 import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 
+import javax.swing.*;
+
 public class MoteurJeu extends Thread {
 
     IHM ihm;
@@ -27,6 +29,7 @@ public class MoteurJeu extends Thread {
                 break;
             case GRAPHIQUE:
                 ihm = new IHMGraphique(this);
+                SwingUtilities.invokeLater(ihm);
                 break;
             default:
                 ihm = null;

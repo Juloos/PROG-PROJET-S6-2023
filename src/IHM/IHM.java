@@ -4,7 +4,7 @@ import Controleur.MoteurJeu;
 import Modele.Actions.Action;
 import Modele.Jeux.JeuConcret;
 
-public abstract class IHM {
+public abstract class IHM implements Runnable {
 
     protected final MoteurJeu moteurJeu;
     protected boolean isPaused;
@@ -77,5 +77,9 @@ public abstract class IHM {
      */
     public synchronized void resume() {
         this.isPaused = false;
+    }
+
+    @Override
+    public void run() {
     }
 }

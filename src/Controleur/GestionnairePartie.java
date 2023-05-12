@@ -29,8 +29,6 @@ public class GestionnairePartie extends Thread {
         jeu.jouer(coup);
         nbPionsPlaces++;
         updateAffichage();
-        System.out.println("Nb pions placés : " + nbPionsPlaces);
-        System.out.println("Nb pions a placés : " + (jeu.getNbPions() * jeu.getNbJoueurs()));
     }
 
     private synchronized void updateAffichage() {

@@ -42,46 +42,8 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
 
     public IHMGraphique(MoteurJeu moteurJeu) {
         super(moteurJeu);
-
         fenetres = new Stack<>();
-
-        frame = new JFrame("");
-//        try {
-//            // chargement du fichier audio
-//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("res/sons/soundtrack.wav")); // "res/Wallpaper.wav
-//            // création du Clip
-//            clip = AudioSystem.getClip();
-//            clip.open(audioInputStream);
-//            clip.loop(Clip.LOOP_CONTINUOUSLY); // boucle infinie
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        setVolume(0);
-
         plateauGraphique = new PlateauGraphique();
-
-        // On charge les sprites des tuiles dans un thread
-        spritesThread = new Thread(Sprites.getInstance());
-        spritesThread.start();
-
-        // La fenêtre par défaut est l'écran d'accueil
-        ouvrirFenetre(new EcranAccueil());
-
-        frame.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent componentEvent) {
-                // Méthode appelée chaque fois que la fenêtre change de dimensions
-                fenetres.peek().resized();
-            }
-        });
-
-        frame.addMouseListener(this);
-        frame.addMouseMotionListener(this);
-
-        frame.setSize(1500, 900);
-        frame.setLocationRelativeTo(null);
-
-        frame.setVisible(true);
     }
 
     /* Getters */
@@ -171,6 +133,46 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         getMoteurJeu().debug("JFrame fermée");
     }
 
+    @Override
+    public void run() {
+        super.run();
+
+        frame = new JFrame("");
+//        try {
+//            // chargement du fichier audio
+//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("res/sons/soundtrack.wav")); // "res/Wallpaper.wav
+//            // création du Clip
+//            clip = AudioSystem.getClip();
+//            clip.open(audioInputStream);
+//            clip.loop(Clip.LOOP_CONTINUOUSLY); // boucle infinie
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        setVolume(0);
+
+        // On charge les sprites des tuiles dans un thread
+        spritesThread = new Thread(Sprites.getInstance());
+        spritesThread.start();
+
+        // La fenêtre par défaut est l'écran d'accueil
+        ouvrirFenetre(new EcranAccueil());
+
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent componentEvent) {
+                // Méthode appelée chaque fois que la fenêtre change de dimensions
+                fenetres.peek().resized();
+            }
+        });
+
+        frame.addMouseListener(this);
+        frame.addMouseMotionListener(this);
+
+        frame.setSize(1500, 900);
+        frame.setLocationRelativeTo(null);
+
+        frame.setVisible(true);
+    }
 
     /* Méthodes d'instance */
 
@@ -199,7 +201,7 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         fenetres.peek().resized();
 
         // Mise à jour de la frame
-        frame.revalidate();
+        frame.validate();
     }
 
     /**
@@ -221,7 +223,7 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         moteurJeu.debug("Ouverture d'une nouvelle fenêtre");
 
         // Mise à jour de la frame
-        frame.revalidate();
+        frame.validate();
     }
 
     /* */
