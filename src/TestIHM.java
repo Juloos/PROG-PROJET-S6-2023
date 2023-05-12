@@ -9,9 +9,7 @@ public class TestIHM {
         try {
             moteurJeu.join();
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
 
-        System.exit(0);
     }
 }

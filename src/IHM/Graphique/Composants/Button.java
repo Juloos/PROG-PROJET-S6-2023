@@ -1,4 +1,4 @@
-package IHM.Graphique.Ecrans;
+package IHM.Graphique.Composants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,11 +7,13 @@ import java.awt.geom.RoundRectangle2D;
 public class Button extends JButton {
     private int radius = 0;
     private Shape shape;
+
     public Button(String text) {
         super(text);
         setFocusPainted(false);
         setContentAreaFilled(false);
     }
+
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 
@@ -25,7 +27,7 @@ public class Button extends JButton {
         qualityHints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2.setRenderingHints(qualityHints);
 
-        g2.fillRoundRect(0, 0, getSize().width-1, getSize().height-1, radius, radius);
+        g2.fillRoundRect(0, 0, getSize().width - 1, getSize().height - 1, radius, radius);
 
         g2.setColor(Color.WHITE); // Définir la couleur du texte en blanc
         g2.setFont(getFont());

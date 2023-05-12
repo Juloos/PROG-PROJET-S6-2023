@@ -1,7 +1,8 @@
 package IHM.Graphique.Ecrans;
 
 import Global.Config;
-import IHM.Colors;
+import IHM.Graphique.Composants.Button;
+import IHM.Graphique.Couleurs;
 import IHM.Graphique.IHMGraphique;
 import Modele.IA.IA;
 import Modele.Joueurs.Joueur;
@@ -19,9 +20,7 @@ import java.awt.event.ActionListener;
 public class EcranCreationPartie extends Ecran {
 
     int nbJoueurs;
-
     Button ajouterJoueur;
-
     JPanel joueursPanel;
 
     public EcranCreationPartie() {
@@ -47,7 +46,7 @@ public class EcranCreationPartie extends Ecran {
         joueursPanel = new JPanel(new GridLayout(0, Config.NB_MAX_JOUEUR));
         joueursPanel.setAlignmentX(JScrollPane.CENTER_ALIGNMENT);
 
-        joueursPanel.setBackground(Colors.TRANSPARENT);
+        joueursPanel.setBackground(Couleurs.TRANSPARENT);
         for (int i = 0; i < nbJoueurs; i++) {
             joueursPanel.add(new MenuJoueur(i + 1), i);
         }
@@ -55,8 +54,8 @@ public class EcranCreationPartie extends Ecran {
         panel.add(joueursPanel, BorderLayout.CENTER);
 
         JPanel buttons = new JPanel(new FlowLayout());
-        buttons.setBackground(Colors.TRANSPARENT);
-        ajouterJoueur = new Button("Ajouter un joueur");
+        buttons.setBackground(Couleurs.TRANSPARENT);
+        ajouterJoueur = new IHM.Graphique.Composants.Button("Ajouter un joueur");
         ajouterJoueur.setPreferredSize(new Dimension(200, 50));
         ajouterJoueur.addActionListener(new ActionListener() {
             @Override
@@ -66,7 +65,7 @@ public class EcranCreationPartie extends Ecran {
         });
         buttons.add(ajouterJoueur);
 
-        Button lancerPartie = new Button("Lancer partie");
+        IHM.Graphique.Composants.Button lancerPartie = new IHM.Graphique.Composants.Button("Lancer partie");
         lancerPartie.setPreferredSize(new Dimension(200, 50));
         buttons.add(lancerPartie);
         lancerPartie.addActionListener(new ActionListener() {
@@ -130,14 +129,14 @@ public class EcranCreationPartie extends Ecran {
         int num;
         JTextField nom;
         JComboBox<String> difficultesIA;
-        Button close;
+        IHM.Graphique.Composants.Button close;
         ActionListener closeAction;
 
         public MenuJoueur(int num) {
             super();
             this.num = num;
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-            setBackground(Colors.TRANSPARENT);
+            setBackground(Couleurs.TRANSPARENT);
             Border border = BorderFactory.createMatteBorder(0, 0, 0, 2, Color.BLACK);
             setBorder(border);
 
@@ -158,7 +157,7 @@ public class EcranCreationPartie extends Ecran {
             add(numJoueur);
 
             JPanel panelnom = new JPanel();
-            panelnom.setBackground(Colors.TRANSPARENT);
+            panelnom.setBackground(Couleurs.TRANSPARENT);
             panelnom.setLayout(new BoxLayout(panelnom, BoxLayout.X_AXIS));
             JLabel nomLabel = new JLabel("Nom : ");
             nomLabel.setFont(new Font("Impact", Font.PLAIN, 20));
@@ -202,7 +201,7 @@ public class EcranCreationPartie extends Ecran {
                 public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                     super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                     setForeground(Color.BLACK); //couleur du texte
-                    setBackground(Colors.TRANSPARENT); //couleur de fond
+                    setBackground(Couleurs.TRANSPARENT); //couleur de fond
                     setHorizontalAlignment(DefaultListCellRenderer.CENTER);
                     return this;
                 }

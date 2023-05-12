@@ -23,12 +23,11 @@ public class EcranChargerPartie extends Ecran {
     public void creation(IHMGraphique ihm) {
         File dirSauv;
         dirSauv = new File("sauvegarde");
-        String [] listNameFiles = dirSauv.list();
+        String[] listNameFiles = dirSauv.list();
         JList listCharg = new JList(listNameFiles);
         charger = new JButton("charger");
         charger.addActionListener(actionEvent -> {
             ihm.getMoteurJeu().lancerPartie("sauvegarde/" + listNameFiles[listCharg.getSelectedIndex()]);
-            ihm.ouvrirFenetre(new EcranJeu());
         });
         panel.add(charger, BorderLayout.PAGE_START);
         panel.add(retour, BorderLayout.PAGE_END);

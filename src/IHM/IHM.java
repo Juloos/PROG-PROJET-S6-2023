@@ -14,9 +14,23 @@ public abstract class IHM {
         this.moteurJeu = moteurJeu;
     }
 
+    /* Getters */
+
     public MoteurJeu getMoteurJeu() {
         return moteurJeu;
     }
+
+    /* Méthodes d'instance */
+
+    /**
+     * Méthode appelée lorsqu'une partie est lancée
+     */
+    public abstract void debutDePartie();
+
+    /**
+     * Méthode appelé lorsqu'une partie est terminée
+     */
+    public abstract void finDePartie();
 
     /**
      * Met à jour l'affichage du plateau ainsi que des informations des joueurs
@@ -28,7 +42,7 @@ public abstract class IHM {
     /**
      * Attend que le joueur actif demande de faire une action
      *
-     * @return l'action que le jouer actif veut faire
+     * @return l'action que le joueur actif veut faire
      */
     public abstract Action attendreActionJoueur();
 
@@ -45,19 +59,22 @@ public abstract class IHM {
      */
     public abstract void attendreCreationPartie();
 
-    public abstract void debutDePartie();
-
-    public abstract void finDePartie();
-
     /**
-     * Ferme l'IHM
+     * Méthode appelée lorsque le moteur de jeu se termine
+     * L'IHM doit se fermer correctement et proprement
      */
     public abstract void terminer();
 
+    /**
+     * Méthode appelée lorsqu'une partie est mise en pause
+     */
     public synchronized void pause() {
         this.isPaused = true;
     }
 
+    /**
+     * Méthode appelée lorsqu'une partie mise en pause reprend
+     */
     public synchronized void resume() {
         this.isPaused = false;
     }

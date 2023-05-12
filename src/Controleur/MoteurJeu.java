@@ -14,12 +14,12 @@ public class MoteurJeu extends Thread {
     IHM ihm;
     JeuConcret jeu;
     GestionnairePartie gestionnairePartie;
-    volatile EtatMoteurJeu etat;
-    boolean isPaused;
+    volatile boolean isAlive;
 
 
     public MoteurJeu() {
         super();
+        this.isAlive = true;
 
         switch (Config.TYPE_IHM) {
             case CONSOLE:
@@ -32,7 +32,7 @@ public class MoteurJeu extends Thread {
                 ihm = null;
         }
 
-        etat = EtatMoteurJeu.ATTENTE_PARTIE;
+        attendreNouvellePartie();
     }
 
     public void debug(String message) {
@@ -83,7 +83,7 @@ public class MoteurJeu extends Thread {
 
     public void appliquerAction(Action action) {
         if (action == null || !action.peutAppliquer(this)) {
-            action.afficherMessageErreur(this);
+//            action.afficherMessageErreur(this);
         } else {
             action.appliquer(this);
         }
@@ -122,20 +122,11 @@ public class MoteurJeu extends Thread {
 
     @Override
     public void run() {
-        while (etat != EtatMoteurJeu.FIN) ;
-    }
-
-    private void waitTime(int time) {
-        if (ihm != null) {
-            try {
-                Thread.sleep(time);
-            } catch (Exception e) {
-            }
-        }
+        while (isAlive) ;
     }
 
     public boolean partieEnPause() {
-        return etat == EtatMoteurJeu.PAUSE;
+        return false;
     }
 
     public boolean partieEnCours() {
@@ -145,6 +136,7 @@ public class MoteurJeu extends Thread {
     public synchronized void pauseGame(boolean pause) {
         gestionnairePartie.pauseGame(pause);
         if (pause) {
+            System.out.println("Pause");
             ihm.pause();
         } else {
             ihm.resume();
@@ -167,6 +159,9 @@ public class MoteurJeu extends Thread {
         this.gestionnairePartie = new GestionnairePartie(this);
         gestionnairePartie.lancerPartie(joueurs);
         this.gestionnairePartie.start();
+        if (hasIHM()) {
+            ihm.resume();
+        }
         debug("Lancement d'une nouvelle partie");
     }
 
@@ -174,6 +169,9 @@ public class MoteurJeu extends Thread {
         this.gestionnairePartie = new GestionnairePartie(this);
         gestionnairePartie.lancerPartie(nomSave);
         this.gestionnairePartie.start();
+        if (hasIHM()) {
+            ihm.resume();
+        }
         debug("Lancement dune nouvelle partie depuis une sauvegarde");
     }
 
@@ -184,13 +182,16 @@ public class MoteurJeu extends Thread {
 
     public synchronized void terminer() {
         debug("Arrêt des threads");
+        if (hasIHM()) {
+            ihm.terminer();
+        }
+
         try {
             gestionnairePartie.interrupt();
             debug("Thread gestionnaire de parties terminé");
         } catch (Exception e) {
-            debug("Exception batard");
         }
+        this.isAlive = false;
         debug("Threads tous terminer");
-        etat = EtatMoteurJeu.FIN;
     }
 }

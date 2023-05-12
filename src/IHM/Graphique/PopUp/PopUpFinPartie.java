@@ -1,6 +1,6 @@
 package IHM.Graphique.PopUp;
 
-import IHM.Colors;
+import IHM.Graphique.Couleurs;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.IHMGraphique;
 
@@ -28,7 +28,7 @@ public class PopUpFinPartie extends PopUp {
         JPanel nameWinners = new JPanel();
         nameWinners.setLayout(new BoxLayout(nameWinners, BoxLayout.Y_AXIS));
         for (int i : ihm.getMoteurJeu().getJeu().getWinner()) {
-            text += ihm.getMoteurJeu().getJeu().getJoueur(i).getNom()  + "   ";
+            text += ihm.getMoteurJeu().getJeu().getJoueur(i).getNom() + "   ";
             if (i == 0) {
                 ImageIcon red = new ImageIcon("res/victory_red.png");
                 red.setImage(red.getImage().getScaledInstance(125, 125, Image.SCALE_DEFAULT));
@@ -79,13 +79,13 @@ public class PopUpFinPartie extends PopUp {
             }
         }
         trophies.add(Box.createRigidArea(new Dimension(30, 0)));
-        trophies.setBackground(Colors.TRANSPARENT);
+        trophies.setBackground(Couleurs.TRANSPARENT);
         panel.add(trophies, BorderLayout.NORTH);
 
         joueurGagnant.setText(text);
         joueurGagnant.setFont(new Font("Forte", Font.BOLD, 30));
         nameWinners.add(joueurGagnant);
-        nameWinners.setBackground(Colors.TRANSPARENT);
+        nameWinners.setBackground(Couleurs.TRANSPARENT);
         nameWinners.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(nameWinners, BorderLayout.CENTER);
 
@@ -102,6 +102,7 @@ public class PopUpFinPartie extends PopUp {
         panel.repaint();
         panel.revalidate();
     }
+
     @Override
     public void resized() {
         super.resized();

@@ -2,8 +2,10 @@ package IHM.Graphique.Composants;
 
 import IHM.Graphique.Couleurs;
 import Modele.Coord;
+import Modele.Coups.Coup;
+import Modele.Coups.CoupDeplacement;
 import Modele.Jeux.Jeu;
-import Modele.Jeux.JeuGraphe;
+import Modele.Jeux.JeuConcret;
 import Modele.Plateau;
 
 import javax.imageio.ImageIO;
@@ -17,11 +19,12 @@ public class PlateauGraphique extends JComponent implements Runnable {
 
     int BORDURES_X = 2, BORDURES_Y = 1;
     Image[][] sprites;
+    Image MOVE_ARROW_SOURCE, MOVE_ARROW_DEST;
     double TAILLE_CASES, Y_OFFSET, ESPACEMENT_TUILES;
     List<Coord> tuilesSurbrillance, pionsSurbrillance;
     Image ARROW_PLAYER_ACTIVE;
     int arrow_X, arrow_Y, arrow_Width, arrow_Height;
-    private Jeu jeu;
+    private JeuConcret jeu;
     private volatile int placementPingouinX, placementPingouinY;
 
     public PlateauGraphique() {
@@ -45,15 +48,14 @@ public class PlateauGraphique extends JComponent implements Runnable {
         return jeu;
     }
 
-    public synchronized void setJeu(Jeu jeu) {
-        this.jeu = new JeuGraphe(jeu);
+    public synchronized void setJeu(JeuConcret jeu) {
+        this.jeu = new JeuConcret(jeu);
     }
 
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D drawable = (Graphics2D) g;
 
-        Jeu jeu = getJeu();
         if (jeu != null) {
             Plateau plateau = jeu.getPlateau();
             final int NB_ROWS = plateau.getNbRows();
@@ -99,6 +101,21 @@ public class PlateauGraphique extends JComponent implements Runnable {
             }
 
             drawable.drawImage(ARROW_PLAYER_ACTIVE, arrow_X, arrow_Y, arrow_Width, arrow_Height, null);
+
+            Coup coup = jeu.dernierCoupJoue();
+            if (coup instanceof CoupDeplacement) {
+                CoupDeplacement deplacement = (CoupDeplacement) coup;
+
+                int x = XHexToPixel(deplacement.source.q, deplacement.source.r) + (int) (TAILLE_CASES / 2.0);
+                int y = YHexToPixel(deplacement.source.r) + (int) (TAILLE_CASES / 2.0);
+
+                drawable.drawImage(MOVE_ARROW_SOURCE, x, y, (int) (TAILLE_CASES / 3.0), (int) (TAILLE_CASES / 3.0), null);
+
+                x = XHexToPixel(deplacement.destination.q, deplacement.destination.r) + (int) (TAILLE_CASES / 2.0);
+                y = YHexToPixel(deplacement.destination.r) + (int) (TAILLE_CASES / 2.0);
+
+                drawable.drawImage(MOVE_ARROW_DEST, x, y, (int) (TAILLE_CASES / 3.0), (int) (TAILLE_CASES / 3.0), null);
+            }
         }
     }
 
@@ -195,6 +212,16 @@ public class PlateauGraphique extends JComponent implements Runnable {
         try {
             InputStream in = new FileInputStream("res/arrow_player.png");
             ARROW_PLAYER_ACTIVE = ImageIO.read(in);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            InputStream in = new FileInputStream("res/arrow_move_source.png");
+            MOVE_ARROW_SOURCE = ImageIO.read(in);
+
+            in = new FileInputStream("res/arrow_move_dest.png");
+            MOVE_ARROW_DEST = ImageIO.read(in);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -28,7 +28,9 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
 
     // La représentation graphique du plateau
     final PlateauGraphique plateauGraphique;
-    // Pile des fenêtres qui ont été ouverte, la fenêtre ouverte est au sommet de la pile
+    // Le thread pour charger les sprites du jeu
+    Thread spritesThread;
+    // Pile des fenêtres qui ont été ouvertes, la fenêtre ouverte est au sommet de la pile
     Stack<Fenetre> fenetres;
     JFrame frame;
     Clip clip;
@@ -56,37 +58,55 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
 //        setVolume(0);
 
         plateauGraphique = new PlateauGraphique();
-        Thread pgt = new Thread(plateauGraphique);
-        pgt.start();
 
+        // On charge les sprites des tuiles dans un thread
+        spritesThread = new Thread(plateauGraphique);
+        spritesThread.start();
+
+        // La fenêtre par défaut est l'écran d'accueil
         ouvrirFenetre(new EcranAccueil());
 
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent componentEvent) {
+                // Méthode appelée chaque fois que la fenêtre change de dimensions
                 fenetres.peek().resized();
             }
         });
 
         frame.addMouseListener(this);
         frame.addMouseMotionListener(this);
+
         frame.setSize(1500, 900);
         frame.setLocationRelativeTo(null);
+
         frame.setVisible(true);
+    }
+
+    /* Getters */
+    public synchronized JFrame getFrame() {
+        return frame;
+    }
+
+    public PlateauGraphique getPlateauGraphique() {
+        return plateauGraphique;
     }
 
     /* Méthodes héritées de la classe IHM */
     @Override
     public synchronized void updateAffichage(JeuConcret jeu) {
-        // Sert uniquement à mettre à jour l'affichage de l'IHM
         try {
+            // Mise à jour de la fenêtre courante
             fenetres.peek().update(jeu);
             fenetres.peek().resized();
 
+            // Mise à jour du plateau graphique
             plateauGraphique.setJeu(jeu);
             if (moteurJeu.estPhasePlacementPions()) {
+                // On affiche en surbrillance les tuiles sur lesquelles un pion peut être placées
                 plateauGraphique.setTuilesSurbrillance(jeu.placementsPionValide());
             } else {
+                // On affiche en surbrillance les pions du joueur actif
                 plateauGraphique.setTuilesSurbrillance(null);
 
                 Set<Coord> pions = jeu.getJoueur().getPions();
@@ -99,16 +119,12 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         }
     }
 
-    public synchronized void updateAffichage() {
-        fenetres.peek().update(this);
-        fenetres.peek().resized();
-    }
-
     @Override
     public Action attendreActionJoueur() {
         actionJoueur = null;
         selection = null;
 
+        // Tant qu'on a pas d'action de la part du joueur et que le partie est toujours en cours
         while (actionJoueur == null && moteurJeu.partieEnCours()) ;
 
         return actionJoueur;
@@ -121,11 +137,11 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
 
     @Override
     public void attendreCreationPartie() {
-
     }
 
     @Override
     public void debutDePartie() {
+        // On enlève toutes les tuiles en surbrillance
         plateauGraphique.setPionsSurbrillance(null);
         ouvrirFenetre(new EcranJeu());
     }
@@ -137,40 +153,30 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
     }
 
     @Override
+    public synchronized void pause() {
+        System.out.println("Mise en pause du jeu");
+        super.pause();
+        plateauGraphique.setPlacementPingouin(-1, -1);
+    }
+
+    @Override
     public void terminer() {
         getMoteurJeu().debug("Fermeture de toutes les fenêtres");
         fermerFenetres();
         frame.dispose();
 
+        spritesThread.interrupt();
+
         getMoteurJeu().debug("JFrame fermée");
     }
 
-    /* Getters */
-    public synchronized JFrame getFrame() {
-        return frame;
-    }
-
-    public PlateauGraphique getPlateauGraphique() {
-        return plateauGraphique;
-    }
-
-    /* Setters */
-
-    public void setVolume(float volume) {
-        if (clip != null) {
-            // Récupération du contrôle de volume du clip
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            // Conversion de la valeur de volume donnée en dB (décibels)
-            float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
-            // Réglage du contrôle de volume
-            gainControl.setValue(dB);
-        }
-    }
 
     /* Méthodes d'instance */
 
+    /* Méthodes pour gérer les fenêtres */
+
     /**
-     * Détruit toutes les fenêtres de l'IHM
+     * Ferme toutes les fenêtres de l'IHM
      */
     public synchronized void fermerFenetres() {
         for (Fenetre fenetre : fenetres) {
@@ -180,7 +186,7 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
     }
 
     /**
-     * Retourne à la fenêtre précédente et détruit la fenêtre courante
+     * Retourne à la fenêtre précédente et ferme la fenêtre courante
      */
     public synchronized void retournerPrecedenteFenetre() {
         // Fermeture de la fenêtre courante
@@ -217,6 +223,29 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         frame.revalidate();
     }
 
+    /* */
+
+    /**
+     * Met à jour l'affichage de la fenêtre courante
+     */
+    public synchronized void updateAffichage() {
+        fenetres.peek().update(this);
+        fenetres.peek().resized();
+    }
+
+    public void setVolume(float volume) {
+        if (clip != null) {
+            // Récupération du contrôle de volume du clip
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            // Conversion de la valeur de volume donnée en dB (décibels)
+            float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
+            // Réglage du contrôle de volume
+            gainControl.setValue(dB);
+        }
+    }
+
+    /* Méthodes d'événements */
+
     /**
      * Lorsqu'un joueur clique sur la fenêtre
      *
@@ -227,7 +256,8 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         // On récupère la coordonnée de la tuile sélectionnée (peut être invalide)
         try {
             if (isPaused) {
-                throw new Exception();
+                // On ne fait rien si la partie est en pause
+                throw new Exception("Jeu en pause");
             }
 
             Coord coord = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
@@ -276,6 +306,7 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
                 }
             }
         } catch (Exception e) {
+            System.out.println(e);
         }
     }
 
@@ -297,23 +328,24 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
 
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {
-
     }
 
+    /**
+     * Lorsque la souris bouge sur la fenêtre
+     *
+     * @param mouseEvent : l'évenement du mouvement de la souris
+     */
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
         if (!isPaused) {
+            // Si la partie n'est pas en pause
             if (moteurJeu.getJeu() != null && moteurJeu.getJoueurActif() instanceof JoueurHumain && moteurJeu.estPhasePlacementPions()) {
+                // On modifie la position du pion a placer
                 plateauGraphique.setPlacementPingouin(mouseEvent.getX(), mouseEvent.getY());
             } else {
+                // On n'affiche pas le pion flottant
                 plateauGraphique.setPlacementPingouin(-1, -1);
             }
         }
-    }
-
-    @Override
-    public synchronized void pause() {
-        super.pause();
-        plateauGraphique.setPlacementPingouin(-1, -1);
     }
 }

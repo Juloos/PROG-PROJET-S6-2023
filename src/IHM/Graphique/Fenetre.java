@@ -7,10 +7,11 @@ import java.awt.*;
 
 public abstract class Fenetre {
 
+    // Le panel dans lequel les composants de la fenêtre sont ajoutés
     protected JPanel panel;
     // Le bouton pour retourner à la fenêtre précédente
     protected JButton retour;
-    // L'image de fond des fenêtres
+    // L'image de fond de la fenêtre
     protected Image backgroundImage;
     // Vrai si la création de la fenêtre est terminée
     protected boolean estCree;
@@ -29,6 +30,9 @@ public abstract class Fenetre {
         retour = new JButton("Retour");
     }
 
+    /* Méthodes d'instance */
+    public abstract void creation(IHMGraphique ihm);
+
     /**
      * Lorsque la fenêtre est ouverte
      *
@@ -45,7 +49,6 @@ public abstract class Fenetre {
         retour.addActionListener(actionEvent -> ihm.retournerPrecedenteFenetre());
     }
 
-    public abstract void creation(IHMGraphique ihm);
 
     /**
      * Lorsque la fenêtre est fermée
@@ -63,11 +66,16 @@ public abstract class Fenetre {
     public void update(IHMGraphique ihm) {
     }
 
+    /**
+     * Mise à jour de la fenêtre lorsqu'elle est ouverte
+     *
+     * @param jeu : l'état courant du jeu à afficher
+     */
     public void update(Jeu jeu) {
     }
 
     /**
-     * Met à jour les dimensions des éléments de la fenêtre lorsqu'elle est ouverte
+     * Met à jour les dimensions des éléments de la fenêtre lorsqu'elle change de dimensions
      */
     public void resized() {
     }

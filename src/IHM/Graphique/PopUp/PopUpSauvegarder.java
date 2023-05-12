@@ -1,6 +1,5 @@
 package IHM.Graphique.PopUp;
 
-import IHM.Colors;
 import IHM.Graphique.IHMGraphique;
 import Modele.Actions.ActionSauvegarder;
 

@@ -118,7 +118,6 @@ public class EcranJeu extends Ecran {
     @Override
     public void update(Jeu jeu) {
         super.update(jeu);
-        System.out.println("Mise à jour de l'écran de jeu via jeu");
         Joueur[] joueursJeu = jeu.getJoueurs();
         joueurActif = jeu.getJoueur().getID();
         for (int i = 0; i < joueurs.length; i++) {
