@@ -36,7 +36,7 @@ public class AnimationDeplacementPion implements Animation {
     }
 
     @Override
-    public void play() {
+    public void run() {
         List<Coord> coords = new ArrayList<>();
         int decalage = deplacement.source.getDecalage(deplacement.destination);
         Coord current = deplacement.source.clone();
@@ -55,7 +55,6 @@ public class AnimationDeplacementPion implements Animation {
         }
 
         plateauGraphique.setTuilesSurbrillance(null);
-        stop();
     }
 
     @Override

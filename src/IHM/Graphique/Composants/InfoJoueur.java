@@ -9,12 +9,10 @@ import java.awt.*;
 public class InfoJoueur extends JPanel {
     private static final ImageIcon FISH = new ImageIcon("res/fish.png");
     private static final ImageIcon ICE = new ImageIcon("res/ice.png");
-    private final Joueur joueur;
     JLabel nom, nbPoissons, nbTuiles;
 
     public InfoJoueur(Joueur joueur) {
         super();
-        this.joueur = joueur;
 
         setLayout(new BorderLayout());
 
@@ -47,9 +45,10 @@ public class InfoJoueur extends JPanel {
         setBorder(BorderFactory.createMatteBorder(0, 0, 5, 0, Color.BLACK));
     }
 
-    public void update() {
-        nbPoissons.setText("x " + joueur.getScore());
-        nbTuiles.setText("x " + joueur.getTuiles());
+    public void update(int score, int tuiles) {
+        nbPoissons.setText("x " + score);
+        nbTuiles.setText("x " + tuiles);
+        repaint();
     }
 
     private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {

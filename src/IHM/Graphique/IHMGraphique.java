@@ -1,7 +1,7 @@
 package IHM.Graphique;
 
 import Controleur.MoteurJeu;
-import IHM.Graphique.Animations.AnimationDeplacementPion;
+import Global.Config;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.Ecrans.EcranJeu;
@@ -40,6 +40,7 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
     Coord selection;
     // L'action que le joueur actif veut faire
     Action actionJoueur;
+    volatile boolean animatioEnCours;
 
     public IHMGraphique(MoteurJeu moteurJeu) {
         super(moteurJeu);
@@ -60,13 +61,38 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
     @Override
     public synchronized void updateAffichage(JeuConcret jeu) {
         try {
+            // Mise à jour de la fenêtre de jeu
+            fenetres.peek().update(jeu);
+
             if (jeu.dernierCoupJoue() instanceof CoupDeplacement) {
-                AnimationDeplacementPion animation = new AnimationDeplacementPion(this, (CoupDeplacement) jeu.dernierCoupJoue());
-                animation.play();
+                try {
+                    animatioEnCours = true;
+                    CoupDeplacement deplacement = (CoupDeplacement) jeu.dernierCoupJoue();
+
+                    List<Coord> coords = new ArrayList<>();
+                    int decalage = deplacement.source.getDecalage(deplacement.destination);
+                    Coord current = deplacement.source.clone();
+
+                    while (!current.equals(deplacement.destination)) {
+                        coords.add(current);
+                        current = current.decale(decalage);
+                    }
+                    coords.add(deplacement.destination);
+
+                    plateauGraphique.setTuilesSurbrillance(coords);
+
+                    Thread.sleep(Config.ANIMATION_DURATION);
+
+                    plateauGraphique.setTuilesSurbrillance(null);
+
+                    Thread.sleep(300);
+
+                    animatioEnCours = false;
+                } catch (InterruptedException e) {
+                }
             }
 
-            // Mise à jour de la fenêtre courante
-            fenetres.peek().update(jeu);
+            fenetres.peek().update(this);
 
             // Mise à jour du plateau graphique
             plateauGraphique.setJeu(jeu);
@@ -83,6 +109,7 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
 
                 plateauGraphique.setPionsSurbrillance(coords);
             }
+            plateauGraphique.repaint();
         } catch (Exception e) {
         }
     }
@@ -92,6 +119,7 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         actionJoueur = null;
         selection = null;
 
+        System.out.println("Attente d'une action du joueur");
         // Tant qu'on a pas d'action de la part du joueur et que le partie est toujours en cours
         while (actionJoueur == null && moteurJeu.partieEnCours()) ;
 
@@ -270,7 +298,7 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
     public void mouseClicked(MouseEvent mouseEvent) {
         // On récupère la coordonnée de la tuile sélectionnée (peut être invalide)
         try {
-            if (isPaused) {
+            if (isPaused || animatioEnCours) {
                 // On ne fait rien si la partie est en pause
                 throw new Exception("Jeu en pause");
             }

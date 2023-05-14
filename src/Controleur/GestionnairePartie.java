@@ -34,7 +34,6 @@ public class GestionnairePartie extends Thread {
 
     private synchronized void updateAffichage() {
         if (partieEnCours()) {
-            moteurJeu.debug("Mise à jour de l'affichage");
             moteurJeu.updateAffichage();
         }
     }

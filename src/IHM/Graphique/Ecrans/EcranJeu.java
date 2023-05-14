@@ -112,20 +112,15 @@ public class EcranJeu extends Ecran {
 
     @Override
     public void update(IHMGraphique ihm) {
-        ihm.getMoteurJeu().debug("Mise à jour de l'écran de jeu");
+        plateauGraphique.setPositionFlecheJoueurActif(menu.getX() - 110, joueurs[joueurActif].getY());
     }
 
     @Override
     public void update(Jeu jeu) {
-        super.update(jeu);
-        joueurActif = jeu.getJoueur().getID();
-        for (int i = 0; i < joueurs.length; i++) {
-            InfoJoueur joueur = joueurs[i];
-            joueur.update();
-        }
+        this.joueurActif = jeu.getJoueur().getID();
 
-        plateauGraphique.setPositionFlecheJoueurActif(menu.getX() - 110, joueurs[joueurActif].getY());
-        panel.repaint();
+        int index = joueurActif == 0 ? (joueurs.length - 1) : (joueurActif - 1);
+        joueurs[index].update(jeu.getJoueur(index).getScore(), jeu.getJoueur(index).getTuiles());
     }
 
     @Override

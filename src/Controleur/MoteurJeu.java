@@ -85,8 +85,8 @@ public class MoteurJeu extends Thread {
     }
 
     public void appliquerAction(Action action) {
-        if (action == null || !action.peutAppliquer(this)) {
-//            action.afficherMessageErreur(this);
+        if (!action.peutAppliquer(this)) {
+            action.afficherMessageErreur(this);
         } else {
             action.appliquer(this);
         }
@@ -119,7 +119,7 @@ public class MoteurJeu extends Thread {
 
     public void updateAffichage() {
         if (hasIHM()) {
-            ihm.updateAffichage(gestionnairePartie.getJeu());
+            ihm.updateAffichage(new JeuConcret(gestionnairePartie.getJeu()));
         }
     }
 

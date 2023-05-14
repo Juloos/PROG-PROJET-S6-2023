@@ -1,14 +1,12 @@
 package IHM.Graphique.Animations;
 
-public interface Animation {
+public interface Animation extends Runnable {
 
     void start();
 
     void play(int frameNumber);
 
     void stop();
-
-    void play();
 
     void pause();
 

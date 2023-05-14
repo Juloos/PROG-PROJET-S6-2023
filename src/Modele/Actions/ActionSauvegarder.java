@@ -21,6 +21,5 @@ public class ActionSauvegarder implements Action {
 
     @Override
     public void afficherMessageErreur(MoteurJeu mt) {
-        mt.getIHM().afficherMessage("Erreur action lors de la sauvegarde", 0);
     }
 }

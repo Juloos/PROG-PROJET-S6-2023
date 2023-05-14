@@ -63,7 +63,9 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
         return nom;
     }
 
-    public void setNom(String nom){ this.nom = nom; }
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
 
     public void ajouterTuile(int score) {
         this.score += score;

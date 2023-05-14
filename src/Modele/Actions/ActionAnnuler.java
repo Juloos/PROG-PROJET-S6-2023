@@ -15,6 +15,6 @@ public class ActionAnnuler implements Action {
 
     @Override
     public void afficherMessageErreur(MoteurJeu mt) {
-        mt.getIHM().afficherMessage("Aucun coup possible à annuler", 0);
+        mt.getIHM().afficherMessage("Aucun coup possible à annuler", 2000);
     }
 }
