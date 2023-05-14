@@ -15,6 +15,6 @@ public class ActionRefaire implements Action {
 
     @Override
     public void afficherMessageErreur(MoteurJeu mt) {
-        mt.getIHM().afficherMessage("Aucun coup à refaire");
+        mt.getIHM().afficherMessage("Aucun coup à refaire", 0);
     }
 }

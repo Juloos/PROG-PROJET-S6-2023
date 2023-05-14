@@ -78,9 +78,9 @@ public class MoteurJeu extends Thread {
         }
     }
 
-    public void afficherMessage(String message) {
+    public void afficherMessage(String message, int duration) {
         if (hasIHM()) {
-            ihm.afficherMessage(message);
+            ihm.afficherMessage(message, duration);
         }
     }
 
@@ -112,7 +112,7 @@ public class MoteurJeu extends Thread {
         try {
             jeu.sauvegarder(nomSave);
         } catch (Exception e) {
-            ihm.afficherMessage("Erreur lors de la sauvegarde");
+            ihm.afficherMessage("Erreur lors de la sauvegarde", 3000);
             debug("Erreur lors de la sauvegarde");
         }
     }

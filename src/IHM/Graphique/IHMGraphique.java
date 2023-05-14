@@ -1,6 +1,7 @@
 package IHM.Graphique;
 
 import Controleur.MoteurJeu;
+import IHM.Graphique.Animations.AnimationDeplacementPion;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.Ecrans.EcranJeu;
@@ -59,9 +60,14 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
     @Override
     public synchronized void updateAffichage(JeuConcret jeu) {
         try {
+            if (jeu.dernierCoupJoue() instanceof CoupDeplacement) {
+                AnimationDeplacementPion animation = new AnimationDeplacementPion(this, (CoupDeplacement) jeu.dernierCoupJoue());
+                animation.play();
+            }
+
             // Mise à jour de la fenêtre courante
             fenetres.peek().update(jeu);
-            
+
             // Mise à jour du plateau graphique
             plateauGraphique.setJeu(jeu);
             if (moteurJeu.estPhasePlacementPions()) {
@@ -93,8 +99,17 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
     }
 
     @Override
-    public void afficherMessage(String message) {
+    public void afficherMessage(String message, int duration) {
         fenetres.peek().afficherMessage(message);
+        if (duration > 0) {
+            Timer timer = new Timer(duration, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    fenetres.peek().afficherMessage("");
+                }
+            });
+            timer.start();
+        }
     }
 
     @Override

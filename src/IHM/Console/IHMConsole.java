@@ -114,7 +114,7 @@ public class IHMConsole extends IHM {
     }
 
     @Override
-    public void afficherMessage(String message) {
+    public void afficherMessage(String message, int duration) {
         System.out.println(message);
     }
 
@@ -153,7 +153,7 @@ public class IHMConsole extends IHM {
                     // Choix des types des joueurs
                     List<Joueur> joueurs = new ArrayList<>();
                     do {
-                        afficherMessage("Entrez le type du joueur n°" + (joueurs.size() + 1) + " (humain ou ia ou ligne vide pour arrêter)");
+                        System.out.println("Entrez le type du joueur n°" + (joueurs.size() + 1) + " (humain ou ia ou ligne vide pour arrêter)");
                         ligne = input.nextLine();
                         ligne = ligne.toLowerCase();
 

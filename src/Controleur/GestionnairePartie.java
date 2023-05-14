@@ -28,6 +28,7 @@ public class GestionnairePartie extends Thread {
         waitPause();
         jeu.jouer(coup);
         nbPionsPlaces++;
+        moteurJeu.afficherMessage("", 0);
         updateAffichage();
     }
 
@@ -50,8 +51,8 @@ public class GestionnairePartie extends Thread {
         return partieEnCours() && !jeu.estTermine();
     }
 
-    private void afficherMessage(String message) {
-        moteurJeu.afficherMessage(message);
+    private void afficherMessage(String message, int duration) {
+        moteurJeu.afficherMessage(message, duration);
     }
 
     public synchronized void annulerCoup() {
@@ -87,7 +88,7 @@ public class GestionnairePartie extends Thread {
         }
 
         moteurJeu.debug("Fin de la phase de placement des pions");
-        afficherMessage("Fin de la phase de placement des pions");
+        afficherMessage("Fin de la phase de placement des pions", 0);
 
         updateAffichage();
 

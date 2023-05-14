@@ -30,9 +30,8 @@ public class AnimationDeplacementPion implements Animation {
     @Override
     public void stop() {
         try {
-            Thread.sleep(200);
+            Thread.sleep(300);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -53,10 +52,10 @@ public class AnimationDeplacementPion implements Animation {
         try {
             Thread.sleep((long) (Config.ANIMATION_DURATION * 1000.0));
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
 
         plateauGraphique.setTuilesSurbrillance(null);
+        stop();
     }
 
     @Override

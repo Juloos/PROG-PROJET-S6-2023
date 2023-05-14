@@ -49,9 +49,10 @@ public abstract class IHM implements Runnable {
     /**
      * Affiche un message sur l'IHM
      *
-     * @param message : le message à afficher
+     * @param message  : le message à afficher
+     * @param duration : la durée d'affichage du message en millis secondes
      */
-    public abstract void afficherMessage(String message);
+    public abstract void afficherMessage(String message, int duration);
 
     /**
      * Attends que le nombre et le type de joueurs de la future partie soit choisis,

@@ -131,13 +131,6 @@ public class EcranJeu extends Ecran {
     @Override
     public void afficherMessage(String mess) {
         this.message.setText(mess);
-        Timer timer = new Timer(3000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                message.setText("");
-            }
-        });
-        timer.start();
     }
 
     @Override

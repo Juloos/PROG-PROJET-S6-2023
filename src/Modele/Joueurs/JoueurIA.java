@@ -4,7 +4,8 @@ import Controleur.MoteurJeu;
 import Modele.Actions.Action;
 import Modele.Actions.ActionCoup;
 import Modele.Coord;
-import Modele.IA.*;
+import Modele.IA.IA;
+import Modele.IA.IAAleatoire;
 
 import java.util.HashMap;
 
@@ -34,6 +35,7 @@ public class JoueurIA extends Joueur {
     public Action reflechir(MoteurJeu mt) {
         if (mt.getJeu().getJoueur().id != id)
             throw new IllegalArgumentException("Mauvais joueur courant pôur ce joueur : " + mt.getJoueurActif().id);
+        mt.afficherMessage("Le joueur " + getNom() + " réfléchit...", 0);
         return new ActionCoup(ia.reflechir(mt.getJeu()));
     }
 
