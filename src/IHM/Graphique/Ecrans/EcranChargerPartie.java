@@ -15,22 +15,17 @@ public class EcranChargerPartie extends Ecran {
     }
 
     @Override
-    public void open(IHMGraphique ihm) {
-        super.open(ihm);
-    }
-
-    @Override
     public void creation(IHMGraphique ihm) {
-        File dirSauv;
-        dirSauv = new File("sauvegarde");
+        File dirSauv = new File("sauvegarde");
         String[] listNameFiles = dirSauv.list();
+//        System.out.println(listNameFiles);
         JList listCharg = new JList(listNameFiles);
         charger = new JButton("charger");
-        charger.addActionListener(actionEvent -> {
-            ihm.getMoteurJeu().lancerPartie("sauvegarde/" + listNameFiles[listCharg.getSelectedIndex()]);
-        });
+//        charger.addActionListener(actionEvent -> {
+//            ihm.getMoteurJeu().lancerPartie("sauvegarde/" + listNameFiles[listCharg.getSelectedIndex()]);
+//        });
         panel.add(charger, BorderLayout.PAGE_START);
         panel.add(retour, BorderLayout.PAGE_END);
-        panel.add(listCharg);
+//        panel.add(listCharg);
     }
 }

@@ -65,7 +65,7 @@ public class EcranJeu extends Ecran {
 
         JPanel annulerRefaire = new JPanel(new GridLayout(1, 0));
 
-        annuler = new JButtonIcon(new ImageIcon("res/fleches/arrow_left.png"), 100);
+        annuler = new JButtonIcon(new ImageIcon("res/icones//arrow_left.png"), 100);
         annuler.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -73,7 +73,7 @@ public class EcranJeu extends Ecran {
             }
         });
 
-        refaire = new JButtonIcon(new ImageIcon("res/fleches/arrow_right.png"), 100);
+        refaire = new JButtonIcon(new ImageIcon("res/icones//arrow_right.png"), 100);
         refaire.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -87,7 +87,7 @@ public class EcranJeu extends Ecran {
 
         JPanel optionsPanel = new JPanel(new BorderLayout());
 
-        options = new JButtonIcon(new ImageIcon("res/gear.png"), 70);
+        options = new JButtonIcon(new ImageIcon("res/icones/gear.png"), 70);
         options.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

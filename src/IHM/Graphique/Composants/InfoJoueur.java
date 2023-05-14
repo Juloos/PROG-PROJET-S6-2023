@@ -7,8 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class InfoJoueur extends JPanel {
-    private static final ImageIcon FISH = new ImageIcon("res/fish.png");
-    private static final ImageIcon ICE = new ImageIcon("res/ice.png");
+    private static final ImageIcon FISH = new ImageIcon("res/icones/fish.png");
+    private static final ImageIcon ICE = new ImageIcon("res/icones/ice.png");
     JLabel nom, nbPoissons, nbTuiles;
 
     public InfoJoueur(Joueur joueur) {
