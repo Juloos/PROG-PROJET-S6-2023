@@ -39,11 +39,6 @@ public class EcranJeu extends Ecran {
     }
 
     @Override
-    public void open(IHMGraphique ihm) {
-        super.open(ihm);
-    }
-
-    @Override
     public void creation(IHMGraphique ihm) {
         this.plateauGraphique = ihm.getPlateauGraphique();
 
@@ -56,7 +51,7 @@ public class EcranJeu extends Ecran {
         joueurs = new InfoJoueur[ihm.getMoteurJeu().getJeu().getNbJoueurs()];
         Joueur[] jeuJoueurs = ihm.getMoteurJeu().getJeu().getJoueurs();
         for (int i = 0; i < joueurs.length; i++) {
-            InfoJoueur infoJoueur = new InfoJoueur(jeuJoueurs[i], i == joueurs.length - 1);
+            InfoJoueur infoJoueur = new InfoJoueur(jeuJoueurs[i]);
             joueurs[i] = infoJoueur;
             menu.add(infoJoueur);
         }
@@ -70,7 +65,7 @@ public class EcranJeu extends Ecran {
 
         JPanel annulerRefaire = new JPanel(new GridLayout(1, 0));
 
-        annuler = new JButtonIcon(new ImageIcon("res/arrow_left.png"), 100);
+        annuler = new JButtonIcon(new ImageIcon("res/fleches/arrow_left.png"), 100);
         annuler.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -78,7 +73,7 @@ public class EcranJeu extends Ecran {
             }
         });
 
-        refaire = new JButtonIcon(new ImageIcon("res/arrow_right.png"), 100);
+        refaire = new JButtonIcon(new ImageIcon("res/fleches/arrow_right.png"), 100);
         refaire.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -106,8 +101,13 @@ public class EcranJeu extends Ecran {
         optionsPanel.add(horizontal, BorderLayout.SOUTH);
         menu.add(optionsPanel);
 
-        panel.add(menu, BorderLayout.EAST);
         panel.add(ihm.getPlateauGraphique(), BorderLayout.CENTER);
+        panel.add(menu, BorderLayout.EAST);
+
+        final int menuWidth = ihm.getFrame().getWidth() * 2 / 7;
+        menu.setPreferredSize(new Dimension(menuWidth, ihm.getFrame().getHeight()));
+
+        plateauGraphique.setDimensionFlecheJoueurActif(100, 100);
     }
 
     @Override
@@ -118,21 +118,14 @@ public class EcranJeu extends Ecran {
     @Override
     public void update(Jeu jeu) {
         super.update(jeu);
-        Joueur[] joueursJeu = jeu.getJoueurs();
         joueurActif = jeu.getJoueur().getID();
         for (int i = 0; i < joueurs.length; i++) {
             InfoJoueur joueur = joueurs[i];
-            joueur.update(joueursJeu[i].getID() == joueurActif);
-
-            if (joueursJeu[i].getID() == joueurActif) {
-                plateauGraphique.setPositionFlecheJoueurActif(menu.getX() - 110, joueur.getY(), 100, 100);
-            }
+            joueur.update();
         }
-    }
 
-    @Override
-    public void close(IHMGraphique ihm) {
-        super.close(ihm);
+        plateauGraphique.setPositionFlecheJoueurActif(menu.getX() - 110, joueurs[joueurActif].getY());
+        panel.repaint();
     }
 
     @Override
@@ -152,6 +145,8 @@ public class EcranJeu extends Ecran {
         final int menuWidth = panel.getWidth() * 2 / 7;
         menu.setPreferredSize(new Dimension(menuWidth, panel.getHeight()));
 
-        plateauGraphique.setPositionFlecheJoueurActif(menu.getX() - 110, joueurs[joueurActif].getY(), 100, 100);
+        int flecheJoueurActifSize = panel.getHeight() / 8;
+        plateauGraphique.setPositionFlecheJoueurActif(menu.getX() - flecheJoueurActifSize - 10, joueurs[joueurActif].getY());
+        plateauGraphique.setDimensionFlecheJoueurActif(flecheJoueurActifSize, flecheJoueurActifSize);
     }
 }

@@ -8,11 +8,8 @@ import Modele.Coups.CoupDeplacement;
 import Modele.Jeux.JeuConcret;
 import Modele.Plateau;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.List;
 
 public class PlateauGraphique extends JComponent {
@@ -20,8 +17,7 @@ public class PlateauGraphique extends JComponent {
     int BORDURES_X = 2, BORDURES_Y = 1;
     double TAILLE_CASES, Y_OFFSET, ESPACEMENT_TUILES;
     List<Coord> tuilesSurbrillance, pionsSurbrillance;
-    Image ARROW_PLAYER_ACTIVE;
-    int arrow_X, arrow_Y, arrow_Width, arrow_Height;
+    volatile int arrow_X, arrow_Y, arrow_Width, arrow_Height;
     private JeuConcret jeu;
     private volatile int placementPingouinX, placementPingouinY;
 
@@ -29,16 +25,6 @@ public class PlateauGraphique extends JComponent {
         super();
         this.jeu = null;
         ESPACEMENT_TUILES = 2.2;
-    }
-
-    private Image chargerImage(String chemin) {
-        try {
-            InputStream in = new FileInputStream(chemin);
-            return ImageIO.read(in);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public synchronized void setJeu(JeuConcret jeu) {
@@ -93,8 +79,6 @@ public class PlateauGraphique extends JComponent {
                         null);
             }
 
-            drawable.drawImage(ARROW_PLAYER_ACTIVE, arrow_X, arrow_Y, arrow_Width, arrow_Height, null);
-
             Coup coup = jeu.dernierCoupJoue();
             if (coup instanceof CoupDeplacement) {
                 CoupDeplacement deplacement = (CoupDeplacement) coup;
@@ -109,6 +93,8 @@ public class PlateauGraphique extends JComponent {
 
                 drawable.drawImage(Sprites.getInstance().getFlecheDeplacement(false), x, y, (int) (TAILLE_CASES / 3.0), (int) (TAILLE_CASES / 3.0), null);
             }
+
+            drawable.drawImage(Sprites.getInstance().getFlecheJoueurActif(), arrow_X, arrow_Y, arrow_Width, arrow_Height, null);
         }
     }
 
@@ -159,9 +145,13 @@ public class PlateauGraphique extends JComponent {
         repaint();
     }
 
-    public synchronized void setPositionFlecheJoueurActif(int x, int y, int width, int height) {
+    public synchronized void setPositionFlecheJoueurActif(int x, int y) {
         this.arrow_X = x;
         this.arrow_Y = y;
+        repaint();
+    }
+
+    public synchronized void setDimensionFlecheJoueurActif(int width, int height) {
         this.arrow_Width = width;
         this.arrow_Height = height;
         repaint();

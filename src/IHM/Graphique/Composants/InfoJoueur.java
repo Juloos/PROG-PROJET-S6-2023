@@ -4,20 +4,16 @@ import IHM.Graphique.Couleurs;
 import Modele.Joueurs.Joueur;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class InfoJoueur extends JPanel {
-    private static final ImageIcon ARROW_PLAYER_ACTIVE = new ImageIcon("res/arrow_player.png");
     private static final ImageIcon FISH = new ImageIcon("res/fish.png");
     private static final ImageIcon ICE = new ImageIcon("res/ice.png");
-    private final boolean isLast;
     private final Joueur joueur;
     JLabel nom, nbPoissons, nbTuiles;
 
-    public InfoJoueur(Joueur joueur, boolean isLast) {
+    public InfoJoueur(Joueur joueur) {
         super();
-        this.isLast = isLast;
         this.joueur = joueur;
 
         setLayout(new BorderLayout());
@@ -34,7 +30,7 @@ public class InfoJoueur extends JPanel {
 
         nbPoissons = new JLabel("x 0");
         nbPoissons.setFont(new Font("Arial", Font.BOLD, 25));
-        nbPoissons.setIcon(resizeIcon(FISH, 80, 80));
+        nbPoissons.setIcon(resizeIcon(FISH, 70, 70));
         infos.add(nbPoissons);
 
         add(Box.createHorizontalGlue());
@@ -46,14 +42,14 @@ public class InfoJoueur extends JPanel {
 
         add(infos, BorderLayout.CENTER);
 
-        setBorder(new EmptyBorder(0, 20, 0, 0));
+        nom.setBorder(BorderFactory.createEmptyBorder(10, 30, 0, 0));
+        infos.setBorder(BorderFactory.createEmptyBorder(0, 30, 10, 0));
+        setBorder(BorderFactory.createMatteBorder(0, 0, 5, 0, Color.BLACK));
     }
 
-    public void update(boolean isActive) {
+    public void update() {
         nbPoissons.setText("x " + joueur.getScore());
         nbTuiles.setText("x " + joueur.getTuiles());
-
-        setBorder(BorderFactory.createEmptyBorder(15, 20, 0, 0));
     }
 
     private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {

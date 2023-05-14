@@ -61,8 +61,7 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         try {
             // Mise à jour de la fenêtre courante
             fenetres.peek().update(jeu);
-            fenetres.peek().resized();
-
+            
             // Mise à jour du plateau graphique
             plateauGraphique.setJeu(jeu);
             if (moteurJeu.estPhasePlacementPions()) {
@@ -198,7 +197,6 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
 
         // Ouverture de la fenêtre précédente
         fenetres.peek().open(this);
-        fenetres.peek().resized();
 
         // Mise à jour de la frame
         frame.validate();
@@ -219,7 +217,6 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         // Ouverture de la nouvelle fenêtre
         fenetres.push(fenetre);
         fenetre.open(this);
-        fenetres.peek().resized();
         moteurJeu.debug("Ouverture d'une nouvelle fenêtre");
 
         // Mise à jour de la frame

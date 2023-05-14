@@ -11,5 +11,6 @@ public class TestIHM {
         } catch (InterruptedException e) {
         }
 
+        System.exit(0);
     }
 }
