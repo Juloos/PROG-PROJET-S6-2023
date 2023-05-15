@@ -68,10 +68,18 @@ public class Sprites implements Runnable {
     @Override
     public void run() {
         // Utilisée pour charger les sprites
-        // Chargement des tuiles sans pingouins
-        String chemin = "res/tuiles/";
-
+        // Chargement des pingouins
+        String chemin = "res/pingouins/";
         int i = 0;
+        for (String fileName : new String[]{"PingouinRouge.png", "PingouinBleu.png", "PingouinVert.png", "PingouinJaune.png"}) {
+            pingouins[i] = chargerImage(chemin + fileName);
+            i++;
+        }
+
+        // Chargement des tuiles sans pingouins
+        chemin = "res/tuiles/";
+
+        i = 0;
         for (String fileName : new String[]{"eau.png", "1Poisson.png", "2Poissons.png", "3Poissons.png"}) {
             tuilesSansPingouins[i] = chargerImage(chemin + fileName);
             i++;
@@ -84,14 +92,6 @@ public class Sprites implements Runnable {
                 "1PingouinVert.png", "2PingouinVert.png", "3PingouinVert.png",
                 "1PingouinJaune.png", "2PingouinJaune.png", "3PingouinJaune.png"}) {
             tuilesAvecPingouins[(i / 3)][(i % 3)] = chargerImage(chemin + fileName);
-            i++;
-        }
-
-        // Chargement des pingouins
-        chemin = "res/pingouins/";
-        i = 0;
-        for (String fileName : new String[]{"PingouinRouge.png", "PingouinBleu.png", "PingouinVert.png", "PingouinJaune.png"}) {
-            pingouins[i] = chargerImage(chemin + fileName);
             i++;
         }
 

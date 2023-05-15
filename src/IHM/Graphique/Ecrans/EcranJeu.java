@@ -25,7 +25,7 @@ public class EcranJeu extends Ecran {
     JPanel menu;
     // Le label pour afficher les messages de l'IHM
     // Le label pour afficher ce que doit faire le joueur actif
-    JLabel message, infoTour;
+    JLabel message;
     // Les boutons pour :
     // - mettre le jeu en pause et ouvrir le menu de pause
     // - annuler le dernier coup joué
@@ -44,11 +44,12 @@ public class EcranJeu extends Ecran {
         this.plateauGraphique = ihm.getPlateauGraphique();
 
         panel.setLayout(new BorderLayout());
-        panel.setBackground(Couleurs.BACKGROUND_ECRAN);
+        panel.setBackground(Couleurs.TRANSPARENT);
 
         joueurs = new InfoJoueur[Config.NB_MAX_JOUEUR];
 
         menu = new JPanel(new GridLayout(0, 1));
+        menu.setBackground(Couleurs.BACKGROUND_ECRAN);
 
         joueurs = new InfoJoueur[ihm.getMoteurJeu().getJeu().getNbJoueurs()];
         Joueur[] jeuJoueurs = ihm.getMoteurJeu().getJeu().getJoueurs();
@@ -59,13 +60,11 @@ public class EcranJeu extends Ecran {
         }
 
         message = new JLabel("", SwingConstants.CENTER);
+        message.setBackground(Couleurs.TRANSPARENT);
         menu.add(message);
 
-        infoTour = new JLabel("", SwingConstants.CENTER);
-        infoTour.setFont(new Font("", Font.PLAIN, 20));
-        menu.add(infoTour);
-
         JPanel annulerRefaire = new JPanel(new GridLayout(1, 0));
+        annulerRefaire.setBackground(Couleurs.TRANSPARENT);
 
         annuler = new JButtonIcon(new ImageIcon("res/icones//arrow_left.png"), 100);
         annuler.addActionListener(new ActionListener() {
@@ -99,8 +98,10 @@ public class EcranJeu extends Ecran {
         });
 
         JPanel horizontal = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        horizontal.setBackground(Couleurs.TRANSPARENT);
         horizontal.add(options);
         optionsPanel.add(horizontal, BorderLayout.SOUTH);
+        optionsPanel.setBackground(Couleurs.TRANSPARENT);
         menu.add(optionsPanel);
 
         panel.add(ihm.getPlateauGraphique(), BorderLayout.CENTER);

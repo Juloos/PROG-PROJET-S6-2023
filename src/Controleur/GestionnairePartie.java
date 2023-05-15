@@ -118,6 +118,11 @@ public class GestionnairePartie extends Thread {
         this.phasePartie = PhasesPartie.PARTIE_EN_COURS;
         this.nbPionsPlaces = 0;
         updateAffichage();
+
+        moteurJeu.debug("Nombre de joueurs : " + joueurs.length);
+        for (Joueur j : joueurs) {
+            moteurJeu.debug(j.getNom());
+        }
     }
 
     public synchronized void lancerPartie(String nomSave) {
@@ -127,7 +132,6 @@ public class GestionnairePartie extends Thread {
         for (int i = 0; i < jeu.getNbJoueurs(); i++) {
             nbPionsPlaces += jeu.getJoueur(i).getPions().size();
         }
-
         updateAffichage();
     }
 

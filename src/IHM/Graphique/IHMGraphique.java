@@ -71,14 +71,12 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
             fenetres.peek().update(jeu);
 
             if (animation != null) {
-                System.out.println("Début animation");
                 animatioEnCours = true;
                 animation.start();
                 animation.play();
                 animation.stop();
                 animation = null;
                 animatioEnCours = false;
-                System.out.println("Fin animation");
             }
 
             fenetres.peek().update(this);
