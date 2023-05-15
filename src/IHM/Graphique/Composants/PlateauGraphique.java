@@ -14,7 +14,7 @@ import java.util.List;
 
 public class PlateauGraphique extends JComponent {
 
-    int BORDURES_X = 2, BORDURES_Y = 1;
+    int BORDURES_X = 2, BORDURES_Y = 3;
     double TAILLE_CASES, Y_OFFSET, ESPACEMENT_TUILES;
     List<Coord> tuilesSurbrillance, pionsSurbrillance;
     volatile int arrow_X, arrow_Y, arrow_Width, arrow_Height;
@@ -44,7 +44,7 @@ public class PlateauGraphique extends JComponent {
 
             final Coord placementPingouin = placementPingouinX >= 0 && placementPingouinY >= 0 ? getClickedTuile(placementPingouinX, placementPingouinY) : null;
 
-            for (int r = -1; r < NB_ROWS + 2; r++) {
+            for (int r = -BORDURES_Y; r < NB_ROWS + BORDURES_Y; r++) {
                 for (int q = -BORDURES_X; q < (r % 2 == 0 ? plateau.getNbColumns() - 1 + BORDURES_X : plateau.getNbColumns() + BORDURES_X); q++) {
                     Coord coord = new Coord(q, r);
                     final int TYPE_TUILE = plateau.estCoordValide(coord) ? plateau.get(coord) : 0;
