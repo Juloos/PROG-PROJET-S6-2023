@@ -53,4 +53,9 @@ public class JoueurIA extends Joueur {
         }
         return 2 + " " + id + " \n" + ia.getDifficulte() + "\n " + score + " " + tuiles + " " + pions.size() + dataHash;
     }
+
+    @Override
+    public JoueurIA resetJoueur(){
+        return new JoueurIA(this.id,this.ia.getDifficulte());
+    }
 }

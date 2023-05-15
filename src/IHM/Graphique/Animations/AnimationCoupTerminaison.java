@@ -27,8 +27,6 @@ public class AnimationCoupTerminaison implements Animation {
     @Override
     public void play() {
         final long TIME_BETWEEN_FRAMES = (long) (Config.ANIMATION_DURATION * 2 / NB_FRAMES);
-        System.out.println("Time between frames : " + TIME_BETWEEN_FRAMES);
-        System.out.println("Nombre de pions : " + pions.size());
 
         for (int i = 0; i < NB_FRAMES; i++) {
             plateauGraphique.setTuilesSurbrillance(new ArrayList<>(pions));

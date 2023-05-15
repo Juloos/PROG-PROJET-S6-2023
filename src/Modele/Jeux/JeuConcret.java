@@ -293,8 +293,11 @@ public class JeuConcret extends Jeu {
                         throw new Exception();
                 }
             }
-            jeu.setPasseFromFutur(tempFutur);
-            jeu.updateJoueurFromeHist();
+            if (!tempFutur.isEmpty()){
+                jeu.setPasseFromFutur(tempFutur);
+                jeu.updateJoueurFromeHist();
+            }
+            jeu.checkPionBloque();
             //terminaison
             sc_f.close();
             return jeu;

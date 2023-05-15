@@ -14,7 +14,7 @@ import java.util.List;
 
 public class PlateauGraphique extends JComponent {
 
-    int BORDURES_X = 2, BORDURES_Y = 1;
+    int BORDURES_X = 2, BORDURES_Y = 3;
     double TAILLE_CASES, Y_OFFSET, ESPACEMENT_TUILES;
     List<Coord> tuilesSurbrillance, pionsSurbrillance;
     volatile int arrow_X, arrow_Y, arrow_Width, arrow_Height;
@@ -44,7 +44,7 @@ public class PlateauGraphique extends JComponent {
 
             final Coord placementPingouin = placementPingouinX >= 0 && placementPingouinY >= 0 ? getClickedTuile(placementPingouinX, placementPingouinY) : null;
 
-            for (int r = -1; r < NB_ROWS + 2; r++) {
+            for (int r = -BORDURES_Y; r < NB_ROWS + BORDURES_Y; r++) {
                 for (int q = -BORDURES_X; q < (r % 2 == 0 ? plateau.getNbColumns() - 1 + BORDURES_X : plateau.getNbColumns() + BORDURES_X); q++) {
                     Coord coord = new Coord(q, r);
                     final int TYPE_TUILE = plateau.estCoordValide(coord) ? plateau.get(coord) : 0;
@@ -88,18 +88,52 @@ public class PlateauGraphique extends JComponent {
                 int x = XHexToPixel(deplacement.source.q, deplacement.source.r) + (int) (TAILLE_CASES / 2.0);
                 int y = YHexToPixel(deplacement.source.r) + (int) (TAILLE_CASES / 2.0);
 
-//                double rotation = 0.0;
-//                switch (decalage) {
-//                    case Coord.BAS_GAUCHE:
-//                        break;
-//                }
+                final int size = (int) (TAILLE_CASES / 3.0);
 
-                drawable.drawImage(Sprites.getInstance().getFlecheDeplacement(true), x, y, (int) (TAILLE_CASES / 3.0), (int) (TAILLE_CASES / 3.0), null);
+                double rotation = 0.0;
+                switch (decalage) {
+                    case Coord.HAUT_GAUCHE:
+                        rotation = Math.toRadians(-120.0);
+                        break;
+                    case Coord.BAS_DROITE:
+                        rotation = Math.toRadians(60.0);
+                        break;
+                    case Coord.DROITE:
+                        rotation = 0.0;
+                        break;
+                    case Coord.GAUCHE:
+                        rotation = Math.toRadians(180.0);
+                        break;
+                    case Coord.HAUT_DROITE:
+                        rotation = Math.toRadians(-60.0);
+                        break;
+                    case Coord.BAS_GAUCHE:
+                        rotation = Math.toRadians(120.0);
+                        break;
+                }
+                
+                final int offset_x = -size * 3 / 2, offset_y = -size / 2;
+
+                drawable.rotate(rotation, x, y);
+                drawable.drawImage(Sprites.getInstance().getFlecheDeplacement(true),
+                        x - size / 2,
+                        y - size / 2,
+                        size,
+                        size,
+                        null);
+                drawable.rotate(-rotation, x, y);
 
                 x = XHexToPixel(deplacement.destination.q, deplacement.destination.r) + (int) (TAILLE_CASES / 2.0);
                 y = YHexToPixel(deplacement.destination.r) + (int) (TAILLE_CASES / 2.0);
 
-                drawable.drawImage(Sprites.getInstance().getFlecheDeplacement(false), x, y, (int) (TAILLE_CASES / 3.0), (int) (TAILLE_CASES / 3.0), null);
+                drawable.rotate(rotation, x, y);
+                drawable.drawImage(Sprites.getInstance().getFlecheDeplacement(false),
+                        x + offset_x,
+                        y + offset_y,
+                        size,
+                        size,
+                        null);
+                drawable.rotate(-rotation, x, y);
             }
 
             drawable.drawImage(Sprites.getInstance().getFlecheJoueurActif(), arrow_X, arrow_Y, arrow_Width, arrow_Height, null);
