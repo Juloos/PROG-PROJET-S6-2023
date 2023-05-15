@@ -255,7 +255,7 @@ public class EcranCreationPartie extends Ecran {
                 closeAction = new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
-                        supprimerJoueur(num);
+                        supprimerJoueur(num-1);
                     }
                 };
                 close.addActionListener(closeAction);
