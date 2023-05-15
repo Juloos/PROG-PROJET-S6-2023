@@ -15,7 +15,7 @@ public class InfoJoueur extends JPanel {
         super();
 
         setLayout(new BorderLayout());
-        setBackground(Couleurs.TRANSPARENT);
+        setBackground(Couleurs.BACKGROUND_ECRAN);
 
         nom = new JLabel(joueur.getNom());
         nom.setFont(new Font("Arial", Font.PLAIN, 35));

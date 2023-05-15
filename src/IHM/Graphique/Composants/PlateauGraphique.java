@@ -14,7 +14,7 @@ import java.util.List;
 
 public class PlateauGraphique extends JComponent {
 
-    int BORDURES_X = 2, BORDURES_Y = 1;
+    int BORDURES_X = 2, BORDURES_Y = 5;
     double TAILLE_CASES, Y_OFFSET, ESPACEMENT_TUILES;
     List<Coord> tuilesSurbrillance, pionsSurbrillance;
     volatile int arrow_X, arrow_Y, arrow_Width, arrow_Height;
@@ -41,10 +41,11 @@ public class PlateauGraphique extends JComponent {
             TAILLE_CASES = Math.floor((Math.min(getHeight(), getWidth() - (getWidth() / 7)) * 4.0 / (3.0 * NB_ROWS)) - 1.0);
             Y_OFFSET = TAILLE_CASES / NB_ROWS;
             BORDURES_X = (int) Math.floor((getWidth() - plateau.getNbColumns() * (TAILLE_CASES / ESPACEMENT_TUILES)) / TAILLE_CASES);
+            BORDURES_Y = (int) Math.floor((getHeight() - plateau.getNbRows() * (TAILLE_CASES / ESPACEMENT_TUILES)) / TAILLE_CASES);
 
             final Coord placementPingouin = placementPingouinX >= 0 && placementPingouinY >= 0 ? getClickedTuile(placementPingouinX, placementPingouinY) : null;
 
-            for (int r = -1; r < NB_ROWS + 2; r++) {
+            for (int r = -BORDURES_Y; r < NB_ROWS + BORDURES_Y; r++) {
                 for (int q = -BORDURES_X; q < (r % 2 == 0 ? plateau.getNbColumns() - 1 + BORDURES_X : plateau.getNbColumns() + BORDURES_X); q++) {
                     Coord coord = new Coord(q, r);
                     final int TYPE_TUILE = plateau.estCoordValide(coord) ? plateau.get(coord) : 0;
@@ -111,13 +112,13 @@ public class PlateauGraphique extends JComponent {
                         rotation = Math.toRadians(120.0);
                         break;
                 }
-                
+
                 final int offset_x = -size * 3 / 2, offset_y = -size / 2;
 
                 drawable.rotate(rotation, x, y);
                 drawable.drawImage(Sprites.getInstance().getFlecheDeplacement(true),
-                        x - size / 2,
-                        y - size / 2,
+                        x,
+                        y + offset_y,
                         size,
                         size,
                         null);
