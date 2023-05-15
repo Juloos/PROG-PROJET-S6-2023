@@ -2,10 +2,14 @@ package Controleur;
 
 import Global.Config;
 import IHM.Console.IHMConsole;
+import IHM.Graphique.Animations.AnimationCoupTerminaison;
+import IHM.Graphique.Animations.AnimationDeplacementPion;
 import IHM.Graphique.IHMGraphique;
 import IHM.IHM;
 import Modele.Actions.Action;
 import Modele.Coups.Coup;
+import Modele.Coups.CoupDeplacement;
+import Modele.Coups.CoupTerminaison;
 import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 
@@ -93,6 +97,15 @@ public class MoteurJeu extends Thread {
     }
 
     public synchronized void jouerCoup(Coup coup) {
+        if (hasIHM() && ihm instanceof IHMGraphique) {
+            IHMGraphique ihmGraphique = (IHMGraphique) ihm;
+            if (coup instanceof CoupDeplacement) {
+                ihmGraphique.setAnimation(new AnimationDeplacementPion(ihmGraphique.getPlateauGraphique(), (CoupDeplacement) coup));
+            } else if (coup instanceof CoupTerminaison) {
+                ihmGraphique.setAnimation(new AnimationCoupTerminaison(ihmGraphique.getPlateauGraphique(), getJoueurActif().getPions()));
+            }
+        }
+
         gestionnairePartie.jouerCoup(coup);
     }
 

@@ -1,7 +1,7 @@
 package IHM.Graphique;
 
 import Controleur.MoteurJeu;
-import Global.Config;
+import IHM.Graphique.Animations.Animation;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.Ecrans.EcranJeu;
@@ -41,6 +41,7 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
     // L'action que le joueur actif veut faire
     Action actionJoueur;
     volatile boolean animatioEnCours;
+    Animation animation;
 
     public IHMGraphique(MoteurJeu moteurJeu) {
         super(moteurJeu);
@@ -57,6 +58,11 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         return plateauGraphique;
     }
 
+    /* Setters */
+    public synchronized void setAnimation(Animation animation) {
+        this.animation = animation;
+    }
+
     /* Méthodes héritées de la classe IHM */
     @Override
     public synchronized void updateAffichage(JeuConcret jeu) {
@@ -64,32 +70,15 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
             // Mise à jour de la fenêtre de jeu
             fenetres.peek().update(jeu);
 
-            if (jeu.dernierCoupJoue() instanceof CoupDeplacement) {
-                try {
-                    animatioEnCours = true;
-                    CoupDeplacement deplacement = (CoupDeplacement) jeu.dernierCoupJoue();
-
-                    List<Coord> coords = new ArrayList<>();
-                    int decalage = deplacement.source.getDecalage(deplacement.destination);
-                    Coord current = deplacement.source.clone();
-
-                    while (!current.equals(deplacement.destination)) {
-                        coords.add(current);
-                        current = current.decale(decalage);
-                    }
-                    coords.add(deplacement.destination);
-
-                    plateauGraphique.setTuilesSurbrillance(coords);
-
-                    Thread.sleep(Config.ANIMATION_DURATION);
-
-                    plateauGraphique.setTuilesSurbrillance(null);
-
-                    Thread.sleep(300);
-
-                    animatioEnCours = false;
-                } catch (InterruptedException e) {
-                }
+            if (animation != null) {
+                System.out.println("Début animation");
+                animatioEnCours = true;
+                animation.start();
+                animation.play();
+                animation.stop();
+                animation = null;
+                animatioEnCours = false;
+                System.out.println("Fin animation");
             }
 
             fenetres.peek().update(this);

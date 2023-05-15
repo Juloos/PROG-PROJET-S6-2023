@@ -4,6 +4,7 @@ import Global.Config;
 import IHM.Graphique.Composants.InfoJoueur;
 import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.Composants.PlateauGraphique;
+import IHM.Graphique.Couleurs;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.PopUp.PopUpMenu;
 import Modele.Actions.ActionAnnuler;
@@ -43,6 +44,7 @@ public class EcranJeu extends Ecran {
         this.plateauGraphique = ihm.getPlateauGraphique();
 
         panel.setLayout(new BorderLayout());
+        panel.setBackground(Couleurs.BACKGROUND_ECRAN);
 
         joueurs = new InfoJoueur[Config.NB_MAX_JOUEUR];
 
@@ -119,8 +121,10 @@ public class EcranJeu extends Ecran {
     public void update(Jeu jeu) {
         this.joueurActif = jeu.getJoueur().getID();
 
-        int index = joueurActif == 0 ? (joueurs.length - 1) : (joueurActif - 1);
-        joueurs[index].update(jeu.getJoueur(index).getScore(), jeu.getJoueur(index).getTuiles());
+        Joueur[] js = jeu.getJoueurs();
+        for (int i = 0; i < joueurs.length; i++) {
+            joueurs[i].update(js[i].getScore(), js[i].getTuiles());
+        }
     }
 
     @Override

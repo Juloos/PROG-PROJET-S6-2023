@@ -1,5 +1,6 @@
 package Controleur;
 
+import Modele.Actions.ActionCoup;
 import Modele.Coups.Coup;
 import Modele.Coups.CoupTerminaison;
 import Modele.Jeux.Jeu;
@@ -95,7 +96,7 @@ public class GestionnairePartie extends Thread {
             while (peutJouer(jeu)) {
                 moteurJeu.appliquerAction(jeu.getJoueur().reflechir(moteurJeu));
             }
-            jeu.jouer(new CoupTerminaison(jeu.getJoueur().getID()));
+            moteurJeu.appliquerAction(new ActionCoup(new CoupTerminaison(jeu.getJoueur().getID())));
         }
         updateAffichage();
 
