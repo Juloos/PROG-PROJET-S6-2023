@@ -10,11 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.io.IOException;
-
-import static com.sun.java.accessibility.util.AWTEventMonitor.addComponentListener;
 
 public class EcranAccueil extends Ecran {
 
@@ -36,12 +32,14 @@ public class EcranAccueil extends Ecran {
 
     @Override
     public void creation(IHMGraphique ihm) {
-        panel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(0, 0, 10, 0);
         // Chargement de l'image de fond
         ImageIcon icon = new ImageIcon("res/fondsEcrans/background.png");
         this.backgroundImage = icon.getImage();
+
+        panel.setLayout(new GridLayout(3, 3));
+
+        JPanel bouttons = new JPanel(new GridLayout(0, 1));
+        bouttons.setBackground(Couleurs.TRANSPARENT);
 
         // Le menu pour ouvrir le menu de création d'une nouvelle partie
         nouvellePartie = new Button("Nouvelle partie");
@@ -99,7 +97,7 @@ public class EcranAccueil extends Ecran {
             }
         });
 
-        rules = new JButtonIcon(new ImageIcon("res/rules.png"),100,100);
+        rules = new JButtonIcon(new ImageIcon("res/rules.png"), 100, 100);
         rules.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -111,30 +109,29 @@ public class EcranAccueil extends Ecran {
             }
         });
 
-        JPanel buttons = new JPanel();
-        buttons.setOpaque(false);
-        buttons.setLayout(new GridLayout(0,1));
-        buttons.add(nouvellePartie);
-        buttons.add(chargerPartie);
-        buttons.add(options);
-        buttons.add(quitter);
+        bouttons.add(nouvellePartie);
+        bouttons.add(chargerPartie);
+        bouttons.add(options);
+        bouttons.add(quitter);
+
         JPanel horizontal = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         horizontal.setBackground(Couleurs.TRANSPARENT);
         horizontal.add(rules);
-        JPanel rulesPanel = new JPanel(new BorderLayout());
-        rulesPanel.add(horizontal,BorderLayout.SOUTH);
-        panel.add(buttons,gbc);
-        gbc.gridy = 1;
-        gbc.gridx = GridBagConstraints.EAST;
-        panel.add(rulesPanel,gbc);
 
-        panel.repaint();
-        panel.revalidate();
-        addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent componentEvent) {
-                resized();
+        for (int i = 0; i < 9; i++) {
+            if (i == 8) {
+                JPanel rulesPanel = new JPanel(new BorderLayout());
+                rulesPanel.setBackground(Couleurs.TRANSPARENT);
+                rulesPanel.add(horizontal, BorderLayout.SOUTH);
+                panel.add(rulesPanel);
+            } else if (i == 4) {
+                panel.add(bouttons);
+            } else {
+                JPanel vide = new JPanel();
+                vide.setBackground(Couleurs.TRANSPARENT);
+                panel.add(vide);
             }
-        });
+        }
     }
 
     @Override
@@ -156,7 +153,5 @@ public class EcranAccueil extends Ecran {
 
         quitter.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
         quitter.setFont(buttonFont);
-
-        panel.revalidate();
     }
 }
