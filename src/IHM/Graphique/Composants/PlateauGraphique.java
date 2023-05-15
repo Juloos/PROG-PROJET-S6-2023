@@ -83,8 +83,16 @@ public class PlateauGraphique extends JComponent {
             if (coup instanceof CoupDeplacement) {
                 CoupDeplacement deplacement = (CoupDeplacement) coup;
 
+                int decalage = deplacement.source.getDecalage(deplacement.destination);
+
                 int x = XHexToPixel(deplacement.source.q, deplacement.source.r) + (int) (TAILLE_CASES / 2.0);
                 int y = YHexToPixel(deplacement.source.r) + (int) (TAILLE_CASES / 2.0);
+
+//                double rotation = 0.0;
+//                switch (decalage) {
+//                    case Coord.BAS_GAUCHE:
+//                        break;
+//                }
 
                 drawable.drawImage(Sprites.getInstance().getFlecheDeplacement(true), x, y, (int) (TAILLE_CASES / 3.0), (int) (TAILLE_CASES / 3.0), null);
 

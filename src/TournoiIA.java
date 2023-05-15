@@ -10,9 +10,8 @@ public class TournoiIA {
         int[] winnersRate = new int[JOUEURS_TOURNOI.length];
         for (int i = 0; i < NB_PARTIES; i++) {
             MoteurJeu moteurJeu = new MoteurJeu();
-            moteurJeu.start();
             moteurJeu.lancerPartie(Arrays.stream(JOUEURS_TOURNOI).map(Joueur::clone).toArray(Joueur[]::new));
-            moteurJeu.join();
+            moteurJeu.attendreFin();
             for (int j : moteurJeu.getJeu().getWinner())
                 winnersRate[j]++;
             if (DEBUG)
