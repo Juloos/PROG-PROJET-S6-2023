@@ -29,6 +29,10 @@ public class JoueurHumain extends Joueur {
     }
 
     @Override
+    public JoueurHumain resetJoueur(){
+        return new JoueurHumain(this.id,this.nom);
+    }
+    @Override
     public Action reflechir(MoteurJeu mt) {
         return mt.getIHM().attendreActionJoueur();
     }
