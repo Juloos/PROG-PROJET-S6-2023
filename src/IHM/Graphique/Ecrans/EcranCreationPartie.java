@@ -44,6 +44,7 @@ public class EcranCreationPartie extends Ecran {
         panel.add(label, BorderLayout.PAGE_START);
 
         joueursPanel = new JPanel(new GridLayout(0, Config.NB_MAX_JOUEUR));
+        joueursPanel.setOpaque(false);
         joueursPanel.setAlignmentX(JScrollPane.CENTER_ALIGNMENT);
 
         joueursPanel.setBackground(Couleurs.TRANSPARENT);
@@ -87,8 +88,9 @@ public class EcranCreationPartie extends Ecran {
                 ihm.getMoteurJeu().lancerPartie(joueurs);
             }
         });
+        retour.setPreferredSize(new Dimension(200, 50));
         buttons.add(retour);
-
+        buttons.setOpaque(false);
         panel.add(buttons, BorderLayout.PAGE_END);
     }
 
@@ -134,7 +136,7 @@ public class EcranCreationPartie extends Ecran {
             super();
             this.num = num;
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-            setBackground(Couleurs.TRANSPARENT);
+            setOpaque(false);
             Border border = BorderFactory.createMatteBorder(0, 0, 0, 2, Color.BLACK);
             setBorder(border);
 
@@ -160,6 +162,7 @@ public class EcranCreationPartie extends Ecran {
             JLabel nomLabel = new JLabel("Nom : ");
             nomLabel.setFont(new Font("Impact", Font.PLAIN, 20));
             nom = new JTextField("Joueur " + num);
+            nom.setFont(new Font("Impact", Font.PLAIN, 20));
             nom.setBackground(Couleurs.BLEU_CIEL_CLAIR);
             nom.setMaximumSize(new Dimension(200, 40));
             panelnom.add(nomLabel);
@@ -174,6 +177,8 @@ public class EcranCreationPartie extends Ecran {
                 @Override
                 public void popupMenuWillBecomeVisible(PopupMenuEvent popupMenuEvent) {
                     // Ne rien faire
+                    panel.repaint();
+                    panel.revalidate();
                 }
 
                 @Override

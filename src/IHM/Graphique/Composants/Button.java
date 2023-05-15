@@ -13,7 +13,6 @@ public class Button extends JButton {
         setFocusPainted(false);
         setContentAreaFilled(false);
     }
-
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 

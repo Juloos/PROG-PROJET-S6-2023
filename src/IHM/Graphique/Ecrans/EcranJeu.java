@@ -40,7 +40,7 @@ public class EcranJeu extends Ecran {
 
     @Override
     public void creation(IHMGraphique ihm) {
-        ImageIcon icon = new ImageIcon("res/fondsEcrans/background2.jpg");
+        ImageIcon icon = new ImageIcon("res/fondsEcrans/background_jeu.jpeg");
         this.backgroundImage = icon.getImage();
 
         this.plateauGraphique = ihm.getPlateauGraphique();

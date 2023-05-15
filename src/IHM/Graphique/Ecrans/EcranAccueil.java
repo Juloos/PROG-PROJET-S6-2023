@@ -39,7 +39,7 @@ public class EcranAccueil extends Ecran {
         panel.setLayout(new GridLayout(3, 3));
 
         JPanel bouttons = new JPanel(new GridLayout(0, 1));
-        bouttons.setBackground(Couleurs.TRANSPARENT);
+        bouttons.setOpaque(false);
 
         // Le menu pour ouvrir le menu de création d'une nouvelle partie
         nouvellePartie = new Button("Nouvelle partie");

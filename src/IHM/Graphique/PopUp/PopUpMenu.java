@@ -3,6 +3,7 @@ package IHM.Graphique.PopUp;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.Ecrans.EcranOptions;
 import IHM.Graphique.IHMGraphique;
+import IHM.Graphique.Composants.Button;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -30,7 +31,6 @@ public class PopUpMenu extends PopUp {
                 ihm.getMoteurJeu().pauseGame(false);
             }
         });
-        retour.setText("Retour au jeu");
         panel.add(retour);
 
         Button sauvegarder = new Button("Sauvegarder");

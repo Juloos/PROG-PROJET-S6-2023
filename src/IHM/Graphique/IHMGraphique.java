@@ -17,6 +17,8 @@ import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.JoueurHumain;
 import com.sun.istack.internal.NotNull;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.swing.*;
@@ -167,17 +169,17 @@ public class IHMGraphique extends IHM implements MouseListener, MouseMotionListe
         super.run();
 
         frame = new JFrame("");
-//        try {
-//            // chargement du fichier audio
-//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("res/sons/soundtrack.wav")); // "res/Wallpaper.wav
-//            // création du Clip
-//            clip = AudioSystem.getClip();
-//            clip.open(audioInputStream);
-//            clip.loop(Clip.LOOP_CONTINUOUSLY); // boucle infinie
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        setVolume(0);
+        try {
+            // chargement du fichier audio
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("soundtrack.wav"));
+            // création du Clip
+            clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.loop(Clip.LOOP_CONTINUOUSLY); // boucle infinie
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        setVolume(0);
 
         // On charge les sprites des tuiles dans un thread
         spritesThread = new Thread(Sprites.getInstance());

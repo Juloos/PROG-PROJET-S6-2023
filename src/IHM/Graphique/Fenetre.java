@@ -1,7 +1,7 @@
 package IHM.Graphique;
 
 import Modele.Jeux.Jeu;
-
+import IHM.Graphique.Composants.Button;
 import javax.swing.*;
 import java.awt.*;
 
@@ -10,7 +10,7 @@ public abstract class Fenetre {
     // Le panel dans lequel les composants de la fenêtre sont ajoutés
     protected JPanel panel;
     // Le bouton pour retourner à la fenêtre précédente
-    protected JButton retour;
+    protected Button retour;
     // L'image de fond de la fenêtre
     protected Image backgroundImage;
     // Vrai si la création de la fenêtre est terminée
@@ -27,7 +27,7 @@ public abstract class Fenetre {
                 g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
             }
         };
-        retour = new JButton("Retour");
+        retour = new Button("Retour");
     }
 
     /* Méthodes d'instance */
