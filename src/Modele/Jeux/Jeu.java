@@ -105,6 +105,19 @@ public abstract class Jeu {
     public boolean estTermine() {
         return Arrays.stream(joueurs).allMatch(Joueur::estTermine);
     }
+    public void checkPionBloque(){
+        for (Joueur j: joueurs ) {
+                j.getPions().forEach(c -> c.voisins().forEach(voisin -> {
+                    if (estPionBloque(c))
+                        j.bloquerPion(c);
+                    if (estPionBloque(voisin))
+                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                })
+
+            );
+
+        }
+    }
 
     public boolean estPion(Coord c) {
         return Arrays.stream(joueurs).anyMatch(j -> j.estPion(c));

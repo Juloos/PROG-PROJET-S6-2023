@@ -88,7 +88,7 @@ public class PlateauGraphique extends JComponent {
                 int x = XHexToPixel(deplacement.source.q, deplacement.source.r) + (int) (TAILLE_CASES / 2.0);
                 int y = YHexToPixel(deplacement.source.r) + (int) (TAILLE_CASES / 2.0);
 
-                System.out.println("Décalage : " + decalage);
+                final int size = (int) (TAILLE_CASES / 3.0);
 
                 double rotation = 0.0;
                 switch (decalage) {
@@ -111,17 +111,28 @@ public class PlateauGraphique extends JComponent {
                         rotation = Math.toRadians(120.0);
                         break;
                 }
-                System.out.println("Rotation : " + rotation);
+                
+                final int offset_x = -size * 3 / 2, offset_y = -size / 2;
 
                 drawable.rotate(rotation, x, y);
-                drawable.drawImage(Sprites.getInstance().getFlecheDeplacement(true), x, y, (int) (TAILLE_CASES / 3.0), (int) (TAILLE_CASES / 3.0), null);
+                drawable.drawImage(Sprites.getInstance().getFlecheDeplacement(true),
+                        x - size / 2,
+                        y - size / 2,
+                        size,
+                        size,
+                        null);
                 drawable.rotate(-rotation, x, y);
 
                 x = XHexToPixel(deplacement.destination.q, deplacement.destination.r) + (int) (TAILLE_CASES / 2.0);
                 y = YHexToPixel(deplacement.destination.r) + (int) (TAILLE_CASES / 2.0);
 
                 drawable.rotate(rotation, x, y);
-                drawable.drawImage(Sprites.getInstance().getFlecheDeplacement(false), x, y, (int) (TAILLE_CASES / 3.0), (int) (TAILLE_CASES / 3.0), null);
+                drawable.drawImage(Sprites.getInstance().getFlecheDeplacement(false),
+                        x + offset_x,
+                        y + offset_y,
+                        size,
+                        size,
+                        null);
                 drawable.rotate(-rotation, x, y);
             }
 

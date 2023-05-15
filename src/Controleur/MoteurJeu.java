@@ -88,10 +88,13 @@ public class MoteurJeu {
     }
 
     public void appliquerAction(Action action) {
-        if (!action.peutAppliquer(this)) {
-            action.afficherMessageErreur(this);
-        } else {
-            action.appliquer(this);
+        try {
+            if (!action.peutAppliquer(this)) {
+                action.afficherMessageErreur(this);
+            } else {
+                action.appliquer(this);
+            }
+        } catch (Exception e) {
         }
     }
 
