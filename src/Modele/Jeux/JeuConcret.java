@@ -297,6 +297,7 @@ public class JeuConcret extends Jeu {
                 jeu.setPasseFromFutur(tempFutur);
                 jeu.updateJoueurFromeHist();
             }
+            jeu.checkPionBloque();
             //terminaison
             sc_f.close();
             return jeu;

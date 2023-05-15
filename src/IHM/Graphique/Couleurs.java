@@ -8,6 +8,10 @@ public class Couleurs {
 
     public static final Color BACKGROUND_ECRAN = new Color(1f, 1f, 1f, 0.5f);
 
+    public static final Color COULEUR_FOND = Color.decode("#0000BB");
+
+    public static final Color BLEU_CIEL_CLAIR = Color.decode("#52CAEF");
+
     public static final Color[] COULEURS_JOUEURS = new Color[]{
             new Color(1.0f, 0f, 0.086f, 1.0f),
             new Color(0.192f, 0.549f, 0.905f, 1.0f),

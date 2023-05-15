@@ -3,7 +3,7 @@ package IHM.Graphique.PopUp;
 import IHM.Graphique.Couleurs;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.IHMGraphique;
-
+import Modele.Joueurs.Joueur;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,10 +17,8 @@ public class PopUpFinPartie extends PopUp {
 
     @Override
     public void creation(IHMGraphique ihm) {
-        final String CHEMIN_VICTOIRE = "res/victoire/";
-
-        panel.setLayout(new BorderLayout());
-        ImageIcon background = new ImageIcon("res/fondsEcran/background_victory.jpeg");
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        ImageIcon background = new ImageIcon("res/background_victory.jpeg");
         this.backgroundImage = background.getImage();
         JLabel joueurGagnant = new JLabel();
 
@@ -30,68 +28,66 @@ public class PopUpFinPartie extends PopUp {
         JPanel nameWinners = new JPanel();
         nameWinners.setLayout(new BoxLayout(nameWinners, BoxLayout.Y_AXIS));
         for (int i : ihm.getMoteurJeu().getJeu().getWinner()) {
-            text += ihm.getMoteurJeu().getJeu().getJoueur(i).getNom() + "   ";
+            text += ihm.getMoteurJeu().getJeu().getJoueur(i).getNom()  + "   ";
             if (i == 0) {
-                ImageIcon red = new ImageIcon(CHEMIN_VICTOIRE + "victory_red.png");
+                ImageIcon red = new ImageIcon("res/victoire/victory_red.png");
                 red.setImage(red.getImage().getScaledInstance(125, 125, Image.SCALE_DEFAULT));
                 JLabel redTrophy = new JLabel(red);
                 trophies.add(redTrophy);
-                // Ajouter un JLabel vide à gauche de l'image suivante
-                trophies.add(Box.createRigidArea(new Dimension(30, 0)));
-                trophies.add(redTrophy);
-
-                // Ajouter un JLabel vide à droite de l'image actuelle
-                trophies.add(Box.createRigidArea(new Dimension(30, 0)));
             }
             if (i == 1) {
-                ImageIcon blue = new ImageIcon(CHEMIN_VICTOIRE + "victory_blue.png");
+                ImageIcon blue = new ImageIcon("res/victoire/victory_blue.png");
                 blue.setImage(blue.getImage().getScaledInstance(125, 125, Image.SCALE_DEFAULT));
                 JLabel blueTrophy = new JLabel(blue);
                 trophies.add(blueTrophy);
-                // Ajouter un JLabel vide à gauche de l'image suivante
-                trophies.add(Box.createRigidArea(new Dimension(30, 0)));
-                trophies.add(blueTrophy);
-
-                // Ajouter un JLabel vide à droite de l'image actuelle
-                trophies.add(Box.createRigidArea(new Dimension(30, 0)));
             }
             if (i == 2) {
-                ImageIcon green = new ImageIcon(CHEMIN_VICTOIRE + "victory_green.png");
+                ImageIcon green = new ImageIcon("res/victoire/victory_green.png");
                 green.setImage(green.getImage().getScaledInstance(125, 125, Image.SCALE_DEFAULT));
                 JLabel greenTrophy = new JLabel(green);
                 trophies.add(greenTrophy);
-                // Ajouter un JLabel vide à gauche de l'image suivante
-                trophies.add(Box.createRigidArea(new Dimension(30, 0)));
-                trophies.add(greenTrophy);
-
-                // Ajouter un JLabel vide à droite de l'image actuelle
-                trophies.add(Box.createRigidArea(new Dimension(30, 0)));
             }
             if (i == 3) {
-                ImageIcon yellow = new ImageIcon(CHEMIN_VICTOIRE + "victory_yellow.png");
+                ImageIcon yellow = new ImageIcon("res/victoire/victory_yellow.png");
                 yellow.setImage(yellow.getImage().getScaledInstance(125, 125, Image.SCALE_DEFAULT));
                 JLabel yellowTrophy = new JLabel(yellow);
                 trophies.add(yellowTrophy);
-                // Ajouter un JLabel vide à gauche de l'image suivante
-                trophies.add(Box.createRigidArea(new Dimension(30, 0)));
-                trophies.add(yellowTrophy);
-
-                // Ajouter un JLabel vide à droite de l'image actuelle
-                trophies.add(Box.createRigidArea(new Dimension(30, 0)));
             }
         }
-        trophies.add(Box.createRigidArea(new Dimension(30, 0)));
         trophies.setBackground(Couleurs.TRANSPARENT);
-        panel.add(trophies, BorderLayout.NORTH);
+        trophies.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(trophies);
+
+        panel.add(Box.createRigidArea(new Dimension(0, 40)));
 
         joueurGagnant.setText(text);
-        joueurGagnant.setFont(new Font("Forte", Font.BOLD, 30));
+        joueurGagnant.setFont(new Font("Impact", Font.BOLD, 30));
         nameWinners.add(joueurGagnant);
         nameWinners.setBackground(Couleurs.TRANSPARENT);
         nameWinners.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(nameWinners, BorderLayout.CENTER);
+        panel.add(nameWinners);
+
+        panel.add(Box.createRigidArea(new Dimension(0, 90)));
+
+        JButton rejouer = new JButton("Rejouer");
+        rejouer.setPreferredSize(new Dimension(200, 50));
+        rejouer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                Joueur[] joueurs = new Joueur[ihm.getMoteurJeu().getJeu().getNbJoueurs()];
+                for (int i = 0; i < ihm.getMoteurJeu().getJeu().getNbJoueurs(); i ++){
+                    joueurs[i] = ihm.getMoteurJeu().getJeu().getJoueur(i).resetJoueur();
+                    joueurs[i].setNom(ihm.getMoteurJeu().getJeu().getJoueur(i).getNom());
+                }
+                ihm.getMoteurJeu().lancerPartie(joueurs);
+            }
+        });
+        rejouer.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(rejouer);
+
 
         JButton retourAccueil = new JButton("Retourner à l'accueil");
+        retourAccueil.setPreferredSize(new Dimension(200, 50));
         retourAccueil.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -100,15 +96,39 @@ public class PopUpFinPartie extends PopUp {
                 ihm.updateAffichage();
             }
         });
-        panel.add(retourAccueil, BorderLayout.SOUTH);
+        retourAccueil.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(retourAccueil);
         panel.repaint();
         panel.revalidate();
     }
-
     @Override
     public void resized() {
-        super.resized();
-        panel.repaint();
+        Component[] components = panel.getComponents();
+        for (Component component : components) {
+            if (component instanceof JButton) {
+                JButton button = (JButton) component;
+                button.setPreferredSize(new Dimension(frame.getWidth() / 4, frame.getHeight() / 10));
+            } else if (component instanceof JLabel) {
+                JLabel label = (JLabel) component;
+                label.setFont(new Font("Impact", Font.BOLD, (int) (frame.getWidth() / 30.0)));
+            } else if (component instanceof JPanel) {
+                JPanel innerPanel = (JPanel) component;
+                if (innerPanel.getComponentCount() == 1 && innerPanel.getComponent(0) instanceof JLabel) {
+                    JLabel trophyLabel = (JLabel) innerPanel.getComponent(0);
+                    trophyLabel.setPreferredSize(new Dimension(frame.getWidth() / 5, frame.getHeight() / 3));
+                } else {
+                    int width = frame.getWidth() / 5;
+                    int height = frame.getHeight() / 3;
+                    Dimension trophySize = new Dimension(width, height);
+                    for (Component innerComponent : innerPanel.getComponents()) {
+                        if (innerComponent instanceof JLabel) {
+                            JLabel trophy = (JLabel) innerComponent;
+                            trophy.setPreferredSize(trophySize);
+                        }
+                    }
+                }
+            }
+        }
         panel.revalidate();
     }
 }

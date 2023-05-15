@@ -35,4 +35,38 @@ public class JeuGraphe extends Jeu {
     public boolean estPionIsole(Coord c) {
         return false;
     }
+
+
+
+    public Coup remplirIlot(Coord c) {
+        Coup maxcoup = null;
+        int max = 0;
+        int k;
+        for (Coord fils : deplacementsPion(c)) {
+            CoupDeplacement cou = new CoupDeplacement(c, fils, getJoueur(joueurCourant).getScore(), joueurCourant);
+            jouer(cou);
+            if ((k=remplir(fils))>max) {
+                maxcoup = cou;
+                max = k;
+            }
+            cou.annuler(this);
+        }
+        return maxcoup;
+    }
+    public int remplir(Coord c) {
+        int valeur = 0;
+        if (deplacementsPion(c) == null) {
+            return getJoueur(joueurCourant).getScore();
+        }
+        for (Coord fils : deplacementsPion(c)) {
+            CoupDeplacement cou = new CoupDeplacement(c, fils, getJoueur(joueurCourant).getScore(), joueurCourant);
+            jouer(cou);
+            int k= remplir(fils);
+            if (k>valeur) {
+                valeur = remplir(fils);
+            }
+            cou.annuler(this);
+        }
+        return valeur;
+    }
 }
