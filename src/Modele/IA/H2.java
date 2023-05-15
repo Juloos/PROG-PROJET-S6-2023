@@ -1,7 +1,6 @@
 package Modele.IA;
 
 import Modele.Jeux.*;
-import static Global.Config.DEBUG;
 
 public class H2 implements Heuristique {
     @Override

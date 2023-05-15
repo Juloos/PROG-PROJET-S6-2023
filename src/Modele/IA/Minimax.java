@@ -27,8 +27,9 @@ public abstract class Minimax {
     }
 
     private double parcourirArbre(int profondeur, double alpha, double beta) {
-        if (profondeur == 0 || pointeur.estTermine())
-            return HEURISTIQUE.evaluer(pointeur, PDV_JOUEUR);
+        double hval = HEURISTIQUE.evaluer(pointeur, PDV_JOUEUR);
+        if (Math.abs(hval) > HVAL_THRESHOLD || profondeur == 0 || pointeur.estTermine())
+            return hval;
 
         double valeur;
         double minimaxVal;

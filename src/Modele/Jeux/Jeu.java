@@ -63,10 +63,6 @@ public abstract class Jeu {
     }
 
     public Joueur[] getJoueurs() {
-        Joueur[] copyJoueurs = new Joueur[getNbJoueurs()];
-        for (int i = 0; i < getNbJoueurs(); i++) {
-            copyJoueurs[i] = getJoueur(i).clone();
-        }
         return joueurs;
     }
 
@@ -125,7 +121,7 @@ public abstract class Jeu {
 
     public boolean estPionBloque(Coord c) {
         return estPion(c) && c.voisins().stream().allMatch(
-                v -> !plateau.estCoordValide(v) || plateau.get(v) == Plateau.VIDE || estPion(v)
+                v -> plateau.get(v) == Plateau.VIDE || estPion(v)
         );
     }
 
@@ -145,7 +141,7 @@ public abstract class Jeu {
         ArrayList<Coord> liste = new ArrayList<>();
         for (int dir = 0; dir < 6; dir++) {
             Coord curr = c.decale(dir);
-            while (plateau.estCoordValide(curr) && plateau.get(curr) != Plateau.VIDE && !estPion(curr)) {
+            while (plateau.get(curr) != Plateau.VIDE && !estPion(curr)) {
                 liste.add(curr);
                 curr = curr.decale(dir);
             }
@@ -159,7 +155,7 @@ public abstract class Jeu {
         for (int i = 0; i < plateau.getNbColumns(); i++) {
             for (int j = 0; j < plateau.getNbRows(); j++) {
                 Coord check = new Coord(i, j);
-                if (plateau.estCoordValide(check) && plateau.get(check) == 1 && !estPion(check)) {
+                if (plateau.get(check) == 1 && !estPion(check)) {
                     liste.add(check);
                 }
             }

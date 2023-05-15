@@ -65,7 +65,7 @@ public class Plateau {
 
     public int get(Coord c) {
         if (!estCoordValide(c))
-            return -1;
+            return VIDE;
         return booleans2int(grille[c.r][c.q]);
     }
 
