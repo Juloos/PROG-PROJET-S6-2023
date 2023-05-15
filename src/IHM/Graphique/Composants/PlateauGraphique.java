@@ -88,18 +88,41 @@ public class PlateauGraphique extends JComponent {
                 int x = XHexToPixel(deplacement.source.q, deplacement.source.r) + (int) (TAILLE_CASES / 2.0);
                 int y = YHexToPixel(deplacement.source.r) + (int) (TAILLE_CASES / 2.0);
 
-//                double rotation = 0.0;
-//                switch (decalage) {
-//                    case Coord.BAS_GAUCHE:
-//                        break;
-//                }
+                System.out.println("Décalage : " + decalage);
 
+                double rotation = 0.0;
+                switch (decalage) {
+                    case Coord.HAUT_GAUCHE:
+                        rotation = Math.toRadians(-120.0);
+                        break;
+                    case Coord.BAS_DROITE:
+                        rotation = Math.toRadians(60.0);
+                        break;
+                    case Coord.DROITE:
+                        rotation = 0.0;
+                        break;
+                    case Coord.GAUCHE:
+                        rotation = Math.toRadians(180.0);
+                        break;
+                    case Coord.HAUT_DROITE:
+                        rotation = Math.toRadians(-60.0);
+                        break;
+                    case Coord.BAS_GAUCHE:
+                        rotation = Math.toRadians(120.0);
+                        break;
+                }
+                System.out.println("Rotation : " + rotation);
+
+                drawable.rotate(rotation, x, y);
                 drawable.drawImage(Sprites.getInstance().getFlecheDeplacement(true), x, y, (int) (TAILLE_CASES / 3.0), (int) (TAILLE_CASES / 3.0), null);
+                drawable.rotate(-rotation, x, y);
 
                 x = XHexToPixel(deplacement.destination.q, deplacement.destination.r) + (int) (TAILLE_CASES / 2.0);
                 y = YHexToPixel(deplacement.destination.r) + (int) (TAILLE_CASES / 2.0);
 
+                drawable.rotate(rotation, x, y);
                 drawable.drawImage(Sprites.getInstance().getFlecheDeplacement(false), x, y, (int) (TAILLE_CASES / 3.0), (int) (TAILLE_CASES / 3.0), null);
+                drawable.rotate(-rotation, x, y);
             }
 
             drawable.drawImage(Sprites.getInstance().getFlecheJoueurActif(), arrow_X, arrow_Y, arrow_Width, arrow_Height, null);
