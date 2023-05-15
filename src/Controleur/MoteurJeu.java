@@ -15,7 +15,7 @@ import Modele.Joueurs.Joueur;
 
 import javax.swing.*;
 
-public class MoteurJeu extends Thread {
+public class MoteurJeu {
 
     IHM ihm;
     JeuConcret jeu;
@@ -24,7 +24,6 @@ public class MoteurJeu extends Thread {
 
 
     public MoteurJeu() {
-        super();
         this.isAlive = true;
 
         switch (Config.TYPE_IHM) {
@@ -136,11 +135,6 @@ public class MoteurJeu extends Thread {
         }
     }
 
-    @Override
-    public void run() {
-        while (isAlive) ;
-    }
-
     public boolean partieEnPause() {
         return false;
     }
@@ -194,6 +188,10 @@ public class MoteurJeu extends Thread {
     public synchronized void arreterPartie() {
         gestionnairePartie.interrupt();
         System.out.println("Arrêt de la partie");
+    }
+
+    public void attendreFin() {
+        while (isAlive) ;
     }
 
     public synchronized void terminer() {

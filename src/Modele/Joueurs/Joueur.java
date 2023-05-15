@@ -71,7 +71,7 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
         this.score += score;
         this.tuiles += 1;
     }
-
+    public abstract Joueur resetJoueur();
     public void supprimerTuile() {
         this.tuiles--;
     }
