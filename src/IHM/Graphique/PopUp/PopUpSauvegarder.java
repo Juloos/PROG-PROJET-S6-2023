@@ -11,19 +11,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import static com.sun.java.accessibility.util.SwingEventMonitor.addListSelectionListener;
-
 public class PopUpSauvegarder extends PopUp {
 
-    public PopUpSauvegarder() {
-        super("Sauvegarder");
+    private PopUp owner;
+
+    public PopUpSauvegarder(PopUp owner) {
+        super(owner, "Sauvegarder", 700, 500);
+        this.owner = owner;
     }
 
     @Override
-    public void creation(IHMGraphique ihm) {
-
-        JButton valider = new JButton("Sauvegarder");
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    public void init(IHMGraphique ihm) {
+        setLayout(new GridLayout(0, 1));
 
         // Preparation du panel de sauvegarde
         JPanel nomPanel = new JPanel();
@@ -36,11 +35,11 @@ public class PopUpSauvegarder extends PopUp {
         JTextField nom = new JTextField("");
         nom.setMaximumSize(new Dimension(200, 40));
         nomPanel.add(nom);
-        panel.add(nomPanel);
+        add(nomPanel);
 
         // Création du dossier de sauvegarde
         File dirSauv = new File("sauvegarde");
-        if (!dirSauv.isDirectory()){
+        if (!dirSauv.isDirectory()) {
             dirSauv.mkdirs();
             System.out.println("Directory created successfully");
         }
@@ -49,7 +48,7 @@ public class PopUpSauvegarder extends PopUp {
         String[] listNameFiles = dirSauv.list();
         System.out.println(listNameFiles);
         JList listSauv = new JList(listNameFiles);
-        panel.add(listSauv);
+        add(listSauv);
 
         // Mise a jour du texte dans la zone d'écriture de la sauvegarde
         listSauv.addListSelectionListener(new ListSelectionListener() {
@@ -60,15 +59,24 @@ public class PopUpSauvegarder extends PopUp {
         });
 
         // Creation de la sauvegarde
+        JButton valider = new JButton("Sauvegarder");
         valider.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 ihm.getMoteurJeu().appliquerAction(new ActionSauvegarder("sauvegarde/" + nom.getText()));
-                ihm.retournerPrecedenteFenetre();
             }
         });
-        panel.add(valider);
+        add(valider);
 
-        panel.add(retour);
+        JButton retour = new JButton("Retour");
+        retour.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                close();
+                owner.setEnabled(true);
+                owner.setVisible(true);
+            }
+        });
+        add(retour);
     }
 }

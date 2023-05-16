@@ -1,9 +1,12 @@
 package IHM.Graphique.Ecrans;
 
 import IHM.Graphique.IHMGraphique;
+import IHM.Graphique.PopUp.PopUp;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class EcranOptions extends Ecran {
 
@@ -11,8 +14,20 @@ public class EcranOptions extends Ecran {
 
     private JCheckBox volumeSlider;
 
+    private PopUp popUp;
+
     public EcranOptions() {
         super("Options");
+        init();
+    }
+
+    public EcranOptions(PopUp popUp) {
+        super("Options");
+        this.popUp = popUp;
+        init();
+    }
+
+    private void init() {
         volumeSlider = new JCheckBox("Activer le son", false);
         volumeSlider.setHorizontalTextPosition(SwingConstants.LEFT);
         //Centrer le texte
@@ -41,6 +56,19 @@ public class EcranOptions extends Ecran {
         this.backgroundImage = icon.getImage();
         ihhm = ihm;
         panel.add(volumeSlider);
+
+        JButton retour = new JButton("Retour");
+        retour.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if (popUp != null) {
+                    popUp.setEnabled(true);
+                    popUp.setVisible(true);
+                } else {
+                    ihm.retournerPrecedenteFenetre();
+                }
+            }
+        });
         panel.add(retour);
     }
 }

@@ -83,16 +83,9 @@ public class GestionnairePartie extends Thread {
 
         moteurJeu.debug("Début de la partie");
 
-        while (estPhasePlacementPions()) {
-            moteurJeu.appliquerAction(jeu.getJoueur().reflechir(moteurJeu));
-        }
-
-        moteurJeu.debug("Fin de la phase de placement des pions");
-        afficherMessage("Fin de la phase de placement des pions", 0);
-
         updateAffichage();
 
-        while (estPhaseDeplacementPion()) {
+        while (!jeu.estTermine()) {
             while (peutJouer(jeu)) {
                 moteurJeu.appliquerAction(jeu.getJoueur().reflechir(moteurJeu));
             }

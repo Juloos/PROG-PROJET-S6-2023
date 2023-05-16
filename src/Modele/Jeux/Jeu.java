@@ -111,7 +111,6 @@ public abstract class Jeu {
                 })
 
             );
-
         }
     }
 
@@ -174,8 +173,7 @@ public abstract class Jeu {
     }
 
     public void deplacerPion(Coord c1, Coord c2) {
-        if (!deplacementsPion(c1).contains(c2))
-            throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
+
         manger(c1);
         joueurs[joueurCourant].deplacerPion(c1, c2);
         if (estPionBloque(c2))
@@ -195,11 +193,7 @@ public abstract class Jeu {
         joueurSuivant();
     }
 
-    public void ajouterPion(Coord c) {
-        if (plateau.get(c) != 1 || Arrays.stream(joueurs).anyMatch(j -> j.estPion(c)))
-            throw new RuntimeException("Impossible de placer le pion à l'emplacement " + c + ".");
-        if (joueurs[joueurCourant].getPions().size() >= nbPions)
-            throw new RuntimeException("Trop de pions.");
+    public void ajouterPion(Coord c) {        
         joueurs[joueurCourant].ajouterPion(c);
         if (estPionBloque(c))
             joueurs[joueurCourant].bloquerPion(c);
@@ -213,8 +207,6 @@ public abstract class Jeu {
     }
 
     public void terminerJoueur() {
-        if (joueurs[joueurCourant].peutJouer(this))
-            throw new RuntimeException("Le joueur " + joueurCourant + " peut encore jouer.");
         joueurs[joueurCourant].terminer();
         for (Coord c : joueurs[joueurCourant].getPions())
             manger(c);
@@ -228,8 +220,6 @@ public abstract class Jeu {
     }
 
     public void annulerDeplacer(int j, Coord c1, Coord c2) {
-        if (!deplacementsPion(c1).contains(c2))
-            throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
         joueurs[j].deplacerPion(c1, c2);
         c1.voisins().forEach(
                 voisin -> {

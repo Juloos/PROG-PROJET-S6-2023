@@ -4,37 +4,48 @@ import IHM.Graphique.IHMGraphique;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PopUpConfirmation extends PopUp {
 
     private ActionListener confirmationAction;
 
-    public PopUpConfirmation(ActionListener confirmationAction) {
-        super("Confirmation");
+    public PopUpConfirmation(IHMGraphique ihm, ActionListener confirmationAction) {
+        super(ihm, "Confirmation", 500, 300);
+        this.confirmationAction = confirmationAction;
+    }
+
+    public PopUpConfirmation(PopUp owner, ActionListener confirmationAction) {
+        super(owner, "Confirmation", 500, 300);
         this.confirmationAction = confirmationAction;
     }
 
     @Override
-    public void creation(IHMGraphique ihm) {
-        panel.setLayout(new BorderLayout());
-        
+    public void init(IHMGraphique ihm) {
+        setLayout(new BorderLayout());
+
+        Button retour = new Button("Retour");
         retour.setFont(new Font("Impact", Font.PLAIN, 48));
         retour.setBackground(Color.RED);
+        retour.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                close();
+            }
+        });
 
         JLabel label = new JLabel("Voulez vous quitter ?");
         label.setFont(new Font("Impact", Font.PLAIN, 48));
-        panel.add(label, BorderLayout.CENTER);
+        add(label, BorderLayout.CENTER);
 
-        panel.add(retour, BorderLayout.PAGE_START);
+        add(retour, BorderLayout.PAGE_START);
 
         JButton confirmation = new JButton("Oui");
         confirmation.setFont(new Font("Impact", Font.PLAIN, 48));
         confirmation.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         confirmation.setBackground(Color.GREEN);
         confirmation.addActionListener(confirmationAction);
-        panel.add(confirmation, BorderLayout.SOUTH);
-
-        frame.setContentPane(panel);
+        add(confirmation, BorderLayout.SOUTH);
     }
 }

@@ -3,75 +3,87 @@ package IHM.Graphique.PopUp;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.Ecrans.EcranOptions;
 import IHM.Graphique.IHMGraphique;
-import IHM.Graphique.Composants.Button;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PopUpMenu extends PopUp {
 
-    public PopUpMenu() {
-        super("Menu");
+    Button quitter;
+
+    boolean optionsOuverte, quitterConfirmationOuvert;
+
+    public PopUpMenu(IHMGraphique ihm) {
+        super(ihm, "Menu", 500, 500);
     }
 
     @Override
-    public void open(IHMGraphique ihm) {
-        super.open(ihm);
-    }
+    public void init(IHMGraphique ihm) {
+        setLayout(new GridLayout(0, 1, 0, 30));
 
-    @Override
-    public void creation(IHMGraphique ihm) {
-        System.out.println("Création du pop de menu");
-        panel.setLayout(new GridLayout(0, 1, 0, 30));
-
+        JButton retour = new JButton("Retour");
         retour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                close();
                 ihm.getMoteurJeu().pauseGame(false);
+                if (optionsOuverte) {
+                    ihm.retournerPrecedenteFenetre();
+                }
             }
         });
-        panel.add(retour);
+        retour.setText("Retour au jeu");
+        add(retour);
+
+        PopUp ref = this;
 
         Button sauvegarder = new Button("Sauvegarder");
         sauvegarder.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                ihm.ouvrirFenetre(new PopUpSauvegarder());
+                setEnabled(false);
+                setVisible(false);
+                PopUp p = new PopUpSauvegarder(ref);
+                p.init(ihm);
+                p.setVisible(true);
             }
         });
-        panel.add(sauvegarder);
+        add(sauvegarder);
 
         Button options = new Button("Options");
         options.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                ihm.ouvrirFenetre(new EcranOptions());
+                setEnabled(false);
+                setVisible(false);
+                if (!optionsOuverte) {
+                    ihm.ouvrirFenetre(new EcranOptions(ref));
+                }
+
+                optionsOuverte = true;
             }
         });
-        panel.add(options);
+        add(options);
 
-        Button quitter = new Button("Quitter");
+        quitter = new Button("Quitter");
         quitter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                ihm.ouvrirFenetre(new PopUpConfirmation(new ActionListener() {
+                PopUp p = new PopUpConfirmation(ref, new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
-                        ihm.getMoteurJeu().arreterPartie();
                         ihm.fermerFenetres();
+                        close();
+                        ref.close();
                         ihm.ouvrirFenetre(new EcranAccueil());
-                        ihm.updateAffichage();
                     }
-                }));
+                });
+                p.init(ihm);
+                p.setVisible(true);
             }
         });
-        panel.add(quitter);
-        System.out.println("Fin création");
-    }
-
-    @Override
-    public void close(IHMGraphique ihm) {
-        super.close(ihm);
+        add(quitter);
     }
 }

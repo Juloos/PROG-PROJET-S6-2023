@@ -13,10 +13,7 @@ import Modele.Plateau;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
-import java.util.Stack;
+import java.util.*;
 
 import static Global.Config.TAILLE_PLATEAU_X;
 import static Global.Config.TAILLE_PLATEAU_Y;
@@ -77,6 +74,34 @@ public class JeuConcret extends Jeu {
         super.jouer(c);
         passe.push(c);
         future.clear();  // on doit vider la pile si l'on fait de nouveau coup après avoir reculer
+    }
+    @Override
+    public void deplacerPion(Coord c1, Coord c2){
+        if (!deplacementsPion(c1).contains(c2))
+            throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
+        super.deplacerPion(c1,c2);
+    }
+    @Override
+    public void ajouterPion(Coord c){
+        if (plateau.get(c) != 1 || Arrays.stream(joueurs).anyMatch(j -> j.estPion(c)))
+            throw new RuntimeException("Impossible de placer le pion à l'emplacement " + c + ".");
+        if (joueurs[joueurCourant].getPions().size() >= nbPions)
+            throw new RuntimeException("Trop de pions.");
+        super.ajouterPion(c);
+    }
+
+    @Override
+    public void terminerJoueur(){
+        if (joueurs[joueurCourant].peutJouer(this))
+            throw new RuntimeException("Le joueur " + joueurCourant + " peut encore jouer.");
+        super.terminerJoueur();
+    }
+
+    @Override
+    public void annulerDeplacer(int j, Coord c1, Coord c2){
+        if (!deplacementsPion(c1).contains(c2))
+            throw new RuntimeException("Déplacement impossible vers la destination " + c2 + ".");
+        super.annulerDeplacer(j,c1,c2);
     }
 
     public void annuler() {
