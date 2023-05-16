@@ -1,49 +1,36 @@
 package IHM.Graphique.PopUp;
 
-import IHM.Graphique.Fenetre;
 import IHM.Graphique.IHMGraphique;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 
-public abstract class PopUp extends Fenetre {
+public abstract class PopUp extends JDialog {
+    protected Image backgroundImage;
 
-    JFrame frame;
-
-    public PopUp(String title) {
-        super(title);
-
-        frame = new JFrame(title);
-        frame.setSize(700, 400);
-        frame.setLocationRelativeTo(null);
+    public PopUp(IHMGraphique ihm, String title, int width, int height) {
+        super(ihm.getFrame(), title);
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics graphics) {
+                super.paintComponent(graphics);
+                graphics.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
+            }
+        };
+        setContentPane(panel);
+        setSize(width, height);
+        setModal(true);
     }
 
-    @Override
-    public void open(IHMGraphique ihm) {
-//        retour.setFont(new Font("Impact", Font.PLAIN, 48));
-//        retour.setBackground(Color.RED);
-
-        if (!estCree) {
-            estCree = true;
-            retour.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent actionEvent) {
-                    ihm.retournerPrecedenteFenetre();
-                }
-            });
-
-            creation(ihm);
-        }
-
-        frame.setContentPane(panel);
-        frame.setEnabled(true);
-        frame.setVisible(true);
+    public PopUp(PopUp owner, String title, int width, int height) {
+        super(owner, title);
+        setSize(width, height);
+        setModal(true);
     }
 
-    @Override
-    public void close(IHMGraphique ihm) {
-        frame.setVisible(false);
-        frame.dispose();
+    protected void close() {
+        dispose();
     }
+
+    public abstract void init(IHMGraphique ihm);
 }
