@@ -48,7 +48,7 @@ public class PlateauGraphique extends JComponent {
             for (int r = -BORDURES_Y; r < NB_ROWS + BORDURES_Y; r++) {
                 for (int q = -BORDURES_X; q < (r % 2 == 0 ? plateau.getNbColumns() - 1 + BORDURES_X : plateau.getNbColumns() + BORDURES_X); q++) {
                     Coord coord = new Coord(q, r);
-                    final int TYPE_TUILE = plateau.estCoordValide(coord) ? plateau.get(coord) : 0;
+                    final int TYPE_TUILE = plateau.get(coord);
 
                     final int x = XHexToPixel(q, r);
                     final int y = YHexToPixel(r);

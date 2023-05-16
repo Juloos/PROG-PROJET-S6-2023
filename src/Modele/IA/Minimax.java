@@ -29,6 +29,7 @@ public abstract class Minimax {
     private double parcourirArbre(int profondeur, double alpha, double beta) {
         if (profondeur == 0 || pointeur.estTermine())
             return HEURISTIQUE.evaluer(pointeur, PDV_JOUEUR);
+        // Gérer avec file à prioirté pour des branch cut-offs
 
         double valeur;
         double minimaxVal;

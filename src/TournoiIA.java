@@ -6,7 +6,7 @@ import java.util.Arrays;
 import static Global.Config.*;
 
 public class TournoiIA {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         int[] winnersRate = new int[JOUEURS_TOURNOI.length];
         for (int i = 0; i < NB_PARTIES; i++) {
             MoteurJeu moteurJeu = new MoteurJeu();
