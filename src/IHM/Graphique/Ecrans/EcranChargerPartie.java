@@ -6,6 +6,7 @@ import IHM.Graphique.Couleurs;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.Composants.Button;
 import Modele.Jeux.JeuConcret;
+import Modele.Joueurs.Joueur;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -68,10 +69,10 @@ public class EcranChargerPartie extends Ecran {
         listCharg.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                JeuConcret jeu = JeuConcret.charger("sauvegarde/" + listNameFiles[listCharg.getSelectedIndex()]);
                 int tempInd = listCharg.getSelectedIndex();
                 int nbJoueurs;
                 if (tempInd >= 0 && tempInd <= listNameFiles.length) {
+                    JeuConcret jeu = JeuConcret.charger("sauvegarde/" + listNameFiles[tempInd]);
                     platGraph.setJeu(jeu);
                     platGraph.setMaximumSize(new Dimension(600, 600));
                     nbJoueurs = jeu.getJoueurs().length;
@@ -82,12 +83,14 @@ public class EcranChargerPartie extends Ecran {
                     panelInfo.setMinimumSize(new Dimension(400, 600));
                     panelInfo.setBackground(Couleurs.BACKGROUND_ECRAN);
                     for (int i = 0; i < nbJoueurs; i++) {
-                        infoJoueurs[i] = new InfoJoueur(jeu.getJoueurs()[i]);
-                        infoJoueurs[i].setPreferredSize(new Dimension(200, 100));
-                        infoJoueurs[i].setMaximumSize(new Dimension(200, 100));
-                        infoJoueurs[i].setMinimumSize(new Dimension(200, 100));
+                        Joueur joueurTemp = jeu.getJoueurs()[i];
+                        infoJoueurs[i] = new InfoJoueur(joueurTemp);
+                        infoJoueurs[i].setPreferredSize(new Dimension(350, 150));
+                        infoJoueurs[i].setMaximumSize(new Dimension(350, 150));
+                        infoJoueurs[i].setMinimumSize(new Dimension(350, 150));
                         infoJoueurs[i].setBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, Couleurs.COULEURS_JOUEURS[i]));
                         infoJoueurs[i].setAlignmentX(Component.CENTER_ALIGNMENT);
+                        infoJoueurs[i].update(joueurTemp.getScore(), joueurTemp.getTuiles());
                         panelInfo.add(infoJoueurs[i]);
                     }
                     panel.add(panelInfo, BorderLayout.EAST);
@@ -115,16 +118,14 @@ public class EcranChargerPartie extends Ecran {
         panelPlateau.setOpaque(false);
         panel.add(panelPlateau, BorderLayout.CENTER);
 
-        // Gestion de la supression / du chargement de la sauvegarde selectionner
+        // Gestion du chargement de la sauvegarde selectionner
         charger = new Button("charger");
         charger.addActionListener(actionEvent -> {
             ihm.getMoteurJeu().lancerPartie("sauvegarde/" + listNameFiles[listCharg.getSelectedIndex()]);
         });
-        JPanel buttons = new JPanel();
-        buttons.setOpaque(false);
-        buttons.setLayout(new FlowLayout());
-        Button suppr = new Button("Supprimer");
 
+        // Gestion de la supression de la sauvegarde selectionner
+        Button suppr = new Button("Supprimer");
         suppr.addActionListener(actionEvent -> {
             int tempIndex = listCharg.getSelectedIndex();
             File f = new File("sauvegarde/" + listNameFiles[tempIndex]);
@@ -132,9 +133,14 @@ public class EcranChargerPartie extends Ecran {
             listNameFiles = dirSauv.list();
             listCharg.setListData(listNameFiles);
             listCharg.setSelectedIndex(max(0,tempIndex-1));
-            listCharg.repaint();
-            listCharg.revalidate();
+            panel.repaint();
+            panel.revalidate();
         });
+
+        // Initialiasation de l'affichage des buttons
+        JPanel buttons = new JPanel();
+        buttons.setOpaque(false);
+        buttons.setLayout(new FlowLayout());
         charger.setPreferredSize(new Dimension(200, 50));
         suppr.setPreferredSize(new Dimension(200, 50));
         retour.setPreferredSize(new Dimension(200, 50));
