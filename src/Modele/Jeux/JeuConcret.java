@@ -80,8 +80,8 @@ public class JeuConcret extends Jeu {
         int nbPionsPlaces = 0;
         for (int i = 0; i < super.getNbJoueurs(); i++) {
             nbPionsPlaces += super.getJoueur(i).getPions().size();
-            return nbPionsPlaces;
         }
+        return nbPionsPlaces;
     }
 
     @Override
