@@ -1,5 +1,6 @@
 package IHM.Graphique.Ecrans;
 
+import IHM.Graphique.Composants.InfoJoueur;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Couleurs;
 import IHM.Graphique.IHMGraphique;
@@ -31,10 +32,10 @@ public class EcranChargerPartie extends Ecran {
         titre.setBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, Color.BLACK));
         panel.add(titre, BorderLayout.NORTH);
 
-
         JPanel panelPlateau = new JPanel();
         panelPlateau.setLayout(new BoxLayout(panelPlateau, BoxLayout.Y_AXIS));
         panelPlateau.setPreferredSize(new Dimension(400,400));
+        panelPlateau.setBackground(Couleurs.BACKGROUND_ECRAN);
         PlateauGraphique platGraph = new PlateauGraphique();
 
 
@@ -51,7 +52,7 @@ public class EcranChargerPartie extends Ecran {
         JList listCharg = new JList(listNameFiles);
         listCharg.setFixedCellWidth(200);
         listCharg.setFixedCellHeight(50);
-        listCharg.setBackground(Couleurs.TRANSPARENT);
+        listCharg.setOpaque(false);
         listCharg.setFont(new Font("Impact", Font.PLAIN, 20));
         listCharg.setAlignmentX(Component.CENTER_ALIGNMENT);
         // Gestion de la selection de la sauvegarde a charger
@@ -60,16 +61,35 @@ public class EcranChargerPartie extends Ecran {
         listCharg.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
+                JeuConcret jeu = JeuConcret.charger("sauvegarde/" + listNameFiles[listCharg.getSelectedIndex()]);
                 int nbJoueurs;
-                platGraph.setJeu(JeuConcret.charger("sauvegarde/" + listNameFiles[listCharg.getSelectedIndex()]));
+                platGraph.setJeu(jeu);
                 platGraph.setMaximumSize(new Dimension(600,600));
-                nbJoueurs = JeuConcret.charger("sauvegarde/" + listNameFiles[listCharg.getSelectedIndex()]).getJoueurs().length;
+                nbJoueurs = jeu.getJoueurs().length;
+
+                InfoJoueur[] infoJoueurs = new InfoJoueur[nbJoueurs];
+                JPanel panelInfo = new JPanel();
+                panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.Y_AXIS));
+                panelInfo.setMinimumSize(new Dimension(400, 600));
+                panelInfo.setBackground(Couleurs.BACKGROUND_ECRAN);
+                for (int i = 0; i < nbJoueurs; i++) {
+                    infoJoueurs[i] = new InfoJoueur(jeu.getJoueurs()[i]);
+                    infoJoueurs[i].setPreferredSize(new Dimension(200, 100));
+                    infoJoueurs[i].setMaximumSize(new Dimension(200, 100));
+                    infoJoueurs[i].setMinimumSize(new Dimension(200, 100));
+                    infoJoueurs[i].setBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, Couleurs.COULEURS_JOUEURS[i]));
+                    infoJoueurs[i].setAlignmentX(Component.CENTER_ALIGNMENT);
+                    panelInfo.add(infoJoueurs[i]);
+                }
+                panel.add(panelInfo, BorderLayout.EAST);
                 panelPlateau.add(platGraph);
-                panelPlateau.remove(0);
                 JLabel nbJoueursLabel = new JLabel("Nombre de joueurs : " + nbJoueurs);
                 nbJoueursLabel.setFont(new Font("Impact", Font.PLAIN, 30));
                 nbJoueursLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 panelPlateau.add(nbJoueursLabel);
+                panelPlateau.remove(0);
+                panelInfo.repaint();
+                panelInfo.revalidate();
                 panelPlateau.repaint();
                 panelPlateau.revalidate();
             }
@@ -80,7 +100,7 @@ public class EcranChargerPartie extends Ecran {
         preview.setFont(new Font("Impact", Font.PLAIN, 30));
         panelPreview.add(preview);
         panelPreview.add(listCharg);
-        panelPreview.setOpaque(false);
+        panelPreview.setBackground(Couleurs.BACKGROUND_ECRAN);
         panel.add(panelPreview, BorderLayout.WEST);
         panelPlateau.setOpaque(false);
         panel.add(panelPlateau, BorderLayout.CENTER);
@@ -106,5 +126,10 @@ public class EcranChargerPartie extends Ecran {
         buttons.add(retour);
         panel.add(buttons, BorderLayout.SOUTH);
         panel.repaint();
+    }
+
+    public void resized() {
+        super.resized();
+        charger.setPreferredSize(new Dimension(200, 50));
     }
 }
