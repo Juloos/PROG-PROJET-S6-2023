@@ -18,8 +18,6 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
     int tuiles;
     boolean termine;
 
-    String nom;
-
     volatile Action action;
 
     public Joueur(int id) {
@@ -28,7 +26,6 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
         tuiles = 0;
         pions = new HashMap<>();
         termine = false;
-        nom = "Joueur " + id;
     }
 
     public Joueur(int id, int score, int tuiles, HashMap<Coord, Boolean> pions) {
@@ -60,11 +57,10 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
     }
 
     public String getNom() {
-        return nom;
+        return "";
     }
 
     public void setNom(String nom) {
-        this.nom = nom;
     }
 
     public void ajouterTuile(int score) {

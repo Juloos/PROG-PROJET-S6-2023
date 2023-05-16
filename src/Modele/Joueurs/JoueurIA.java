@@ -45,6 +45,11 @@ public class JoueurIA extends Joueur {
     }
 
     @Override
+    public String getNom() {
+        return "IA " + ia.getDifficulte();
+    }
+
+    @Override
     public String toString() {
         String dataHash = "";
         Coord[] tempL = pions.keySet().toArray(new Coord[pions.size()]);

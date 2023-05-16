@@ -102,8 +102,8 @@ public class EcranChargerPartie extends Ecran {
                     nbJoueursLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                     panelPlateau.add(nbJoueursLabel);
                     panelPlateau.remove(0);
-                    panelPlateau.repaint();
-                    panelPlateau.revalidate();
+                    panel.repaint();
+                    panel.revalidate();
                 }
             }
         });
