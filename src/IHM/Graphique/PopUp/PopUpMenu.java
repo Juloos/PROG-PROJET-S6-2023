@@ -1,10 +1,10 @@
 package IHM.Graphique.PopUp;
 
+import IHM.Graphique.Composants.Button;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.Ecrans.EcranOptions;
 import IHM.Graphique.IHMGraphique;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +13,7 @@ public class PopUpMenu extends PopUp {
 
     Button quitter;
 
-    boolean optionsOuverte, quitterConfirmationOuvert;
+    boolean optionsOuverte;
 
     public PopUpMenu(IHMGraphique ihm) {
         super(ihm, "Menu", 500, 500);
@@ -23,18 +23,18 @@ public class PopUpMenu extends PopUp {
     public void init(IHMGraphique ihm) {
         setLayout(new GridLayout(0, 1, 0, 30));
 
-        JButton retour = new JButton("Retour");
+        Button retour = new Button("Retour au jeu");
         retour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 close();
                 ihm.getMoteurJeu().pauseGame(false);
+
                 if (optionsOuverte) {
                     ihm.retournerPrecedenteFenetre();
                 }
             }
         });
-        retour.setText("Retour au jeu");
         add(retour);
 
         PopUp ref = this;

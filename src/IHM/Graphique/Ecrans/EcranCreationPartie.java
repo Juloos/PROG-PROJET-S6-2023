@@ -218,7 +218,6 @@ public class EcranCreationPartie extends Ecran {
                 public void actionPerformed(ActionEvent actionEvent) {
                     int selected = difficultesIA.getSelectedIndex();
                     if (selected != 0 && !isIA[0]) {
-                        remove(panelnom.getComponent(0));
                         ImageIcon image = null;
                         if (num == 1) {
                             image = new ImageIcon("res/ia/ia_rouge.png");

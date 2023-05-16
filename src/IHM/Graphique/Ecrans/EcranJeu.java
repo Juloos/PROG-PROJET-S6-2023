@@ -89,13 +89,13 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         menu.add(panelJoueur, BorderLayout.CENTER);
 
         panelInf = new JPanel(new GridLayout(0, 1));
-        panelInf.setBackground(Couleurs.TRANSPARENT);
+        panelInf.setOpaque(false);
 
         message = new JTextArea();
         message.setEditable(false);
         message.setLineWrap(true);
-        message.setFont(new Font("Arial", Font.PLAIN, 20));
-        message.setBackground(Couleurs.TRANSPARENT);
+        message.setFont(new Font("Arial", Font.PLAIN, 25));
+        message.setOpaque(false);
         message.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
         panelInf.add(message);
 
@@ -116,7 +116,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         });
 
         JPanel annulerRefaire = new JPanel(new GridLayout(1, 0));
-        annulerRefaire.setBackground(Couleurs.TRANSPARENT);
+        annulerRefaire.setOpaque(false);
         annulerRefaire.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         annulerRefaire.add(annuler);
         annulerRefaire.add(refaire);
@@ -135,11 +135,11 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         });
 
         JPanel horizontal = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        horizontal.setBackground(Couleurs.TRANSPARENT);
+        horizontal.setOpaque(false);
         horizontal.add(options);
         panelInf.add(horizontal);
-
         menu.add(panelInf, BorderLayout.SOUTH);
+        menu.setOpaque(false);
         panel.add(ihm.getPlateauGraphique(), BorderLayout.CENTER);
         panel.add(menu, BorderLayout.EAST);
 
