@@ -10,9 +10,15 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.io.File;
 
+import static java.lang.Math.max;
+
 public class EcranChargerPartie extends Ecran {
 
     protected JButton charger;
+
+    protected JList listCharg;
+
+    protected  String[] listNameFiles;
 
     public EcranChargerPartie() {
         super("Charger partie");
@@ -29,6 +35,7 @@ public class EcranChargerPartie extends Ecran {
         panel.add(panelPlateau);
 
         PlateauGraphique platGraph = new PlateauGraphique();
+        platGraph.setPreferredSize(new Dimension(500,400));
         panelPlateau.add(platGraph);
 
         // Création du dossier de sauvegarde
@@ -39,18 +46,20 @@ public class EcranChargerPartie extends Ecran {
         }
 
         // Affichages des sauvegardes
-        String[] listNameFiles = dirSauv.list();
-        System.out.println(listNameFiles);
-        JList listCharg = new JList(listNameFiles);
+        listNameFiles = dirSauv.list();
+        listCharg = new JList(listNameFiles);
+        panel.add(listCharg);
 
         // Preview du plateau de la sauvegarde selectionner
         listCharg.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                platGraph.setJeu(JeuConcret.charger("sauvegarde/" + listNameFiles[listCharg.getSelectedIndex()]));
-                platGraph.setPreferredSize(new Dimension(500,400));
-                panelPlateau.repaint();
-                panelPlateau.revalidate();
+                int tempInd = listCharg.getSelectedIndex();
+                if (tempInd >= 0 && tempInd<= listNameFiles.length){
+                    platGraph.setJeu(JeuConcret.charger("sauvegarde/" + listNameFiles[tempInd]));
+                    panelPlateau.repaint();
+                    panelPlateau.revalidate();
+                }
             }
         });
 
@@ -63,12 +72,17 @@ public class EcranChargerPartie extends Ecran {
 
         suppr = new JButton("Supprimer");
         suppr.addActionListener(actionEvent -> {
-            File f = new File(listNameFiles[listCharg.getSelectedIndex()]);
+            int tempIndex = listCharg.getSelectedIndex();
+            File f = new File("sauvegarde/" + listNameFiles[tempIndex]);
             f.delete();
+            listNameFiles = dirSauv.list();
+            listCharg.setListData(listNameFiles);
+            listCharg.setSelectedIndex(max(0,tempIndex-1));
+            listCharg.repaint();
+            listCharg.revalidate();
         });
         panel.add(suppr, BorderLayout.PAGE_START);
 
         panel.add(retour, BorderLayout.PAGE_END);
-        panel.add(listCharg);
     }
 }
