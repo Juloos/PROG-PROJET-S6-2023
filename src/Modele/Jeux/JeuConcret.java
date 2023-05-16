@@ -75,6 +75,15 @@ public class JeuConcret extends Jeu {
         passe.push(c);
         future.clear();  // on doit vider la pile si l'on fait de nouveau coup après avoir reculer
     }
+
+    public int nbPionsSurPlateau() {
+        int nbPionsPlaces = 0;
+        for (int i = 0; i < super.getNbJoueurs(); i++) {
+            nbPionsPlaces += super.getJoueur(i).getPions().size();
+            return nbPionsPlaces;
+        }
+    }
+
     @Override
     public void deplacerPion(Coord c1, Coord c2){
         if (!deplacementsPion(c1).contains(c2))
