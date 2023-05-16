@@ -25,7 +25,7 @@ public class PopUpConfirmation extends PopUp {
     public void init(IHMGraphique ihm) {
         setLayout(new BorderLayout());
 
-        JButton retour = new JButton("Retour");
+        Button retour = new Button("Retour");
         retour.setFont(new Font("Impact", Font.PLAIN, 48));
         retour.setBackground(Color.RED);
         retour.addActionListener(new ActionListener() {
