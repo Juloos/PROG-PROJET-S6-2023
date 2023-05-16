@@ -66,22 +66,22 @@ public class EcranChargerPartie extends Ecran {
         // Gestion de la selection de la sauvegarde a charger
 
         // Preview du plateau de la sauvegarde selectionner
+        JPanel panelInfo = new JPanel();
+        panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.Y_AXIS));
+        panelInfo.setMinimumSize(new Dimension(400, 600));
+        panelInfo.setBackground(Couleurs.BACKGROUND_ECRAN);
         listCharg.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
+                panelInfo.removeAll();
                 int tempInd = listCharg.getSelectedIndex();
                 int nbJoueurs;
                 if (tempInd >= 0 && tempInd <= listNameFiles.length) {
                     JeuConcret jeu = JeuConcret.charger("sauvegarde/" + listNameFiles[tempInd]);
                     platGraph.setJeu(jeu);
-                    platGraph.setMaximumSize(new Dimension(600, 600));
+                    platGraph.setMaximumSize(new Dimension(900, 900));
                     nbJoueurs = jeu.getJoueurs().length;
                     InfoJoueur[] infoJoueurs = new InfoJoueur[nbJoueurs];
-
-                    JPanel panelInfo = new JPanel();
-                    panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.Y_AXIS));
-                    panelInfo.setMinimumSize(new Dimension(400, 600));
-                    panelInfo.setBackground(Couleurs.BACKGROUND_ECRAN);
                     for (int i = 0; i < nbJoueurs; i++) {
                         Joueur joueurTemp = jeu.getJoueurs()[i];
                         infoJoueurs[i] = new InfoJoueur(joueurTemp);
@@ -92,6 +92,8 @@ public class EcranChargerPartie extends Ecran {
                         infoJoueurs[i].setAlignmentX(Component.CENTER_ALIGNMENT);
                         infoJoueurs[i].update(joueurTemp.getScore(), joueurTemp.getTuiles());
                         panelInfo.add(infoJoueurs[i]);
+                        panelInfo.repaint();
+                        panelInfo.revalidate();
                     }
                     panel.add(panelInfo, BorderLayout.EAST);
                     panelPlateau.add(platGraph);
@@ -100,8 +102,6 @@ public class EcranChargerPartie extends Ecran {
                     nbJoueursLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                     panelPlateau.add(nbJoueursLabel);
                     panelPlateau.remove(0);
-                    panelInfo.repaint();
-                    panelInfo.revalidate();
                     panelPlateau.repaint();
                     panelPlateau.revalidate();
                 }

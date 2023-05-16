@@ -32,16 +32,16 @@ public class PopUpFinPartie extends PopUp {
             ImageIcon icon = null;
             if (i == 0) {
                 icon = new ImageIcon("res/victoire/victory_red.png");
-                icon.setImage(icon.getImage().getScaledInstance(125, 125, Image.SCALE_DEFAULT));
+                icon.setImage(icon.getImage().getScaledInstance(145, 145, Image.SCALE_DEFAULT));
             } else if (i == 1) {
                 icon = new ImageIcon("res/victoire/victory_blue.png");
-                icon.setImage(icon.getImage().getScaledInstance(125, 125, Image.SCALE_DEFAULT));
+                icon.setImage(icon.getImage().getScaledInstance(145, 145, Image.SCALE_DEFAULT));
             } else if (i == 2) {
                 icon = new ImageIcon("res/victoire/victory_green.png");
-                icon.setImage(icon.getImage().getScaledInstance(125, 125, Image.SCALE_DEFAULT));
+                icon.setImage(icon.getImage().getScaledInstance(145, 145, Image.SCALE_DEFAULT));
             } else if (i == 3) {
                 icon = new ImageIcon("res/victoire/victory_yellow.png");
-                icon.setImage(icon.getImage().getScaledInstance(125, 125, Image.SCALE_DEFAULT));
+                icon.setImage(icon.getImage().getScaledInstance(145, 145, Image.SCALE_DEFAULT));
             }
 
             Winner winner = new Winner(text, icon);
@@ -52,7 +52,7 @@ public class PopUpFinPartie extends PopUp {
         add(trophies, BorderLayout.CENTER);
 
         JPanel bouttons = new JPanel();
-        bouttons.setBackground(Couleurs.TRANSPARENT);
+        bouttons.setOpaque(false);
 
         Button rejouer = new Button("Rejouer");
         rejouer.setPreferredSize(new Dimension(200, 50));
@@ -97,7 +97,7 @@ public class PopUpFinPartie extends PopUp {
             setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
             JLabel name = new JLabel(nom);
-            name.setFont(new Font("Impact", Font.BOLD, 30));
+            name.setFont(new Font("Impact", Font.BOLD, 40));
 
             JLabel iconLabel = new JLabel(icon, SwingConstants.CENTER);
 

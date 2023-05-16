@@ -118,13 +118,13 @@ public class EcranAccueil extends Ecran {
         bouttons.add(quitter);
 
         JPanel horizontal = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        horizontal.setBackground(Couleurs.TRANSPARENT);
+        horizontal.setOpaque(false);
         horizontal.add(rules);
 
         for (int i = 0; i < 9; i++) {
             if (i == 8) {
                 JPanel rulesPanel = new JPanel(new BorderLayout());
-                rulesPanel.setBackground(Couleurs.TRANSPARENT);
+                rulesPanel.setOpaque(false);
                 rulesPanel.add(horizontal, BorderLayout.SOUTH);
                 panel.add(rulesPanel);
             } else if (i == 4) {
@@ -156,5 +156,7 @@ public class EcranAccueil extends Ecran {
 
         quitter.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
         quitter.setFont(buttonFont);
+
+        rules.setPreferredSize(new Dimension((int) (width * 0.1), (int) (height * 0.1)));
     }
 }
