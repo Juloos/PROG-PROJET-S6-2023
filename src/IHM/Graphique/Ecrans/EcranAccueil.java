@@ -4,6 +4,7 @@ import IHM.Graphique.Composants.Button;
 import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.Couleurs;
 import IHM.Graphique.IHMGraphique;
+import IHM.Graphique.PopUp.PopUp;
 import IHM.Graphique.PopUp.PopUpConfirmation;
 
 import javax.swing.*;
@@ -39,7 +40,7 @@ public class EcranAccueil extends Ecran {
         panel.setLayout(new GridLayout(3, 3));
 
         JPanel bouttons = new JPanel(new GridLayout(0, 1));
-        bouttons.setBackground(Couleurs.TRANSPARENT);
+        bouttons.setOpaque(false);
 
         // Le menu pour ouvrir le menu de création d'une nouvelle partie
         nouvellePartie = new Button("Nouvelle partie");
@@ -88,12 +89,14 @@ public class EcranAccueil extends Ecran {
         quitter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                ihm.ouvrirFenetre(new PopUpConfirmation(new ActionListener() {
+                PopUp popUp = new PopUpConfirmation(ihm, new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent actionEvent) {
                         ihm.getMoteurJeu().terminer();
                     }
-                }));
+                });
+                popUp.init(ihm);
+                popUp.setVisible(true);
             }
         });
 

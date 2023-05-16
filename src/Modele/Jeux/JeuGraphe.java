@@ -38,34 +38,52 @@ public class JeuGraphe extends Jeu {
 
 
 
-    public Coup remplirIlot(Coord c) {
+    public Coup remplirIlot(ArrayList<Coord> pions) {
         Coup maxcoup = null;
         int max = 0;
         int k;
-        for (Coord fils : deplacementsPion(c)) {
-            CoupDeplacement cou = new CoupDeplacement(c, fils, getJoueur(joueurCourant).getScore(), joueurCourant);
-            jouer(cou);
-            if ((k=remplir(fils))>max) {
-                maxcoup = cou;
-                max = k;
+        for (Coord c : pions) {
+            for (Coord j : deplacementsPion(c)) {
+                CoupDeplacement cou = new CoupDeplacement(c, j, getJoueur(joueurCourant).getScore(), joueurCourant);
+                jouer(cou);
+                pions.remove(c);
+                pions.add(j);
+                if ((k = remplir(pions)) > max) {
+                    maxcoup = cou;
+                    max = k;
+                }
+                pions.remove(j);
+                pions.add(c);
+                cou.annuler(this);
             }
-            cou.annuler(this);
         }
         return maxcoup;
     }
-    public int remplir(Coord c) {
+    public int remplir(ArrayList<Coord> pions) {
         int valeur = 0;
-        if (deplacementsPion(c) == null) {
+        boolean fils = false;
+        for (Coord c : pions){
+            if (deplacementsPion(c)==null){
+                fils = true;
+            }
+        }
+        if (fils){
             return getJoueur(joueurCourant).getScore();
         }
-        for (Coord fils : deplacementsPion(c)) {
-            CoupDeplacement cou = new CoupDeplacement(c, fils, getJoueur(joueurCourant).getScore(), joueurCourant);
-            jouer(cou);
-            int k= remplir(fils);
-            if (k>valeur) {
-                valeur = remplir(fils);
+        for (Coord c : pions) {
+            for (Coord j : deplacementsPion(c)) {
+                CoupDeplacement cou = new CoupDeplacement(c, j, getJoueur(joueurCourant).getScore(), joueurCourant);
+                jouer(cou);
+                pions.remove(c);
+                pions.add(j);
+                int k = remplir(pions);
+                if (k > valeur) {
+                    valeur = k;
+                }
+                pions.add(c);
+                pions.remove(j);
+                cou.annuler(this);
             }
-            cou.annuler(this);
         }
         return valeur;
     }
