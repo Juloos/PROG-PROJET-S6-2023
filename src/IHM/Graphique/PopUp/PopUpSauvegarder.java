@@ -2,7 +2,7 @@ package IHM.Graphique.PopUp;
 
 import IHM.Graphique.IHMGraphique;
 import Modele.Actions.ActionSauvegarder;
-
+import IHM.Graphique.Composants.Button;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -59,16 +59,18 @@ public class PopUpSauvegarder extends PopUp {
         });
 
         // Creation de la sauvegarde
-        JButton valider = new JButton("Sauvegarder");
+        Button valider = new Button("Sauvegarder");
         valider.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 ihm.getMoteurJeu().appliquerAction(new ActionSauvegarder("sauvegarde/" + nom.getText()));
+                JOptionPane.showMessageDialog(null, "Sauvegarde réussie", "Sauvegarde", JOptionPane.INFORMATION_MESSAGE);
+                close();
             }
         });
         add(valider);
 
-        JButton retour = new JButton("Retour");
+        Button retour = new Button("Retour");
         retour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
