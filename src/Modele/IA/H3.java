@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class H3 implements Heuristique {
+    int nbAppels = 0;
+
     Random rand = new Random();
 
     final int NB_SIMULE;
@@ -22,6 +24,7 @@ public class H3 implements Heuristique {
 
     @Override
     public double evaluer(Jeu j, int pdvJoueur) {
+        nbAppels++;
         JeuGraphe jg;
         double nbGagnant = 0;
         for (int i = 0; i < NB_SIMULE; i++) {
@@ -33,5 +36,10 @@ public class H3 implements Heuristique {
                 nbGagnant++;
         }
         return 2 * nbGagnant / NB_SIMULE - 1;
+    }
+
+    @Override
+    public int getNbAppels() {
+        return nbAppels;
     }
 }

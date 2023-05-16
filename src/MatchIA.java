@@ -5,12 +5,15 @@ import java.util.Arrays;
 
 import static Global.Config.*;
 
-public class TournoiIA {
+public class MatchIA {
     public static void main(String[] args) {
-        int[] winnersRate = new int[JOUEURS_TOURNOI.length];
+        int[] winnersRate = new int[JOUEURS_MATCH.length];
+        long start = System.currentTimeMillis();
+        if (!DEBUG)
+            System.out.print("\rPartie 0/" + NB_PARTIES);
         for (int i = 0; i < NB_PARTIES; i++) {
             MoteurJeu moteurJeu = new MoteurJeu();
-            moteurJeu.lancerPartie(Arrays.stream(JOUEURS_TOURNOI).map(Joueur::clone).toArray(Joueur[]::new));
+            moteurJeu.lancerPartie(Arrays.stream(JOUEURS_MATCH).map(Joueur::clone).toArray(Joueur[]::new));
             moteurJeu.attendreFin();
             for (int j : moteurJeu.getJeu().getWinner())
                 winnersRate[j]++;
@@ -19,8 +22,12 @@ public class TournoiIA {
             else
                 System.out.print("\rPartie " + (i + 1) + "/" + NB_PARTIES);
         }
-        System.out.println("\nRésultats :");
+        System.out.println("\nRésultats (" + ((System.currentTimeMillis() - start) / 1000.0) + "ms) :");
         for (int i = 0; i < winnersRate.length; i++)
             System.out.println("  Joueur " + i + " : " + winnersRate[i] + " victoires sur " + NB_PARTIES + " parties (" + (winnersRate[i] * 100 / NB_PARTIES) + "%)");
+        System.out.println("Appels aux heuristiques :");
+        System.out.println("  IA Facile : " + IA_FACILE_HEURISTIQUE.getNbAppels());
+        System.out.println("  IA Moyen : " + IA_MOYEN_HEURISTIQUE.getNbAppels());
+        System.out.println("  IA Difficile : " + IA_DIFFICILE_HEURISTIQUE.getNbAppels());
     }
 }

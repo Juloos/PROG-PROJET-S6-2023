@@ -24,6 +24,11 @@ public class JoueurIA extends Joueur {
             throw new IllegalArgumentException("Difficulté inconnue : " + d);
     }
 
+    public JoueurIA(int id, IA ia) {
+        super(id);
+        this.ia = ia;
+    }
+
     public JoueurIA(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, IA.Difficulte d) {
         super(id, score, tuiles, pions);
         ia = IA.getIA(d, id);

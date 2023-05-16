@@ -6,8 +6,11 @@ import Modele.Jeux.JeuGraphe;
 import Modele.Joueurs.Joueur;
 
 public class H4 implements Heuristique {
+    int nbAppels = 0;
+
     @Override
     public double evaluer(Jeu j, int pdvJoueur) {
+        nbAppels++;
         double valeur = 0;
         JeuGraphe jg = new JeuGraphe(j);
         for (Joueur joueur : jg.getJoueurs())
@@ -16,5 +19,10 @@ public class H4 implements Heuristique {
                     if (jg.estPionIsole(pion))
                         valeur += jg.getIlot(pion).stream().mapToDouble(c -> j.getPlateau().get(c)).sum() * (joueur.id == pdvJoueur ? 1 : -1);
         return valeur;
+    }
+
+    @Override
+    public int getNbAppels() {
+        return nbAppels;
     }
 }

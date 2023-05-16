@@ -7,10 +7,9 @@ import Modele.Joueurs.JoueurIA;
 
 public class Config {
     public final static TypeIHM TYPE_IHM = TypeIHM.GRAPHIQUE;
-    public final static Joueur[] JOUEURS_TOURNOI = new Joueur[]{new JoueurIA(0, IA.Difficulte.DIFFICILE), new JoueurIA(1)};
-    public final static int NB_PARTIES = 10;
-    public final static double HVAL_THRESHOLD = 1000;
-    public final static boolean DEBUG = true;
+    public final static Joueur[] JOUEURS_MATCH = new Joueur[]{new JoueurIA(0, IA.Difficulte.DIFFICILE), new JoueurIA(1, IA.Difficulte.FACILE)};
+    public final static int NB_PARTIES = 100;
+    public final static boolean DEBUG = false;
     public final static int TAILLE_PLATEAU_X = 8;
     public final static int TAILLE_PLATEAU_Y = 8;
     public final static int NB_PIONS_TOTAL = 9;
