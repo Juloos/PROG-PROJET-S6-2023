@@ -31,12 +31,12 @@ public class EcranChargerPartie extends Ecran {
     @Override
     public void creation(IHMGraphique ihm) {
         panel.setLayout(new BorderLayout());
-        ImageIcon icon = new ImageIcon("res/fondsEcrans/background_chargement.png");
+        ImageIcon icon = new ImageIcon("res/fondsEcrans/background_chargement.jpg");
         this.backgroundImage = icon.getImage();
 
         JLabel titre = new JLabel("Charger une partie", SwingConstants.CENTER);
+        titre.setForeground(Color.WHITE);
         titre.setFont(new Font("Impact", Font.PLAIN, 50));
-        titre.setBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, Color.BLACK));
         panel.add(titre, BorderLayout.NORTH);
 
 
@@ -98,6 +98,7 @@ public class EcranChargerPartie extends Ecran {
                     panel.add(panelInfo, BorderLayout.EAST);
                     panelPlateau.add(platGraph);
                     JLabel nbJoueursLabel = new JLabel("Nombre de joueurs : " + nbJoueurs);
+                    nbJoueursLabel.setForeground(Color.WHITE);
                     nbJoueursLabel.setFont(new Font("Impact", Font.PLAIN, 30));
                     nbJoueursLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                     panelPlateau.add(nbJoueursLabel);
@@ -111,6 +112,7 @@ public class EcranChargerPartie extends Ecran {
         panelPreview.setLayout(new BoxLayout(panelPreview, BoxLayout.Y_AXIS));
         JLabel preview = new JLabel("Sauvegardes :");
         preview.setFont(new Font("Impact", Font.PLAIN, 30));
+        preview.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelPreview.add(preview);
         panelPreview.add(listCharg);
         panelPreview.setBackground(Couleurs.BACKGROUND_ECRAN);
