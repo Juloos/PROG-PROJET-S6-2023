@@ -9,10 +9,11 @@ public interface IA {
     IA.Difficulte getDifficulte();
 
     enum Difficulte {
-        ALEATOIRE, // identifiant : 0
-        FACILE,    // identifiant : 1
-        MOYEN,     // identifiant : 2
-        DIFFICILE  // identifiant : 3
+        ALEATOIRE,  // identifiant : 0
+        FACILE,     // identifiant : 1
+        MOYEN,      // identifiant : 2
+        DIFFICILE,  // identifiant : 3
+        LEGENDAIRE  // identifiant : 4
     }
 
     static IA getIA(Difficulte d, int joueur) {
@@ -25,6 +26,8 @@ public interface IA {
                 return new IAMoyen(joueur);
             case DIFFICILE:
                 return new IADifficile(joueur);
+            case LEGENDAIRE:
+                return new IALegendaire(joueur);
             default:
                 return null;
         }

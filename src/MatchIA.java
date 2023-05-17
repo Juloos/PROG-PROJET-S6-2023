@@ -13,6 +13,7 @@ public class MatchIA {
             System.out.print("\rPartie 0/" + NB_PARTIES);
         for (int i = 0; i < NB_PARTIES; i++) {
             MoteurJeu moteurJeu = new MoteurJeu();
+            long startingTimeMillis = System.currentTimeMillis();
             moteurJeu.lancerPartie(Arrays.stream(JOUEURS_MATCH).map(Joueur::clone).toArray(Joueur[]::new));
             moteurJeu.attendreFin();
             for (int j : moteurJeu.getJeu().getWinner())
@@ -20,7 +21,7 @@ public class MatchIA {
             if (DEBUG)
                 System.out.println("Gagnant(s) Partie " + (i + 1) + " : " + moteurJeu.getJeu().getWinner());
             else
-                System.out.print("\rPartie " + (i + 1) + "/" + NB_PARTIES);
+                System.out.print("\rPartie " + (i + 1) + "/" + NB_PARTIES + " (" + ((System.currentTimeMillis() - startingTimeMillis) / 1000.0) + "s)");
         }
         System.out.println("\nRésultats (" + ((System.currentTimeMillis() - start) / 1000.0) + "ms) :");
         for (int i = 0; i < winnersRate.length; i++)
@@ -29,5 +30,6 @@ public class MatchIA {
         System.out.println("  IA Facile : " + IA_FACILE_HEURISTIQUE.getNbAppels());
         System.out.println("  IA Moyen : " + IA_MOYEN_HEURISTIQUE.getNbAppels());
         System.out.println("  IA Difficile : " + IA_DIFFICILE_HEURISTIQUE.getNbAppels());
+        System.out.println("  IA Légendaire : " + IA_LEGENDAIRE_HEURISTIQUE.getNbAppels());
     }
 }
