@@ -1,8 +1,7 @@
 package IHM;
 
 import Controleur.MoteurJeu;
-import Modele.Actions.Action;
-import Modele.Jeux.JeuConcret;
+import Modele.Joueurs.JoueurHumain;
 
 public abstract class IHM implements Runnable {
 
@@ -34,17 +33,15 @@ public abstract class IHM implements Runnable {
 
     /**
      * Met à jour l'affichage du plateau ainsi que des informations des joueurs
-     *
-     * @param jeu : le jeu mit à jour
      */
-    public abstract void updateAffichage(JeuConcret jeu);
+    public abstract void updateAffichage();
 
     /**
      * Attend que le joueur actif demande de faire une action
      *
-     * @return l'action que le joueur actif veut faire
+     * @param : joueur : le joueur humain qui doit faire une action
      */
-    public abstract Action attendreActionJoueur();
+    public abstract void attendreActionJoueur(JoueurHumain joueur);
 
     /**
      * Affiche un message sur l'IHM

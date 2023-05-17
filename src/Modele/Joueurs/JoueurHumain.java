@@ -11,11 +11,12 @@ public class JoueurHumain extends Joueur {
 
     public JoueurHumain(int id) {
         super(id);
-        this.nom = "Joueur "+(1+id);
+        this.nom = "Joueur " + (1 + id);
     }
-    public JoueurHumain(int id, int score, int tuiles, HashMap<Coord,Boolean> pions){
+
+    public JoueurHumain(int id, int score, int tuiles, HashMap<Coord, Boolean> pions) {
         super(id, score, tuiles, pions);
-        this.nom = "Joueur "+(1+id);
+        this.nom = "Joueur " + (1 + id);
     }
 
     public JoueurHumain(int id, String nom) {
@@ -29,12 +30,18 @@ public class JoueurHumain extends Joueur {
     }
 
     @Override
-    public JoueurHumain resetJoueur(){
-        return new JoueurHumain(this.id,this.nom);
+    public JoueurHumain resetJoueur() {
+        return new JoueurHumain(this.id, this.nom);
     }
+
+    public synchronized void setAction(MoteurJeu mt, Action action) {
+        mt.appliquerAction(action);
+    }
+
     @Override
-    public Action reflechir(MoteurJeu mt) {
-        return mt.getIHM().attendreActionJoueur();
+    public void reflechir(MoteurJeu mt) {
+        System.out.println("Le joueur humain réfléchit");
+        mt.getIHM().attendreActionJoueur(this);
     }
 
     @Override
@@ -46,7 +53,7 @@ public class JoueurHumain extends Joueur {
         return nom;
     }
 
-    public void setNom(String nom){
+    public void setNom(String nom) {
         this.nom = nom;
     }
 

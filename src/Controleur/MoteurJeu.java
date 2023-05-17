@@ -2,14 +2,10 @@ package Controleur;
 
 import Global.Config;
 import IHM.Console.IHMConsole;
-import IHM.Graphique.Animations.AnimationCoupTerminaison;
-import IHM.Graphique.Animations.AnimationDeplacementPion;
 import IHM.Graphique.IHMGraphique;
 import IHM.IHM;
 import Modele.Actions.Action;
 import Modele.Coups.Coup;
-import Modele.Coups.CoupDeplacement;
-import Modele.Coups.CoupTerminaison;
 import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 
@@ -99,25 +95,14 @@ public class MoteurJeu {
     }
 
     public synchronized void jouerCoup(Coup coup) {
-        if (hasIHM() && ihm instanceof IHMGraphique) {
-            IHMGraphique ihmGraphique = (IHMGraphique) ihm;
-            if (coup instanceof CoupDeplacement) {
-                ihmGraphique.setAnimation(new AnimationDeplacementPion(ihmGraphique.getPlateauGraphique(), (CoupDeplacement) coup));
-            } else if (coup instanceof CoupTerminaison) {
-                ihmGraphique.setAnimation(new AnimationCoupTerminaison(ihmGraphique.getPlateauGraphique(), getJoueurActif().getPions()));
-            }
-        }
-
         gestionnairePartie.jouerCoup(coup);
     }
 
     public synchronized void annulerCoup() {
-        debug("Annulation du dernier coup joué");
         gestionnairePartie.annulerCoup();
     }
 
     public synchronized void refaireCoup() {
-        debug("Refaison du dernier coup annulé");
         gestionnairePartie.refaireCoup();
     }
 
@@ -132,27 +117,31 @@ public class MoteurJeu {
         }
     }
 
-    public void updateAffichage() {
+    public synchronized void updateAffichage() {
         if (hasIHM()) {
-            ihm.updateAffichage(new JeuConcret(gestionnairePartie.getJeu()));
+            gestionnairePartie.pauseGame(true);
+            ihm.updateAffichage();
+        }
+    }
+
+    public synchronized void finUpdateAffichage() {
+        if (hasIHM()) {
+            gestionnairePartie.pauseGame(false);
         }
     }
 
     public boolean partieEnPause() {
-        return false;
-    }
-
-    public boolean partieEnCours() {
-        return gestionnairePartie.partieEnCours();
+        return gestionnairePartie.isGamePaused();
     }
 
     public synchronized void pauseGame(boolean pause) {
-        gestionnairePartie.pauseGame(pause);
-        if (pause) {
-            System.out.println("Pause");
-            ihm.pause();
-        } else {
-            ihm.resume();
+        if (pause | gestionnairePartie.isGamePaused()) {
+            gestionnairePartie.pauseGame(pause);
+            if (pause) {
+                ihm.pause();
+            } else {
+                ihm.resume();
+            }
         }
     }
 
@@ -180,17 +169,23 @@ public class MoteurJeu {
 
     public synchronized void lancerPartie(String nomSave) {
         this.gestionnairePartie = new GestionnairePartie(this);
-        gestionnairePartie.lancerPartie(nomSave);
-        this.gestionnairePartie.start();
-        if (hasIHM()) {
-            ihm.resume();
+
+        JeuConcret jeu = JeuConcret.charger(nomSave);
+
+        if (jeu != null) {
+            gestionnairePartie.lancerPartie(jeu);
+            this.gestionnairePartie.start();
+            if (hasIHM()) {
+                ihm.resume();
+            }
+            debug("Lancement dune nouvelle partie depuis une sauvegarde");
+        } else {
+            afficherMessage("Erreur lors du chargement de la partie", 2000);
         }
-        debug("Lancement dune nouvelle partie depuis une sauvegarde");
     }
 
     public synchronized void arreterPartie() {
         gestionnairePartie.interrupt();
-        System.out.println("Arrêt de la partie");
     }
 
     public void attendreFin() {

@@ -2,6 +2,7 @@ package IHM.Graphique;
 
 import Controleur.MoteurJeu;
 import IHM.Graphique.Animations.Animation;
+import IHM.Graphique.Animations.AnimationDeplacementPion;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.Ecran;
 import IHM.Graphique.Ecrans.EcranAccueil;
@@ -12,7 +13,10 @@ import IHM.Graphique.Sprites.Sprites;
 import IHM.IHM;
 import Modele.Actions.Action;
 import Modele.Coord;
+import Modele.Coups.CoupDeplacement;
+import Modele.Coups.CoupTerminaison;
 import Modele.Jeux.JeuConcret;
+import Modele.Joueurs.JoueurHumain;
 import com.sun.istack.internal.NotNull;
 
 import javax.sound.sampled.AudioInputStream;
@@ -39,10 +43,7 @@ public class IHMGraphique extends IHM {
     Stack<Ecran> fenetres;
     JFrame frame;
     Clip clip;
-    // L'action que le joueur actif veut faire
-    Action actionJoueur;
-    volatile boolean animationEnCours;
-    Animation animation;
+    JoueurHumain joueurActif;
 
     public IHMGraphique(MoteurJeu moteurJeu) {
         super(moteurJeu);
@@ -59,62 +60,68 @@ public class IHMGraphique extends IHM {
         return plateauGraphique;
     }
 
-    /* Setters */
-    public synchronized void setAnimation(Animation animation) {
-        this.animation = animation;
-    }
-
-    public synchronized void setActionJoueur(Action actionJoueur) {
-        this.actionJoueur = actionJoueur;
+    public synchronized void jouerAction(Action actionJoueur) {
+        if (joueurActif != null) {
+            joueurActif.setAction(moteurJeu, actionJoueur);
+        }
     }
 
     /* Méthodes héritées de la classe IHM */
     @Override
-    public synchronized void updateAffichage(JeuConcret jeu) {
+    public synchronized void updateAffichage() {
+        joueurActif = null;
+        JeuConcret jeu = new JeuConcret(moteurJeu.getJeu());
+
         try {
-            // Mise à jour de la fenêtre de jeu
-            fenetres.peek().update(jeu);
+            Animation animation = null;
+            if (jeu.dernierCoupJoue() instanceof CoupDeplacement) {
+                CoupDeplacement deplacement = (CoupDeplacement) jeu.dernierCoupJoue();
+                animation = new AnimationDeplacementPion(this, deplacement);
+            } else if (jeu.dernierCoupJoue() instanceof CoupTerminaison) {
+//                System.out.println("Nouvelle animation de terminaison");
+//                animation = new AnimationCoupTerminaison(this, jeu.getJoueur(jeu.getDernierJoueurMort()).getPions());
+            }
 
             if (animation != null) {
-                animationEnCours = true;
-                animation.start();
-                animation.play();
-                animation.stop();
-                animation = null;
-                animationEnCours = false;
-            }
-
-            fenetres.peek().update(this);
-
-            // Mise à jour du plateau graphique
-            plateauGraphique.setJeu(jeu);
-            if (moteurJeu.estPhasePlacementPions()) {
-                // On affiche en surbrillance les tuiles sur lesquelles un pion peut être placées
-                plateauGraphique.setTuilesSurbrillance(jeu.placementsPionValide());
+                System.out.println("On lance une animation");
+                animation.execute();
             } else {
-                // On affiche en surbrillance les pions du joueur actif
-                plateauGraphique.setTuilesSurbrillance(null);
-
-                Set<Coord> pions = jeu.getJoueur().getPions();
-                List<Coord> coords = new ArrayList<>();
-                coords.addAll(pions);
-
-                plateauGraphique.setPionsSurbrillance(coords);
+                updateAffichage(jeu);
             }
-            plateauGraphique.repaint();
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
+    public synchronized void updateAffichage(JeuConcret jeu) {
+        // Mise à jour de la fenêtre de jeu
+        fenetres.peek().update(jeu);
+        fenetres.peek().update(this);
+
+        // Mise à jour du plateau graphique
+        plateauGraphique.setJeu(jeu);
+        if (moteurJeu.estPhasePlacementPions()) {
+            // On affiche en surbrillance les tuiles sur lesquelles un pion peut être placées
+            System.out.println("Affichage des tuiles possibles");
+            plateauGraphique.setTuilesSurbrillance(jeu.placementsPionValide());
+        } else {
+            // On affiche en surbrillance les pions du joueur actif
+            plateauGraphique.setTuilesSurbrillance(null);
+
+            Set<Coord> pions = jeu.getJoueur().getPions();
+            List<Coord> coords = new ArrayList<>();
+            coords.addAll(pions);
+
+            plateauGraphique.setPionsSurbrillance(coords);
+        }
+        plateauGraphique.repaint();
+
+        moteurJeu.finUpdateAffichage();
+    }
+
     @Override
-    public Action attendreActionJoueur() {
-        actionJoueur = null;
-
-        System.out.println("Attente d'une action du joueur");
-        // Tant qu'on a pas d'action de la part du joueur et que le partie est toujours en cours
-        while (actionJoueur == null && moteurJeu.partieEnCours()) ;
-
-        return actionJoueur;
+    public void attendreActionJoueur(JoueurHumain joueur) {
+        this.joueurActif = joueur;
     }
 
     @Override
@@ -152,9 +159,19 @@ public class IHMGraphique extends IHM {
 
     @Override
     public synchronized void pause() {
-        System.out.println("Mise en pause du jeu");
         super.pause();
         plateauGraphique.setPlacementPingouin(-1, -1);
+        fenetres.peek().pause();
+    }
+
+    @Override
+    public synchronized void resume() {
+        super.resume();
+        fenetres.peek().resume();
+
+        if (moteurJeu.estPhasePlacementPions()) {
+            plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().placementsPionValide());
+        }
     }
 
     @Override
@@ -175,7 +192,7 @@ public class IHMGraphique extends IHM {
         frame = new JFrame("");
         try {
             // chargement du fichier audio
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream("soundtrack.wav"));
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getClassLoader().getResourceAsStream("res/sons/soundtrack.wav"));
             // création du Clip
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
@@ -257,14 +274,6 @@ public class IHMGraphique extends IHM {
     }
 
     /* */
-
-    /**
-     * Met à jour l'affichage de la fenêtre courante
-     */
-    public synchronized void updateAffichage() {
-        fenetres.peek().update(this);
-        fenetres.peek().resized();
-    }
 
     public void setVolume(float volume) {
         if (clip != null) {

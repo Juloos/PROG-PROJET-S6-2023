@@ -17,6 +17,7 @@ public abstract class Jeu {
     int nbJoueurs;
     int nbPions;
     int joueurCourant;
+    int dernierJoueurMort = -1;
 
     public Jeu() {
         plateau = new Plateau();
@@ -101,14 +102,15 @@ public abstract class Jeu {
     public boolean estTermine() {
         return Arrays.stream(joueurs).allMatch(Joueur::estTermine);
     }
-    public void checkPionBloque(){
-        for (Joueur j: joueurs ) {
-                j.getPions().forEach(c -> c.voisins().forEach(voisin -> {
-                    if (estPionBloque(c))
-                        j.bloquerPion(c);
-                    if (estPionBloque(voisin))
-                        joueurs[joueurDePion(voisin)].bloquerPion(voisin);
-                })
+
+    public void checkPionBloque() {
+        for (Joueur j : joueurs) {
+            j.getPions().forEach(c -> c.voisins().forEach(voisin -> {
+                        if (estPionBloque(c))
+                            j.bloquerPion(c);
+                        if (estPionBloque(voisin))
+                            joueurs[joueurDePion(voisin)].bloquerPion(voisin);
+                    })
 
             );
         }
@@ -193,7 +195,7 @@ public abstract class Jeu {
         joueurSuivant();
     }
 
-    public void ajouterPion(Coord c) {        
+    public void ajouterPion(Coord c) {
         joueurs[joueurCourant].ajouterPion(c);
         if (estPionBloque(c))
             joueurs[joueurCourant].bloquerPion(c);
@@ -206,11 +208,15 @@ public abstract class Jeu {
         joueurSuivant();
     }
 
+    public int getDernierJoueurMort() {
+        return dernierJoueurMort;
+    }
+
     public void terminerJoueur() {
+        dernierJoueurMort = joueurCourant;
         joueurs[joueurCourant].terminer();
         for (Coord c : joueurs[joueurCourant].getPions())
             manger(c);
-        joueurs[joueurCourant].getPions().clear();
         joueurSuivant();
     }
 

@@ -15,7 +15,7 @@ import Modele.Actions.ActionRefaire;
 import Modele.Coord;
 import Modele.Coups.CoupAjout;
 import Modele.Coups.CoupDeplacement;
-import Modele.Jeux.Jeu;
+import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
 
@@ -38,7 +38,8 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     // - mettre le jeu en pause et ouvrir le menu de pause
     // - annuler le dernier coup joué
     // - refaire le dernier coup annulé
-    JButton options, annuler, refaire;
+    // - reprendre la partie lorsqu'elle mise en pause par refaire et annuler
+    JButtonIcon options, annuler, refaire, reprendre;
     // La tuile sélectionnée par le joueur
     Coord selection;
     PlateauGraphique plateauGraphique;
@@ -74,7 +75,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         panel.setBackground(Couleurs.TRANSPARENT);
 
         menu = new JPanel(new BorderLayout());
-        menu.setBackground(Couleurs.BACKGROUND_ECRAN);
+        menu.setBackground(Couleurs.TRANSPARENT);
 
         JPanel panelJoueur = new JPanel(new GridLayout(Config.NB_MAX_JOUEUR, 1));
         panelJoueur.setBackground(Couleurs.TRANSPARENT);
@@ -99,7 +100,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         message.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
         panelInf.add(message);
 
-        annuler = new JButtonIcon(new ImageIcon("res/icones//arrow_left.png"), 100);
+        annuler = new JButtonIcon(new ImageIcon("res/icones/arrow_left.png"), 100);
         annuler.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -107,7 +108,15 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
             }
         });
 
-        refaire = new JButtonIcon(new ImageIcon("res/icones//arrow_right.png"), 100);
+        reprendre = new JButtonIcon(new ImageIcon("res/icones/pause.png"), 100);
+        reprendre.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                ihm.getMoteurJeu().pauseGame(!ihm.getMoteurJeu().partieEnPause());
+            }
+        });
+
+        refaire = new JButtonIcon(new ImageIcon("res/icones/arrow_right.png"), 100);
         refaire.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -119,6 +128,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         annulerRefaire.setOpaque(false);
         annulerRefaire.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         annulerRefaire.add(annuler);
+        annulerRefaire.add(reprendre);
         annulerRefaire.add(refaire);
 
         panelInf.add(annulerRefaire);
@@ -157,14 +167,13 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     }
 
     @Override
-    public void update(Jeu jeu) {
+    public void update(JeuConcret jeu) {
         this.joueurActif = jeu.getJoueur().getID();
 
         Joueur[] js = jeu.getJoueurs();
         for (int i = 0; i < joueurs.length; i++) {
             joueurs[i].update(js[i].getScore(), js[i].getTuiles());
         }
-
         panel.repaint();
     }
 
@@ -183,6 +192,18 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         plateauGraphique.setDimensionFlecheJoueurActif(flecheJoueurActifSize, flecheJoueurActifSize);
     }
 
+    @Override
+    public void pause() {
+        super.pause();
+        reprendre.setImageIcon(new ImageIcon("res/icones/play.png"));
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+        reprendre.setImageIcon(new ImageIcon("res/icones/pause.png"));
+    }
+
     /**
      * Lorsqu'un joueur clique sur la fenêtre
      *
@@ -191,54 +212,56 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
         MoteurJeu moteurJeu = ihm.getMoteurJeu();
+        int joueurActifID = moteurJeu.getJoueurActif().id;
 
-        // On récupère la coordonnée de la tuile sélectionnée (peut être invalide)
-        Coord coord = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
-        moteurJeu.debug("Tuile clickée " + coord);
+        if (clickEnable) {
+            // On récupère la coordonnée de la tuile sélectionnée (peut être invalide)
+            Coord coord = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
+            moteurJeu.debug("Tuile clickée " + coord);
 
-        if (moteurJeu.estPhasePlacementPions()) {
-            // Si le jeu est dans la phase placement des pions
-            ihm.setActionJoueur(new ActionCoup(new CoupAjout(coord, moteurJeu.getJoueurActif().id)));
-        } else {
-            // Si le jeu est dans la phase jeu (déplacement des pions jusqu'à fin de la partie)
-            if (selection == null) {
-                // Le joueur choisi lequel de ses pions, il veut déplacer
-                selection = coord;
-                moteurJeu.debug("Le joueur actif choisi un de ses pions");
-
-                if (moteurJeu.getJeu().joueurDePion(selection) == moteurJeu.getJoueurActif().id) {
-                    // On affiche en surbrillance toutes les tuiles sur lesquelles le pion sélectionné peut aller
-                    moteurJeu.debug("Affichage des tuiles accessible pour le pion choisi");
-                    plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection));
-                } else {
-                    // Le joueur n'a pas choisi un de ses pions
-                    moteurJeu.debug("Le joueur n'a pas choisi un de ses pions");
-                    selection = null;
-                    plateauGraphique.setTuilesSurbrillance(null);
-                }
-
+            if (moteurJeu.estPhasePlacementPions()) {
+                // Si le jeu est dans la phase placement des pions
+                moteurJeu.debug("On essaie de placer un pion");
+                ihm.jouerAction(new ActionCoup(new CoupAjout(coord, joueurActifID)));
             } else {
-                // Le joueur choisi sur quelle tuile il veut déplacer le pion qu'il a sélectionné
-                Coord cible = coord;
-                moteurJeu.debug("Le joueur choisi où il veut déplacer son pion");
+                // Si le jeu est dans la phase jeu (déplacement des pions jusqu'à fin de la partie)
+                if (selection == null) {
+                    // Le joueur choisi lequel de ses pions, il veut déplacer
+                    selection = coord;
+                    moteurJeu.debug("Le joueur actif choisi un de ses pions");
 
-                if (moteurJeu.getJeu().getPlateau().estCoordValide(cible) && !moteurJeu.getJeu().estPion(cible)) {
-                    // Le pion va se déplacer
-                    moteurJeu.debug("On essaye de déplacer le pion");
-                    ihm.setActionJoueur(new ActionCoup(new CoupDeplacement(selection, cible, moteurJeu.getJoueurActif().id)));
-                    plateauGraphique.setTuilesSurbrillance(null);
-                    selection = null;
-                } else if (moteurJeu.getJeu().joueurDePion(cible) == moteurJeu.getJoueurActif().id) {
-                    // Le joueur a choisi un autre de ses pions
-                    selection = cible;
-                    moteurJeu.debug("Le joueur a choisi un autre de ses pions");
-
-                    ArrayList<Coord> coords = moteurJeu.getJeu().deplacementsPion(selection);
-                    coords.add(selection);
-                    plateauGraphique.setTuilesSurbrillance(coords);
+                    if (moteurJeu.getJeu().joueurDePion(selection) == joueurActifID) {
+                        // On affiche en surbrillance toutes les tuiles sur lesquelles le pion sélectionné peut aller
+                        moteurJeu.debug("Affichage des tuiles accessible pour le pion choisi");
+                        plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection));
+                    } else {
+                        // Le joueur n'a pas choisi un de ses pions
+                        moteurJeu.debug("Le joueur n'a pas choisi un de ses pions");
+                        selection = null;
+                        plateauGraphique.setTuilesSurbrillance(null);
+                    }
                 } else {
-                    selection = null;
-                    plateauGraphique.setTuilesSurbrillance(null);
+                    // Le joueur choisi sur quelle tuile il veut déplacer le pion qu'il a sélectionné
+                    moteurJeu.debug("Le joueur choisi où il veut déplacer son pion");
+
+                    if (moteurJeu.getJeu().getPlateau().estCoordValide(coord) && !moteurJeu.getJeu().estPion(coord)) {
+                        // Le pion va se déplacer
+                        moteurJeu.debug("On essaye de déplacer le pion");
+                        plateauGraphique.setTuilesSurbrillance(null);
+                        ihm.jouerAction(new ActionCoup(new CoupDeplacement(selection, coord, joueurActifID)));
+                        selection = null;
+                    } else if (moteurJeu.getJeu().joueurDePion(coord) == joueurActifID) {
+                        // Le joueur a choisi un autre de ses pions
+                        selection = coord;
+                        moteurJeu.debug("Le joueur a choisi un autre de ses pions");
+
+                        ArrayList<Coord> coords = moteurJeu.getJeu().deplacementsPion(selection);
+                        coords.add(selection);
+                        plateauGraphique.setTuilesSurbrillance(coords);
+                    } else {
+                        selection = null;
+                        plateauGraphique.setTuilesSurbrillance(null);
+                    }
                 }
             }
         }

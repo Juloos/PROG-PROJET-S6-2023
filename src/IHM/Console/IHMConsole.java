@@ -6,7 +6,6 @@ import Modele.Actions.*;
 import Modele.Coord;
 import Modele.Coups.CoupAjout;
 import Modele.Coups.CoupDeplacement;
-import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
 import Modele.Joueurs.JoueurIA;
@@ -28,12 +27,13 @@ public class IHMConsole extends IHM {
     }
 
     @Override
-    public void updateAffichage(JeuConcret jeu) {
-        System.out.println(jeu.toString() + "\n");
+    public void updateAffichage() {
+        System.out.println(moteurJeu.getJeu().toString() + "\n");
+        moteurJeu.finUpdateAffichage();
     }
 
     @Override
-    public Action attendreActionJoueur() {
+    public void attendreActionJoueur(JoueurHumain joueur) {
         int numJoueur = getMoteurJeu().getJoueurActif().id;
         Action action = null;
 
@@ -69,7 +69,7 @@ public class IHMConsole extends IHM {
             }
         } while (action == null || !action.peutAppliquer(getMoteurJeu()));
 
-        return action;
+        joueur.setAction(moteurJeu, action);
     }
 
     /**
