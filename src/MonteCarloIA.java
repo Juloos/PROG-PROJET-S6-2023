@@ -25,13 +25,13 @@ public class MonteCarloIA {
 
         HashMap<Double[], Integer> winnersRate = new HashMap<>();
         for (int g = 0; g <= NB_GENERATIONS; g++) {
-            System.out.print("\n\rGénération " + g + "/" + NB_GENERATIONS + " - Partie 0/" + (NB_MONTECARLOS * (NB_MONTECARLOS + 1) * NB_PARTIES / 2));
+            System.out.print("\n\rGénération " + g + "/" + NB_GENERATIONS + " - Partie 0/" + (NB_MONTECARLOS * (NB_MONTECARLOS - 1) * NB_PARTIES / 2));
             for (int i = 0; i < NB_MONTECARLOS; i++)
                 winnersRate.put(heuristiques.get(i), 0);
             int nbFinis = 0;
 
             for (int i = 0; i < NB_MONTECARLOS; i++) {
-                for (int j = i; j < NB_MONTECARLOS; j++) {
+                for (int j = i + 1; j < NB_MONTECARLOS; j++) {
                     for (int k = 0; k < NB_PARTIES; k++) {
                         MoteurJeu moteurJeu = new MoteurJeu();
                         long startingTimeMillis = System.currentTimeMillis();
@@ -41,16 +41,16 @@ public class MonteCarloIA {
                             winnersRate.put(heuristiques.get(i), winnersRate.get(heuristiques.get(i)) + 1);
                         if (moteurJeu.getJeu().getWinner().contains(1))
                             winnersRate.put(heuristiques.get(j), winnersRate.get(heuristiques.get(j)) + 1);
-                        System.out.print("\rGénération " + g + "/" + NB_GENERATIONS + " - Partie " + (++nbFinis) + "/" + (NB_MONTECARLOS * (NB_MONTECARLOS + 1) * NB_PARTIES / 2) + " (" + ((System.currentTimeMillis() - startingTimeMillis) / 1000.0) + "s)");
+                        System.out.print("\rGénération " + g + "/" + NB_GENERATIONS + " - Partie " + (++nbFinis) + "/" + (NB_MONTECARLOS * (NB_MONTECARLOS - 1) * NB_PARTIES / 2) + " (" + ((System.currentTimeMillis() - startingTimeMillis) / 1000.0) + "s)");
                     }
                 }
             }
 
             ArrayList<Double[]> heuristiquesV2 = winnersRate.keySet().stream().sorted((ia1, ia2) -> winnersRate.get(ia2) - winnersRate.get(ia1)).limit(NB_MONTECARLOS / 10).collect(Collectors.toCollection(ArrayList::new));
 
-            System.out.println("\rRésultats des 10% meilleurs heuristiques de la génération " + g + " : ");
+            System.out.println("\n\rRésultats des 10% meilleurs heuristiques de la génération " + g + " : ");
             for (Double[] poids : heuristiquesV2)
-                System.out.println("  " + Arrays.toString(poids) + " : " + winnersRate.get(poids) + " victoires sur " + NB_MONTECARLOS * NB_PARTIES + " parties (" + (winnersRate.get(poids) * 100 / (NB_MONTECARLOS * NB_PARTIES)) + "%)");
+                System.out.println("  " + Arrays.toString(poids) + " : " + winnersRate.get(poids) + " victoires sur " + ((NB_MONTECARLOS - 1) * NB_PARTIES) + " parties (" + (winnersRate.get(poids) * 100 / ((NB_MONTECARLOS - 1) * NB_PARTIES)) + "%)");
             winnersRate.clear();
 
             for (Double[] poids : new ArrayList<>(heuristiquesV2)) {
