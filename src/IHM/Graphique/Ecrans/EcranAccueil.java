@@ -49,7 +49,7 @@ public class EcranAccueil extends Ecran {
         bouttons.add(Box.createRigidArea(new Dimension(0, 300)));
 
         // Le menu pour ouvrir le menu de création d'une nouvelle partie
-        ImageIcon iconNouvellePartie = new ImageIcon("res/boutons/nouvelle_partie.png");
+        ImageIcon iconNouvellePartie = new ImageIcon("res/boutons/Nouvelle_partie.png");
         nouvellePartie = new JButtonIcon(iconNouvellePartie, 370, 130);
         nouvellePartie.setContentAreaFilled(false);
         nouvellePartie.setAlignmentX(Component.CENTER_ALIGNMENT);
