@@ -1,42 +1,39 @@
 package IHM.Graphique.Animations;
 
-import Global.Config;
 import IHM.Graphique.Composants.PlateauGraphique;
+import IHM.Graphique.IHMGraphique;
 import Modele.Coord;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class AnimationCoupTerminaison implements Animation {
-
+public class AnimationCoupTerminaison extends Animation {
     private static final int NB_FRAMES = 4;
     private final PlateauGraphique plateauGraphique;
     private final List<Coord> pions;
+    private final int TIME_BETWEEN_FRAMES;
 
-    public AnimationCoupTerminaison(PlateauGraphique plateauGraphique, Set<Coord> pions) {
-        this.plateauGraphique = plateauGraphique;
+    public AnimationCoupTerminaison(IHMGraphique ihm, Set<Coord> pions) {
+        super(3000, ihm);
+        this.TIME_BETWEEN_FRAMES = DURATION / NB_FRAMES;
+        this.plateauGraphique = ihm.getPlateauGraphique();
         this.pions = new ArrayList<>(pions);
     }
 
     @Override
-    public void start() {
-
+    public void begin() {
     }
 
     @Override
     public void play() {
-        final long TIME_BETWEEN_FRAMES = (long) (Config.ANIMATION_DURATION * 2 / NB_FRAMES);
-
-        for (int i = 0; i < NB_FRAMES; i++) {
-            plateauGraphique.setTuilesSurbrillance(new ArrayList<>(pions));
-            plateauGraphique.repaint();
-            try {
-                Thread.sleep(TIME_BETWEEN_FRAMES / 2);
-            } catch (InterruptedException e) {
+        for (int numFrame = 0; numFrame < NB_FRAMES * 2; numFrame++) {
+            if (numFrame % 2 == 0) {
+                plateauGraphique.setTuilesSurbrillance(null);
+            } else {
+                plateauGraphique.setTuilesSurbrillance(pions);
             }
-            plateauGraphique.setTuilesSurbrillance(null);
-            plateauGraphique.repaint();
+            System.out.println("Frame numéro " + numFrame);
             try {
                 Thread.sleep(TIME_BETWEEN_FRAMES / 2);
             } catch (InterruptedException e) {
@@ -45,16 +42,7 @@ public class AnimationCoupTerminaison implements Animation {
     }
 
     @Override
-    public void stop() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
+    public void end() {
+        System.out.println("Fin de l'animation de coup terminaison");
     }
 }

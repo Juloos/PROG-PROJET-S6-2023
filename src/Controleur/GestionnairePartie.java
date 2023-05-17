@@ -10,10 +10,9 @@ import Modele.Joueurs.Joueur;
 public class GestionnairePartie extends Thread {
     private final MoteurJeu moteurJeu;
     private JeuConcret jeu;
-    private int nbPionsPlaces;
     private PhasesPartie phasePartie;
-
-    private boolean isPaused;
+    private int nbPions;
+    private boolean coupJouer;
 
     public GestionnairePartie(MoteurJeu moteurJeu) {
         super();
@@ -21,34 +20,42 @@ public class GestionnairePartie extends Thread {
         this.phasePartie = PhasesPartie.ATTENTE_PARTIE;
     }
 
+    public synchronized boolean isGamePaused() {
+        return phasePartie == PhasesPartie.PAUSE;
+    }
+
     public synchronized JeuConcret getJeu() {
         return jeu;
     }
 
-    public synchronized void jouerCoup(Coup coup) {
-        waitPause();
-        jeu.jouer(coup);
-        nbPionsPlaces++;
-        moteurJeu.afficherMessage("", 0);
-        updateAffichage();
+    private synchronized int getJoueurActifID() {
+        return jeu.getJoueur().getID();
     }
 
-    private synchronized void updateAffichage() {
-        if (partieEnCours()) {
-            moteurJeu.updateAffichage();
+    private synchronized boolean getCoupJouer() {
+        return coupJouer;
+    }
+
+    public synchronized void jouerCoup(Coup coup) {
+        if (!isGamePaused()) {
+            coupJouer = true;
+            jeu.jouer(coup);
+            moteurJeu.afficherMessage("", 0);
+            nbPions++;
+            updateAffichage();
         }
     }
 
-    public synchronized boolean estPhasePlacementPions() {
-        return partieEnCours() && nbPionsPlaces < jeu.getNbPions() * jeu.getNbJoueurs();
+    private synchronized void updateAffichage() {
+        moteurJeu.updateAffichage();
     }
 
-    public synchronized boolean partieEnCours() {
-        return phasePartie == PhasesPartie.PARTIE_EN_COURS || phasePartie == PhasesPartie.PAUSE;
+    public synchronized boolean estPhasePlacementPions() {
+        return nbPions < jeu.getNbPions() * jeu.getNbJoueurs();
     }
 
     public synchronized boolean estPhaseDeplacementPion() {
-        return partieEnCours() && !jeu.estTermine();
+        return !jeu.estTermine();
     }
 
     private void afficherMessage(String message, int duration) {
@@ -57,20 +64,22 @@ public class GestionnairePartie extends Thread {
 
     public synchronized void annulerCoup() {
         moteurJeu.debug("Annulation du dernier coup joué");
+        moteurJeu.pauseGame(true);
+        nbPions--;
         jeu.annuler();
-        nbPionsPlaces--;
         updateAffichage();
     }
 
     public synchronized void refaireCoup() {
         moteurJeu.debug("Refaison du dernier coup annulé");
+        moteurJeu.pauseGame(true);
+        nbPions++;
         jeu.refaire();
-        nbPionsPlaces++;
         updateAffichage();
     }
 
     private boolean peutJouer(Jeu jeu) {
-        return partieEnCours() && jeu.peutJouer();
+        return jeu.peutJouer();
     }
 
     @Override
@@ -81,18 +90,23 @@ public class GestionnairePartie extends Thread {
 
         updateAffichage();
 
-        moteurJeu.debug("Début de la partie");
-
-        updateAffichage();
-
         while (!jeu.estTermine()) {
             while (peutJouer(jeu)) {
-                moteurJeu.appliquerAction(jeu.getJoueur().reflechir(moteurJeu));
+                waitPause();
+                coupJouer = false;
+                Joueur joueur = jeu.getJoueur();
+                System.out.println("Tour du joueur : " + joueur.getID());
+
+                joueur.reflechir(moteurJeu);
+                while (!getCoupJouer() && !isGamePaused()) ;
+                System.out.println("Fin tour");
             }
+            waitPause();
+            System.out.println("Le joueur : " + jeu.getJoueur().getID() + " est mort");
             moteurJeu.appliquerAction(new ActionCoup(new CoupTerminaison(jeu.getJoueur().getID())));
         }
-        updateAffichage();
 
+        waitPause();
         moteurJeu.finDePartie();
 
         moteurJeu.debug("Fin de la partie");
@@ -102,15 +116,19 @@ public class GestionnairePartie extends Thread {
         }
     }
 
-    public void waitPause() {
-        while (phasePartie == PhasesPartie.PAUSE) ;
+    private void waitPause() {
+        while (isGamePaused()) ;
+    }
+
+    public synchronized void genePlateau(){
+            jeu.generateNewPlateau();
     }
 
     public synchronized void lancerPartie(Joueur[] joueurs) {
         this.jeu = new JeuConcret(joueurs);
         this.phasePartie = PhasesPartie.PARTIE_EN_COURS;
-        this.nbPionsPlaces = 0;
         updateAffichage();
+        this.nbPions = 0;
 
         moteurJeu.debug("Nombre de joueurs : " + joueurs.length);
         for (Joueur j : joueurs) {
@@ -118,14 +136,15 @@ public class GestionnairePartie extends Thread {
         }
     }
 
-    public synchronized void lancerPartie(String nomSave) {
-        this.jeu = JeuConcret.charger(nomSave);
+    public synchronized void lancerPartie(JeuConcret jeu) {
+        this.jeu = jeu;
         this.phasePartie = PhasesPartie.PARTIE_EN_COURS;
-        this.nbPionsPlaces = 0;
-        for (int i = 0; i < jeu.getNbJoueurs(); i++) {
-            nbPionsPlaces += jeu.getJoueur(i).getPions().size();
-        }
         updateAffichage();
+        this.nbPions = 0;
+
+        for (int i = 0; i < jeu.getNbJoueurs(); i++) {
+            nbPions += jeu.getJoueur(i).getPions().size();
+        }
     }
 
     public synchronized void pauseGame(boolean pause) {

@@ -1,7 +1,6 @@
 package Modele.Joueurs;
 
 import Controleur.MoteurJeu;
-import Modele.Actions.Action;
 import Modele.Coord;
 import Modele.Jeux.Jeu;
 
@@ -12,30 +11,33 @@ import static Global.Config.TAILLE_PLATEAU_X;
 import static Global.Config.TAILLE_PLATEAU_Y;
 
 public abstract class Joueur implements Cloneable, Comparable<Joueur> {
+
     public final int id;
     final HashMap<Coord, Boolean> pions;
     int score;
     int tuiles;
     boolean termine;
-
-    volatile Action action;
+    String nom;
 
     public Joueur(int id) {
+        super();
         this.id = id;
         score = 0;
         tuiles = 0;
         pions = new HashMap<>();
         termine = false;
+        nom = "Joueur " + id;
     }
 
     public Joueur(int id, int score, int tuiles, HashMap<Coord, Boolean> pions) {
+        super();
         this.id = id;
         this.score = score;
         this.tuiles = tuiles;
         this.pions = pions;
     }
 
-    public abstract Action reflechir(MoteurJeu mt);
+    public abstract void reflechir(MoteurJeu mt);
 
     @Override
     public abstract Joueur clone();
@@ -57,17 +59,20 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
     }
 
     public String getNom() {
-        return "";
+        return nom;
     }
 
     public void setNom(String nom) {
+        this.nom = nom;
     }
 
     public void ajouterTuile(int score) {
         this.score += score;
         this.tuiles += 1;
     }
+
     public abstract Joueur resetJoueur();
+
     public void supprimerTuile() {
         this.tuiles--;
     }

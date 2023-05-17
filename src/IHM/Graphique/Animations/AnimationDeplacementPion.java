@@ -1,33 +1,33 @@
 package IHM.Graphique.Animations;
 
-import Global.Config;
 import IHM.Graphique.Composants.PlateauGraphique;
+import IHM.Graphique.IHMGraphique;
 import Modele.Coord;
 import Modele.Coups.CoupDeplacement;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnimationDeplacementPion implements Animation {
-
+public class AnimationDeplacementPion extends Animation {
     private final PlateauGraphique plateauGraphique;
     private final CoupDeplacement deplacement;
 
-    public AnimationDeplacementPion(PlateauGraphique plateauGraphique, CoupDeplacement deplacement) {
-        this.plateauGraphique = plateauGraphique;
+    public AnimationDeplacementPion(IHMGraphique ihm, CoupDeplacement deplacement) {
+        super(750, ihm);
+        this.plateauGraphique = ihm.getPlateauGraphique();
         this.deplacement = deplacement;
     }
 
     @Override
-    public void start() {
+    public void begin() {
+        super.begin();
     }
 
     @Override
-    public void stop() {
-//        try {
-//            Thread.sleep(300);
-//        } catch (InterruptedException e) {
-//        }
+    public void end() {
+        plateauGraphique.setTuilesSurbrillance(null);
+        System.out.println("Fin de l'animation de déplacement");
+        super.end();
     }
 
     @Override
@@ -38,6 +38,7 @@ public class AnimationDeplacementPion implements Animation {
 
         while (!current.equals(deplacement.destination)) {
             coords.add(current);
+            System.out.println(current);
             current = current.decale(decalage);
         }
         coords.add(deplacement.destination);
@@ -45,18 +46,8 @@ public class AnimationDeplacementPion implements Animation {
         plateauGraphique.setTuilesSurbrillance(coords);
 
         try {
-            Thread.sleep(Config.ANIMATION_DURATION);
+            Thread.sleep(DURATION);
         } catch (InterruptedException e) {
         }
-
-        plateauGraphique.setTuilesSurbrillance(null);
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
     }
 }

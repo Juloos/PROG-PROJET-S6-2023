@@ -25,6 +25,11 @@ public class JButtonIcon extends JButton {
         setIcon(resizeIcon(icon, width, height));
     }
 
+    public void setImageIcon(ImageIcon icon) {
+        final int size = Math.min(getWidth(), getHeight());
+        setIcon(resizeIcon(icon, size, size));
+    }
+
     private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
         Image img = icon.getImage();
         Image resized = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);

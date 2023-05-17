@@ -1,14 +1,46 @@
 package IHM.Graphique.Animations;
 
-public interface Animation {
+import IHM.Graphique.Ecrans.Ecran;
+import IHM.Graphique.IHMGraphique;
 
-    void start();
+import javax.swing.*;
 
-    void play();
+public abstract class Animation extends SwingWorker<Void, Void> {
+    protected final IHMGraphique ihm;
+    protected int DURATION = 3000;
 
-    void stop();
+    public Animation(int duration, IHMGraphique ihm) {
+        super();
+        this.DURATION = duration;
+        this.ihm = ihm;
+    }
 
-    void pause();
+    public int getDuration() {
+        return DURATION;
+    }
 
-    void resume();
+    public void begin() {
+        Ecran.clickEnable = false;
+    }
+
+    public abstract void play();
+
+    public void end() {
+        Ecran.clickEnable = true;
+    }
+
+    @Override
+    protected Void doInBackground() throws Exception {
+        System.out.println("On est parti!");
+        begin();
+        play();
+        end();
+        return null;
+    }
+
+    @Override
+    protected void done() {
+        super.done();
+        ihm.updateAffichage(ihm.getMoteurJeu().getJeu());
+    }
 }

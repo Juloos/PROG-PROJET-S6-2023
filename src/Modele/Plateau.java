@@ -23,7 +23,7 @@ public class Plateau {
         this(true);
     }
 
-    private void randomInit() {
+    public void randomInit() {
         int nbCases = qMax * rMax - (rMax / 2);
         ArrayList<Integer> weights = new ArrayList<>();
         for (int i = 0; i < nbCases / 2; i++)
@@ -39,6 +39,7 @@ public class Plateau {
             for (c.r = 0; c.r < rMax; c.r++)
                 set(c, (c.r % 2 == 0 && c.q == qMax - 1) ? VIDE : weights.get(i++));
     }
+
 
     private boolean[] int2booleans(int i) {
         return new boolean[]{i % 2 == 1, i / 2 == 1};

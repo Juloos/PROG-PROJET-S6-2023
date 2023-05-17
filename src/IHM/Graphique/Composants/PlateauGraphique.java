@@ -1,5 +1,6 @@
 package IHM.Graphique.Composants;
 
+import IHM.Graphique.Animations.Animation;
 import IHM.Graphique.Couleurs;
 import IHM.Graphique.Sprites.Sprites;
 import Modele.Coord;
@@ -17,9 +18,11 @@ public class PlateauGraphique extends JComponent {
     int BORDURES_X = 2, BORDURES_Y = 5;
     double TAILLE_CASES, Y_OFFSET, ESPACEMENT_TUILES;
     List<Coord> tuilesSurbrillance, pionsSurbrillance;
-    volatile int arrow_X, arrow_Y, arrow_Width, arrow_Height;
+    private int arrow_X, arrow_Y, arrow_Width, arrow_Height;
     private JeuConcret jeu;
-    private volatile int placementPingouinX, placementPingouinY;
+    private int placementPingouinX, placementPingouinY;
+
+    private volatile boolean animationEnCours;
 
     public PlateauGraphique() {
         super();
@@ -28,11 +31,11 @@ public class PlateauGraphique extends JComponent {
     }
 
     public synchronized void setJeu(JeuConcret jeu) {
-        this.jeu = new JeuConcret(jeu);
+        this.jeu = jeu != null ? new JeuConcret(jeu) : null;
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) {
         Graphics2D drawable = (Graphics2D) g;
 
         if (jeu != null) {
@@ -66,7 +69,7 @@ public class PlateauGraphique extends JComponent {
 
                     if (tuilesSurbrillance != null && tuilesSurbrillance.contains(coord)) {
                         ajouterSurbrillance(drawable, q, r, jeu.estPion(coord) ? Couleurs.SURBRILLANCE_PION : Couleurs.SURBRILLANCE);
-                    } else if (pionsSurbrillance != null && pionsSurbrillance.contains(coord)) {
+                    } else if (pionsSurbrillance != null && pionsSurbrillance.contains(coord) && !jeu.estPionBloque(coord)) {
                         ajouterSurbrillance(drawable, q, r, Couleurs.SURBRILLANCE_PION);
                     }
                 }
@@ -180,6 +183,11 @@ public class PlateauGraphique extends JComponent {
 
     public synchronized void setTuilesSurbrillance(List<Coord> tuilesSurbrillance) {
         this.tuilesSurbrillance = tuilesSurbrillance;
+        if (tuilesSurbrillance != null) {
+            System.out.println("Nb tuiles en surbrillance : " + tuilesSurbrillance.size());
+        } else {
+            System.out.println("Plus de tuiles en surbrillance");
+        }
         repaint();
     }
 
@@ -204,5 +212,11 @@ public class PlateauGraphique extends JComponent {
         this.placementPingouinX = x;
         this.placementPingouinY = y;
         repaint();
+    }
+
+    public synchronized void jouerAnimation(Animation animation) {
+        animation.begin();
+        animation.play();
+        animation.end();
     }
 }

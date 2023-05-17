@@ -24,9 +24,7 @@ public class PopUpFinPartie extends PopUp {
 
         setLayout(new BorderLayout());
 
-        JLabel joueurGagnant = new JLabel();
-
-        JPanel trophies = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel trophies = new JPanel(new FlowLayout());
         for (int i : ihm.getMoteurJeu().getJeu().getWinner()) {
             String text = ihm.getMoteurJeu().getJeu().getJoueur(i).getNom() + "   ";
             ImageIcon icon = null;
@@ -45,11 +43,12 @@ public class PopUpFinPartie extends PopUp {
             }
 
             Winner winner = new Winner(text, icon);
+            winner.setAlignmentX(Component.CENTER_ALIGNMENT);
             trophies.add(winner);
         }
         trophies.setBackground(Couleurs.TRANSPARENT);
         trophies.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(trophies, BorderLayout.CENTER);
+        add(trophies, BorderLayout.NORTH);
 
         JPanel bouttons = new JPanel();
         bouttons.setOpaque(false);
@@ -102,7 +101,9 @@ public class PopUpFinPartie extends PopUp {
             JLabel iconLabel = new JLabel(icon, SwingConstants.CENTER);
 
             add(iconLabel);
+            add(Box.createRigidArea(new Dimension(0,40)));
             add(name);
+            setAlignmentX(Component.CENTER_ALIGNMENT);
         }
     }
 }

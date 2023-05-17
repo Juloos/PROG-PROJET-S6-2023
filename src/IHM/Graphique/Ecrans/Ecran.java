@@ -1,13 +1,15 @@
 package IHM.Graphique.Ecrans;
 
-import IHM.Graphique.IHMGraphique;
-import Modele.Jeux.Jeu;
 import IHM.Graphique.Composants.Button;
+import IHM.Graphique.IHMGraphique;
+import Modele.Jeux.JeuConcret;
 
 import javax.swing.*;
 import java.awt.*;
 
 public abstract class Ecran {
+
+    public static boolean clickEnable = true;
 
     // Le panel dans lequel les composants de la fenêtre sont ajoutés
     protected JPanel panel;
@@ -74,7 +76,7 @@ public abstract class Ecran {
      *
      * @param jeu : l'état courant du jeu à afficher
      */
-    public void update(Jeu jeu) {
+    public void update(JeuConcret jeu) {
     }
 
     /**
@@ -91,4 +93,9 @@ public abstract class Ecran {
     public void afficherMessage(String message) {
     }
 
+    public void pause() {
+    }
+
+    public void resume() {
+    }
 }
