@@ -87,6 +87,10 @@ public abstract class Jeu {
         return plateau;
     }
 
+    public void generateNewPlateau(){
+        plateau.randomInit();
+    }
+
     public boolean estJoueurValide(int joueur) {
         return joueur >= 0 && joueur < nbJoueurs;
     }

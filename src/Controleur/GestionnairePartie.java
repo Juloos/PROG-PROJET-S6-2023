@@ -120,6 +120,10 @@ public class GestionnairePartie extends Thread {
         while (isGamePaused()) ;
     }
 
+    public synchronized void genePlateau(){
+            jeu.generateNewPlateau();
+    }
+
     public synchronized void lancerPartie(Joueur[] joueurs) {
         this.jeu = new JeuConcret(joueurs);
         this.phasePartie = PhasesPartie.PARTIE_EN_COURS;

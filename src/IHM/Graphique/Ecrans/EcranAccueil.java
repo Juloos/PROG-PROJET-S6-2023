@@ -1,8 +1,6 @@
 package IHM.Graphique.Ecrans;
 
-import IHM.Graphique.Composants.Button;
 import IHM.Graphique.Composants.JButtonIcon;
-import IHM.Graphique.Couleurs;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.PopUp.PopUp;
 import IHM.Graphique.PopUp.PopUpConfirmation;
@@ -15,10 +13,10 @@ import java.io.IOException;
 
 public class EcranAccueil extends Ecran {
 
-    Button nouvellePartie;
-    Button chargerPartie;
-    Button options;
-    Button quitter;
+    JButtonIcon nouvellePartie;
+    JButtonIcon chargerPartie;
+    JButtonIcon options;
+    JButtonIcon quitter;
     JButtonIcon rules;
 
     public EcranAccueil() {
@@ -29,6 +27,12 @@ public class EcranAccueil extends Ecran {
     public void open(IHMGraphique ihm) {
         super.open(ihm);
         ihm.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        /*ihm.getFrame().addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                resized();
+            }
+        });*/
     }
 
     @Override
@@ -37,21 +41,18 @@ public class EcranAccueil extends Ecran {
         ImageIcon icon = new ImageIcon("res/fondsEcrans/background.png");
         this.backgroundImage = icon.getImage();
 
-        panel.setLayout(new GridLayout(3, 3));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        JPanel bouttons = new JPanel(new GridLayout(0, 1));
+        JPanel bouttons = new JPanel();
+        bouttons.setLayout(new BoxLayout(bouttons, BoxLayout.Y_AXIS));
         bouttons.setOpaque(false);
+        bouttons.add(Box.createRigidArea(new Dimension(0, 300)));
 
         // Le menu pour ouvrir le menu de création d'une nouvelle partie
-        nouvellePartie = new Button("Nouvelle partie");
-        nouvellePartie.setForeground(Couleurs.COULEUR_FOND);
-        nouvellePartie.setFont(new Font("Forte", Font.PLAIN, 25));
-
-        // Centrer le texte sur l'icône
-        nouvellePartie.setHorizontalTextPosition(JButton.CENTER);
-        nouvellePartie.setVerticalTextPosition(JButton.CENTER);
-
+        ImageIcon iconNouvellePartie = new ImageIcon("res/boutons/Nouvelle_partie.png");
+        nouvellePartie = new JButtonIcon(iconNouvellePartie, 370, 130);
         nouvellePartie.setContentAreaFilled(false);
+        nouvellePartie.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         nouvellePartie.addActionListener(new ActionListener() {
             @Override
@@ -61,9 +62,9 @@ public class EcranAccueil extends Ecran {
         });
 
         // Le bouton pour ouvrir le menu de chargement d'une partie
-        chargerPartie = new Button("Charger partie");
-        chargerPartie.setForeground(Couleurs.COULEUR_FOND);
-        chargerPartie.setFont(new Font("Forte", Font.PLAIN, 25));
+        chargerPartie = new JButtonIcon(new ImageIcon("res/boutons/charger_partie.png"), 340, 100);
+        chargerPartie.setContentAreaFilled(false);
+        chargerPartie.setAlignmentX(Component.CENTER_ALIGNMENT);
         chargerPartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -72,9 +73,9 @@ public class EcranAccueil extends Ecran {
         });
 
         // Le bouton pour ouvrir le menu des options
-        options = new Button("Options");
-        options.setForeground(Couleurs.COULEUR_FOND);
-        options.setFont(new Font("Forte", Font.PLAIN, 25));
+        options = new JButtonIcon(new ImageIcon("res/boutons/option.png"), 270, 80);
+        options.setContentAreaFilled(false);
+        options.setAlignmentX(Component.CENTER_ALIGNMENT);
         options.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -83,9 +84,9 @@ public class EcranAccueil extends Ecran {
         });
 
         // Le bouton pour quitter le jeu
-        quitter = new Button("Quitter");
-        quitter.setForeground(Couleurs.COULEUR_FOND);
-        quitter.setFont(new Font("Forte", Font.PLAIN, 25));
+        quitter = new JButtonIcon(new ImageIcon("res/boutons/quitter.png"), 270, 80);
+        quitter.setContentAreaFilled(false);
+        quitter.setAlignmentX(Component.CENTER_ALIGNMENT);
         quitter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -100,7 +101,8 @@ public class EcranAccueil extends Ecran {
             }
         });
 
-        rules = new JButtonIcon(new ImageIcon("res/rules.png"), 100, 100);
+        rules = new JButtonIcon(new ImageIcon("res/boutons/Regles.png"), 100, 150);
+        rules.setContentAreaFilled(false);
         rules.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -121,42 +123,45 @@ public class EcranAccueil extends Ecran {
         horizontal.setOpaque(false);
         horizontal.add(rules);
 
-        for (int i = 0; i < 9; i++) {
-            if (i == 8) {
-                JPanel rulesPanel = new JPanel(new BorderLayout());
-                rulesPanel.setOpaque(false);
-                rulesPanel.add(horizontal, BorderLayout.SOUTH);
-                panel.add(rulesPanel);
-            } else if (i == 4) {
-                panel.add(bouttons);
-            } else {
-                JPanel vide = new JPanel();
-                vide.setBackground(Couleurs.TRANSPARENT);
-                panel.add(vide);
-            }
+        panel.add(bouttons);
+        panel.add(horizontal);
+
         }
     }
 
-    @Override
+    /*@Override
     public void resized() {
         int width = panel.getWidth();
         int height = panel.getHeight();
-        int buttonWidth = (int) (width * 0.3);
-        int buttonHeight = (int) (height * 0.06);
-        Font buttonFont = new Font("Forte", Font.PLAIN, (int) (height * 0.05));
 
-        nouvellePartie.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-        nouvellePartie.setFont(buttonFont);
+        nouvellePartie.setPreferredSize(new Dimension((int) (width * 0.23), (int) (height * 0.13)));
+        // Redimensionner les images des boutons en fonction de la taille de la fenêtre
+        ImageIcon iconNouvellePartie = new ImageIcon("res/boutons/Nouvelle_partie.png");
+        nouvellePartie.setIcon(resizeIcon(iconNouvellePartie, (int) (width * 0.23), (int) (height * 0.13)));
 
-        chargerPartie.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-        chargerPartie.setFont(buttonFont);
+        chargerPartie.setPreferredSize(new Dimension((int) (width * 0.23), (int) (height * 0.11)));
+        ImageIcon iconChargerPartie = new ImageIcon("res/boutons/charger_partie.png");
+        chargerPartie.setIcon(resizeIcon(iconChargerPartie, (int) (width * 0.23), (int) (height * 0.11)));
 
-        options.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-        options.setFont(buttonFont);
+        options.setPreferredSize(new Dimension((int) (width * 0.17), (int) (height * 0.13)));
+        ImageIcon iconOptions = new ImageIcon("res/boutons/option.png");
+        options.setIcon(resizeIcon(iconOptions, (int) (width * 0.3), (int) (height * 0.13)));
 
-        quitter.setPreferredSize(new Dimension(buttonWidth, buttonHeight));
-        quitter.setFont(buttonFont);
+        quitter.setPreferredSize(new Dimension((int) (width * 0.3), (int) (height * 0.13)));
+        ImageIcon iconQuitter = new ImageIcon("res/boutons/Quitter.png");
+        quitter.setIcon(resizeIcon(iconQuitter, (int) (width * 0.3), (int) (height * 0.13)));
 
-        rules.setPreferredSize(new Dimension((int) (width * 0.1), (int) (height * 0.1)));
+        ImageIcon iconRules = new ImageIcon("res/rules.png");
+        rules.setIcon(resizeIcon(iconRules, (int) (width * 0.1), (int) (height * 0.1)));
+
+        panel.repaint();
+        panel.revalidate();
     }
-}
+
+    // Méthode utilitaire pour redimensionner une icône
+    private Icon resizeIcon(ImageIcon icon, int width, int height) {
+        Image img = icon.getImage();
+        Image resizedImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImg);
+    }*/
+

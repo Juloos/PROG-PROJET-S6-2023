@@ -1,28 +1,33 @@
 package Modele.IA;
 
 import Modele.Jeux.Jeu;
-import Global.Config;
 
 
 public class Hmax implements Heuristique {
-    Heuristique[] heuristiques = {new H1(), new H2(), new H3()};
-    double[] poids = {Double.MAX_VALUE, 1, 1000};
-    final double HVAL_THRESHOLD;
+    int nbAppels = 0;
+    Heuristique[] heuristiques = {new H1(), new H2(), new H9(), new H7(), new H4(), new H5(), new H6(), new H8(), new H10()};
+    double[] poids;
 
-    Hmax() {
-        this(Config.HVAL_THRESHOLD);
+    public Hmax() {
+        this.poids = new double[]{1, 1, 1, 1, 1, 1, 1, 1, 1};
     }
 
-    Hmax(double hval_threshold) {
-        HVAL_THRESHOLD = hval_threshold;
+    public Hmax(double[] poids) {
+        this.poids = poids;
     }
 
     @Override
     public double evaluer(Jeu j, int pdvJoueur) {
+        nbAppels++;
         int i = 0;
         double value = 0;
-        while (i < poids.length && Math.abs(value) < HVAL_THRESHOLD)
+        while (i < heuristiques.length)
             value += poids[i] * heuristiques[i++].evaluer(j, pdvJoueur);
         return value;
+    }
+
+    @Override
+    public int getNbAppels() {
+        return nbAppels;
     }
 }

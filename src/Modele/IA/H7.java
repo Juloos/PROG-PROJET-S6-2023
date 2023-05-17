@@ -5,8 +5,11 @@ import Modele.Jeux.Jeu;
 import Modele.Plateau;
 
 public class H7 implements Heuristique {
+    int nbAppels = 0;
+
     @Override
     public double evaluer(Jeu j, int pdvJoueur) {
+        nbAppels++;
         double valeur = 0;
         for (Coord pion : j.getJoueur(pdvJoueur).getPions())
             valeur += nbVoisinLibre(j, pion);
@@ -19,5 +22,10 @@ public class H7 implements Heuristique {
             if (j.getPlateau().get(v) != Plateau.VIDE && !j.estPion(v))
                 nbVoisins++;
         return nbVoisins;
+    }
+
+    @Override
+    public int getNbAppels() {
+        return nbAppels;
     }
 }

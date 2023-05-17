@@ -8,12 +8,9 @@ import Modele.Coups.CoupTerminaison;
 import Modele.Joueurs.Joueur;
 import Modele.Plateau;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-
-import static Global.Config.DEBUG;
 
 public class JeuGraphe extends Jeu {
     HashMap<Coord, HashSet<Coord>> ilots = new HashMap<>();
@@ -31,55 +28,19 @@ public class JeuGraphe extends Jeu {
             joueurs[i] = j.joueurs[i].clone();
         joueurCourant = j.joueurCourant;
         ilots = new HashMap<>(j.ilots);
-        System.out.println("JeuGraphe(JeuGraphe j)");
     }
 
-    private ArrayList<Coup> abstractCoupsPossibles(boolean avecPionsIsoles) {
+    public ArrayList<Coup> coupsPossibles() {
         ArrayList<Coup> coups = new ArrayList<>();
         if (getJoueur().getPions().size() < nbPions) {
             for (Coord c : placementsPionValide())
                 coups.add(new CoupAjout(c, joueurCourant));
         } else if (peutJouer()) {
             for (Coord s : joueurs[joueurCourant].getPions())
-                if (avecPionsIsoles || !estPionIsole(s))
-                    for (Coord d : deplacementsPion(s))
-                        coups.add(new CoupDeplacement(s.clone(), d, joueurCourant));
+                for (Coord d : deplacementsPion(s))
+                    coups.add(new CoupDeplacement(s.clone(), d, joueurCourant));
         } else if (!getJoueur().estTermine())
             coups.add(new CoupTerminaison(joueurCourant));
-        return coups;
-    }
-
-    public ArrayList<Coup> coupsPossibles() {
-        return abstractCoupsPossibles(true);
-    }
-
-    public ArrayList<Coup> coupsPossiblesOpti() {
-        ArrayList<Coup> coups = abstractCoupsPossibles(false);
-
-        if (coups.isEmpty()) {
-            HashSet<Coord> traitees = new HashSet<>();
-            for (Coord pion : getJoueur().getPions()) {
-                if (traitees.contains(pion))
-                    continue;
-                ArrayList<Coord> pionsIlot = new ArrayList<>();
-                pionsIlot.add(pion);
-                traitees.add(pion);
-                for (Coord autrePion : getJoueur().getPions()) {
-                    if (traitees.contains(autrePion))
-                        continue;
-                    traitees.add(autrePion);
-                    if (ilots.get(pion).equals(ilots.get(autrePion)))
-                        pionsIlot.add(autrePion);
-                }
-
-                Coup coupIlot;
-                if ((coupIlot = remplirIlot(joueurs[joueurCourant], pionsIlot)) != null) {
-                    coups.add(coupIlot);
-                    break;
-                }
-            }
-        }
-
         return coups;
     }
 
@@ -127,49 +88,7 @@ public class JeuGraphe extends Jeu {
     }
 
     public HashSet<Coord> getIlot(Coord c) {
+        estPionIsole(c);
         return ilots.get(c);
-    }
-
-    public Coup remplirIlot(Joueur j, ArrayList<Coord> pions) {
-        Coup maxcoup = null;
-        int max = 0;
-        for (Coord s : pions) {
-            for (Coord d : deplacementsPion(s)) {
-                CoupDeplacement cou = new CoupDeplacement(s, d, joueurCourant);
-                jouer(cou);
-                pions.remove(s);
-                pions.add(d);
-                int k = remplir(j, pions);
-                if (k > max) {
-                    maxcoup = cou;
-                    max = k;
-                }
-                pions.remove(d);
-                pions.add(s);
-                cou.annuler(this);
-            }
-        }
-        return maxcoup;
-    }
-
-    public int remplir(Joueur j, ArrayList<Coord> pions) {
-        int valeur = 0;
-        if (j.estTermine())
-            return getJoueur(joueurCourant).getScore();
-        for (Coord s : pions) {
-            for (Coord d : deplacementsPion(s)) {
-                CoupDeplacement cou = new CoupDeplacement(s, d, getJoueur(joueurCourant).getScore(), joueurCourant);
-                jouer(cou);
-                pions.remove(s);
-                pions.add(d);
-                int k = remplir(j, pions);
-                if (k > valeur)
-                    valeur = k;
-                pions.remove(d);
-                pions.add(s);
-                cou.annuler(this);
-            }
-        }
-        return valeur;
     }
 }

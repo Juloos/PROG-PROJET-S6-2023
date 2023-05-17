@@ -79,7 +79,7 @@ public class EcranCreationPartie extends Ecran {
                         IA.Difficulte diff = IA.Difficulte.values()[((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex()];
                         System.out.println(diff);
                         joueurs[i] = new JoueurIA(((MenuJoueur) joueursPanel.getComponent(i)).num - 1, diff);
-                        joueurs[i].setNom("IA " + diff);
+//                        joueurs[i].setNom("IA " + diff);
                     } else {
                         joueurs[i] = new JoueurHumain(((MenuJoueur) joueursPanel.getComponent(i)).num - 1);
                         joueurs[i].setNom(((MenuJoueur) joueursPanel.getComponent(i)).nom.getText());
@@ -228,7 +228,7 @@ public class EcranCreationPartie extends Ecran {
                         } else if (num == 4) {
                             image = new ImageIcon("res/ia/ia_jaune.png");
                         }
-                        image.setImage(image.getImage().getScaledInstance(300, 500, Image.SCALE_DEFAULT));
+                        image.setImage(image.getImage().getScaledInstance(250, 450, Image.SCALE_DEFAULT));
                         image.setDescription(" " + difficultesIA.getSelectedItem());
 
                         // création du label contenant l'image
