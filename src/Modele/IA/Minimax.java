@@ -4,6 +4,11 @@ import Modele.Coups.Coup;
 import Modele.Jeux.Jeu;
 import Modele.Jeux.JeuGraphe;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+
 import static Global.Config.*;
 
 public abstract class Minimax {
@@ -29,13 +34,30 @@ public abstract class Minimax {
     private double parcourirArbre(int profondeur, double alpha, double beta) {
         if (profondeur == 0 || pointeur.estTermine())
             return HEURISTIQUE.evaluer(pointeur, PDV_JOUEUR);
-        // Gérer avec file à prioirté pour des branch cut-offs
+
+        ArrayList<Coup> coups = pointeur.coupsPossibles();
+        if (profondeur > 1) {
+            HashMap<Coup, Double> valeurs = new HashMap<>();
+            for (Coup cfils : coups) {
+                pointeur.jouer(cfils);
+                valeurs.put(cfils, HEURISTIQUE.evaluer(pointeur, PDV_JOUEUR));
+                cfils.annuler(pointeur);
+                if (Math.abs(valeurs.get(cfils)) > HVAL_THRESHOLD) {
+                    if (profondeur == PROFONDEUR_MAX)
+                        this.coup = cfils;
+                    return valeurs.get(cfils);
+                }
+            }
+            coups.sort(Comparator.comparingDouble(valeurs::get));
+            if (fautMaximiser())
+                Collections.reverse(coups);
+        }
 
         double valeur;
         double minimaxVal;
         if (fautMaximiser()) {
             minimaxVal = Double.NEGATIVE_INFINITY;
-            for (Coup cfils : pointeur.coupsPossibles()) {
+            for (Coup cfils : coups) {
                 pointeur.jouer(cfils);
                 valeur = parcourirArbre(profondeur - 1, alpha, beta);
                 if (profondeur == PROFONDEUR_MAX && valeur > minimaxVal)
@@ -48,7 +70,7 @@ public abstract class Minimax {
             }
         } else {
             minimaxVal = Double.POSITIVE_INFINITY;
-            for (Coup cfils : pointeur.coupsPossibles()) {
+            for (Coup cfils : coups) {
                 pointeur.jouer(cfils);
                 valeur = parcourirArbre(profondeur - 1, alpha, beta);
                 if (profondeur == PROFONDEUR_MAX && valeur < minimaxVal)

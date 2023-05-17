@@ -15,6 +15,8 @@ import Modele.Joueurs.Joueur;
 
 import javax.swing.*;
 
+import static Global.Config.DEBUG;
+
 public class MoteurJeu {
 
     IHM ihm;
@@ -42,7 +44,7 @@ public class MoteurJeu {
     }
 
     public void debug(String message) {
-        if (Config.DEBUG) {
+        if (DEBUG) {
             System.out.println(message);
         }
     }
@@ -95,6 +97,8 @@ public class MoteurJeu {
                 action.appliquer(this);
             }
         } catch (Exception e) {
+            if (DEBUG)
+                System.out.println("Action non applicable.");
         }
     }
 
