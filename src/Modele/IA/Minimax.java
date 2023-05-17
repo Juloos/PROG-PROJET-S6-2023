@@ -42,7 +42,7 @@ public abstract class Minimax {
                 pointeur.jouer(cfils);
                 valeurs.put(cfils, HEURISTIQUE.evaluer(pointeur, PDV_JOUEUR));
                 cfils.annuler(pointeur);
-                if (Math.abs(valeurs.get(cfils)) > HVAL_THRESHOLD) {
+                if (Math.abs(valeurs.get(cfils)) >= HVAL_THRESHOLD) {
                     if (profondeur == PROFONDEUR_MAX)
                         this.coup = cfils;
                     return valeurs.get(cfils);
@@ -64,7 +64,7 @@ public abstract class Minimax {
                     this.coup = cfils;
                 minimaxVal = Double.max(minimaxVal, valeur);
                 cfils.annuler(pointeur);
-                if (minimaxVal > beta || minimaxVal > HVAL_THRESHOLD)
+                if (minimaxVal > beta || minimaxVal >= HVAL_THRESHOLD)
                     break;
                 alpha = Double.max(alpha, minimaxVal);
             }
@@ -77,7 +77,7 @@ public abstract class Minimax {
                     this.coup = cfils;
                 minimaxVal = Double.min(minimaxVal, valeur);
                 cfils.annuler(pointeur);
-                if (minimaxVal < alpha || -minimaxVal > HVAL_THRESHOLD)
+                if (minimaxVal < alpha || -minimaxVal >= HVAL_THRESHOLD)
                     break;
                 beta = Double.min(beta, minimaxVal);
             }
