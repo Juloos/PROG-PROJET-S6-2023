@@ -38,7 +38,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     // - mettre le jeu en pause et ouvrir le menu de pause
     // - annuler le dernier coup joué
     // - refaire le dernier coup annulé
-    JButton options, annuler, refaire;
+    JButton options, annuler, refaire, generer, valider;
     // La tuile sélectionnée par le joueur
     Coord selection;
     PlateauGraphique plateauGraphique;
@@ -72,6 +72,8 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         ImageIcon left_button = new ImageIcon("res/icones/arrow_left.png");
         ImageIcon right_button = new ImageIcon("res/icones/arrow_right.png");
         ImageIcon option_button = new ImageIcon("res/icones/gear.png");
+        ImageIcon generation_button = new ImageIcon("res/icones/two_circular_arrows.png");
+        ImageIcon validate_button = new ImageIcon("res/icones/check.png");
         this.plateauGraphique = ihm.getPlateauGraphique();
         plateauGraphique.setDimensionFlecheJoueurActif(100, 100);
 
@@ -149,12 +151,45 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
 
 
+        // Initialisation du bouton generer
+        generer = new JButtonIcon(generation_button, 100);
+        generer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                ihm.getMoteurJeu().genePlateau();
+                ihm.getMoteurJeu().updateAffichage();
+//                ihm.updateAffichage();
+            }
+        });
+
+        // Initialisation du bouton valider
+        valider = new JButtonIcon(validate_button, 100);
+        valider.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                panelInf.removeAll();
+                panelInf.add(message);
+                panelInf.add(annulerRefaire);
+                panelInf.add(horizontal);
+                panel.repaint();
+                panel.revalidate();
+            }
+        });
+
+        JPanel panic = new JPanel(new GridLayout(1, 0));
+        panic.setOpaque(false);
+        panic.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        panic.add(generer);
+        panic.add(valider);
+
+
+
+
         // Initialisation du panel des fonctionnelité (annuler, refaire, option et message)
         panelInf = new JPanel(new GridLayout(0, 1));
         panelInf.setPreferredSize(new Dimension(menuWidth, ihm.getFrame().getHeight() / 3));
         panelInf.setOpaque(false);
-        panelInf.add(message);
-        panelInf.add(annulerRefaire);
+        panelInf.add(panic);
         panelInf.add(horizontal);
 
         // Initialisation du panel de gauche

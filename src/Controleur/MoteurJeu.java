@@ -172,6 +172,10 @@ public class MoteurJeu {
         }
     }
 
+    public synchronized void genePlateau(){
+        gestionnairePartie.genePlateau();
+    }
+
     public synchronized void lancerPartie(Joueur[] joueurs) {
         this.gestionnairePartie = new GestionnairePartie(this);
         gestionnairePartie.lancerPartie(joueurs);
