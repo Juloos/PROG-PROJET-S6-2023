@@ -13,7 +13,7 @@ import java.io.File;
 
 public class PopUpSauvegarder extends PopUp {
 
-    private PopUp owner;
+    private final PopUp owner;
 
     public PopUpSauvegarder(PopUp owner) {
         super(owner, "Sauvegarder", 700, 500);
@@ -26,8 +26,10 @@ public class PopUpSauvegarder extends PopUp {
 
         // Preparation du panel de sauvegarde
         JPanel nomPanel = new JPanel();
+        nomPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         nomPanel.setLayout(new BoxLayout(nomPanel, BoxLayout.X_AXIS));
         JLabel nomLabel = new JLabel("Nom sauvegarde : ");
+        nomLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         nomLabel.setFont(new Font("Impact", Font.PLAIN, 20));
         nomPanel.add(nomLabel);
 
@@ -48,6 +50,7 @@ public class PopUpSauvegarder extends PopUp {
         String[] listNameFiles = dirSauv.list();
         System.out.println(listNameFiles);
         JList listSauv = new JList(listNameFiles);
+        listSauv.setFixedCellWidth(200);
         add(listSauv);
 
         // Mise a jour du texte dans la zone d'écriture de la sauvegarde

@@ -1,5 +1,6 @@
 package IHM.Graphique.Ecrans;
 
+import IHM.Graphique.Composants.Button;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.PopUp.PopUp;
 
@@ -7,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class EcranOptions extends Ecran {
 
@@ -30,10 +32,8 @@ public class EcranOptions extends Ecran {
     private void init() {
         volumeSlider = new JCheckBox("Activer le son", false);
         volumeSlider.setHorizontalTextPosition(SwingConstants.LEFT);
-        //Centrer le texte
-        volumeSlider.setHorizontalAlignment(SwingConstants.CENTER);
-        volumeSlider.setFont(new Font("Forte", Font.PLAIN, 48));
-        volumeSlider.setIconTextGap(20);
+        volumeSlider.setFont(new Font("Impact", Font.PLAIN, 48));
+        volumeSlider.setIconTextGap(30);
         volumeSlider.addActionListener(actionEvent -> {
             if (volumeSlider.isSelected()) {
                 float volume = 0.5f;
@@ -42,6 +42,8 @@ public class EcranOptions extends Ecran {
                 ihhm.setVolume(0);
             }
         });
+        volumeSlider.setAlignmentX(Component.CENTER_ALIGNMENT);
+        volumeSlider.setOpaque(false);
     }
 
     @Override
@@ -51,13 +53,36 @@ public class EcranOptions extends Ecran {
 
     @Override
     public void creation(IHMGraphique ihm) {
-        panel.setLayout(new GridLayout(2, 2));
-        ImageIcon icon = new ImageIcon("res\\background2.png");
+        panel.setLayout(new BorderLayout());
+        ImageIcon icon = new ImageIcon("res/fondsEcrans/background_options.jpg");
         this.backgroundImage = icon.getImage();
         ihhm = ihm;
-        panel.add(volumeSlider);
+        JPanel panelVolume = new JPanel();
+        panelVolume.add(Box.createRigidArea(new Dimension(0, 100)));
+        panelVolume.setLayout(new BoxLayout(panelVolume, BoxLayout.Y_AXIS));
+        panelVolume.setPreferredSize(new Dimension(400,400));
+        panelVolume.setOpaque(false);
+        panelVolume.add(volumeSlider);
+        panelVolume.add(Box.createRigidArea(new Dimension(0, 50)));
+        panelVolume.add(Box.createRigidArea(new Dimension(0, 50)));
+        Button rules = new Button("Règles");
+        rules.setFont(new Font("Impact", Font.PLAIN, 48));
+        rules.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    Desktop.getDesktop().open(new java.io.File("res/rules.pdf"));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        rules.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelVolume.add(rules);
+        panel.add(panelVolume, BorderLayout.CENTER);
 
-        JButton retour = new JButton("Retour");
+        Button retour = new Button("Retour");
+        retour.setFont(new Font("Impact", Font.PLAIN, 48));
         retour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -69,6 +94,7 @@ public class EcranOptions extends Ecran {
                 }
             }
         });
-        panel.add(retour);
+        retour.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(retour, BorderLayout.SOUTH);
     }
 }

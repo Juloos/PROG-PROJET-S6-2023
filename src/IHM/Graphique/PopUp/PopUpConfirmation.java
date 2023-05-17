@@ -1,5 +1,6 @@
 package IHM.Graphique.PopUp;
 
+import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.IHMGraphique;
 
 import javax.swing.*;
@@ -9,25 +10,28 @@ import java.awt.event.ActionListener;
 
 public class PopUpConfirmation extends PopUp {
 
-    private ActionListener confirmationAction;
+    private final ActionListener confirmationAction;
 
     public PopUpConfirmation(IHMGraphique ihm, ActionListener confirmationAction) {
         super(ihm, "Confirmation", 500, 300);
+        this.backgroundImage = new ImageIcon("res/fondsEcrans/background_popup.png").getImage();
         this.confirmationAction = confirmationAction;
     }
 
     public PopUpConfirmation(PopUp owner, ActionListener confirmationAction) {
         super(owner, "Confirmation", 500, 300);
+        this.backgroundImage = new ImageIcon("res/fondsEcrans/background_popup.png").getImage();
         this.confirmationAction = confirmationAction;
     }
 
     @Override
     public void init(IHMGraphique ihm) {
-        setLayout(new BorderLayout());
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-        Button retour = new Button("Retour");
-        retour.setFont(new Font("Impact", Font.PLAIN, 48));
-        retour.setBackground(Color.RED);
+        JButtonIcon retour = new JButtonIcon(new ImageIcon("res/back.png"), 190, 80);
+        retour.setAlignmentX(Component.CENTER_ALIGNMENT);
+        add(retour);
+
         retour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -35,17 +39,14 @@ public class PopUpConfirmation extends PopUp {
             }
         });
 
-        JLabel label = new JLabel("Voulez vous quitter ?");
+        JLabel label = new JLabel("Voulez-vous quitter ?");
         label.setFont(new Font("Impact", Font.PLAIN, 48));
-        add(label, BorderLayout.CENTER);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        add(label);
 
-        add(retour, BorderLayout.PAGE_START);
-
-        JButton confirmation = new JButton("Oui");
-        confirmation.setFont(new Font("Impact", Font.PLAIN, 48));
-        confirmation.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        confirmation.setBackground(Color.GREEN);
+        JButtonIcon confirmation = new JButtonIcon(new ImageIcon("res/oui.png"), 190, 80);
+        confirmation.setAlignmentX(Component.CENTER_ALIGNMENT);
         confirmation.addActionListener(confirmationAction);
-        add(confirmation, BorderLayout.SOUTH);
+        add(confirmation);
     }
 }
