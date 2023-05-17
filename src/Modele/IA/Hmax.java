@@ -5,20 +5,14 @@ import Modele.Jeux.Jeu;
 
 public class Hmax implements Heuristique {
     int nbAppels = 0;
-    Heuristique[] heuristiques = {new H1(), new H2(), new H4(), new H5(), new H6(), new H7(), new H8(), new H9(), new H10()};
-    double[] poids = {Double.MAX_VALUE, 1, 2000, 100, 100, 100, 100, 100, 100};
-    final double HVAL_THRESHOLD;
+    Heuristique[] heuristiques = {new H1(), new H2(), new H9(), new H7(), new H4(), new H5(), new H6(), new H8(), new H10()};
+    double[] poids;
 
     public Hmax() {
-        HVAL_THRESHOLD = 10000;
-    }
-
-    public Hmax(double hval_threshold) {
-        HVAL_THRESHOLD = hval_threshold;
+        this.poids = new double[]{1, 1, 1, 1, 1, 1, 1, 1, 1};
     }
 
     public Hmax(double[] poids) {
-        HVAL_THRESHOLD = poids[poids.length - 1];
         this.poids = poids;
     }
 
@@ -27,7 +21,7 @@ public class Hmax implements Heuristique {
         nbAppels++;
         int i = 0;
         double value = 0;
-        while (i < poids.length && Math.abs(value) < HVAL_THRESHOLD)
+        while (i < heuristiques.length)
             value += poids[i] * heuristiques[i++].evaluer(j, pdvJoueur);
         return value;
     }

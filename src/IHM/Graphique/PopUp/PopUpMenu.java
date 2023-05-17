@@ -1,29 +1,33 @@
 package IHM.Graphique.PopUp;
 
-import IHM.Graphique.Composants.Button;
+import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.Ecrans.EcranOptions;
 import IHM.Graphique.IHMGraphique;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PopUpMenu extends PopUp {
 
-    Button quitter;
+    JButtonIcon quitter;
 
     boolean optionsOuverte;
 
     public PopUpMenu(IHMGraphique ihm) {
-        super(ihm, "Menu", 500, 500);
+        super(ihm, "Menu", 450, 450);
     }
 
     @Override
     public void init(IHMGraphique ihm) {
-        setLayout(new GridLayout(0, 1, 0, 30));
+        this.backgroundImage = new ImageIcon("res/fondsEcrans/background_popup.png").getImage();
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        add(Box.createRigidArea(new Dimension(0, 20)));
 
-        Button retour = new Button("Retour au jeu");
+        JButtonIcon retour = new JButtonIcon(new ImageIcon("res/back.png"), 190, 80);
+        retour.setAlignmentX(Component.CENTER_ALIGNMENT);
         retour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -39,7 +43,8 @@ public class PopUpMenu extends PopUp {
 
         PopUp ref = this;
 
-        Button sauvegarder = new Button("Sauvegarder");
+        JButtonIcon sauvegarder = new JButtonIcon(new ImageIcon("res/save.png"), 190, 80);
+        sauvegarder.setAlignmentX(Component.CENTER_ALIGNMENT);
         sauvegarder.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -52,7 +57,8 @@ public class PopUpMenu extends PopUp {
         });
         add(sauvegarder);
 
-        Button options = new Button("Options");
+        JButtonIcon options = new JButtonIcon(new ImageIcon("res/options.png"), 190, 80);
+        options.setAlignmentX(Component.CENTER_ALIGNMENT);
         options.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -67,7 +73,8 @@ public class PopUpMenu extends PopUp {
         });
         add(options);
 
-        quitter = new Button("Quitter");
+        quitter = new JButtonIcon(new ImageIcon("res/oui.png"), 190, 80);
+        quitter.setAlignmentX(Component.CENTER_ALIGNMENT);
         quitter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

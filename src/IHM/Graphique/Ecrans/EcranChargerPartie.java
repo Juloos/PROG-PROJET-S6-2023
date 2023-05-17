@@ -69,7 +69,7 @@ public class EcranChargerPartie extends Ecran {
         JPanel panelInfo = new JPanel();
         panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.Y_AXIS));
         panelInfo.setMinimumSize(new Dimension(400, 600));
-        panelInfo.setBackground(Couleurs.BACKGROUND_ECRAN);
+        panelInfo.setOpaque(false);
         listCharg.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {

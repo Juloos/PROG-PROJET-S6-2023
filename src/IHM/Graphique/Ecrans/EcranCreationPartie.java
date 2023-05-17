@@ -228,7 +228,7 @@ public class EcranCreationPartie extends Ecran {
                         } else if (num == 4) {
                             image = new ImageIcon("res/ia/ia_jaune.png");
                         }
-                        image.setImage(image.getImage().getScaledInstance(300, 500, Image.SCALE_DEFAULT));
+                        image.setImage(image.getImage().getScaledInstance(250, 450, Image.SCALE_DEFAULT));
                         image.setDescription(" " + difficultesIA.getSelectedItem());
 
                         // création du label contenant l'image
