@@ -2,6 +2,7 @@ package IHM.Graphique;
 
 import Controleur.MoteurJeu;
 import IHM.Graphique.Animations.Animation;
+import IHM.Graphique.Animations.AnimationCoupTerminaison;
 import IHM.Graphique.Animations.AnimationDeplacementPion;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.Ecran;
@@ -16,6 +17,7 @@ import Modele.Coord;
 import Modele.Coups.CoupDeplacement;
 import Modele.Coups.CoupTerminaison;
 import Modele.Jeux.JeuConcret;
+import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
 import com.sun.istack.internal.NotNull;
 
@@ -70,7 +72,7 @@ public class IHMGraphique extends IHM {
     @Override
     public synchronized void updateAffichage() {
         joueurActif = null;
-        JeuConcret jeu = new JeuConcret(moteurJeu.getJeu());
+        JeuConcret jeu = moteurJeu.getJeu();
 
         try {
             Animation animation = null;
@@ -79,7 +81,8 @@ public class IHMGraphique extends IHM {
                 animation = new AnimationDeplacementPion(this, deplacement);
             } else if (jeu.dernierCoupJoue() instanceof CoupTerminaison) {
 //                System.out.println("Nouvelle animation de terminaison");
-//                animation = new AnimationCoupTerminaison(this, jeu.getJoueur(jeu.getDernierJoueurMort()).getPions());
+                Joueur joueur = jeu.getJoueur(jeu.getDernierJoueurMort());
+                animation = new AnimationCoupTerminaison(this, joueur.getNom(), joueur.getPions());
             }
 
             if (animation != null) {

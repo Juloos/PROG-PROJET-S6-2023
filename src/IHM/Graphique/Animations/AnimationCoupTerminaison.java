@@ -9,24 +9,30 @@ import java.util.List;
 import java.util.Set;
 
 public class AnimationCoupTerminaison extends Animation {
-    private static final int NB_FRAMES = 4;
+    private static final int NB_FRAMES = 3;
     private final PlateauGraphique plateauGraphique;
+    private final IHMGraphique ihm;
     private final List<Coord> pions;
+    private final String nomJoueur;
     private final int TIME_BETWEEN_FRAMES;
 
-    public AnimationCoupTerminaison(IHMGraphique ihm, Set<Coord> pions) {
-        super(3000, ihm);
+    public AnimationCoupTerminaison(IHMGraphique ihm, String nomJoueur, Set<Coord> pions) {
+        super(2000, ihm);
         this.TIME_BETWEEN_FRAMES = DURATION / NB_FRAMES;
+        this.ihm = ihm;
         this.plateauGraphique = ihm.getPlateauGraphique();
         this.pions = new ArrayList<>(pions);
+        this.nomJoueur = nomJoueur;
     }
 
     @Override
     public void begin() {
+        ihm.afficherMessage("Le joueur " + nomJoueur + " est mort", 0);
     }
 
     @Override
     public void play() {
+        System.out.println("TEMPS ENTRE CHAQUE FRAME : " + (TIME_BETWEEN_FRAMES / 2));
         for (int numFrame = 0; numFrame < NB_FRAMES * 2; numFrame++) {
             if (numFrame % 2 == 0) {
                 plateauGraphique.setTuilesSurbrillance(null);
@@ -43,6 +49,6 @@ public class AnimationCoupTerminaison extends Animation {
 
     @Override
     public void end() {
-        System.out.println("Fin de l'animation de coup terminaison");
+        ihm.afficherMessage("", 0);
     }
 }
