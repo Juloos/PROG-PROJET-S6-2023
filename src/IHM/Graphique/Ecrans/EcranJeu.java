@@ -177,6 +177,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         valider.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                ihm.getMoteurJeu().fixerPlateau();
                 panelInf.removeAll();
                 panelInf.add(message);
                 panelInf.add(annulerRefaire);
@@ -192,9 +193,6 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         buttonGeneration.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         buttonGeneration.add(generer);
         buttonGeneration.add(valider);
-
-
-
 
         // Initialisation du panel des fonctionnelité (annuler, refaire, option et message)
         panelInf = new JPanel(new GridLayout(0, 1));
@@ -269,7 +267,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     public void mouseClicked(MouseEvent mouseEvent) {
         MoteurJeu moteurJeu = ihm.getMoteurJeu();
         int joueurActifID = moteurJeu.getJoueurActif().id;
-
+        
         if (clickEnable) {
             // On récupère la coordonnée de la tuile sélectionnée (peut être invalide)
             Coord coord = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
@@ -331,13 +329,16 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
         MoteurJeu moteurJeu = ihm.getMoteurJeu();
-        // Si la partie n'est pas en pause
-        if (moteurJeu.getJeu() != null && moteurJeu.getJoueurActif() instanceof JoueurHumain && moteurJeu.estPhasePlacementPions()) {
-            // On modifie la position du pion a placer
-            plateauGraphique.setPlacementPingouin(mouseEvent.getX(), mouseEvent.getY());
-        } else {
-            // On n'affiche pas le pion flottant
+        if (!moteurJeu.estPlateauFixer()) {
             plateauGraphique.setPlacementPingouin(-1, -1);
+        } else {
+            if (moteurJeu.getJeu() != null && moteurJeu.getJoueurActif() instanceof JoueurHumain && moteurJeu.estPhasePlacementPions()) {
+                // On modifie la position du pion a placer
+                plateauGraphique.setPlacementPingouin(mouseEvent.getX(), mouseEvent.getY());
+            } else {
+                // On n'affiche pas le pion flottant
+                plateauGraphique.setPlacementPingouin(-1, -1);
+            }
         }
     }
 

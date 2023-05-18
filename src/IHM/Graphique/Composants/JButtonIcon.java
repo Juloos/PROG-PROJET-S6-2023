@@ -31,8 +31,12 @@ public class JButtonIcon extends JButton {
     }
 
     private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
-        Image img = icon.getImage();
-        Image resized = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(resized);
+        if (width > 0 && height > 0) {
+            Image img = icon.getImage();
+            Image resized = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            return new ImageIcon(resized);
+        } else {
+            return null;
+        }
     }
 }

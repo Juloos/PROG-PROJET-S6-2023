@@ -12,7 +12,7 @@ public class GestionnairePartie extends Thread {
     private JeuConcret jeu;
     private PhasesPartie phasePartie;
     private int nbPions;
-    private boolean coupJouer;
+    private boolean plateauGenere, coupJouer;
 
     public GestionnairePartie(MoteurJeu moteurJeu) {
         super();
@@ -48,6 +48,10 @@ public class GestionnairePartie extends Thread {
 
     private synchronized void updateAffichage() {
         moteurJeu.updateAffichage();
+    }
+
+    public synchronized boolean estPlateauFixer() {
+        return plateauGenere;
     }
 
     public synchronized boolean estPhasePlacementPions() {
@@ -90,6 +94,8 @@ public class GestionnairePartie extends Thread {
 
         updateAffichage();
 
+        while (!estPlateauFixer()) ;
+
         while (!jeu.estTermine()) {
             while (peutJouer(jeu)) {
                 waitPause();
@@ -120,8 +126,12 @@ public class GestionnairePartie extends Thread {
         while (isGamePaused()) ;
     }
 
-    public synchronized void genePlateau(){
-            jeu.generateNewPlateau();
+    public synchronized void genePlateau() {
+        jeu.generateNewPlateau();
+    }
+
+    public synchronized void fixerPlateau() {
+        this.plateauGenere = true;
     }
 
     public synchronized void lancerPartie(Joueur[] joueurs) {

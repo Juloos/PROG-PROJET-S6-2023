@@ -65,6 +65,10 @@ public class MoteurJeu {
         return gestionnairePartie.getJeu().getJoueur();
     }
 
+    public boolean estPlateauFixer() {
+        return gestionnairePartie.estPlateauFixer();
+    }
+
     public boolean estPhasePlacementPions() {
         return gestionnairePartie.getJeu() != null && gestionnairePartie.estPhasePlacementPions();
     }
@@ -161,8 +165,12 @@ public class MoteurJeu {
         }
     }
 
-    public synchronized void genePlateau(){
+    public synchronized void genePlateau() {
         gestionnairePartie.genePlateau();
+    }
+
+    public synchronized void fixerPlateau() {
+        gestionnairePartie.fixerPlateau();
     }
 
     public synchronized void lancerPartie(Joueur[] joueurs) {
