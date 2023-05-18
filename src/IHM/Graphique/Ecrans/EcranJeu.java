@@ -186,11 +186,12 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
             }
         });
 
-        JPanel panic = new JPanel(new GridLayout(1, 0));
-        panic.setOpaque(false);
-        panic.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-        panic.add(generer);
-        panic.add(valider);
+        // Initialisation du panel des button de generation de plateau
+        JPanel buttonGeneration = new JPanel(new GridLayout(1, 0));
+        buttonGeneration.setOpaque(false);
+        buttonGeneration.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        buttonGeneration.add(generer);
+        buttonGeneration.add(valider);
 
 
 
@@ -199,7 +200,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         panelInf = new JPanel(new GridLayout(0, 1));
         panelInf.setPreferredSize(new Dimension(menuWidth, ihm.getFrame().getHeight() / 3));
         panelInf.setOpaque(false);
-        panelInf.add(panic);
+        panelInf.add(buttonGeneration);
         panelInf.add(horizontal);
 
         // Initialisation du panel de gauche
