@@ -27,12 +27,6 @@ public class EcranAccueil extends Ecran {
     public void open(IHMGraphique ihm) {
         super.open(ihm);
         ihm.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        /*ihm.getFrame().addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                resized();
-            }
-        });*/
     }
 
     @Override
@@ -127,41 +121,57 @@ public class EcranAccueil extends Ecran {
         panel.add(horizontal);
 
         }
-    }
 
-    /*@Override
+    @Override
     public void resized() {
+        panel.removeAll(); // Supprimer tous les composants du panneau
+
+        JPanel bouttons = new JPanel();
+        bouttons.setLayout(new BoxLayout(bouttons, BoxLayout.Y_AXIS));
+        bouttons.setOpaque(false);
+        bouttons.add(Box.createVerticalGlue());
         int width = panel.getWidth();
         int height = panel.getHeight();
 
-        nouvellePartie.setPreferredSize(new Dimension((int) (width * 0.23), (int) (height * 0.13)));
         // Redimensionner les images des boutons en fonction de la taille de la fenêtre
         ImageIcon iconNouvellePartie = new ImageIcon("res/boutons/Nouvelle_partie.png");
-        nouvellePartie.setIcon(resizeIcon(iconNouvellePartie, (int) (width * 0.23), (int) (height * 0.13)));
+        nouvellePartie.setIcon(resizeIcon(iconNouvellePartie, (int) (width * 0.25), (int) (height * 0.12)));
 
-        chargerPartie.setPreferredSize(new Dimension((int) (width * 0.23), (int) (height * 0.11)));
         ImageIcon iconChargerPartie = new ImageIcon("res/boutons/charger_partie.png");
-        chargerPartie.setIcon(resizeIcon(iconChargerPartie, (int) (width * 0.23), (int) (height * 0.11)));
+        chargerPartie.setIcon(resizeIcon(iconChargerPartie, (int) (width * 0.25), (int) (height * 0.1)));
 
-        options.setPreferredSize(new Dimension((int) (width * 0.17), (int) (height * 0.13)));
         ImageIcon iconOptions = new ImageIcon("res/boutons/option.png");
-        options.setIcon(resizeIcon(iconOptions, (int) (width * 0.3), (int) (height * 0.13)));
+        options.setIcon(resizeIcon(iconOptions, (int) (width * 0.2), (int) (height * 0.1)));
 
-        quitter.setPreferredSize(new Dimension((int) (width * 0.3), (int) (height * 0.13)));
-        ImageIcon iconQuitter = new ImageIcon("res/boutons/Quitter.png");
-        quitter.setIcon(resizeIcon(iconQuitter, (int) (width * 0.3), (int) (height * 0.13)));
+        ImageIcon iconQuitter = new ImageIcon("res/boutons/quitter.png");
+        quitter.setIcon(resizeIcon(iconQuitter, (int) (width * 0.2), (int) (height * 0.1)));
 
-        ImageIcon iconRules = new ImageIcon("res/rules.png");
-        rules.setIcon(resizeIcon(iconRules, (int) (width * 0.1), (int) (height * 0.1)));
+        ImageIcon iconRules = new ImageIcon("res/boutons/Regles.png");
+        rules.setIcon(resizeIcon(iconRules, (int) (width * 0.06), (int) (height * 0.15)));
 
-        panel.repaint();
-        panel.revalidate();
+        bouttons.add(nouvellePartie);
+        bouttons.add(chargerPartie);
+        bouttons.add(Box.createVerticalGlue());
+        bouttons.add(options);
+        bouttons.add(Box.createVerticalGlue());
+        bouttons.add(quitter);
+
+        JPanel horizontal = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        horizontal.setOpaque(false);
+        horizontal.add(rules);
+
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(Box.createRigidArea(new Dimension(0, panel.getHeight()/3)));
+        panel.add(bouttons);
+        panel.add(horizontal);
+
+        panel.revalidate(); // Réorganiser les composants du panneau
+        panel.repaint(); // Redessiner le panneau
     }
-
-    // Méthode utilitaire pour redimensionner une icône
     private Icon resizeIcon(ImageIcon icon, int width, int height) {
         Image img = icon.getImage();
         Image resizedImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(resizedImg);
-    }*/
+    }
+}
 
