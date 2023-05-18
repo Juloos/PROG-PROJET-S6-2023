@@ -46,6 +46,7 @@ public class IHMGraphique extends IHM {
     JFrame frame;
     Clip clip;
     JoueurHumain joueurActif;
+    Timer timerAffichageMessage;
 
     public IHMGraphique(MoteurJeu moteurJeu) {
         super(moteurJeu);
@@ -130,14 +131,19 @@ public class IHMGraphique extends IHM {
     @Override
     public void afficherMessage(String message, int duration) {
         fenetres.peek().afficherMessage(message);
+        if (timerAffichageMessage != null) {
+            timerAffichageMessage.stop();
+        }
+
         if (duration > 0) {
-            Timer timer = new Timer(duration, new ActionListener() {
+            timerAffichageMessage = new Timer(duration, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
                     fenetres.peek().afficherMessage("");
+                    timerAffichageMessage = null;
                 }
             });
-            timer.start();
+            timerAffichageMessage.start();
         }
     }
 

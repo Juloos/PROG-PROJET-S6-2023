@@ -96,6 +96,8 @@ public class GestionnairePartie extends Thread {
 
         while (!estPlateauFixer()) ;
 
+        afficherMessage("Début de la partie", 3000);
+
         while (!jeu.estTermine()) {
             while (peutJouer(jeu)) {
                 waitPause();
