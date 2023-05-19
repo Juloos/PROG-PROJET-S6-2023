@@ -27,7 +27,7 @@ public class IHMConsole extends IHM {
     }
 
     @Override
-    public void updateAffichage() {
+    public void updateAffichage(boolean jouerAnimation) {
         System.out.println(moteurJeu.getJeu().toString() + "\n");
         moteurJeu.finUpdateAffichage();
     }

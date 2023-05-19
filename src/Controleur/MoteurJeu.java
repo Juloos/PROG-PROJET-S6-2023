@@ -125,10 +125,10 @@ public class MoteurJeu {
         }
     }
 
-    public synchronized void updateAffichage() {
+    public synchronized void updateAffichage(boolean jouerAnimation) {
         if (hasIHM()) {
             gestionnairePartie.pauseGame(true);
-            ihm.updateAffichage();
+            ihm.updateAffichage(jouerAnimation);
         }
     }
 

@@ -8,9 +8,9 @@ import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.Ecran;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.Ecrans.EcranJeu;
+import IHM.Graphique.Images.Images;
 import IHM.Graphique.PopUp.PopUp;
 import IHM.Graphique.PopUp.PopUpFinPartie;
-import IHM.Graphique.Sprites.Sprites;
 import IHM.IHM;
 import Modele.Actions.Action;
 import Modele.Coord;
@@ -21,8 +21,6 @@ import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
 import com.sun.istack.internal.NotNull;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.swing.*;
@@ -71,19 +69,20 @@ public class IHMGraphique extends IHM {
 
     /* Méthodes héritées de la classe IHM */
     @Override
-    public synchronized void updateAffichage() {
+    public synchronized void updateAffichage(boolean jouerAnimation) {
         joueurActif = null;
         JeuConcret jeu = moteurJeu.getJeu();
 
         try {
             Animation animation = null;
-            if (jeu.dernierCoupJoue() instanceof CoupDeplacement) {
-                CoupDeplacement deplacement = (CoupDeplacement) jeu.dernierCoupJoue();
-                animation = new AnimationDeplacementPion(this, deplacement);
-            } else if (jeu.dernierCoupJoue() instanceof CoupTerminaison) {
-//                System.out.println("Nouvelle animation de terminaison");
-                Joueur joueur = jeu.getJoueur(jeu.getDernierJoueurMort());
-                animation = new AnimationCoupTerminaison(this, joueur.getNom(), joueur.getPions());
+            if (jouerAnimation) {
+                if (jeu.dernierCoupJoue() instanceof CoupDeplacement) {
+                    CoupDeplacement deplacement = (CoupDeplacement) jeu.dernierCoupJoue();
+                    animation = new AnimationDeplacementPion(this, deplacement);
+                } else if (jeu.dernierCoupJoue() instanceof CoupTerminaison) {
+                    Joueur joueur = jeu.getJoueur(jeu.getDernierJoueurMort());
+                    animation = new AnimationCoupTerminaison(this, joueur.getNom(), joueur.getPions());
+                }
             }
 
             if (animation != null) {
@@ -176,11 +175,10 @@ public class IHMGraphique extends IHM {
     @Override
     public synchronized void resume() {
         super.resume();
-        fenetres.peek().resume();
-
         if (moteurJeu.estPhasePlacementPions()) {
             plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().placementsPionValide());
         }
+        fenetres.peek().resume();
     }
 
     @Override
@@ -199,20 +197,20 @@ public class IHMGraphique extends IHM {
         super.run();
 
         frame = new JFrame("");
-        try {
-            // chargement du fichier audio
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getClassLoader().getResourceAsStream("res/sons/soundtrack.wav"));
-            // création du Clip
-            clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.loop(Clip.LOOP_CONTINUOUSLY); // boucle infinie
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        setVolume(0);
+//        try {
+//            // chargement du fichier audio
+//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getClassLoader().getResource("/sons/soundtrack.wav"));
+//            // création du Clip
+//            clip = AudioSystem.getClip();
+//            clip.open(audioInputStream);
+//            clip.loop(Clip.LOOP_CONTINUOUSLY); // boucle infinie
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        setVolume(0);
 
         // On charge les sprites des tuiles dans un thread
-        spritesThread = new Thread(Sprites.getInstance());
+        spritesThread = new Thread(Images.getInstance());
         spritesThread.start();
 
         // La fenêtre par défaut est l'écran d'accueil
@@ -256,6 +254,7 @@ public class IHMGraphique extends IHM {
 
         // Ouverture de la fenêtre précédente
         fenetres.peek().open(this);
+        fenetres.peek().resized();
 
         // Mise à jour de la frame
         frame.validate();

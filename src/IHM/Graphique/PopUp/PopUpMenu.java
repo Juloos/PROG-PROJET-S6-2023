@@ -4,6 +4,7 @@ import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.Ecrans.EcranOptions;
 import IHM.Graphique.IHMGraphique;
+import IHM.Graphique.Images.Images;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,11 +23,11 @@ public class PopUpMenu extends PopUp {
 
     @Override
     public void init(IHMGraphique ihm) {
-        this.backgroundImage = new ImageIcon("res/fondsEcrans/background_popup.png").getImage();
+        this.backgroundImage = Images.chargerImage("/fondsEcrans/background_popup.png");
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         add(Box.createRigidArea(new Dimension(0, 20)));
 
-        JButtonIcon retour = new JButtonIcon(new ImageIcon("res/back.png"), 190, 80);
+        JButtonIcon retour = new JButtonIcon(Images.chargerImage("/back.png"), 190, 80);
         retour.setAlignmentX(Component.CENTER_ALIGNMENT);
         retour.addActionListener(new ActionListener() {
             @Override
@@ -43,7 +44,7 @@ public class PopUpMenu extends PopUp {
 
         PopUp ref = this;
 
-        JButtonIcon sauvegarder = new JButtonIcon(new ImageIcon("res/save.png"), 190, 80);
+        JButtonIcon sauvegarder = new JButtonIcon(Images.chargerImage("/save.png"), 190, 80);
         sauvegarder.setAlignmentX(Component.CENTER_ALIGNMENT);
         sauvegarder.addActionListener(new ActionListener() {
             @Override
@@ -57,7 +58,7 @@ public class PopUpMenu extends PopUp {
         });
         add(sauvegarder);
 
-        JButtonIcon options = new JButtonIcon(new ImageIcon("res/options.png"), 190, 80);
+        JButtonIcon options = new JButtonIcon(Images.chargerImage("/options.png"), 190, 80);
         options.setAlignmentX(Component.CENTER_ALIGNMENT);
         options.addActionListener(new ActionListener() {
             @Override
@@ -73,7 +74,7 @@ public class PopUpMenu extends PopUp {
         });
         add(options);
 
-        quitter = new JButtonIcon(new ImageIcon("res/oui.png"), 190, 80);
+        quitter = new JButtonIcon(Images.chargerImage("/oui.png"), 190, 80);
         quitter.setAlignmentX(Component.CENTER_ALIGNMENT);
         quitter.addActionListener(new ActionListener() {
             @Override

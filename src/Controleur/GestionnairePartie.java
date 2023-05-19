@@ -42,12 +42,12 @@ public class GestionnairePartie extends Thread {
             jeu.jouer(coup);
             moteurJeu.afficherMessage("", 0);
             nbPions++;
-            updateAffichage();
+            updateAffichage(true);
         }
     }
 
-    private synchronized void updateAffichage() {
-        moteurJeu.updateAffichage();
+    private synchronized void updateAffichage(boolean jouerAnimation) {
+        moteurJeu.updateAffichage(jouerAnimation);
     }
 
     public synchronized boolean estPlateauFixer() {
@@ -71,7 +71,7 @@ public class GestionnairePartie extends Thread {
         moteurJeu.pauseGame(true);
         nbPions--;
         jeu.annuler();
-        updateAffichage();
+        updateAffichage(false);
     }
 
     public synchronized void refaireCoup() {
@@ -79,7 +79,7 @@ public class GestionnairePartie extends Thread {
         moteurJeu.pauseGame(true);
         nbPions++;
         jeu.refaire();
-        updateAffichage();
+        updateAffichage(false);
     }
 
     private boolean peutJouer(Jeu jeu) {
@@ -92,7 +92,7 @@ public class GestionnairePartie extends Thread {
 
         moteurJeu.debutDePartie();
 
-        updateAffichage();
+        updateAffichage(false);
 
         while (!estPlateauFixer()) ;
 
@@ -130,6 +130,7 @@ public class GestionnairePartie extends Thread {
 
     public synchronized void genePlateau() {
         jeu.generateNewPlateau();
+        updateAffichage(false);
     }
 
     public synchronized void fixerPlateau() {
@@ -139,7 +140,7 @@ public class GestionnairePartie extends Thread {
     public synchronized void lancerPartie(Joueur[] joueurs) {
         this.jeu = new JeuConcret(joueurs);
         this.phasePartie = PhasesPartie.PARTIE_EN_COURS;
-        updateAffichage();
+        updateAffichage(false);
         this.nbPions = 0;
 
         moteurJeu.debug("Nombre de joueurs : " + joueurs.length);
@@ -151,9 +152,9 @@ public class GestionnairePartie extends Thread {
     public synchronized void lancerPartie(JeuConcret jeu) {
         this.jeu = jeu;
         this.phasePartie = PhasesPartie.PARTIE_EN_COURS;
-        updateAffichage();
+        updateAffichage(false);
+        this.plateauGenere = jeu.nbPionsSurPlateau() > 0;
         this.nbPions = 0;
-
         for (int i = 0; i < jeu.getNbJoueurs(); i++) {
             nbPions += jeu.getJoueur(i).getPions().size();
         }

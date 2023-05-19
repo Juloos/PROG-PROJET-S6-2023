@@ -2,6 +2,7 @@ package IHM.Graphique.Ecrans;
 
 import IHM.Graphique.Composants.Button;
 import IHM.Graphique.IHMGraphique;
+import IHM.Graphique.Images.Images;
 import IHM.Graphique.PopUp.PopUp;
 
 import javax.swing.*;
@@ -54,13 +55,12 @@ public class EcranOptions extends Ecran {
     @Override
     public void creation(IHMGraphique ihm) {
         panel.setLayout(new BorderLayout());
-        ImageIcon icon = new ImageIcon("res/fondsEcrans/background_options.jpg");
-        this.backgroundImage = icon.getImage();
+        this.backgroundImage = Images.chargerImage("/fondsEcrans/background_options.jpg");
         ihhm = ihm;
         JPanel panelVolume = new JPanel();
         panelVolume.add(Box.createRigidArea(new Dimension(0, 100)));
         panelVolume.setLayout(new BoxLayout(panelVolume, BoxLayout.Y_AXIS));
-        panelVolume.setPreferredSize(new Dimension(400,400));
+        panelVolume.setPreferredSize(new Dimension(400, 400));
         panelVolume.setOpaque(false);
         panelVolume.add(volumeSlider);
         panelVolume.add(Box.createRigidArea(new Dimension(0, 50)));
@@ -71,7 +71,7 @@ public class EcranOptions extends Ecran {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
-                    Desktop.getDesktop().open(new java.io.File("res/rules.pdf"));
+                    Desktop.getDesktop().open(new java.io.File("/rules.pdf"));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

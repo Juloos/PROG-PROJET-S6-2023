@@ -1,14 +1,15 @@
 package IHM.Graphique.Composants;
 
 import IHM.Graphique.Couleurs;
+import IHM.Graphique.Images.Images;
 import Modele.Joueurs.Joueur;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class InfoJoueur extends JPanel {
-    private static final ImageIcon FISH = new ImageIcon("res/icones/fish.png");
-    private static final ImageIcon ICE = new ImageIcon("res/icones/ice.png");
+    private static final Image FISH = Images.chargerImage("/icones/fish.png");
+    private static final Image ICE = Images.chargerImage("/icones/ice.png");
     JLabel nom, nbPoissons, nbTuiles;
 
     public InfoJoueur(Joueur joueur) {
@@ -52,9 +53,7 @@ public class InfoJoueur extends JPanel {
         repaint();
     }
 
-    private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
-        Image img = icon.getImage();
-        Image resized = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(resized);
+    private ImageIcon resizeIcon(Image image, int width, int height) {
+        return new ImageIcon(Images.resizeImage(image, width, height));
     }
 }

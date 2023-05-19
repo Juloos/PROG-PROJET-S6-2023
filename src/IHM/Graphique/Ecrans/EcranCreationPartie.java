@@ -4,6 +4,7 @@ import Global.Config;
 import IHM.Graphique.Composants.Button;
 import IHM.Graphique.Couleurs;
 import IHM.Graphique.IHMGraphique;
+import IHM.Graphique.Images.Images;
 import Modele.IA.IA;
 import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
@@ -36,8 +37,7 @@ public class EcranCreationPartie extends Ecran {
     @Override
     public void creation(IHMGraphique ihm) {
         panel.setLayout(new BorderLayout());
-        ImageIcon icon = new ImageIcon("res/fondsEcrans/background2.jpg");
-        this.backgroundImage = icon.getImage();
+        this.backgroundImage = Images.chargerImage("/fondsEcrans/background2.jpg");
 
         JLabel label = new JLabel("Nouvelle Partie", SwingConstants.CENTER);
         label.setFont(new Font("Impact", Font.PLAIN, 48));
@@ -220,13 +220,13 @@ public class EcranCreationPartie extends Ecran {
                     if (selected != 0 && !isIA[0]) {
                         ImageIcon image = null;
                         if (num == 1) {
-                            image = new ImageIcon("res/ia/ia_rouge.png");
+                            image = new ImageIcon(Images.chargerImage("/ia/ia_rouge.png"));
                         } else if (num == 2) {
-                            image = new ImageIcon("res/ia/ia_bleu.png");
+                            image = new ImageIcon(Images.chargerImage("/ia/ia_bleu.png"));
                         } else if (num == 3) {
-                            image = new ImageIcon("res/ia/ia_verte.png");
+                            image = new ImageIcon(Images.chargerImage("/ia/ia_verte.png"));
                         } else if (num == 4) {
-                            image = new ImageIcon("res/ia/ia_jaune.png");
+                            image = new ImageIcon(Images.chargerImage("/ia/ia_jaune.png"));
                         }
                         image.setImage(image.getImage().getScaledInstance(250, 450, Image.SCALE_DEFAULT));
                         image.setDescription(" " + difficultesIA.getSelectedItem());

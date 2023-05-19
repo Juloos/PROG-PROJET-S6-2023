@@ -7,6 +7,7 @@ import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Couleurs;
 import IHM.Graphique.IHMGraphique;
+import IHM.Graphique.Images.Images;
 import IHM.Graphique.PopUp.PopUp;
 import IHM.Graphique.PopUp.PopUpMenu;
 import Modele.Actions.ActionAnnuler;
@@ -68,17 +69,19 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     public void creation(IHMGraphique ihm) {
         // Création des variables
         final int menuWidth = ihm.getFrame().getWidth() * 2 / 7;
-        ImageIcon background = new ImageIcon("res/fondsEcrans/background_jeu.jpeg");
-        ImageIcon left_button = new ImageIcon("res/icones/arrow_left.png");
-        ImageIcon right_button = new ImageIcon("res/icones/arrow_right.png");
-        ImageIcon option_button = new ImageIcon("res/icones/gear.png");
-        ImageIcon generation_button = new ImageIcon("res/icones/two_circular_arrows.png");
-        ImageIcon validate_button = new ImageIcon("res/icones/check.png");
+        Image background = Images.chargerImage("/fondsEcrans/background_jeu.jpeg");
+        Image left_button = Images.chargerImage("/icones/arrow_left.png");
+        Image right_button = Images.chargerImage("/icones/arrow_right.png");
+        Image option_button = Images.chargerImage("/icones/gear.png");
+        Image generation_button = Images.chargerImage("/icones/two_circular_arrows.png");
+        Image validate_button = Images.chargerImage("/icones/check.png");
         this.plateauGraphique = ihm.getPlateauGraphique();
+
+        // Définition des dimensions de la flèche du joueur actif
         plateauGraphique.setDimensionFlecheJoueurActif(100, 100);
 
         // Mise en place du background
-        this.backgroundImage = background.getImage();
+        this.backgroundImage = background;
         panel.setLayout(new BorderLayout());
         panel.setBackground(Couleurs.TRANSPARENT);
 
@@ -117,7 +120,6 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
         // Initialisation du bouton refaire
         refaire = new JButtonIcon(right_button, 100);
-        refaire = new JButtonIcon(new ImageIcon("res/icones/arrow_right.png"), 100);
         refaire.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -126,7 +128,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         });
 
         // Initialisation du bouton reprendre
-        reprendre = new JButtonIcon(new ImageIcon("res/icones/pause.png"), 100);
+        reprendre = new JButtonIcon(Images.chargerImage("/icones/pause.png"), 100);
         reprendre.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -167,8 +169,6 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 ihm.getMoteurJeu().genePlateau();
-                ihm.getMoteurJeu().updateAffichage();
-//                ihm.updateAffichage();
             }
         });
 
@@ -196,9 +196,8 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
         // Initialisation du panel des fonctionnelité (annuler, refaire, option et message)
         panelInf = new JPanel(new GridLayout(0, 1));
-        panelInf.setPreferredSize(new Dimension(menuWidth, ihm.getFrame().getHeight() / 3));
         panelInf.setOpaque(false);
-        panelInf.add(buttonGeneration);
+        panelInf.add(ihm.getMoteurJeu().estPlateauFixer() ? annulerRefaire : buttonGeneration);
         panelInf.add(horizontal);
 
         // Initialisation du panel de gauche
@@ -213,6 +212,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         panel.add(plateauGraphique, BorderLayout.CENTER);
         panel.add(menu, BorderLayout.EAST);
 
+        menu.setPreferredSize(new Dimension(menuWidth, panel.getHeight()));
     }
 
     @Override
@@ -242,20 +242,20 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         menu.setPreferredSize(new Dimension(menuWidth, panel.getParent().getHeight()));
 
         int flecheJoueurActifSize = panel.getHeight() / 8;
-        plateauGraphique.setPositionFlecheJoueurActif(panel.getParent().getWidth() - menuWidth - flecheJoueurActifSize - 10, joueurs[joueurActif].getY());
+        plateauGraphique.setPositionFlecheJoueurActif(plateauGraphique.getWidth() - flecheJoueurActifSize - 10, joueurs[joueurActif].getY());
         plateauGraphique.setDimensionFlecheJoueurActif(flecheJoueurActifSize, flecheJoueurActifSize);
     }
 
     @Override
     public void pause() {
         super.pause();
-        reprendre.setImageIcon(new ImageIcon("res/icones/play.png"));
+        reprendre.setImageIcon(Images.chargerImage("/icones/play.png"));
     }
 
     @Override
     public void resume() {
         super.resume();
-        reprendre.setImageIcon(new ImageIcon("res/icones/pause.png"));
+        reprendre.setImageIcon(Images.chargerImage("/icones/pause.png"));
     }
 
     /**
@@ -267,7 +267,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     public void mouseClicked(MouseEvent mouseEvent) {
         MoteurJeu moteurJeu = ihm.getMoteurJeu();
         int joueurActifID = moteurJeu.getJoueurActif().id;
-        
+
         if (clickEnable) {
             // On récupère la coordonnée de la tuile sélectionnée (peut être invalide)
             Coord coord = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());

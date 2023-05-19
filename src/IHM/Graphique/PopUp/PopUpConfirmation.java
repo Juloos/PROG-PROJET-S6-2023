@@ -2,6 +2,7 @@ package IHM.Graphique.PopUp;
 
 import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.IHMGraphique;
+import IHM.Graphique.Images.Images;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,13 +15,13 @@ public class PopUpConfirmation extends PopUp {
 
     public PopUpConfirmation(IHMGraphique ihm, ActionListener confirmationAction) {
         super(ihm, "Confirmation", 500, 300);
-        this.backgroundImage = new ImageIcon("res/fondsEcrans/background_popup.png").getImage();
+        this.backgroundImage = Images.chargerImage("/fondsEcrans/background_popup.png");
         this.confirmationAction = confirmationAction;
     }
 
     public PopUpConfirmation(PopUp owner, ActionListener confirmationAction) {
         super(owner, "Confirmation", 500, 300);
-        this.backgroundImage = new ImageIcon("res/fondsEcrans/background_popup.png").getImage();
+        this.backgroundImage = Images.chargerImage("/fondsEcrans/background_popup.png");
         this.confirmationAction = confirmationAction;
     }
 
@@ -28,7 +29,7 @@ public class PopUpConfirmation extends PopUp {
     public void init(IHMGraphique ihm) {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-        JButtonIcon retour = new JButtonIcon(new ImageIcon("res/back.png"), 190, 80);
+        JButtonIcon retour = new JButtonIcon(Images.chargerImage("/back.png"), 190, 80);
         retour.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(retour);
 
@@ -44,7 +45,7 @@ public class PopUpConfirmation extends PopUp {
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(label);
 
-        JButtonIcon confirmation = new JButtonIcon(new ImageIcon("res/oui.png"), 190, 80);
+        JButtonIcon confirmation = new JButtonIcon(Images.chargerImage("/oui.png"), 190, 80);
         confirmation.setAlignmentX(Component.CENTER_ALIGNMENT);
         confirmation.addActionListener(confirmationAction);
         add(confirmation);

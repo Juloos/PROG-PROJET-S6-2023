@@ -33,8 +33,10 @@ public abstract class IHM implements Runnable {
 
     /**
      * Met à jour l'affichage du plateau ainsi que des informations des joueurs
+     *
+     * @param jouerAnimation : vrai si il faut jouer des animations
      */
-    public abstract void updateAffichage();
+    public abstract void updateAffichage(boolean jouerAnimation);
 
     /**
      * Attend que le joueur actif demande de faire une action

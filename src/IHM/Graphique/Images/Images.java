@@ -1,12 +1,11 @@
-package IHM.Graphique.Sprites;
+package IHM.Graphique.Images;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.net.URL;
 
-public class Sprites implements Runnable {
-    protected static Sprites INSTANCE;
+public class Images implements Runnable {
+    protected static Images INSTANCE;
     // Les tuiles où il n'y a pas de pingouins dessus
     private final Image[] tuilesSansPingouins;
     // Les tuiles où il y a un pingouin dessus
@@ -18,7 +17,7 @@ public class Sprites implements Runnable {
     // Les flèches pour indiquer le dernier déplacement du joueur
     private Image flecheDeplacementSource, flecheDeplacementDest;
 
-    protected Sprites() {
+    protected Images() {
         tuilesSansPingouins = new Image[4];
 
         tuilesAvecPingouins = new Image[4][3];
@@ -26,11 +25,26 @@ public class Sprites implements Runnable {
         pingouins = new Image[4];
     }
 
-    public synchronized static Sprites getInstance() {
+    public synchronized static Images getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new Sprites();
+            INSTANCE = new Images();
         }
         return INSTANCE;
+    }
+
+    public static Image chargerImage(String chemin) {
+        try {
+            URL url = Images.class.getResource(chemin);
+            return ImageIO.read(url);
+        } catch (Exception e) {
+            System.out.println(chemin);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Image resizeImage(Image image, int width, int height) {
+        return image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
     }
 
     public Image getTuile(boolean avecPingouin, int nbPoissons) {
@@ -69,7 +83,7 @@ public class Sprites implements Runnable {
     public void run() {
         // Utilisée pour charger les sprites
         // Chargement des pingouins
-        String chemin = "res/pingouins/";
+        String chemin = "/pingouins/";
         int i = 0;
         for (String fileName : new String[]{"PingouinRouge.png", "PingouinBleu.png", "PingouinVert.png", "PingouinJaune.png"}) {
             pingouins[i] = chargerImage(chemin + fileName);
@@ -77,7 +91,7 @@ public class Sprites implements Runnable {
         }
 
         // Chargement des tuiles sans pingouins
-        chemin = "res/tuiles/";
+        chemin = "/tuiles/";
 
         i = 0;
         for (String fileName : new String[]{"eau.png", "1Poisson.png", "2Poissons.png", "3Poissons.png"}) {
@@ -97,28 +111,18 @@ public class Sprites implements Runnable {
 
         // Chargement de la flèche du joueur actif
         try {
-            flecheJoueurActif = chargerImage("res/fleches/arrow_player.png");
+            flecheJoueurActif = chargerImage("/fleches/arrow_player.png");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         // Chargement des flèches d'indication du dernier déplacement
         try {
-            flecheDeplacementSource = chargerImage("res/fleches/arrow_move_source.png");
+            flecheDeplacementSource = chargerImage("/fleches/arrow_move_source.png");
 
-            flecheDeplacementDest = chargerImage("res/fleches/arrow_move_dest.png");
+            flecheDeplacementDest = chargerImage("/fleches/arrow_move_dest.png");
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private Image chargerImage(String chemin) {
-        try {
-            InputStream in = new FileInputStream(chemin);
-            return ImageIO.read(in);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }
