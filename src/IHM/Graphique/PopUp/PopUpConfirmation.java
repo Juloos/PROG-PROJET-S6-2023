@@ -29,7 +29,7 @@ public class PopUpConfirmation extends PopUp {
     public void init(IHMGraphique ihm) {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-        JButtonIcon retour = new JButtonIcon(Images.chargerImage("/back.png"), 190, 80);
+        JButtonIcon retour = new JButtonIcon(Images.chargerImage("/boutons/retour.png"), 190, 80);
         retour.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(retour);
 
@@ -45,7 +45,7 @@ public class PopUpConfirmation extends PopUp {
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(label);
 
-        JButtonIcon confirmation = new JButtonIcon(Images.chargerImage("/oui.png"), 190, 80);
+        JButtonIcon confirmation = new JButtonIcon(Images.chargerImage("/boutons/quitter.png"), 190, 80);
         confirmation.setAlignmentX(Component.CENTER_ALIGNMENT);
         confirmation.addActionListener(confirmationAction);
         add(confirmation);

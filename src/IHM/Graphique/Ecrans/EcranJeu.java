@@ -69,12 +69,12 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     public void creation(IHMGraphique ihm) {
         // Création des variables
         final int menuWidth = ihm.getFrame().getWidth() * 2 / 7;
-        Image background = Images.chargerImage("/fondsEcrans/background_jeu.jpeg");
+        Image background = Images.chargerImage("/fondsEcrans/fond.png");
         Image left_button = Images.chargerImage("/icones/arrow_left.png");
         Image right_button = Images.chargerImage("/icones/arrow_right.png");
         Image option_button = Images.chargerImage("/icones/gear.png");
-        Image generation_button = Images.chargerImage("/icones/two_circular_arrows.png");
-        Image validate_button = Images.chargerImage("/icones/check.png");
+        Image generation_button = Images.chargerImage("/icones/check.png");
+        Image validate_button = Images.chargerImage("/icones/validé.png");
         this.plateauGraphique = ihm.getPlateauGraphique();
 
         // Définition des dimensions de la flèche du joueur actif

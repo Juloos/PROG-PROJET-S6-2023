@@ -27,7 +27,7 @@ public class PopUpMenu extends PopUp {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         add(Box.createRigidArea(new Dimension(0, 20)));
 
-        JButtonIcon retour = new JButtonIcon(Images.chargerImage("/back.png"), 190, 80);
+        JButtonIcon retour = new JButtonIcon(Images.chargerImage("/boutons/retour.png"), 190, 80);
         retour.setAlignmentX(Component.CENTER_ALIGNMENT);
         retour.addActionListener(new ActionListener() {
             @Override
@@ -44,7 +44,7 @@ public class PopUpMenu extends PopUp {
 
         PopUp ref = this;
 
-        JButtonIcon sauvegarder = new JButtonIcon(Images.chargerImage("/save.png"), 190, 80);
+        JButtonIcon sauvegarder = new JButtonIcon(Images.chargerImage("/boutons/Sauvegarder.png"), 190, 80);
         sauvegarder.setAlignmentX(Component.CENTER_ALIGNMENT);
         sauvegarder.addActionListener(new ActionListener() {
             @Override
@@ -58,7 +58,7 @@ public class PopUpMenu extends PopUp {
         });
         add(sauvegarder);
 
-        JButtonIcon options = new JButtonIcon(Images.chargerImage("/options.png"), 190, 80);
+        JButtonIcon options = new JButtonIcon(Images.chargerImage("/boutons/option.png"), 190, 80);
         options.setAlignmentX(Component.CENTER_ALIGNMENT);
         options.addActionListener(new ActionListener() {
             @Override
@@ -74,7 +74,7 @@ public class PopUpMenu extends PopUp {
         });
         add(options);
 
-        quitter = new JButtonIcon(Images.chargerImage("/oui.png"), 190, 80);
+        quitter = new JButtonIcon(Images.chargerImage("/boutons/quitter.png"), 190, 80);
         quitter.setAlignmentX(Component.CENTER_ALIGNMENT);
         quitter.addActionListener(new ActionListener() {
             @Override
