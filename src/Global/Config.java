@@ -6,7 +6,7 @@ import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurIA;
 
 public class Config {
-    public final static TypeIHM TYPE_IHM = TypeIHM.AUCUNE;
+    public final static TypeIHM TYPE_IHM = TypeIHM.GRAPHIQUE;
     public final static int NB_HEURISTIQUES = 9;
     public final static boolean DEBUG = false;
     public final static int TAILLE_PLATEAU_X = 8;
