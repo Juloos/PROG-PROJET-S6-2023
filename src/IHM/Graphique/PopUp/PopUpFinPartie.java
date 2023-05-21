@@ -20,7 +20,7 @@ public class PopUpFinPartie extends PopUp {
 
     @Override
     public void init(IHMGraphique ihm) {
-        this.backgroundImage = Images.chargerImage("/background_victory.jpeg");
+        this.backgroundImage = Images.chargerImage("/fondsEcrans/background_victory.jpeg");
 
         setLayout(new BorderLayout());
 

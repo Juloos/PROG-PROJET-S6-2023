@@ -5,13 +5,12 @@ import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.Images.Images;
 import IHM.Graphique.PopUp.PopUp;
 import IHM.Graphique.PopUp.PopUpConfirmation;
+import IHM.Graphique.PopUp.PopUpReglesJeu;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 
 public class EcranAccueil extends Ecran {
 
@@ -98,11 +97,9 @@ public class EcranAccueil extends Ecran {
         rules.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    Desktop.getDesktop().open(new File("res/rules.pdf"));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                PopUp p = new PopUpReglesJeu(ihm);
+                p.init(ihm);
+                p.setVisible(true);
             }
         });
 

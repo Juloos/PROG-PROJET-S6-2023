@@ -36,6 +36,7 @@ public class MoteurJeu {
                 ihm = null;
         }
 
+        gestionnairePartie = new GestionnairePartie(this);
         attendreNouvellePartie();
     }
 
@@ -143,7 +144,7 @@ public class MoteurJeu {
     }
 
     public synchronized void pauseGame(boolean pause) {
-        if (pause | gestionnairePartie.isGamePaused()) {
+        if (gestionnairePartie.getJeu() != null && (pause | gestionnairePartie.isGamePaused())) {
             gestionnairePartie.pauseGame(pause);
             if (pause) {
                 ihm.pause();

@@ -42,6 +42,7 @@ public class JButtonIcon extends JButton {
 
     public void setDimension(int width, int height) {
         if (getIcon() != null) {
+            setPreferredSize(new Dimension(width, height));
             ImageIcon newIcon = resizeIcon(width, height);
             setIcon(newIcon);
         }

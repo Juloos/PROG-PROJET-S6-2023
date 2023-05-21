@@ -16,28 +16,27 @@ public class InfoJoueur extends JPanel {
         super();
 
         setLayout(new BorderLayout());
-        setBackground(Couleurs.BACKGROUND_ECRAN);
+        setOpaque(false);
 
         nom = new JLabel(joueur.getNom());
-        nom.setFont(new Font("Arial", Font.PLAIN, 35));
+        nom.setFont(new Font("Arial", Font.PLAIN, 25));
         nom.setForeground(Couleurs.COULEURS_JOUEURS[joueur.getID()]);
         add(nom, BorderLayout.NORTH);
 
         JPanel infos = new JPanel(new GridLayout(1, 0));
-        infos.setBackground(Color.BLUE);
-        infos.setBackground(new Color(0, 0, 0, 0));
+        infos.setOpaque(false);
         infos.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
         nbPoissons = new JLabel("x 0");
-        nbPoissons.setFont(new Font("Arial", Font.BOLD, 25));
-        nbPoissons.setIcon(resizeIcon(FISH, 70, 70));
+        nbPoissons.setFont(new Font("Arial", Font.BOLD, 20));
+        nbPoissons.setIcon(resizeIcon(FISH, 60, 60));
         infos.add(nbPoissons);
 
         add(Box.createHorizontalGlue());
 
         nbTuiles = new JLabel("x 0");
         nbTuiles.setIcon(resizeIcon(ICE, 30, 30));
-        nbTuiles.setFont(new Font("Arial", Font.PLAIN, 20));
+        nbTuiles.setFont(new Font("Arial", Font.PLAIN, 15));
         infos.add(nbTuiles);
 
         add(infos, BorderLayout.CENTER);
