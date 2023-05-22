@@ -21,7 +21,6 @@ import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
 
 import javax.swing.*;
-import javax.swing.plaf.DimensionUIResource;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     // Les menus des informations des joueurs
     InfoJoueur[] joueurs;
     // Le menu affiché sur la droite de l'écran
-    JPanel menu, panelInf;
+    JPanel menu, panelJoueur, panelInf;
     // Pour afficher les messages de l'IHM
     JTextArea message;
     // Les boutons pour :
@@ -70,7 +69,6 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     public void creation(IHMGraphique ihm) {
 
         // Création des variables
-        final int menuWidth = ihm.getFrame().getWidth() * 2 / 7;
         Image background = Images.chargerImage("/fondsEcrans/fond.png");
         Image left_button = Images.chargerImage("/icones/arrow_left.png");
         Image right_button = Images.chargerImage("/icones/arrow_right.png");
@@ -87,11 +85,9 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         panel.setLayout(new BorderLayout());
         panel.setOpaque(false);
 
-
         // Initialisation du panel infoJoueur
-        JPanel panelJoueur = new JPanel();
+        panelJoueur = new JPanel();
         panelJoueur.setLayout(new GridLayout(Config.NB_MAX_JOUEUR, 1));
-        panelJoueur.setPreferredSize(new Dimension(panel.getWidth(), ihm.getFrame().getHeight() * 3 / 5));
         panelJoueur.setOpaque(false);
 
         // Remplissage du panel joueur
@@ -141,7 +137,9 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         });
 
         // Initialisation du panel contenant annuler et refaire
-        JPanel annulerRefaire = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel annulerRefaire = new JPanel();
+        annulerRefaire.setLayout(new BoxLayout(annulerRefaire, BoxLayout.X_AXIS));
+        annulerRefaire.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
         annulerRefaire.setOpaque(false);
         annulerRefaire.add(annuler);
         annulerRefaire.add(Box.createHorizontalGlue());
@@ -173,7 +171,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
             }
         });
 
-        // Gestion du placement du bouton option
+        // Initialisation du panel contenant regles et options
         JPanel horizontal = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         horizontal.setOpaque(false);
         horizontal.add(regles);
@@ -196,12 +194,16 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
                 ihm.getMoteurJeu().fixerPlateau();
                 panelInf.removeAll();
 
-                panelInf.add(message);
-                message.setOpaque(false);
-                panelInf.add(annulerRefaire);
-                annulerRefaire.setOpaque(false);
-                panelInf.add(horizontal);
-                horizontal.setOpaque(false);
+                JPanel centerPanel = new JPanel(new GridLayout(3, 1));
+                centerPanel.setOpaque(false);
+
+                centerPanel.add(message);
+                centerPanel.add(annulerRefaire);
+                centerPanel.add(Box.createVerticalGlue());
+
+                panelInf.add(centerPanel, BorderLayout.CENTER);
+                panelInf.add(horizontal, BorderLayout.SOUTH);
+
                 panel.repaint();
                 panel.revalidate();
             }
@@ -215,17 +217,15 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         buttonGeneration.add(valider);
 
         // Initialisation du panel des fonctionnelité (annuler, refaire, option et message)
-        panelInf = new JPanel(new GridLayout(0, 1));
-        panelInf.setPreferredSize(new Dimension(panel.getWidth(), ihm.getFrame().getHeight() * 2 / 5));
+        panelInf = new JPanel();
+        panelInf.setLayout(new BorderLayout());
         panelInf.setOpaque(false);
-        panelInf.add(ihm.getMoteurJeu().estPlateauFixer() ? annulerRefaire : buttonGeneration);
-        panelInf.add(Box.createVerticalGlue());
-        panelInf.add(horizontal);
+        panelInf.add(ihm.getMoteurJeu().estPlateauFixer() ? annulerRefaire : buttonGeneration, BorderLayout.CENTER);
+        panelInf.add(horizontal, BorderLayout.SOUTH);
 
         // Initialisation du panel de droite
         menu = new JPanel();
-        menu.setLayout(new BoxLayout(menu, BoxLayout.Y_AXIS));
-        menu.setPreferredSize(new Dimension(menuWidth, panel.getHeight()));
+        menu.setLayout(new GridLayout(2, 1));
         menu.setOpaque(false);
         menu.add(panelJoueur);
         menu.add(panelInf);
@@ -258,16 +258,35 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
     @Override
     public void resized(Dimension frameDimension) {
+        System.out.println("Resize du nouveau menu");
         final int menuWidth = (int) (frameDimension.getWidth() * 2.0 / 7.0);
         final int menuHeight = (int) frameDimension.getHeight();
 
         menu.setPreferredSize(new Dimension(menuWidth, menuHeight));
-        panelInf.setPreferredSize(new Dimension(menuWidth, menuHeight / 2));
-        message.setPreferredSize(new DimensionUIResource(menuWidth, menuHeight / 3));
 
+        message.setPreferredSize(new Dimension(menuWidth, menuHeight / 8));
+
+        // Tailles des boutons
+        int sizeAnnulerRefaire = menuHeight / 8;
+        annuler.setDimension(sizeAnnulerRefaire, sizeAnnulerRefaire);
+        reprendre.setDimension(sizeAnnulerRefaire, sizeAnnulerRefaire);
+        refaire.setDimension(sizeAnnulerRefaire, sizeAnnulerRefaire);
+
+        int sizeOptionsRegles = menuHeight / 8;
+        options.setDimension(sizeOptionsRegles, sizeOptionsRegles);
+        regles.setDimension(sizeOptionsRegles, sizeOptionsRegles);
+
+        // Position et taille de la flèche du joueur actif
         int flecheJoueurActifSize = menuHeight / 8;
         plateauGraphique.setPositionFlecheJoueurActif(plateauGraphique.getWidth() - flecheJoueurActifSize - 10, joueurs[joueurActif].getY());
         plateauGraphique.setDimensionFlecheJoueurActif(flecheJoueurActifSize, flecheJoueurActifSize);
+
+        for (InfoJoueur joueur : joueurs) {
+            joueur.resize();
+        }
+
+        panel.repaint();
+        panel.revalidate();
     }
 
     @Override

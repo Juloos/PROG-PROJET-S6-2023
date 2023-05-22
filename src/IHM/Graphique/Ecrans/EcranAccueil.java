@@ -93,7 +93,7 @@ public class EcranAccueil extends Ecran {
             }
         });
 
-        rules = new JButtonIcon(Images.chargerImage("/boutons/Regles.png"), 100, 150);
+        rules = new JButtonIcon(Images.chargerImage("/boutons/Regles.png"), 150, 150);
         rules.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -128,14 +128,16 @@ public class EcranAccueil extends Ecran {
         double height = frameDimension.getHeight();
 
         panel.remove(0);
-        panel.add(Box.createRigidArea(new Dimension(0, (int) (height / 3.0))), 0);
+        panel.add(Box.createRigidArea(new Dimension(0, (int) (height / 3.2))), 0);
 
         // Redimensionner les images des boutons en fonction de la taille de la fenêtre
         nouvellePartie.setDimension((int) (width * 0.25), (int) (height * 0.12));
         chargerPartie.setDimension((int) (width * 0.25), (int) (height * 0.12));
         options.setDimension((int) (width * 0.24), (int) (height * 0.12));
         quitter.setDimension((int) (width * 0.24), (int) (height * 0.12));
-        rules.setDimension((int) (width * 0.06), (int) (height * 0.15));
+
+        int rulesSize = (int) (Math.min(width, height) * 0.15);
+        rules.setDimension(rulesSize, rulesSize);
 
         System.out.println("Taille du bouton quitter : " + quitter.getSize());
 

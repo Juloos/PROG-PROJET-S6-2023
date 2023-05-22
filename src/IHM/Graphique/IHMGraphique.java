@@ -97,6 +97,7 @@ public class IHMGraphique extends IHM {
     }
 
     public synchronized void updateAffichage(JeuConcret jeu) {
+        System.out.println("MISE A JOUR DE L'IHM GRAPHIQUE");
         // Mise à jour de la fenêtre de jeu
         fenetres.peek().update(jeu);
         fenetres.peek().update(this);
@@ -107,6 +108,7 @@ public class IHMGraphique extends IHM {
             // On affiche en surbrillance les tuiles sur lesquelles un pion peut être placées
             System.out.println("Affichage des tuiles possibles");
             plateauGraphique.setTuilesSurbrillance(jeu.placementsPionValide());
+            plateauGraphique.setPionsSurbrillance(null);
         } else {
             // On affiche en surbrillance les pions du joueur actif
             plateauGraphique.setTuilesSurbrillance(null);

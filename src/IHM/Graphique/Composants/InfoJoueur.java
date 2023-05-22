@@ -19,7 +19,7 @@ public class InfoJoueur extends JPanel {
         setOpaque(false);
 
         nom = new JLabel(joueur.getNom());
-        nom.setFont(new Font("Arial", Font.PLAIN, 25));
+        nom.setFont(new Font("Arial", Font.BOLD, 25));
         nom.setForeground(Couleurs.COULEURS_JOUEURS[joueur.getID()]);
         add(nom, BorderLayout.NORTH);
 
@@ -50,6 +50,15 @@ public class InfoJoueur extends JPanel {
         nbPoissons.setText("x " + score);
         nbTuiles.setText("x " + tuiles);
         repaint();
+    }
+
+    public void resize() {
+        nbPoissons.setPreferredSize(new Dimension(getWidth() / 2, getHeight() / 2));
+
+        final int size = (int) (getHeight() * 0.45);
+        if (size > 0) {
+            nbPoissons.setIcon(resizeIcon(FISH, size, size));
+        }
     }
 
     private ImageIcon resizeIcon(Image image, int width, int height) {

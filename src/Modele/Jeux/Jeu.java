@@ -87,7 +87,7 @@ public abstract class Jeu {
         return plateau;
     }
 
-    public void generateNewPlateau(){
+    public void generateNewPlateau() {
         plateau.randomInit();
     }
 
@@ -155,7 +155,7 @@ public abstract class Jeu {
     }
 
 
-    public ArrayList<Coord> placementsPionValide() {
+    public synchronized ArrayList<Coord> placementsPionValide() {
         ArrayList<Coord> liste = new ArrayList<>();
         for (int i = 0; i < plateau.getNbColumns(); i++) {
             for (int j = 0; j < plateau.getNbRows(); j++) {
