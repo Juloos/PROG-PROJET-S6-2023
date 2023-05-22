@@ -28,8 +28,8 @@ public class InfoJoueur extends JPanel {
         infos.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
         nbPoissons = new JLabel("x 0");
-        nbPoissons.setFont(new Font("Arial", Font.BOLD, 20));
-        nbPoissons.setIcon(resizeIcon(FISH, 60, 60));
+        nbPoissons.setFont(new Font("Arial", Font.BOLD, 36));
+        nbPoissons.setIcon(resizeIcon(FISH, 70, 70));
         infos.add(nbPoissons);
 
         add(Box.createHorizontalGlue());

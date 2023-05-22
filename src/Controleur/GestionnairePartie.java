@@ -1,5 +1,7 @@
 package Controleur;
 
+import Global.Config;
+import IHM.TypeIHM;
 import Modele.Actions.ActionCoup;
 import Modele.Coups.Coup;
 import Modele.Coups.CoupTerminaison;
@@ -16,7 +18,8 @@ public class GestionnairePartie extends Thread {
     public GestionnairePartie(MoteurJeu moteurJeu) {
         super();
         this.moteurJeu = moteurJeu;
-        this.plateauGenere = this.coupJouer = this.pause = false;
+        this.plateauGenere = Config.TYPE_IHM != TypeIHM.GRAPHIQUE;
+        this.coupJouer = this.pause = false;
     }
 
     public synchronized boolean isGamePaused() {

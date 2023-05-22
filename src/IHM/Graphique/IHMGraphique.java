@@ -199,7 +199,7 @@ public class IHMGraphique extends IHM {
         frame = new JFrame("");
 //        try {
 //            // chargement du fichier audio
-//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getClassLoader().getResource("/sons/soundtrack.wav"));
+//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(getClass().getClassLoader().getResource("sons/soundtrack.wav"));
 //            // création du Clip
 //            clip = AudioSystem.getClip();
 //            clip.open(audioInputStream);
@@ -220,7 +220,7 @@ public class IHMGraphique extends IHM {
             @Override
             public void componentResized(ComponentEvent componentEvent) {
                 // Méthode appelée chaque fois que la fenêtre change de dimensions
-                fenetres.peek().resized();
+                fenetres.peek().resized(frame.getSize());
             }
         });
 
@@ -254,7 +254,7 @@ public class IHMGraphique extends IHM {
 
         // Ouverture de la fenêtre précédente
         fenetres.peek().open(this);
-        fenetres.peek().resized();
+        fenetres.peek().resized(frame.getSize());
 
         // Mise à jour de la frame
         frame.validate();
@@ -275,7 +275,7 @@ public class IHMGraphique extends IHM {
         // Ouverture de la nouvelle fenêtre
         fenetres.push(ecran);
         ecran.open(this);
-        moteurJeu.debug("Ouverture d'une nouvelle fenêtre");
+        ecran.resized(frame.getSize());
 
         // Mise à jour de la frame
         frame.validate();

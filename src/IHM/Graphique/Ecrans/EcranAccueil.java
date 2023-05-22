@@ -115,15 +115,20 @@ public class EcranAccueil extends Ecran {
         bouttons.add(Box.createVerticalGlue());
         bouttons.add(quitter);
 
-        panel.add(Box.createRigidArea(new Dimension(0, panel.getHeight() / 3)));
+        panel.add(Box.createRigidArea(new Dimension(0, ihm.getFrame().getHeight() / 3)), 0);
         panel.add(bouttons);
         panel.add(horizontal);
+
+        panel.validate();
     }
 
     @Override
-    public void resized() {
-        int width = panel.getWidth();
-        int height = panel.getHeight();
+    public void resized(Dimension frameDimension) {
+        double width = frameDimension.getWidth();
+        double height = frameDimension.getHeight();
+
+        panel.remove(0);
+        panel.add(Box.createRigidArea(new Dimension(0, (int) (height / 3.0))), 0);
 
         // Redimensionner les images des boutons en fonction de la taille de la fenêtre
         nouvellePartie.setDimension((int) (width * 0.25), (int) (height * 0.12));
@@ -132,8 +137,10 @@ public class EcranAccueil extends Ecran {
         quitter.setDimension((int) (width * 0.25), (int) (height * 0.12));
         rules.setDimension((int) (width * 0.06), (int) (height * 0.15));
 
-        panel.remove(0);
-        panel.add(Box.createRigidArea(new Dimension(0, panel.getHeight() / 3)), 0);
+        System.out.println("Taille du bouton quitter : " + quitter.getSize());
+
+        panel.repaint();
+        panel.revalidate();
     }
 }
 

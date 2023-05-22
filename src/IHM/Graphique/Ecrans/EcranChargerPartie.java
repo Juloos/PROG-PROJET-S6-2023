@@ -153,8 +153,8 @@ public class EcranChargerPartie extends Ecran {
         panel.repaint();
     }
 
-    public void resized() {
-        super.resized();
+    @Override
+    public void resized(Dimension frameDimension) {
         charger.setPreferredSize(new Dimension(200, 50));
     }
 }
