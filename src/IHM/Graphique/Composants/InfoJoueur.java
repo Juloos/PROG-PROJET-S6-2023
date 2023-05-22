@@ -36,7 +36,7 @@ public class InfoJoueur extends JPanel {
 
         nbTuiles = new JLabel("x 0");
         nbTuiles.setIcon(resizeIcon(ICE, 30, 30));
-        nbTuiles.setFont(new Font("Arial", Font.PLAIN, 15));
+        nbTuiles.setFont(new Font("Arial", Font.BOLD, 15));
         infos.add(nbTuiles);
 
         add(infos, BorderLayout.CENTER);
