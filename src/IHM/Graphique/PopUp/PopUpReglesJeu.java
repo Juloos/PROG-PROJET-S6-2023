@@ -20,6 +20,7 @@ public class PopUpReglesJeu extends PopUp {
 
     public PopUpReglesJeu(IHMGraphique ihm) {
         super(ihm, "Règles du jeu", ihm.getFrame().getWidth(), ihm.getFrame().getHeight());
+        this.setLocation(ihm.getFrame().getX(), ihm.getFrame().getY());
         this.ihm = ihm;
     }
 
