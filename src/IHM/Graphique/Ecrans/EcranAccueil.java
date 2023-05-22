@@ -53,7 +53,7 @@ public class EcranAccueil extends Ecran {
         });
 
         // Le bouton pour ouvrir le menu de chargement d'une partie
-        chargerPartie = new JButtonIcon(Images.chargerImage("/boutons/charger_partie.png"), 340, 100);
+        chargerPartie = new JButtonIcon(Images.chargerImage("/boutons/charger_partie.png"), 340, 120);
         chargerPartie.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         chargerPartie.setAlignmentX(Component.CENTER_ALIGNMENT);
         chargerPartie.addActionListener(new ActionListener() {
@@ -64,7 +64,7 @@ public class EcranAccueil extends Ecran {
         });
 
         // Le bouton pour ouvrir le menu des options
-        options = new JButtonIcon(Images.chargerImage("/boutons/option.png"), 270, 80);
+        options = new JButtonIcon(Images.chargerImage("/boutons/option.png"), 270, 110);
         options.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         options.setContentAreaFilled(false);
         options.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -76,7 +76,7 @@ public class EcranAccueil extends Ecran {
         });
 
         // Le bouton pour quitter le jeu
-        quitter = new JButtonIcon(Images.chargerImage("/boutons/quitter.png"), 270, 80);
+        quitter = new JButtonIcon(Images.chargerImage("/boutons/quitter.png"), 270, 110);
         quitter.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         quitter.setAlignmentX(Component.CENTER_ALIGNMENT);
         quitter.addActionListener(new ActionListener() {
@@ -128,8 +128,8 @@ public class EcranAccueil extends Ecran {
         // Redimensionner les images des boutons en fonction de la taille de la fenêtre
         nouvellePartie.setDimension((int) (width * 0.25), (int) (height * 0.12));
         chargerPartie.setDimension((int) (width * 0.25), (int) (height * 0.12));
-        options.setDimension((int) (width * 0.25), (int) (height * 0.12));
-        quitter.setDimension((int) (width * 0.25), (int) (height * 0.12));
+        options.setDimension((int) (width * 0.24), (int) (height * 0.12));
+        quitter.setDimension((int) (width * 0.24), (int) (height * 0.12));
         rules.setDimension((int) (width * 0.06), (int) (height * 0.15));
 
         panel.remove(0);
