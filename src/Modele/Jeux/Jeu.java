@@ -253,7 +253,6 @@ public abstract class Jeu {
 
     public void annulerTerminaison(int joueur, Coord source, int oldVal) {
         this.getPlateau().set(source, oldVal);
-        this.getJoueur(joueur).ajouterPion(source);
         this.getJoueur(joueur).replacerPion(source, true);
         this.getJoueur(joueur).supprimerTuile();
         this.getJoueur(joueur).decrementerScore(oldVal);
