@@ -67,6 +67,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
     @Override
     public void creation(IHMGraphique ihm) {
+
         // Création des variables
         final int menuWidth = ihm.getFrame().getWidth() * 2 / 7;
         Image background = Images.chargerImage("/fondsEcrans/fond.png");
