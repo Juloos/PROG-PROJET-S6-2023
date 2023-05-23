@@ -81,8 +81,10 @@ public abstract class Ecran {
 
     /**
      * Met à jour les dimensions des éléments de la fenêtre lorsqu'elle change de dimensions
+     *
+     * @param frameDimension : les dimensions de la fenêtre
      */
-    public void resized() {
+    public void resized(Dimension frameDimension) {
     }
 
     /**

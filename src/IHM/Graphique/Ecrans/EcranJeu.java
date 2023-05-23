@@ -5,10 +5,11 @@ import Global.Config;
 import IHM.Graphique.Composants.InfoJoueur;
 import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.Composants.PlateauGraphique;
-import IHM.Graphique.Couleurs;
 import IHM.Graphique.IHMGraphique;
+import IHM.Graphique.Images.Images;
 import IHM.Graphique.PopUp.PopUp;
 import IHM.Graphique.PopUp.PopUpMenu;
+import IHM.Graphique.PopUp.PopUpReglesJeu;
 import Modele.Actions.ActionAnnuler;
 import Modele.Actions.ActionCoup;
 import Modele.Actions.ActionRefaire;
@@ -31,7 +32,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     // Les menus des informations des joueurs
     InfoJoueur[] joueurs;
     // Le menu affiché sur la droite de l'écran
-    JPanel menu, panelInf;
+    JPanel menu, panelJoueur, panelInf;
     // Pour afficher les messages de l'IHM
     JTextArea message;
     // Les boutons pour :
@@ -39,7 +40,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     // - annuler le dernier coup joué
     // - refaire le dernier coup annulé
     // - reprendre la partie lorsqu'elle mise en pause par refaire et annuler
-    JButtonIcon options, annuler, refaire, reprendre, generer, valider;
+    JButtonIcon regles, options, annuler, refaire, reprendre, generer, valider;
     // La tuile sélectionnée par le joueur
     Coord selection;
     PlateauGraphique plateauGraphique;
@@ -66,26 +67,28 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
     @Override
     public void creation(IHMGraphique ihm) {
+
         // Création des variables
-        final int menuWidth = ihm.getFrame().getWidth() * 2 / 7;
-        ImageIcon background = new ImageIcon("res/fondsEcrans/background_jeu.jpeg");
-        ImageIcon left_button = new ImageIcon("res/icones/arrow_left.png");
-        ImageIcon right_button = new ImageIcon("res/icones/arrow_right.png");
-        ImageIcon option_button = new ImageIcon("res/icones/gear.png");
-        ImageIcon generation_button = new ImageIcon("res/icones/two_circular_arrows.png");
-        ImageIcon validate_button = new ImageIcon("res/icones/check.png");
+        Image background = Images.chargerImage("/fondsEcrans/fond.png");
+        Image left_button = Images.chargerImage("/icones/arrow_left.png");
+        Image right_button = Images.chargerImage("/icones/arrow_right.png");
+        Image option_button = Images.chargerImage("/icones/gear.png");
+        Image generation_button = Images.chargerImage("/icones/check.png");
+        Image validate_button = Images.chargerImage("/icones/validé.png");
         this.plateauGraphique = ihm.getPlateauGraphique();
+
+        // Définition des dimensions de la flèche du joueur actif
         plateauGraphique.setDimensionFlecheJoueurActif(100, 100);
 
         // Mise en place du background
-        this.backgroundImage = background.getImage();
+        this.backgroundImage = background;
         panel.setLayout(new BorderLayout());
-        panel.setBackground(Couleurs.TRANSPARENT);
-
+        panel.setOpaque(false);
 
         // Initialisation du panel infoJoueur
-        JPanel panelJoueur = new JPanel(new GridLayout(Config.NB_MAX_JOUEUR, 1));
-        panelJoueur.setBackground(Couleurs.TRANSPARENT);
+        panelJoueur = new JPanel();
+        panelJoueur.setLayout(new GridLayout(Config.NB_MAX_JOUEUR, 1));
+        panelJoueur.setOpaque(false);
 
         // Remplissage du panel joueur
         joueurs = new InfoJoueur[ihm.getMoteurJeu().getJeu().getNbJoueurs()];
@@ -101,7 +104,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         message = new JTextArea();
         message.setEditable(false);
         message.setLineWrap(true);
-        message.setFont(new Font("Arial", Font.PLAIN, 25));
+        message.setFont(new Font("Arial", Font.PLAIN, 20));
         message.setOpaque(false);
         message.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
 
@@ -117,7 +120,6 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
         // Initialisation du bouton refaire
         refaire = new JButtonIcon(right_button, 100);
-        refaire = new JButtonIcon(new ImageIcon("res/icones/arrow_right.png"), 100);
         refaire.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -126,7 +128,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         });
 
         // Initialisation du bouton reprendre
-        reprendre = new JButtonIcon(new ImageIcon("res/icones/pause.png"), 100);
+        reprendre = new JButtonIcon(Images.chargerImage("/icones/pause.png"), 100);
         reprendre.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -135,16 +137,30 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         });
 
         // Initialisation du panel contenant annuler et refaire
-        JPanel annulerRefaire = new JPanel(new GridLayout(1, 0));
+        JPanel annulerRefaire = new JPanel();
+        annulerRefaire.setLayout(new BoxLayout(annulerRefaire, BoxLayout.X_AXIS));
+        annulerRefaire.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
         annulerRefaire.setOpaque(false);
-        annulerRefaire.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
         annulerRefaire.add(annuler);
+        annulerRefaire.add(Box.createHorizontalGlue());
         annulerRefaire.add(reprendre);
+        annulerRefaire.add(Box.createHorizontalGlue());
         annulerRefaire.add(refaire);
 
+        // Initialisation du bouton des regles
+        regles = new JButtonIcon(Images.chargerImage("/boutons/Regles.png"), 70);
+        regles.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                PopUp p = new PopUpReglesJeu(ihm);
+                p.init(ihm);
+                p.setVisible(true);
+            }
+        });
 
         // Initialisation du bouton option
         options = new JButtonIcon(option_button, 70);
+        options.setOpaque(false);
         options.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -155,11 +171,11 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
             }
         });
 
-        // Gestion du placement du bouton option
+        // Initialisation du panel contenant regles et options
         JPanel horizontal = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         horizontal.setOpaque(false);
+        horizontal.add(regles);
         horizontal.add(options);
-
 
         // Initialisation du bouton generer
         generer = new JButtonIcon(generation_button, 100);
@@ -167,8 +183,6 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 ihm.getMoteurJeu().genePlateau();
-                ihm.getMoteurJeu().updateAffichage();
-//                ihm.updateAffichage();
             }
         });
 
@@ -177,43 +191,48 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         valider.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                ihm.getMoteurJeu().fixerPlateau();
                 panelInf.removeAll();
-                panelInf.add(message);
-                panelInf.add(annulerRefaire);
-                panelInf.add(horizontal);
+
+                JPanel centerPanel = new JPanel(new GridLayout(3, 1));
+                centerPanel.setOpaque(false);
+
+                centerPanel.add(message);
+                centerPanel.add(annulerRefaire);
+                centerPanel.add(Box.createVerticalGlue());
+
+                panelInf.add(centerPanel, BorderLayout.CENTER);
+                panelInf.add(horizontal, BorderLayout.SOUTH);
+
                 panel.repaint();
                 panel.revalidate();
             }
         });
 
-        JPanel panic = new JPanel(new GridLayout(1, 0));
-        panic.setOpaque(false);
-        panic.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-        panic.add(generer);
-        panic.add(valider);
-
-
-
+        // Initialisation du panel des button de generation de plateau
+        JPanel buttonGeneration = new JPanel(new GridLayout(1, 0));
+        buttonGeneration.setOpaque(false);
+        buttonGeneration.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        buttonGeneration.add(generer);
+        buttonGeneration.add(valider);
 
         // Initialisation du panel des fonctionnelité (annuler, refaire, option et message)
-        panelInf = new JPanel(new GridLayout(0, 1));
-        panelInf.setPreferredSize(new Dimension(menuWidth, ihm.getFrame().getHeight() / 3));
+        panelInf = new JPanel();
+        panelInf.setLayout(new BorderLayout());
         panelInf.setOpaque(false);
-        panelInf.add(panic);
-        panelInf.add(horizontal);
+        panelInf.add(ihm.getMoteurJeu().estPlateauFixer() ? annulerRefaire : buttonGeneration, BorderLayout.CENTER);
+        panelInf.add(horizontal, BorderLayout.SOUTH);
 
-        // Initialisation du panel de gauche
-        menu = new JPanel(new BorderLayout());
-        menu.setBackground(Couleurs.BACKGROUND_ECRAN);
-        menu.setPreferredSize(new Dimension(menuWidth, ihm.getFrame().getHeight()));
+        // Initialisation du panel de droite
+        menu = new JPanel();
+        menu.setLayout(new GridLayout(2, 1));
         menu.setOpaque(false);
-        menu.add(panelJoueur, BorderLayout.CENTER);
-        menu.add(panelInf, BorderLayout.SOUTH);
+        menu.add(panelJoueur);
+        menu.add(panelInf);
 
         // Initialisation de l'ecran
         panel.add(plateauGraphique, BorderLayout.CENTER);
         panel.add(menu, BorderLayout.EAST);
-
     }
 
     @Override
@@ -238,25 +257,48 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     }
 
     @Override
-    public void resized() {
-        final int menuWidth = panel.getParent().getWidth() * 2 / 7;
-        menu.setPreferredSize(new Dimension(menuWidth, panel.getParent().getHeight()));
+    public void resized(Dimension frameDimension) {
+        System.out.println("Resize du nouveau menu");
+        final int menuWidth = (int) (frameDimension.getWidth() * 2.0 / 7.0);
+        final int menuHeight = (int) frameDimension.getHeight();
 
-        int flecheJoueurActifSize = panel.getHeight() / 8;
-        plateauGraphique.setPositionFlecheJoueurActif(panel.getParent().getWidth() - menuWidth - flecheJoueurActifSize - 10, joueurs[joueurActif].getY());
+        menu.setPreferredSize(new Dimension(menuWidth, menuHeight));
+
+        message.setPreferredSize(new Dimension(menuWidth, menuHeight / 8));
+
+        // Tailles des boutons
+        int sizeAnnulerRefaire = menuHeight / 8;
+        annuler.setDimension(sizeAnnulerRefaire, sizeAnnulerRefaire);
+        reprendre.setDimension(sizeAnnulerRefaire, sizeAnnulerRefaire);
+        refaire.setDimension(sizeAnnulerRefaire, sizeAnnulerRefaire);
+
+        int sizeOptionsRegles = menuHeight / 8;
+        options.setDimension(sizeOptionsRegles, sizeOptionsRegles);
+        regles.setDimension(sizeOptionsRegles, sizeOptionsRegles);
+
+        // Position et taille de la flèche du joueur actif
+        int flecheJoueurActifSize = menuHeight / 8;
+        plateauGraphique.setPositionFlecheJoueurActif(plateauGraphique.getWidth() - flecheJoueurActifSize - 10, joueurs[joueurActif].getY());
         plateauGraphique.setDimensionFlecheJoueurActif(flecheJoueurActifSize, flecheJoueurActifSize);
+
+        for (InfoJoueur joueur : joueurs) {
+            joueur.resize();
+        }
+
+        panel.repaint();
+        panel.revalidate();
     }
 
     @Override
     public void pause() {
         super.pause();
-        reprendre.setImageIcon(new ImageIcon("res/icones/play.png"));
+        reprendre.setImageIcon(Images.chargerImage("/icones/play.png"));
     }
 
     @Override
     public void resume() {
         super.resume();
-        reprendre.setImageIcon(new ImageIcon("res/icones/pause.png"));
+        reprendre.setImageIcon(Images.chargerImage("/icones/pause.png"));
     }
 
     /**
@@ -269,7 +311,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         MoteurJeu moteurJeu = ihm.getMoteurJeu();
         int joueurActifID = moteurJeu.getJoueurActif().id;
 
-        if (clickEnable) {
+        if (clickEnable && moteurJeu.getJoueurActif() instanceof JoueurHumain) {
             // On récupère la coordonnée de la tuile sélectionnée (peut être invalide)
             Coord coord = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
             moteurJeu.debug("Tuile clickée " + coord);
@@ -330,13 +372,16 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     @Override
     public void mouseMoved(MouseEvent mouseEvent) {
         MoteurJeu moteurJeu = ihm.getMoteurJeu();
-        // Si la partie n'est pas en pause
-        if (moteurJeu.getJeu() != null && moteurJeu.getJoueurActif() instanceof JoueurHumain && moteurJeu.estPhasePlacementPions()) {
-            // On modifie la position du pion a placer
-            plateauGraphique.setPlacementPingouin(mouseEvent.getX(), mouseEvent.getY());
-        } else {
-            // On n'affiche pas le pion flottant
+        if (!moteurJeu.estPlateauFixer()) {
             plateauGraphique.setPlacementPingouin(-1, -1);
+        } else {
+            if (moteurJeu.getJeu() != null && moteurJeu.getJoueurActif() instanceof JoueurHumain && moteurJeu.estPhasePlacementPions()) {
+                // On modifie la position du pion a placer
+                plateauGraphique.setPlacementPingouin(mouseEvent.getX(), mouseEvent.getY());
+            } else {
+                // On n'affiche pas le pion flottant
+                plateauGraphique.setPlacementPingouin(-1, -1);
+            }
         }
     }
 

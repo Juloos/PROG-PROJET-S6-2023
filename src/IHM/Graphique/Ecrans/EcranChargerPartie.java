@@ -1,10 +1,11 @@
 package IHM.Graphique.Ecrans;
 
+import IHM.Graphique.Composants.Button;
 import IHM.Graphique.Composants.InfoJoueur;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Couleurs;
 import IHM.Graphique.IHMGraphique;
-import IHM.Graphique.Composants.Button;
+import IHM.Graphique.Images.Images;
 import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 
@@ -22,7 +23,7 @@ public class EcranChargerPartie extends Ecran {
 
     protected JList listCharg;
 
-    protected  String[] listNameFiles;
+    protected String[] listNameFiles;
 
     public EcranChargerPartie() {
         super("Charger partie");
@@ -31,8 +32,7 @@ public class EcranChargerPartie extends Ecran {
     @Override
     public void creation(IHMGraphique ihm) {
         panel.setLayout(new BorderLayout());
-        ImageIcon icon = new ImageIcon("res/fondsEcrans/background_chargement.jpg");
-        this.backgroundImage = icon.getImage();
+        this.backgroundImage = Images.chargerImage("/fondsEcrans/background_chargement.jpg");
 
         JLabel titre = new JLabel("Charger une partie", SwingConstants.CENTER);
         titre.setForeground(Color.WHITE);
@@ -42,14 +42,14 @@ public class EcranChargerPartie extends Ecran {
 
         JPanel panelPlateau = new JPanel();
         panelPlateau.setLayout(new BoxLayout(panelPlateau, BoxLayout.Y_AXIS));
-        panelPlateau.setPreferredSize(new Dimension(400,400));
+        panelPlateau.setPreferredSize(new Dimension(400, 400));
         panelPlateau.setBackground(Couleurs.BACKGROUND_ECRAN);
         PlateauGraphique platGraph = new PlateauGraphique();
 
 
         // Création du dossier de sauvegarde
         File dirSauv = new File("sauvegarde");
-        if (!dirSauv. isDirectory()){
+        if (!dirSauv.isDirectory()) {
             dirSauv.mkdirs();
             System.out.println("Directory created successfully");
         }
@@ -134,7 +134,7 @@ public class EcranChargerPartie extends Ecran {
             f.delete();
             listNameFiles = dirSauv.list();
             listCharg.setListData(listNameFiles);
-            listCharg.setSelectedIndex(max(0,tempIndex-1));
+            listCharg.setSelectedIndex(max(0, tempIndex - 1));
             panel.repaint();
             panel.revalidate();
         });
@@ -153,8 +153,8 @@ public class EcranChargerPartie extends Ecran {
         panel.repaint();
     }
 
-    public void resized() {
-        super.resized();
+    @Override
+    public void resized(Dimension frameDimension) {
         charger.setPreferredSize(new Dimension(200, 50));
     }
 }

@@ -1,34 +1,34 @@
 package IHM.Graphique.Composants;
 
 import IHM.Graphique.Couleurs;
+import IHM.Graphique.Images.Images;
 import Modele.Joueurs.Joueur;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class InfoJoueur extends JPanel {
-    private static final ImageIcon FISH = new ImageIcon("res/icones/fish.png");
-    private static final ImageIcon ICE = new ImageIcon("res/icones/ice.png");
+    private static final Image FISH = Images.chargerImage("/icones/fish.png");
+    private static final Image ICE = Images.chargerImage("/icones/ice.png");
     JLabel nom, nbPoissons, nbTuiles;
 
     public InfoJoueur(Joueur joueur) {
         super();
 
         setLayout(new BorderLayout());
-        setBackground(Couleurs.BACKGROUND_ECRAN);
+        setOpaque(false);
 
         nom = new JLabel(joueur.getNom());
-        nom.setFont(new Font("Arial", Font.PLAIN, 35));
+        nom.setFont(new Font("Arial", Font.BOLD, 25));
         nom.setForeground(Couleurs.COULEURS_JOUEURS[joueur.getID()]);
         add(nom, BorderLayout.NORTH);
 
         JPanel infos = new JPanel(new GridLayout(1, 0));
-        infos.setBackground(Color.BLUE);
-        infos.setBackground(new Color(0, 0, 0, 0));
+        infos.setOpaque(false);
         infos.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
         nbPoissons = new JLabel("x 0");
-        nbPoissons.setFont(new Font("Arial", Font.BOLD, 25));
+        nbPoissons.setFont(new Font("Arial", Font.BOLD, 36));
         nbPoissons.setIcon(resizeIcon(FISH, 70, 70));
         infos.add(nbPoissons);
 
@@ -36,7 +36,7 @@ public class InfoJoueur extends JPanel {
 
         nbTuiles = new JLabel("x 0");
         nbTuiles.setIcon(resizeIcon(ICE, 30, 30));
-        nbTuiles.setFont(new Font("Arial", Font.PLAIN, 20));
+        nbTuiles.setFont(new Font("Arial", Font.BOLD, 15));
         infos.add(nbTuiles);
 
         add(infos, BorderLayout.CENTER);
@@ -52,9 +52,16 @@ public class InfoJoueur extends JPanel {
         repaint();
     }
 
-    private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
-        Image img = icon.getImage();
-        Image resized = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(resized);
+    public void resize() {
+        nbPoissons.setPreferredSize(new Dimension(getWidth() / 2, getHeight() / 2));
+
+        final int size = (int) (getHeight() * 0.45);
+        if (size > 0) {
+            nbPoissons.setIcon(resizeIcon(FISH, size, size));
+        }
+    }
+
+    private ImageIcon resizeIcon(Image image, int width, int height) {
+        return new ImageIcon(Images.resizeImage(image, width, height));
     }
 }

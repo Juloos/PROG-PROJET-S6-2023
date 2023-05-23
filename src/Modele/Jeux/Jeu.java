@@ -87,7 +87,7 @@ public abstract class Jeu {
         return plateau;
     }
 
-    public void generateNewPlateau(){
+    public void generateNewPlateau() {
         plateau.randomInit();
     }
 
@@ -155,7 +155,7 @@ public abstract class Jeu {
     }
 
 
-    public ArrayList<Coord> placementsPionValide() {
+    public synchronized ArrayList<Coord> placementsPionValide() {
         ArrayList<Coord> liste = new ArrayList<>();
         for (int i = 0; i < plateau.getNbColumns(); i++) {
             for (int j = 0; j < plateau.getNbRows(); j++) {
@@ -253,7 +253,6 @@ public abstract class Jeu {
 
     public void annulerTerminaison(int joueur, Coord source, int oldVal) {
         this.getPlateau().set(source, oldVal);
-        this.getJoueur(joueur).ajouterPion(source);
         this.getJoueur(joueur).replacerPion(source, true);
         this.getJoueur(joueur).supprimerTuile();
         this.getJoueur(joueur).decrementerScore(oldVal);

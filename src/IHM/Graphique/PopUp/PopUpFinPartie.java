@@ -4,6 +4,7 @@ import IHM.Graphique.Composants.Button;
 import IHM.Graphique.Couleurs;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.IHMGraphique;
+import IHM.Graphique.Images.Images;
 import Modele.Joueurs.Joueur;
 
 import javax.swing.*;
@@ -19,8 +20,7 @@ public class PopUpFinPartie extends PopUp {
 
     @Override
     public void init(IHMGraphique ihm) {
-        ImageIcon background = new ImageIcon("res/background_victory.jpeg");
-        this.backgroundImage = background.getImage();
+        this.backgroundImage = Images.chargerImage("/fondsEcrans/background_victory.jpeg");
 
         setLayout(new BorderLayout());
 
@@ -28,18 +28,16 @@ public class PopUpFinPartie extends PopUp {
         for (int i : ihm.getMoteurJeu().getJeu().getWinner()) {
             String text = ihm.getMoteurJeu().getJeu().getJoueur(i).getNom() + "   ";
             ImageIcon icon = null;
+            int size = 145;
+
             if (i == 0) {
-                icon = new ImageIcon("res/victoire/victory_red.png");
-                icon.setImage(icon.getImage().getScaledInstance(145, 145, Image.SCALE_DEFAULT));
+                icon = new ImageIcon(Images.resizeImage(Images.chargerImage("/victoire/victory_red.png"), size, size));
             } else if (i == 1) {
-                icon = new ImageIcon("res/victoire/victory_blue.png");
-                icon.setImage(icon.getImage().getScaledInstance(145, 145, Image.SCALE_DEFAULT));
+                icon = new ImageIcon(Images.resizeImage(Images.chargerImage("/victoire/victory_blue.png"), size, size));
             } else if (i == 2) {
-                icon = new ImageIcon("res/victoire/victory_green.png");
-                icon.setImage(icon.getImage().getScaledInstance(145, 145, Image.SCALE_DEFAULT));
+                icon = new ImageIcon(Images.resizeImage(Images.chargerImage("/victoire/victory_green.png"), size, size));
             } else if (i == 3) {
-                icon = new ImageIcon("res/victoire/victory_yellow.png");
-                icon.setImage(icon.getImage().getScaledInstance(145, 145, Image.SCALE_DEFAULT));
+                icon = new ImageIcon(Images.resizeImage(Images.chargerImage("/victoire/victory_yellow.png"), size, size));
             }
 
             Winner winner = new Winner(text, icon);
@@ -79,7 +77,7 @@ public class PopUpFinPartie extends PopUp {
                 ihm.fermerFenetres();
                 close();
                 ihm.ouvrirFenetre(new EcranAccueil());
-                ihm.updateAffichage();
+                ihm.updateAffichage(false);
             }
         });
         retourAccueil.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -101,7 +99,7 @@ public class PopUpFinPartie extends PopUp {
             JLabel iconLabel = new JLabel(icon, SwingConstants.CENTER);
 
             add(iconLabel);
-            add(Box.createRigidArea(new Dimension(0,40)));
+            add(Box.createRigidArea(new Dimension(0, 40)));
             add(name);
             setAlignmentX(Component.CENTER_ALIGNMENT);
         }

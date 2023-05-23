@@ -36,6 +36,7 @@ public class MoteurJeu {
                 ihm = null;
         }
 
+        gestionnairePartie = new GestionnairePartie(this);
         attendreNouvellePartie();
     }
 
@@ -63,6 +64,10 @@ public class MoteurJeu {
 
     public synchronized Joueur getJoueurActif() {
         return gestionnairePartie.getJeu().getJoueur();
+    }
+
+    public boolean estPlateauFixer() {
+        return gestionnairePartie.estPlateauFixer();
     }
 
     public boolean estPhasePlacementPions() {
@@ -121,10 +126,10 @@ public class MoteurJeu {
         }
     }
 
-    public synchronized void updateAffichage() {
+    public synchronized void updateAffichage(boolean jouerAnimation) {
         if (hasIHM()) {
             gestionnairePartie.pauseGame(true);
-            ihm.updateAffichage();
+            ihm.updateAffichage(jouerAnimation);
         }
     }
 
@@ -139,7 +144,7 @@ public class MoteurJeu {
     }
 
     public synchronized void pauseGame(boolean pause) {
-        if (pause | gestionnairePartie.isGamePaused()) {
+        if (gestionnairePartie.getJeu() != null && (pause | gestionnairePartie.isGamePaused())) {
             gestionnairePartie.pauseGame(pause);
             if (pause) {
                 ihm.pause();
@@ -161,8 +166,12 @@ public class MoteurJeu {
         }
     }
 
-    public synchronized void genePlateau(){
+    public synchronized void genePlateau() {
         gestionnairePartie.genePlateau();
+    }
+
+    public synchronized void fixerPlateau() {
+        gestionnairePartie.fixerPlateau();
     }
 
     public synchronized void lancerPartie(Joueur[] joueurs) {

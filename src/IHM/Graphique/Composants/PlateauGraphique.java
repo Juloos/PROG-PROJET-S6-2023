@@ -2,7 +2,7 @@ package IHM.Graphique.Composants;
 
 import IHM.Graphique.Animations.Animation;
 import IHM.Graphique.Couleurs;
-import IHM.Graphique.Sprites.Sprites;
+import IHM.Graphique.Images.Images;
 import Modele.Coord;
 import Modele.Coups.Coup;
 import Modele.Coups.CoupDeplacement;
@@ -58,11 +58,11 @@ public class PlateauGraphique extends JComponent {
 
                     Image img;
                     if (jeu.estPion(coord) && TYPE_TUILE > 0) {
-                        img = Sprites.getInstance().getTuile(true, TYPE_TUILE, jeu.joueurDePion(coord));
+                        img = Images.getInstance().getTuile(true, TYPE_TUILE, jeu.joueurDePion(coord));
                     } else if (coord.equals(placementPingouin) && TYPE_TUILE == 1) {
-                        img = Sprites.getInstance().getTuile(true, 1, jeu.getJoueur().getID());
+                        img = Images.getInstance().getTuile(true, 1, jeu.getJoueur().getID());
                     } else {
-                        img = Sprites.getInstance().getTuile(false, TYPE_TUILE);
+                        img = Images.getInstance().getTuile(false, TYPE_TUILE);
                     }
 
                     drawable.drawImage(img, x, y, (int) TAILLE_CASES, (int) TAILLE_CASES, null);
@@ -76,7 +76,7 @@ public class PlateauGraphique extends JComponent {
             }
 
             if (placementPingouin != null && jeu.getPlateau().get(placementPingouin) != 1) {
-                drawable.drawImage(Sprites.getInstance().getPingouin(jeu.getJoueur().getID()), (int) Math.round(placementPingouinX - (TAILLE_CASES / 2.0)),
+                drawable.drawImage(Images.getInstance().getPingouin(jeu.getJoueur().getID()), (int) Math.round(placementPingouinX - (TAILLE_CASES / 2.0)),
                         (int) Math.round(placementPingouinY - (TAILLE_CASES / 1.25)),
                         (int) TAILLE_CASES,
                         (int) TAILLE_CASES,
@@ -119,7 +119,7 @@ public class PlateauGraphique extends JComponent {
                 final int offset_x = -size * 3 / 2, offset_y = -size / 2;
 
                 drawable.rotate(rotation, x, y);
-                drawable.drawImage(Sprites.getInstance().getFlecheDeplacement(true),
+                drawable.drawImage(Images.getInstance().getFlecheDeplacement(true),
                         x,
                         y + offset_y,
                         size,
@@ -131,7 +131,7 @@ public class PlateauGraphique extends JComponent {
                 y = YHexToPixel(deplacement.destination.r) + (int) (TAILLE_CASES / 2.0);
 
                 drawable.rotate(rotation, x, y);
-                drawable.drawImage(Sprites.getInstance().getFlecheDeplacement(false),
+                drawable.drawImage(Images.getInstance().getFlecheDeplacement(false),
                         x + offset_x,
                         y + offset_y,
                         size,
@@ -140,7 +140,7 @@ public class PlateauGraphique extends JComponent {
                 drawable.rotate(-rotation, x, y);
             }
 
-            drawable.drawImage(Sprites.getInstance().getFlecheJoueurActif(), arrow_X, arrow_Y, arrow_Width, arrow_Height, null);
+            drawable.drawImage(Images.getInstance().getFlecheJoueurActif(), getWidth() - arrow_Width - 10, arrow_Y, arrow_Width, arrow_Height, null);
         }
     }
 

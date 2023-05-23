@@ -1,5 +1,7 @@
 package Controleur;
 
+import Global.Config;
+import IHM.TypeIHM;
 import Modele.Actions.ActionCoup;
 import Modele.Coups.Coup;
 import Modele.Coups.CoupTerminaison;
@@ -10,26 +12,22 @@ import Modele.Joueurs.Joueur;
 public class GestionnairePartie extends Thread {
     private final MoteurJeu moteurJeu;
     private JeuConcret jeu;
-    private PhasesPartie phasePartie;
     private int nbPions;
-    private boolean coupJouer;
+    private boolean plateauGenere, coupJouer, pause;
 
     public GestionnairePartie(MoteurJeu moteurJeu) {
         super();
         this.moteurJeu = moteurJeu;
-        this.phasePartie = PhasesPartie.ATTENTE_PARTIE;
+        this.plateauGenere = Config.TYPE_IHM != TypeIHM.GRAPHIQUE;
+        this.coupJouer = this.pause = false;
     }
 
     public synchronized boolean isGamePaused() {
-        return phasePartie == PhasesPartie.PAUSE;
+        return pause;
     }
 
     public synchronized JeuConcret getJeu() {
         return jeu;
-    }
-
-    private synchronized int getJoueurActifID() {
-        return jeu.getJoueur().getID();
     }
 
     private synchronized boolean getCoupJouer() {
@@ -42,12 +40,16 @@ public class GestionnairePartie extends Thread {
             jeu.jouer(coup);
             moteurJeu.afficherMessage("", 0);
             nbPions++;
-            updateAffichage();
+            updateAffichage(true);
         }
     }
 
-    private synchronized void updateAffichage() {
-        moteurJeu.updateAffichage();
+    private synchronized void updateAffichage(boolean jouerAnimation) {
+        moteurJeu.updateAffichage(jouerAnimation);
+    }
+
+    public synchronized boolean estPlateauFixer() {
+        return plateauGenere;
     }
 
     public synchronized boolean estPhasePlacementPions() {
@@ -67,7 +69,7 @@ public class GestionnairePartie extends Thread {
         moteurJeu.pauseGame(true);
         nbPions--;
         jeu.annuler();
-        updateAffichage();
+        updateAffichage(false);
     }
 
     public synchronized void refaireCoup() {
@@ -75,7 +77,7 @@ public class GestionnairePartie extends Thread {
         moteurJeu.pauseGame(true);
         nbPions++;
         jeu.refaire();
-        updateAffichage();
+        updateAffichage(false);
     }
 
     private boolean peutJouer(Jeu jeu) {
@@ -88,21 +90,21 @@ public class GestionnairePartie extends Thread {
 
         moteurJeu.debutDePartie();
 
-        updateAffichage();
+        updateAffichage(false);
+
+        while (!estPlateauFixer()) ;
+
+        afficherMessage("Début de la partie", 3000);
 
         while (!jeu.estTermine()) {
             while (peutJouer(jeu)) {
                 waitPause();
                 coupJouer = false;
                 Joueur joueur = jeu.getJoueur();
-                System.out.println("Tour du joueur : " + joueur.getID());
-
                 joueur.reflechir(moteurJeu);
                 while (!getCoupJouer() && !isGamePaused()) ;
-                System.out.println("Fin tour");
             }
             waitPause();
-            System.out.println("Le joueur : " + jeu.getJoueur().getID() + " est mort");
             moteurJeu.appliquerAction(new ActionCoup(new CoupTerminaison(jeu.getJoueur().getID())));
         }
 
@@ -120,14 +122,18 @@ public class GestionnairePartie extends Thread {
         while (isGamePaused()) ;
     }
 
-    public synchronized void genePlateau(){
-            jeu.generateNewPlateau();
+    public synchronized void genePlateau() {
+        jeu.generateNewPlateau();
+        updateAffichage(false);
+    }
+
+    public synchronized void fixerPlateau() {
+        this.plateauGenere = true;
     }
 
     public synchronized void lancerPartie(Joueur[] joueurs) {
         this.jeu = new JeuConcret(joueurs);
-        this.phasePartie = PhasesPartie.PARTIE_EN_COURS;
-        updateAffichage();
+        updateAffichage(false);
         this.nbPions = 0;
 
         moteurJeu.debug("Nombre de joueurs : " + joueurs.length);
@@ -138,10 +144,9 @@ public class GestionnairePartie extends Thread {
 
     public synchronized void lancerPartie(JeuConcret jeu) {
         this.jeu = jeu;
-        this.phasePartie = PhasesPartie.PARTIE_EN_COURS;
-        updateAffichage();
+        updateAffichage(false);
+        this.plateauGenere = jeu.nbPionsSurPlateau() > 0;
         this.nbPions = 0;
-
         for (int i = 0; i < jeu.getNbJoueurs(); i++) {
             nbPions += jeu.getJoueur(i).getPions().size();
         }
@@ -149,6 +154,9 @@ public class GestionnairePartie extends Thread {
 
     public synchronized void pauseGame(boolean pause) {
         moteurJeu.debug("Jeu en pause : " + pause);
-        this.phasePartie = pause ? PhasesPartie.PAUSE : PhasesPartie.PARTIE_EN_COURS;
+        this.pause = pause;
+        if (pause) {
+            afficherMessage("", 0);
+        }
     }
 }
