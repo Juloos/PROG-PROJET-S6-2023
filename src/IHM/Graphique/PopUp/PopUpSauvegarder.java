@@ -74,11 +74,23 @@ public class PopUpSauvegarder extends PopUp {
         Button valider = new Button("Sauvegarder");
         valider.addActionListener(actionEvent -> {
                 ihm.getMoteurJeu().appliquerAction(new ActionSauvegarder("sauvegarde/" + nom.getText()));
+                // Teste la création du fichier de sauvgarde
+                Boolean isCreate = false;
                 if(Arrays.equals(dirSauv.list(), listNameFiles)){
-                    JOptionPane.showMessageDialog(null, "Sauvegarde à échouer", "Sauvegarde", JOptionPane.INFORMATION_MESSAGE);
+                    for (String temp : listNameFiles) {
+                        if (temp.equals(nom.getText())) {
+                            isCreate = true;
+                        }
+                    }
                 }else{
+                    isCreate = true;
+                }
+                // Renvoie le message correspondant au succé ou echec de la creation
+                if(isCreate){
                     JOptionPane.showMessageDialog(null, "Sauvegarde réussie", "Sauvegarde", JOptionPane.INFORMATION_MESSAGE);
                     close();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Sauvegarde à échouer", "Sauvegarde", JOptionPane.INFORMATION_MESSAGE);
                 }
             });
 
