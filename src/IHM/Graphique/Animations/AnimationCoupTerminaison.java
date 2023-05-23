@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Classe de l'animation lorsqu'un joueur retire tous ses pingouins du plateau
+ */
 public class AnimationCoupTerminaison extends Animation {
     private static final int NB_FRAMES = 3;
     private final PlateauGraphique plateauGraphique;
@@ -26,6 +29,8 @@ public class AnimationCoupTerminaison extends Animation {
         this.nomJoueur = nomJoueur;
     }
 
+    /* Méthodes héritées */
+
     @Override
     public void begin() {
         ihm.afficherMessage("Le joueur " + nomJoueur + " est mort", 0);
@@ -40,7 +45,6 @@ public class AnimationCoupTerminaison extends Animation {
             } else {
                 plateauGraphique.ajouterTuilesSurbrillance(pions, Couleurs.SURBRILLANCE_PION);
             }
-            System.out.println("Frame numéro " + numFrame);
             try {
                 Thread.sleep(TIME_BETWEEN_FRAMES / 2);
             } catch (InterruptedException e) {

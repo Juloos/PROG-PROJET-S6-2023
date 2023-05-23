@@ -3,6 +3,9 @@ package IHM;
 import Controleur.MoteurJeu;
 import Modele.Joueurs.JoueurHumain;
 
+/**
+ * Classe abstraite étendue par toutes les IHM
+ */
 public abstract class IHM implements Runnable {
 
     protected final MoteurJeu moteurJeu;
@@ -34,22 +37,22 @@ public abstract class IHM implements Runnable {
     /**
      * Met à jour l'affichage du plateau ainsi que des informations des joueurs
      *
-     * @param jouerAnimation : vrai si il faut jouer des animations
+     * @param jouerAnimation vrai si il faut jouer des animations
      */
     public abstract void updateAffichage(boolean jouerAnimation);
 
     /**
      * Attend que le joueur actif demande de faire une action
      *
-     * @param : joueur : le joueur humain qui doit faire une action
+     * @param : joueur le joueur humain qui doit faire une action
      */
     public abstract void attendreActionJoueur(JoueurHumain joueur);
 
     /**
      * Affiche un message sur l'IHM
      *
-     * @param message  : le message à afficher
-     * @param duration : la durée d'affichage du message en millis secondes
+     * @param message  le message à afficher
+     * @param duration la durée d'affichage du message en millis secondes
      */
     public abstract void afficherMessage(String message, int duration);
 
@@ -77,9 +80,5 @@ public abstract class IHM implements Runnable {
      */
     public synchronized void resume() {
         this.isPaused = false;
-    }
-
-    @Override
-    public void run() {
     }
 }

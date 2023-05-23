@@ -2,7 +2,7 @@ package IHM.Graphique.Ecrans;
 
 import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.IHMGraphique;
-import IHM.Graphique.Images.Images;
+import IHM.Graphique.Images;
 import IHM.Graphique.PopUp.PopUp;
 import IHM.Graphique.PopUp.PopUpConfirmation;
 import IHM.Graphique.PopUp.PopUpReglesJeu;
@@ -12,6 +12,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Classe du menu d'accueil
+ */
 public class EcranAccueil extends Ecran {
 
     JButtonIcon nouvellePartie;
@@ -24,6 +27,7 @@ public class EcranAccueil extends Ecran {
         super("Accueil");
     }
 
+    /* Méthodes héritées */
     @Override
     public void open(IHMGraphique ihm) {
         super.open(ihm);

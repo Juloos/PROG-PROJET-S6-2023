@@ -2,7 +2,7 @@ package IHM.Graphique.Ecrans;
 
 import IHM.Graphique.Composants.Button;
 import IHM.Graphique.IHMGraphique;
-import IHM.Graphique.Images.Images;
+import IHM.Graphique.Images;
 import IHM.Graphique.PopUp.PopUp;
 
 import javax.swing.*;
@@ -11,6 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+/**
+ * Classe du menu des options
+ */
 public class EcranOptions extends Ecran {
 
     IHMGraphique ihhm;
@@ -30,23 +33,7 @@ public class EcranOptions extends Ecran {
         init();
     }
 
-    private void init() {
-        volumeSlider = new JCheckBox("Activer le son", false);
-        volumeSlider.setHorizontalTextPosition(SwingConstants.LEFT);
-        volumeSlider.setFont(new Font("Impact", Font.PLAIN, 48));
-        volumeSlider.setIconTextGap(30);
-        volumeSlider.addActionListener(actionEvent -> {
-            if (volumeSlider.isSelected()) {
-                float volume = 0.5f;
-                ihhm.setVolume(volume);
-            } else {
-                ihhm.setVolume(0);
-            }
-        });
-        volumeSlider.setAlignmentX(Component.CENTER_ALIGNMENT);
-        volumeSlider.setOpaque(false);
-    }
-
+    /* Méthodes héritées */
     @Override
     public void open(IHMGraphique ihm) {
         super.open(ihm);
@@ -97,4 +84,23 @@ public class EcranOptions extends Ecran {
         retour.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(retour, BorderLayout.SOUTH);
     }
+
+    /* Méthodes d'instance */
+    private void init() {
+        volumeSlider = new JCheckBox("Activer le son", false);
+        volumeSlider.setHorizontalTextPosition(SwingConstants.LEFT);
+        volumeSlider.setFont(new Font("Impact", Font.PLAIN, 48));
+        volumeSlider.setIconTextGap(30);
+        volumeSlider.addActionListener(actionEvent -> {
+            if (volumeSlider.isSelected()) {
+                float volume = 0.5f;
+                ihhm.setVolume(volume);
+            } else {
+                ihhm.setVolume(0);
+            }
+        });
+        volumeSlider.setAlignmentX(Component.CENTER_ALIGNMENT);
+        volumeSlider.setOpaque(false);
+    }
 }
+

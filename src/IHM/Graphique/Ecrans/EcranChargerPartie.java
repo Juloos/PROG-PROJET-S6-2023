@@ -5,7 +5,7 @@ import IHM.Graphique.Composants.InfoJoueur;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Couleurs;
 import IHM.Graphique.IHMGraphique;
-import IHM.Graphique.Images.Images;
+import IHM.Graphique.Images;
 import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 
@@ -17,6 +17,9 @@ import java.io.File;
 
 import static java.lang.Math.max;
 
+/**
+ * Classe du menu pour charger une partie
+ */
 public class EcranChargerPartie extends Ecran {
 
     protected Button charger;
@@ -29,6 +32,7 @@ public class EcranChargerPartie extends Ecran {
         super("Charger partie");
     }
 
+    /* Méthodes héritées */
     @Override
     public void creation(IHMGraphique ihm) {
         panel.setLayout(new BorderLayout());

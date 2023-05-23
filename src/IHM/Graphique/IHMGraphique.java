@@ -8,7 +8,6 @@ import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Ecrans.Ecran;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.Ecrans.EcranJeu;
-import IHM.Graphique.Images.Images;
 import IHM.Graphique.PopUp.PopUp;
 import IHM.Graphique.PopUp.PopUpFinPartie;
 import IHM.IHM;
@@ -30,6 +29,9 @@ import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.Stack;
 
+/**
+ * Classe de l'IHM graphique pour jouer au jeu avec une fenêtre graphique
+ */
 public class IHMGraphique extends IHM {
 
     // La représentation graphique du plateau
@@ -59,10 +61,8 @@ public class IHMGraphique extends IHM {
         return plateauGraphique;
     }
 
-    public synchronized void jouerAction(Action actionJoueur) {
-        if (joueurActif != null) {
-            joueurActif.setAction(moteurJeu, actionJoueur);
-        }
+    public synchronized boolean getAnimationEnCours() {
+        return animationEnCours;
     }
 
     /* Méthodes héritées de la classe IHM */
@@ -84,7 +84,6 @@ public class IHMGraphique extends IHM {
             }
 
             if (animation != null) {
-                System.out.println("On lance une animation");
                 animationEnCours = true;
                 animation.execute();
             } else {
@@ -117,10 +116,6 @@ public class IHMGraphique extends IHM {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public synchronized boolean getAnimationEnCours() {
-        return animationEnCours;
     }
 
     @Override
@@ -235,7 +230,16 @@ public class IHMGraphique extends IHM {
 
     /* Méthodes d'instance */
 
-    /* Méthodes pour gérer les fenêtres */
+    /**
+     * Définit quelle actif le joueur actif veut faire
+     *
+     * @param actionJoueur : l'action que le joueur veut faire
+     */
+    public synchronized void jouerAction(Action actionJoueur) {
+        if (joueurActif != null) {
+            joueurActif.setAction(moteurJeu, actionJoueur);
+        }
+    }
 
     /**
      * Ferme toutes les fenêtres de l'IHM
@@ -283,8 +287,11 @@ public class IHMGraphique extends IHM {
         frame.validate();
     }
 
-    /* */
-
+    /**
+     * Permet de changer le volume de la musique
+     *
+     * @param volume : le volume de la musique
+     */
     public void setVolume(float volume) {
         if (clip != null) {
             // Récupération du contrôle de volume du clip

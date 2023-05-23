@@ -1,10 +1,13 @@
 package IHM.Graphique.Composants;
 
-import IHM.Graphique.Images.Images;
+import IHM.Graphique.Images;
 
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Classe des boutons sans texte et avec uniquement un icone
+ */
 public class JButtonIcon extends JButton {
     private Image image;
 

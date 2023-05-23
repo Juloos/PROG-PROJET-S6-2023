@@ -4,7 +4,7 @@ import IHM.Graphique.Composants.Button;
 import IHM.Graphique.Couleurs;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.IHMGraphique;
-import IHM.Graphique.Images.Images;
+import IHM.Graphique.Images;
 import Modele.Joueurs.Joueur;
 
 import javax.swing.*;
@@ -12,12 +12,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Pop-up affiché lorsqu'une partie est terminée
+ */
 public class PopUpFinPartie extends PopUp {
 
     public PopUpFinPartie(IHMGraphique ihm) {
         super(ihm, "Partie terminée", 700, 500);
     }
 
+    /* Méthodes héritées */
     @Override
     public void init(IHMGraphique ihm) {
         this.backgroundImage = Images.chargerImage("/fondsEcrans/background_victory.jpeg");

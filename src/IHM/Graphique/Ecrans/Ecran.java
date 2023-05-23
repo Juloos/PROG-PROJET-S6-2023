@@ -7,8 +7,14 @@ import Modele.Jeux.JeuConcret;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Classe abstraite étendue par tous les menus du jeu
+ */
 public abstract class Ecran {
 
+    /**
+     * Vrai si les cliques sont autorisées sur la fenêtre
+     */
     public static boolean clickEnable = true;
 
     // Le panel dans lequel les composants de la fenêtre sont ajoutés
@@ -35,12 +41,18 @@ public abstract class Ecran {
     }
 
     /* Méthodes d'instance */
+
+    /**
+     * Initialise l'écran et ses composants
+     *
+     * @param ihm : l'IHM graphique
+     */
     public abstract void creation(IHMGraphique ihm);
 
     /**
-     * Lorsque la fenêtre est ouverte
+     * Lorsque l'écran est ouvert
      *
-     * @param ihm : l'IHM graphique sur laquelle est affichée la fenêtre
+     * @param ihm : l'IHM graphique
      */
     public void open(IHMGraphique ihm) {
         ihm.getFrame().setTitle(title);
@@ -54,25 +66,24 @@ public abstract class Ecran {
         ihm.getFrame().setContentPane(panel);
     }
 
-
     /**
-     * Lorsque la fenêtre est fermée
+     * Lorsque l'écran est fermé
      *
-     * @param ihm : l'IHM graphique sur laquelle est affichée la fenêtre
+     * @param ihm : l'IHM graphique
      */
     public void close(IHMGraphique ihm) {
     }
 
     /**
-     * Met à jour la fenêtre lorsqu'elle est ouverte
+     * Met à jour l'écran lorsqu'il est ouvert
      *
-     * @param ihm : l'IHM graphique sur laquelle est affichée la fenêtre
+     * @param ihm : l'IHM graphique
      */
     public void update(IHMGraphique ihm) {
     }
 
     /**
-     * Mise à jour de la fenêtre lorsqu'elle est ouverte
+     * Met à jour l'écran lorsqu'il est ouvert
      *
      * @param jeu : l'état courant du jeu à afficher
      */
@@ -80,7 +91,7 @@ public abstract class Ecran {
     }
 
     /**
-     * Met à jour les dimensions des éléments de la fenêtre lorsqu'elle change de dimensions
+     * Met à jour les dimensions des éléments de l'écran lorsque la fenêtre change de dimensions
      *
      * @param frameDimension : les dimensions de la fenêtre
      */
@@ -95,9 +106,15 @@ public abstract class Ecran {
     public void afficherMessage(String message) {
     }
 
+    /**
+     * Méthode appelée lorsque le jeu est mit en pause
+     */
     public void pause() {
     }
 
+    /**
+     * Méthode appelée lorsque le jeu reprend
+     */
     public void resume() {
     }
 }

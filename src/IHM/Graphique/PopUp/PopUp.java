@@ -5,6 +5,9 @@ import IHM.Graphique.IHMGraphique;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Classe abstraite étendue par tous les pop-ups du jeu, elle étend elle même la classe JDialog
+ */
 public abstract class PopUp extends JDialog {
     protected Image backgroundImage;
 
@@ -18,6 +21,12 @@ public abstract class PopUp extends JDialog {
         construct(width, height);
     }
 
+    /**
+     * Méthode utilisée par tous les constructeurs
+     *
+     * @param width  la largeur du pop-up
+     * @param height la hauteur du pop-up
+     */
     private void construct(int width, int height) {
         JPanel panel = new JPanel() {
             @Override
@@ -35,9 +44,17 @@ public abstract class PopUp extends JDialog {
         setModal(true);
     }
 
+    /**
+     * Lorsque l'on ferme le pop-up
+     */
     protected void close() {
         dispose();
     }
 
+    /**
+     * Crée et initialise les différents composants du pop-up
+     *
+     * @param ihm : l'IHM graphique
+     */
     public abstract void init(IHMGraphique ihm);
 }

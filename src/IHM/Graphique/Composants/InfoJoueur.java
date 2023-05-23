@@ -1,12 +1,15 @@
 package IHM.Graphique.Composants;
 
 import IHM.Graphique.Couleurs;
-import IHM.Graphique.Images.Images;
+import IHM.Graphique.Images;
 import Modele.Joueurs.Joueur;
 
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Contient les informations de partie d'un joueur
+ */
 public class InfoJoueur extends JPanel {
     private static final Image FISH = Images.chargerImage("/icones/fish.png");
     private static final Image ICE = Images.chargerImage("/icones/ice.png");
@@ -46,12 +49,21 @@ public class InfoJoueur extends JPanel {
         setBorder(BorderFactory.createMatteBorder(0, 0, 5, 0, Color.BLACK));
     }
 
+    /**
+     * Met à jour l'affichage du score du joueur
+     *
+     * @param score  : le score du joueur mis à jour
+     * @param tuiles : le nombre de tuiles collectées par le joueur mis à jour
+     */
     public void update(int score, int tuiles) {
         nbPoissons.setText("x " + score);
         nbTuiles.setText("x " + tuiles);
         repaint();
     }
 
+    /**
+     * Méthode appelée lorsque la fenêtre change de dimensions
+     */
     public void resize() {
         nbPoissons.setPreferredSize(new Dimension(getWidth() / 2, getHeight() / 2));
 

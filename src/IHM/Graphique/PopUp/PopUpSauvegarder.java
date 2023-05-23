@@ -1,8 +1,9 @@
 package IHM.Graphique.PopUp;
 
+import IHM.Graphique.Composants.Button;
 import IHM.Graphique.IHMGraphique;
 import Modele.Actions.ActionSauvegarder;
-import IHM.Graphique.Composants.Button;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -11,6 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+/**
+ * Le pop-up pour sauvegarder une partie
+ */
 public class PopUpSauvegarder extends PopUp {
 
     private final PopUp owner;
@@ -20,6 +24,7 @@ public class PopUpSauvegarder extends PopUp {
         this.owner = owner;
     }
 
+    /* Méthodes héritées */
     @Override
     public void init(IHMGraphique ihm) {
         setLayout(new GridLayout(0, 1));
