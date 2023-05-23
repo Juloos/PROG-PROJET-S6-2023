@@ -331,9 +331,9 @@ public class JeuConcret extends Jeu {
             }
             if (!tempFutur.isEmpty()){
                 jeu.setPasseFromFutur(tempFutur);
+                jeu.checkPionBloque();
                 jeu.updateJoueurFromeHist();
             }
-            jeu.checkPionBloque();
             //terminaison
             sc_f.close();
             return jeu;
