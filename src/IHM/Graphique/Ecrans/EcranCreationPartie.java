@@ -77,6 +77,7 @@ public class EcranCreationPartie extends Ecran {
                     //si le joueur est une IA
                     if (((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex() != 0) {
                         IA.Difficulte diff = IA.Difficulte.values()[((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex()];
+                        System.out.println(((MenuJoueur) joueursPanel.getComponent(i)).difficultesIA.getSelectedIndex());
                         System.out.println(diff);
                         joueurs[i] = new JoueurIA(((MenuJoueur) joueursPanel.getComponent(i)).num - 1, diff);
 //                        joueurs[i].setNom("IA " + diff);
@@ -198,6 +199,7 @@ public class EcranCreationPartie extends Ecran {
             difficultesIA.addItem("Facile");
             difficultesIA.addItem("Moyenne");
             difficultesIA.addItem("Difficile");
+            difficultesIA.addItem("Légendaire");
             difficultesIA.setSelectedIndex(0);
             difficultesIA.setMaximumSize(new Dimension(300, 50));
             //Personnalisation de l'affichage de la JComboBox

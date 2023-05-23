@@ -32,6 +32,20 @@ public class Coord {
         this.r = coord[1];
     }
 
+    public static ArrayList<Coord> getCoordsEntre(Coord source, Coord cible) {
+        ArrayList<Coord> coords = new ArrayList<>();
+        int decalage = source.getDecalage(cible);
+        Coord current = source.clone();
+
+        while (!current.equals(cible)) {
+            coords.add(current);
+            System.out.println(current);
+            current = current.decale(decalage);
+        }
+        coords.add(cible);
+        return coords;
+    }
+
     public Coord decaleHautGauche() {
         return new Coord(q - (r % 2), r - 1);
     }
@@ -85,7 +99,7 @@ public class Coord {
         if (dr != 0) {
             dr /= Math.abs(dr);
         }
-        
+
         if (dr == 0 && dq == 0) {
             return -1;
         }

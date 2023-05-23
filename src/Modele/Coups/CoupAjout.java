@@ -28,6 +28,10 @@ public class CoupAjout implements Coup {
         return joueur;
     }
 
+    public Coord getCible() {
+        return cible;
+    }
+
     public String getSaveString() {
         return "-1 " + joueur + " " + cible.q + " " + cible.r;
     }

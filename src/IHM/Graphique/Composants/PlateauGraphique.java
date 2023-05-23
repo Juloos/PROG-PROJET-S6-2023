@@ -1,7 +1,5 @@
 package IHM.Graphique.Composants;
 
-import IHM.Graphique.Animations.Animation;
-import IHM.Graphique.Couleurs;
 import IHM.Graphique.Images.Images;
 import Modele.Coord;
 import Modele.Coups.Coup;
@@ -11,7 +9,9 @@ import Modele.Plateau;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class PlateauGraphique extends JComponent {
 
@@ -24,10 +24,13 @@ public class PlateauGraphique extends JComponent {
 
     private volatile boolean animationEnCours;
 
+    private HashMap<Coord, Color> tuilesSurbrillances;
+
     public PlateauGraphique() {
         super();
         this.jeu = null;
         ESPACEMENT_TUILES = 2.2;
+        tuilesSurbrillances = new HashMap<>();
     }
 
     public synchronized void setJeu(JeuConcret jeu) {
@@ -67,10 +70,8 @@ public class PlateauGraphique extends JComponent {
 
                     drawable.drawImage(img, x, y, (int) TAILLE_CASES, (int) TAILLE_CASES, null);
 
-                    if (tuilesSurbrillance != null && tuilesSurbrillance.contains(coord)) {
-                        ajouterSurbrillance(drawable, q, r, jeu.estPion(coord) ? Couleurs.SURBRILLANCE_PION : Couleurs.SURBRILLANCE);
-                    } else if (pionsSurbrillance != null && pionsSurbrillance.contains(coord) && !jeu.estPionBloque(coord)) {
-                        ajouterSurbrillance(drawable, q, r, Couleurs.SURBRILLANCE_PION);
+                    if (tuilesSurbrillances.containsKey(coord)) {
+                        ajouterSurbrillance(drawable, q, r, tuilesSurbrillances.get(coord));
                     }
                 }
             }
@@ -181,19 +182,26 @@ public class PlateauGraphique extends JComponent {
         return new Coord((int) q, rInt);
     }
 
-    public synchronized void setTuilesSurbrillance(List<Coord> tuilesSurbrillance) {
-        this.tuilesSurbrillance = tuilesSurbrillance;
-        if (tuilesSurbrillance != null) {
-            System.out.println("Nb tuiles en surbrillance : " + tuilesSurbrillance.size());
-        } else {
-            System.out.println("Plus de tuiles en surbrillance");
+    public synchronized void viderTuilesSurbrillance() {
+        tuilesSurbrillances.clear();
+    }
+
+    public synchronized void ajouterTuilesSurbrillance(Set<Coord> coords, Color couleur) {
+        for (Coord coord : coords) {
+            ajouterTuilesSurbrillance(coord, couleur);
         }
         repaint();
     }
 
-    public synchronized void setPionsSurbrillance(List<Coord> pions) {
-        pionsSurbrillance = pions;
+    public synchronized void ajouterTuilesSurbrillance(List<Coord> coords, Color couleur) {
+        for (Coord coord : coords) {
+            ajouterTuilesSurbrillance(coord, couleur);
+        }
         repaint();
+    }
+
+    public synchronized void ajouterTuilesSurbrillance(Coord coord, Color couleur) {
+        tuilesSurbrillances.put(coord, couleur);
     }
 
     public synchronized void setPositionFlecheJoueurActif(int x, int y) {
@@ -212,11 +220,5 @@ public class PlateauGraphique extends JComponent {
         this.placementPingouinX = x;
         this.placementPingouinY = y;
         repaint();
-    }
-
-    public synchronized void jouerAnimation(Animation animation) {
-        animation.begin();
-        animation.play();
-        animation.end();
     }
 }

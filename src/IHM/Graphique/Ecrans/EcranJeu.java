@@ -5,6 +5,7 @@ import Global.Config;
 import IHM.Graphique.Composants.InfoJoueur;
 import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.Composants.PlateauGraphique;
+import IHM.Graphique.Couleurs;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.Images.Images;
 import IHM.Graphique.PopUp.PopUp;
@@ -14,8 +15,11 @@ import Modele.Actions.ActionAnnuler;
 import Modele.Actions.ActionCoup;
 import Modele.Actions.ActionRefaire;
 import Modele.Coord;
+import Modele.Coups.Coup;
 import Modele.Coups.CoupAjout;
 import Modele.Coups.CoupDeplacement;
+import Modele.IA.IA;
+import Modele.IA.IALegendaire;
 import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
@@ -23,7 +27,6 @@ import Modele.Joueurs.JoueurHumain;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 public class EcranJeu extends Ecran implements MouseListener, MouseMotionListener {
 
@@ -40,11 +43,13 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     // - annuler le dernier coup joué
     // - refaire le dernier coup annulé
     // - reprendre la partie lorsqu'elle mise en pause par refaire et annuler
-    JButtonIcon regles, options, annuler, refaire, reprendre, generer, valider;
+    JButtonIcon suggestion, regles, options, annuler, refaire, reprendre, generer, valider;
     // La tuile sélectionnée par le joueur
     Coord selection;
     PlateauGraphique plateauGraphique;
     int joueurActif;
+
+    IA suggestionIA;
 
     public EcranJeu(IHMGraphique ihm) {
         super("Partie en cours");
@@ -147,6 +152,16 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         annulerRefaire.add(Box.createHorizontalGlue());
         annulerRefaire.add(refaire);
 
+        // Initialisation du bouton de suggestion d'un coup
+        suggestion = new JButtonIcon(Images.chargerImage("/icones/suggestion.png"), 70);
+        suggestion.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                suggererCoup();
+            }
+        });
+        suggestion.setVisible(false);
+
         // Initialisation du bouton des regles
         regles = new JButtonIcon(Images.chargerImage("/boutons/Regles.png"), 70);
         regles.addActionListener(new ActionListener() {
@@ -174,6 +189,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         // Initialisation du panel contenant regles et options
         JPanel horizontal = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         horizontal.setOpaque(false);
+        horizontal.add(suggestion);
         horizontal.add(regles);
         horizontal.add(options);
 
@@ -203,6 +219,8 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
                 panelInf.add(centerPanel, BorderLayout.CENTER);
                 panelInf.add(horizontal, BorderLayout.SOUTH);
+
+                suggestion.setVisible(true);
 
                 panel.repaint();
                 panel.revalidate();
@@ -258,7 +276,6 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
     @Override
     public void resized(Dimension frameDimension) {
-        System.out.println("Resize du nouveau menu");
         final int menuWidth = (int) (frameDimension.getWidth() * 2.0 / 7.0);
         final int menuHeight = (int) frameDimension.getHeight();
 
@@ -267,12 +284,13 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         message.setPreferredSize(new Dimension(menuWidth, menuHeight / 8));
 
         // Tailles des boutons
-        int sizeAnnulerRefaire = menuHeight / 8;
+        int sizeAnnulerRefaire = menuHeight / 9;
         annuler.setDimension(sizeAnnulerRefaire, sizeAnnulerRefaire);
         reprendre.setDimension(sizeAnnulerRefaire, sizeAnnulerRefaire);
         refaire.setDimension(sizeAnnulerRefaire, sizeAnnulerRefaire);
 
         int sizeOptionsRegles = menuHeight / 8;
+        suggestion.setDimension(sizeOptionsRegles, sizeOptionsRegles);
         options.setDimension(sizeOptionsRegles, sizeOptionsRegles);
         regles.setDimension(sizeOptionsRegles, sizeOptionsRegles);
 
@@ -299,6 +317,26 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     public void resume() {
         super.resume();
         reprendre.setImageIcon(Images.chargerImage("/icones/pause.png"));
+    }
+
+    private void suggererCoup() {
+        if (ihm.getMoteurJeu().getJoueurActif() instanceof JoueurHumain && suggestionIA == null) {
+            suggestionIA = new IALegendaire(joueurActif);
+            afficherMessage("Réflexion d'un coup à suggérer");
+            Coup coup = suggestionIA.reflechir(ihm.getMoteurJeu().getJeu());
+
+            if (coup instanceof CoupAjout) {
+                CoupAjout ajout = (CoupAjout) coup;
+                plateauGraphique.ajouterTuilesSurbrillance(ajout.getCible(), Couleurs.SUGGESTION);
+            } else if (coup instanceof CoupDeplacement) {
+                CoupDeplacement deplacement = (CoupDeplacement) coup;
+                plateauGraphique.ajouterTuilesSurbrillance(deplacement.source, Couleurs.SUGGESTION_DEBUT);
+                plateauGraphique.ajouterTuilesSurbrillance(Coord.getCoordsEntre(deplacement.source, deplacement.destination), Couleurs.SUGGESTION);
+            }
+            plateauGraphique.repaint();
+            suggestionIA = null;
+            afficherMessage("");
+        }
     }
 
     /**
@@ -330,12 +368,13 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
                     if (moteurJeu.getJeu().joueurDePion(selection) == joueurActifID) {
                         // On affiche en surbrillance toutes les tuiles sur lesquelles le pion sélectionné peut aller
                         moteurJeu.debug("Affichage des tuiles accessible pour le pion choisi");
-                        plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection));
+                        plateauGraphique.ajouterTuilesSurbrillance(selection, Couleurs.SURBRILLANCE_PION);
+                        plateauGraphique.ajouterTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection), Couleurs.SURBRILLANCE);
                     } else {
                         // Le joueur n'a pas choisi un de ses pions
                         moteurJeu.debug("Le joueur n'a pas choisi un de ses pions");
                         selection = null;
-                        plateauGraphique.setTuilesSurbrillance(null);
+                        plateauGraphique.viderTuilesSurbrillance();
                     }
                 } else {
                     // Le joueur choisi sur quelle tuile il veut déplacer le pion qu'il a sélectionné
@@ -344,7 +383,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
                     if (moteurJeu.getJeu().getPlateau().estCoordValide(coord) && !moteurJeu.getJeu().estPion(coord)) {
                         // Le pion va se déplacer
                         moteurJeu.debug("On essaye de déplacer le pion");
-                        plateauGraphique.setTuilesSurbrillance(null);
+                        plateauGraphique.viderTuilesSurbrillance();
                         ihm.jouerAction(new ActionCoup(new CoupDeplacement(selection, coord, joueurActifID)));
                         selection = null;
                     } else if (moteurJeu.getJeu().joueurDePion(coord) == joueurActifID) {
@@ -352,12 +391,12 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
                         selection = coord;
                         moteurJeu.debug("Le joueur a choisi un autre de ses pions");
 
-                        ArrayList<Coord> coords = moteurJeu.getJeu().deplacementsPion(selection);
-                        coords.add(selection);
-                        plateauGraphique.setTuilesSurbrillance(coords);
+                        plateauGraphique.ajouterTuilesSurbrillance(selection, Couleurs.SURBRILLANCE_PION);
+                        plateauGraphique.ajouterTuilesSurbrillance(moteurJeu.getJeu().deplacementsPion(selection), Couleurs.SURBRILLANCE);
                     } else {
                         selection = null;
-                        plateauGraphique.setTuilesSurbrillance(null);
+                        plateauGraphique.viderTuilesSurbrillance();
+                        plateauGraphique.ajouterTuilesSurbrillance(moteurJeu.getJoueurActif().getPions(), Couleurs.SURBRILLANCE_PION);
                     }
                 }
             }

@@ -22,4 +22,7 @@ public class Couleurs {
     public static final Color SURBRILLANCE = new Color(0.5f, 0.8f, 0.5f, 0.45f);
 
     public static final Color SURBRILLANCE_PION = new Color(0.8f, 0.25f, 0.8f, 0.65f);
+
+    public static final Color SUGGESTION = new Color(1.0f, 1.0f, 0.25f, 0.5f);
+    public static final Color SUGGESTION_DEBUT = new Color(0.5f, 0.5f, 0.25f, 0.5f);
 }

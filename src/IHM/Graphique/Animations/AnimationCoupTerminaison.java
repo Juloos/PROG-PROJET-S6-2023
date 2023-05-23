@@ -1,6 +1,7 @@
 package IHM.Graphique.Animations;
 
 import IHM.Graphique.Composants.PlateauGraphique;
+import IHM.Graphique.Couleurs;
 import IHM.Graphique.IHMGraphique;
 import Modele.Coord;
 
@@ -35,9 +36,9 @@ public class AnimationCoupTerminaison extends Animation {
         System.out.println("TEMPS ENTRE CHAQUE FRAME : " + (TIME_BETWEEN_FRAMES / 2));
         for (int numFrame = 0; numFrame < NB_FRAMES * 2; numFrame++) {
             if (numFrame % 2 == 0) {
-                plateauGraphique.setTuilesSurbrillance(null);
+                plateauGraphique.viderTuilesSurbrillance();
             } else {
-                plateauGraphique.setTuilesSurbrillance(pions);
+                plateauGraphique.ajouterTuilesSurbrillance(pions, Couleurs.SURBRILLANCE_PION);
             }
             System.out.println("Frame numéro " + numFrame);
             try {
