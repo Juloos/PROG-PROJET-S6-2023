@@ -55,7 +55,7 @@ public class GestionnairePartie extends Thread {
     }
 
     public synchronized boolean estPhasePlacementPions() {
-        nbPions = jeu.nbPionsSurPlateau();
+        nbPions = jeu.getNbPionsSurPlateau();
         return nbPions < jeu.getNbPions() * jeu.getNbJoueurs();
     }
 
@@ -70,7 +70,6 @@ public class GestionnairePartie extends Thread {
     public synchronized void annulerCoup() {
         moteurJeu.debug("Annulation du dernier coup joué");
         moteurJeu.pauseGame(true);
-        nbPions--;
         jeu.annuler();
         updateAffichage(false);
     }
@@ -78,7 +77,6 @@ public class GestionnairePartie extends Thread {
     public synchronized void refaireCoup() {
         moteurJeu.debug("Refaison du dernier coup annulé");
         moteurJeu.pauseGame(true);
-        nbPions++;
         jeu.refaire();
         updateAffichage(false);
     }
@@ -155,7 +153,7 @@ public class GestionnairePartie extends Thread {
     public synchronized void lancerPartie(JeuConcret jeu) {
         this.jeu = jeu;
         updateAffichage(false);
-        this.plateauGenere = jeu.nbPionsSurPlateau() > 0;
+        this.plateauGenere = jeu.getNbPionsSurPlateau() > 0;
         this.nbPions = 0;
         for (int i = 0; i < jeu.getNbJoueurs(); i++) {
             nbPions += jeu.getJoueur(i).getPions().size();

@@ -76,7 +76,7 @@ public class JeuConcret extends Jeu {
         future.clear();  // on doit vider la pile si l'on fait de nouveau coup après avoir reculer
     }
 
-    public int nbPionsSurPlateau() {
+    public int getNbPionsSurPlateau() {
         int nbPionsPlaces = 0;
         for (int i = 0; i < super.getNbJoueurs(); i++) {
             nbPionsPlaces += super.getJoueur(i).getPions().size();
