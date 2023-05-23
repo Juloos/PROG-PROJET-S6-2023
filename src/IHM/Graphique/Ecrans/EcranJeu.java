@@ -163,7 +163,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         suggestion.setVisible(false);
 
         // Initialisation du bouton des regles
-        regles = new JButtonIcon(Images.chargerImage("/boutons/Regles.png"), 70);
+        regles = new JButtonIcon(Images.chargerImage("/icones/regles.png"), 70);
         regles.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

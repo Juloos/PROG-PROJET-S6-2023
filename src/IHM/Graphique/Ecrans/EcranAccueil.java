@@ -93,7 +93,7 @@ public class EcranAccueil extends Ecran {
             }
         });
 
-        rules = new JButtonIcon(Images.chargerImage("/boutons/Regles.png"), 150, 150);
+        rules = new JButtonIcon(Images.chargerImage("/icones/regles.png"), 150, 150);
         rules.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
