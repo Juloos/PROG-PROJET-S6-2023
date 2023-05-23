@@ -13,7 +13,6 @@ import IHM.Graphique.PopUp.PopUp;
 import IHM.Graphique.PopUp.PopUpFinPartie;
 import IHM.IHM;
 import Modele.Actions.Action;
-import Modele.Coord;
 import Modele.Coups.CoupDeplacement;
 import Modele.Coups.CoupTerminaison;
 import Modele.Jeux.JeuConcret;
@@ -27,9 +26,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.Stack;
 
 public class IHMGraphique extends IHM {
@@ -103,20 +99,15 @@ public class IHMGraphique extends IHM {
 
         // Mise à jour du plateau graphique
         plateauGraphique.setJeu(jeu);
+        plateauGraphique.viderTuilesSurbrillance();
+
         if (moteurJeu.estPhasePlacementPions()) {
             // On affiche en surbrillance les tuiles sur lesquelles un pion peut être placées
             System.out.println("Affichage des tuiles possibles");
-            plateauGraphique.setTuilesSurbrillance(jeu.placementsPionValide());
-            plateauGraphique.setPionsSurbrillance(null);
+            plateauGraphique.ajouterTuilesSurbrillance(jeu.placementsPionValide(), Couleurs.SURBRILLANCE);
         } else {
             // On affiche en surbrillance les pions du joueur actif
-            plateauGraphique.setTuilesSurbrillance(null);
-
-            Set<Coord> pions = jeu.getJoueur().getPions();
-            List<Coord> coords = new ArrayList<>();
-            coords.addAll(pions);
-
-            plateauGraphique.setPionsSurbrillance(coords);
+            plateauGraphique.ajouterTuilesSurbrillance(jeu.getJoueur().getPions(), Couleurs.SURBRILLANCE_PION);
         }
         plateauGraphique.repaint();
 
@@ -154,7 +145,7 @@ public class IHMGraphique extends IHM {
     @Override
     public void debutDePartie() {
         // On enlève toutes les tuiles en surbrillance
-        plateauGraphique.setPionsSurbrillance(null);
+        plateauGraphique.viderTuilesSurbrillance();
         ouvrirFenetre(new EcranJeu(this));
     }
 
@@ -177,7 +168,7 @@ public class IHMGraphique extends IHM {
     public synchronized void resume() {
         super.resume();
         if (moteurJeu.estPhasePlacementPions()) {
-            plateauGraphique.setTuilesSurbrillance(moteurJeu.getJeu().placementsPionValide());
+            plateauGraphique.ajouterTuilesSurbrillance(moteurJeu.getJeu().placementsPionValide(), Couleurs.SURBRILLANCE);
         }
         fenetres.peek().resume();
     }
