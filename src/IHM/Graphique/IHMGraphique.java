@@ -19,7 +19,6 @@ import Modele.Coups.CoupTerminaison;
 import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
-import com.sun.istack.internal.NotNull;
 
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
@@ -267,7 +266,6 @@ public class IHMGraphique extends IHM {
      *
      * @param ecran La nouvelle fenêtre à ouvrir
      */
-    @NotNull()
     public synchronized void ouvrirFenetre(Ecran ecran) {
         if (!fenetres.empty()) {
             // On ferme la fenêtre précédente lorsqu'il y en a une
