@@ -29,13 +29,13 @@ public abstract class Joueur implements Cloneable, Comparable<Joueur> {
         nom = "Joueur " + id;
     }
 
-    public Joueur(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, boolean termine) {
+    public Joueur(int id, int score, int tuiles, HashMap<Coord, Boolean> pions) {
         super();
         this.id = id;
         this.score = score;
         this.tuiles = tuiles;
         this.pions = pions;
-        this.termine = termine;
+
     }
 
     public abstract void reflechir(MoteurJeu mt);

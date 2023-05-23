@@ -190,7 +190,7 @@ public class JeuConcret extends Jeu {
         int test, jou, val, nbJoueurs, testType;
         int id, score, tuile, r, q;
         HashMap<Coord,Boolean> pions;
-        boolean termine;
+
         Stack<Coup> tempFutur = new Stack<>(), tempPasse = new Stack<>();
         IA.Difficulte difficulte = IA.Difficulte.ALEATOIRE;
         String nom = "";
@@ -251,7 +251,7 @@ public class JeuConcret extends Jeu {
                 score = sc_f.nextInt();
                 tuile = sc_f.nextInt();
                 pions = new HashMap<>();
-                termine = sc_f.nextBoolean();
+
                 int nbPions = sc_f.nextInt();
                 for (int j = 0; j < nbPions; j++) {
                     q = sc_f.nextInt();
@@ -260,10 +260,10 @@ public class JeuConcret extends Jeu {
                 }
                 switch (testType) {
                     case 1:
-                        joueurs[i] = new JoueurHumain(id, score, tuile, pions, termine, nom);
+                        joueurs[i] = new JoueurHumain(id, score, tuile, pions, nom);
                         break;
                     case 2:
-                        joueurs[i] = new JoueurIA(id, score, tuile, pions, termine, difficulte);
+                        joueurs[i] = new JoueurIA(id, score, tuile, pions, difficulte);
                         break;
                 }
             }

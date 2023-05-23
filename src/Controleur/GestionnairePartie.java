@@ -55,6 +55,7 @@ public class GestionnairePartie extends Thread {
     }
 
     public synchronized boolean estPhasePlacementPions() {
+        nbPions = jeu.nbPionsSurPlateau();
         return nbPions < jeu.getNbPions() * jeu.getNbJoueurs();
     }
 

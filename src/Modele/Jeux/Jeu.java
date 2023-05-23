@@ -117,6 +117,9 @@ public abstract class Jeu {
                     })
 
             );
+            if(!j.peutJouer(this)){
+                j.terminer();
+            }
         }
     }
 
