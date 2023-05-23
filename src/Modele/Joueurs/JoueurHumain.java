@@ -14,8 +14,8 @@ public class JoueurHumain extends Joueur {
         this.nom = "Joueur " + (1 + id);
     }
 
-    public JoueurHumain(int id, int score, int tuiles, HashMap<Coord, Boolean> pions) {
-        super(id, score, tuiles, pions);
+    public JoueurHumain(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, boolean termine) {
+        super(id, score, tuiles, pions, termine);
         this.nom = "Joueur " + (1 + id);
     }
 
@@ -24,8 +24,8 @@ public class JoueurHumain extends Joueur {
         this.nom = nom;
     }
 
-    public JoueurHumain(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, String nom) {
-        super(id, score, tuiles, pions);
+    public JoueurHumain(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, boolean termine, String nom) {
+        super(id, score, tuiles, pions, termine);
         this.nom = nom;
     }
 
@@ -46,7 +46,7 @@ public class JoueurHumain extends Joueur {
 
     @Override
     public JoueurHumain clone() {
-        return new JoueurHumain(id, score, tuiles, new HashMap<>(pions), nom);
+        return new JoueurHumain(id, score, tuiles, new HashMap<>(pions), termine, nom);
     }
 
     public String getNom() {

@@ -13,7 +13,7 @@ public class H7 implements Heuristique {
         double valeur = 0;
         for (Coord pion : j.getJoueur(pdvJoueur).getPions())
             valeur += nbVoisinLibre(j, pion);
-        return 2 * Math.sqrt(valeur / (j.getJoueur(pdvJoueur).getPions().size() * 6)) - 1;
+        return 2 * Math.sqrt(valeur / Double.max(1, j.getJoueur(pdvJoueur).getPions().size() * 6)) - 1;
     }
 
     private int nbVoisinLibre(Jeu j, Coord c) {
