@@ -9,8 +9,6 @@ import IHM.Graphique.PopUp.PopUpReglesJeu;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class EcranAccueil extends Ecran {
 
@@ -32,6 +30,7 @@ public class EcranAccueil extends Ecran {
 
     @Override
     public void creation(IHMGraphique ihm) {
+        ihm.getFrame().setMinimumSize(new Dimension(800, 600));
         // Chargement de l'image de fond
         this.backgroundImage = Images.chargerImage("/fondsEcrans/background.png");
 
@@ -45,62 +44,36 @@ public class EcranAccueil extends Ecran {
         nouvellePartie = new JButtonIcon(Images.chargerImage("/boutons/Nouvelle_partie.png"), 370, 130);
         nouvellePartie.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         nouvellePartie.setAlignmentX(Component.CENTER_ALIGNMENT);
-        nouvellePartie.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                ihm.ouvrirFenetre(new EcranCreationPartie());
-            }
-        });
+        nouvellePartie.addActionListener(actionEvent -> ihm.ouvrirFenetre(new EcranCreationPartie()));
 
         // Le bouton pour ouvrir le menu de chargement d'une partie
         chargerPartie = new JButtonIcon(Images.chargerImage("/boutons/charger_partie.png"), 340, 120);
         chargerPartie.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         chargerPartie.setAlignmentX(Component.CENTER_ALIGNMENT);
-        chargerPartie.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                ihm.ouvrirFenetre(new EcranChargerPartie());
-            }
-        });
+        chargerPartie.addActionListener(actionEvent -> ihm.ouvrirFenetre(new EcranChargerPartie()));
 
         // Le bouton pour ouvrir le menu des options
         options = new JButtonIcon(Images.chargerImage("/boutons/option.png"), 270, 110);
         options.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         options.setContentAreaFilled(false);
         options.setAlignmentX(Component.CENTER_ALIGNMENT);
-        options.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                ihm.ouvrirFenetre(new EcranOptions());
-            }
-        });
+        options.addActionListener(actionEvent -> ihm.ouvrirFenetre(new EcranOptions()));
 
         // Le bouton pour quitter le jeu
         quitter = new JButtonIcon(Images.chargerImage("/boutons/quitter.png"), 270, 110);
         quitter.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         quitter.setAlignmentX(Component.CENTER_ALIGNMENT);
-        quitter.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                PopUp popUp = new PopUpConfirmation(ihm, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent actionEvent) {
-                        ihm.getMoteurJeu().terminer();
-                    }
-                });
-                popUp.init(ihm);
-                popUp.setVisible(true);
-            }
+        quitter.addActionListener(actionEvent -> {
+            PopUp popUp = new PopUpConfirmation(ihm, actionEvent1 -> ihm.getMoteurJeu().terminer());
+            popUp.init(ihm);
+            popUp.setVisible(true);
         });
 
         rules = new JButtonIcon(Images.chargerImage("/icones/regles.png"), 150, 150);
-        rules.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                PopUp p = new PopUpReglesJeu(ihm);
-                p.init(ihm);
-                p.setVisible(true);
-            }
+        rules.addActionListener(e -> {
+            PopUp p = new PopUpReglesJeu(ihm);
+            p.init(ihm);
+            p.setVisible(true);
         });
 
         JPanel horizontal = new JPanel(new FlowLayout(FlowLayout.RIGHT));
