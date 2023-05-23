@@ -41,6 +41,6 @@ public abstract class Animation extends SwingWorker<Void, Void> {
     @Override
     protected void done() {
         super.done();
-        ihm.updateAffichage(ihm.getMoteurJeu().getJeu());
+        ihm.updateAffichage(false);
     }
 }

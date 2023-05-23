@@ -27,10 +27,10 @@ public class JButtonIcon extends JButton {
         setFocusPainted(false);
         setBorderPainted(false);
 
-        setIcon(resizeIcon(width, height));
+        setDimension(width, height);
     }
 
-    public void setImageIcon(Image icon) {
+    public synchronized void setImageIcon(Image icon) {
         this.image = icon;
         if (image != null) {
             setIcon(resizeIcon(getWidth(), getHeight()));
@@ -39,9 +39,10 @@ public class JButtonIcon extends JButton {
         }
     }
 
-    public void setDimension(int width, int height) {
+    public synchronized void setDimension(int width, int height) {
         if (image != null) {
             setPreferredSize(new Dimension(width, height));
+            setMaximumSize(new Dimension(width, height));
             ImageIcon newIcon = resizeIcon(width, height);
             setIcon(newIcon);
         }
