@@ -27,6 +27,7 @@ import Modele.Joueurs.JoueurHumain;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class EcranJeu extends Ecran implements MouseListener, MouseMotionListener {
 
@@ -375,6 +376,14 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
                         moteurJeu.debug("Le joueur n'a pas choisi un de ses pions");
                         selection = null;
                         plateauGraphique.viderTuilesSurbrillance();
+
+                        ArrayList<Coord> pions = new ArrayList<>(ihm.getMoteurJeu().getJoueurActif().getPions());
+                        for (int i = 0; i < pions.size(); i++) {
+                            if (ihm.getMoteurJeu().getJeu().estPionBloque(pions.get(i))) {
+                                pions.remove(i);
+                            }
+                        }
+                        plateauGraphique.ajouterTuilesSurbrillance(pions, Couleurs.SURBRILLANCE_PION);
                     }
                 } else {
                     // Le joueur choisi sur quelle tuile il veut déplacer le pion qu'il a sélectionné
@@ -396,7 +405,14 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
                     } else {
                         selection = null;
                         plateauGraphique.viderTuilesSurbrillance();
-                        plateauGraphique.ajouterTuilesSurbrillance(moteurJeu.getJoueurActif().getPions(), Couleurs.SURBRILLANCE_PION);
+
+                        ArrayList<Coord> pions = new ArrayList<>(ihm.getMoteurJeu().getJoueurActif().getPions());
+                        for (int i = 0; i < pions.size(); i++) {
+                            if (ihm.getMoteurJeu().getJeu().estPionBloque(pions.get(i))) {
+                                pions.remove(i);
+                            }
+                        }
+                        plateauGraphique.ajouterTuilesSurbrillance(pions, Couleurs.SURBRILLANCE_PION);
                     }
                 }
             }
