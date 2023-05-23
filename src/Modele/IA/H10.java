@@ -22,10 +22,8 @@ public class H10 implements Heuristique {
             }
             if (joueur == pdvJoueur) {
                 nbpionpdvJoueur = nbpion;
-            } else {
-                if (joueur > nbpionadversairemax) {
-                    nbpionadversairemax = nbpion;
-                }
+            } else if (nbpion > nbpionadversairemax) {
+                nbpionadversairemax = nbpion;
             }
         }
         return nbpionpdvJoueur - nbpionadversairemax;

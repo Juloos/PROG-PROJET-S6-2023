@@ -9,6 +9,8 @@ import Modele.Jeux.Jeu;
 import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 
+import static Global.Config.DEBUG;
+
 public class GestionnairePartie extends Thread {
     private final MoteurJeu moteurJeu;
     private JeuConcret jeu;
@@ -101,10 +103,17 @@ public class GestionnairePartie extends Thread {
                 waitPause();
                 coupJouer = false;
                 Joueur joueur = jeu.getJoueur();
+                if (DEBUG)
+                    System.out.println("Tour du joueur : " + joueur.getID());
+
                 joueur.reflechir(moteurJeu);
                 while (!getCoupJouer() && !isGamePaused()) ;
+                if (DEBUG)
+                    System.out.println("Fin tour");
             }
             waitPause();
+            if (DEBUG)
+                System.out.println("Le joueur : " + jeu.getJoueur().getID() + " est mort");
             moteurJeu.appliquerAction(new ActionCoup(new CoupTerminaison(jeu.getJoueur().getID())));
         }
 

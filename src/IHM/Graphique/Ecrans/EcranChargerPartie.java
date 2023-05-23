@@ -121,7 +121,7 @@ public class EcranChargerPartie extends Ecran {
         panel.add(panelPlateau, BorderLayout.CENTER);
 
         // Gestion du chargement de la sauvegarde selectionner
-        charger = new Button("charger");
+        charger = new Button("Charger");
         charger.addActionListener(actionEvent -> {
             ihm.getMoteurJeu().lancerPartie("sauvegarde/" + listNameFiles[listCharg.getSelectedIndex()]);
         });

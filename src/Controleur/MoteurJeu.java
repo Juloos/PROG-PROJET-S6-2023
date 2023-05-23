@@ -16,7 +16,6 @@ import static Global.Config.DEBUG;
 public class MoteurJeu {
 
     IHM ihm;
-    JeuConcret jeu;
     GestionnairePartie gestionnairePartie;
     volatile boolean isAlive;
 
@@ -117,9 +116,8 @@ public class MoteurJeu {
 
     public synchronized void sauvegarder(String nomSave) {
         debug("Sauvegarde de la partie");
-        jeu = gestionnairePartie.getJeu();
         try {
-            jeu.sauvegarder(nomSave);
+            gestionnairePartie.getJeu().sauvegarder(nomSave);
         } catch (Exception e) {
             ihm.afficherMessage("Erreur lors de la sauvegarde", 3000);
             debug("Erreur lors de la sauvegarde");

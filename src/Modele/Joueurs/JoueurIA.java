@@ -8,6 +8,8 @@ import Modele.IA.IAAleatoire;
 
 import java.util.HashMap;
 
+import static Global.Config.DEBUG;
+
 public class JoueurIA extends Joueur {
     IA ia;
 
@@ -28,8 +30,8 @@ public class JoueurIA extends Joueur {
         this.ia = ia;
     }
 
-    public JoueurIA(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, IA.Difficulte d) {
-        super(id, score, tuiles, pions);
+    public JoueurIA(int id, int score, int tuiles, HashMap<Coord, Boolean> pions, boolean termine, IA.Difficulte d) {
+        super(id, score, tuiles, pions, termine);
         ia = IA.getIA(d, id);
         if (ia == null)
             throw new IllegalArgumentException("Difficulté inconnue : " + d);
@@ -37,17 +39,19 @@ public class JoueurIA extends Joueur {
 
     @Override
     public void reflechir(MoteurJeu mt) {
-        System.out.println("Le joueur IA réfléchit");
+        if (DEBUG)
+            System.out.println("Le joueur IA réfléchit");
         if (mt.getJeu().getJoueur().id != id)
             throw new IllegalArgumentException("Mauvais joueur courant pôur ce joueur : " + mt.getJoueurActif().id);
         mt.afficherMessage("Le joueur " + getNom() + " réfléchit...", 0);
         mt.appliquerAction(new ActionCoup(ia.reflechir(mt.getJeu())));
-        System.out.println("Fin réflexion du joueur IA");
+        if (DEBUG)
+            System.out.println("Fin réflexion du joueur IA");
     }
 
     @Override
     public JoueurIA clone() {
-        return new JoueurIA(id, score, tuiles, new HashMap<>(pions), ia.getDifficulte());
+        return new JoueurIA(id, score, tuiles, new HashMap<>(pions), termine, ia.getDifficulte());
     }
 
     @Override

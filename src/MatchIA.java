@@ -23,7 +23,7 @@ public class MatchIA {
             else
                 System.out.print("\rPartie " + (i + 1) + "/" + NB_PARTIES + " (" + ((System.currentTimeMillis() - startingTimeMillis) / 1000.0) + "s)");
         }
-        System.out.println("\nRésultats (" + ((System.currentTimeMillis() - start) / 1000.0) + "ms) :");
+        System.out.println("\nRésultats (" + ((System.currentTimeMillis() - start) / 1000.0) + "s) :");
         for (int i = 0; i < winnersRate.length; i++)
             System.out.println("  Joueur " + i + " : " + winnersRate[i] + " victoires sur " + NB_PARTIES + " parties (" + (winnersRate[i] * 100 / NB_PARTIES) + "%)");
         System.out.println("Appels aux heuristiques :");
