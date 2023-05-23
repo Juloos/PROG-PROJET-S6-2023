@@ -34,7 +34,7 @@ public class EcranAccueil extends Ecran {
 
     @Override
     public void creation(IHMGraphique ihm) {
-        ihm.getFrame().setMinimumSize(new Dimension(800, 600));
+        ihm.getFrame().setMinimumSize(new Dimension(1400, 800));
         // Chargement de l'image de fond
         this.backgroundImage = Images.chargerImage("/fondsEcrans/background.png");
 

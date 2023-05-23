@@ -208,12 +208,12 @@ public class EcranCreationPartie extends Ecran {
                 }
             };
             difficultesIA.setRenderer(renderer);
-            final boolean[] isIA = {false};
             difficultesIA.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
                     int selected = difficultesIA.getSelectedIndex();
-                    if (selected != 0 && !isIA[0]) {
+                    if (selected != 0 && selected!= 4) {
+                        panelia.remove(1);
                         ImageIcon image = null;
                         if (num == 1) {
                             image = new ImageIcon(Images.chargerImage("/ia/ia_rouge.png"));
@@ -227,47 +227,116 @@ public class EcranCreationPartie extends Ecran {
                         image.setImage(image.getImage().getScaledInstance(250, 450, Image.SCALE_DEFAULT));
                         image.setDescription(" " + difficultesIA.getSelectedItem());
 
-                        // création du label contenant l'image
-                        JLabel label = new JLabel(image);
-                        label.setAlignmentX(CENTER_ALIGNMENT);
+                    // création du label contenant l'image
+                    JLabel label = new JLabel(image);
+                    label.setAlignmentX(CENTER_ALIGNMENT);
 
-                        // création du panel contenant le label
-                        JPanel iaPanel = new JPanel();
-                        iaPanel.setOpaque(false);
-                        iaPanel.setLayout(new BorderLayout());
-                        iaPanel.add(Box.createHorizontalStrut(10), BorderLayout.WEST); // ajout d'un espace avant l'image
-                        iaPanel.add(label, BorderLayout.CENTER);
-                        // ajout du panel contenant l'image au panel principal
-                        panelia.add(iaPanel);
-                        panelia.setOpaque(false);
+                    // création du panel contenant le label
+                    JPanel iaPanel = new JPanel();
+                    iaPanel.setOpaque(false);
+                    iaPanel.setLayout(new BorderLayout());
+                    iaPanel.add(Box.createHorizontalStrut(10), BorderLayout.WEST); // ajout d'un espace avant l'image
+                    iaPanel.add(label, BorderLayout.CENTER);
+                    // ajout du panel contenant l'image au panel principal
+                    panelia.add(iaPanel);
+                    panelia.setOpaque(false);
 
-                        // rafraîchissement du panel
-                        panelia.repaint();
-                        panelia.revalidate();
-                        isIA[0] = true;
+                    // rafraîchissement du panel
+                    panelia.repaint();
+                    panelia.revalidate();
 
-                    } else if (selected == 0 && isIA[0]) {
-                        panelia.remove(1);
-                        panelia.repaint();
-                        panelia.revalidate();
-                        isIA[0] = false;
+                } else if (selected == 0) {
+                    panelia.remove(1);
+                    ImageIcon image = null;
+                    switch (num) {
+                        case 1 :
+                            image = new ImageIcon(Images.chargerImage("/pingouins/PingouinRouge.png"));
+                            break;
+                        case 2 :
+                            image = new ImageIcon(Images.chargerImage("/pingouins/PingouinBleu.png"));
+                            break;
+                        case 3 :
+                            image = new ImageIcon(Images.chargerImage("/pingouins/PingouinVert.png"));
+                            break;
+                        case 4 :
+                            image = new ImageIcon(Images.chargerImage("/pingouins/PingouinJaune.png"));
+                            break;
                     }
+                    image.setImage(image.getImage().getScaledInstance(650, 650, Image.SCALE_DEFAULT));
+                    JLabel img = new JLabel(image);
+                    img.setAlignmentX(CENTER_ALIGNMENT);
+                    JPanel jPanel = new JPanel();
+                    jPanel.setOpaque(false);
+                    jPanel.setLayout(new BorderLayout());
+                    jPanel.add(Box.createHorizontalStrut(10), BorderLayout.WEST);
+                    jPanel.add(img, BorderLayout.CENTER);
+                    panelia.add(jPanel);
+                    panelia.repaint();
+                    panelia.revalidate();
                 }
-            });
-
+                else {
+                    panelia.remove(1);
+                    ImageIcon image = null;
+                    switch (num) {
+                        case 1 :
+                            image = new ImageIcon(Images.chargerImage("/ia/legendaire_rouge.png"));
+                            break;
+                        case 2 :
+                            image = new ImageIcon(Images.chargerImage("/ia/legendaire_bleu.png"));
+                            break;
+                        case 3 :
+                            image = new ImageIcon(Images.chargerImage("/ia/legendaire_vert.png"));
+                            break;
+                        case 4 :
+                            image = new ImageIcon(Images.chargerImage("/ia/legendaire_jaune.png"));
+                            break;
+                    }
+                    image.setImage(image.getImage().getScaledInstance(350, 480, Image.SCALE_DEFAULT));
+                    JLabel img = new JLabel(image);
+                    img.setAlignmentX(CENTER_ALIGNMENT);
+                    JPanel jPanel = new JPanel();
+                    jPanel.setOpaque(false);
+                    jPanel.setLayout(new BorderLayout());
+                    jPanel.add(Box.createHorizontalStrut(10), BorderLayout.WEST);
+                    jPanel.add(img, BorderLayout.CENTER);
+                    panelia.add(jPanel);
+                    panelia.repaint();
+                    panelia.revalidate();
+                }
+            }});
             panelia.add(difficultesIA);
             add(panelnom);
+            ImageIcon image = null;
+            switch (num) {
+                case 1 :
+                    image = new ImageIcon(Images.chargerImage("/pingouins/PingouinRouge.png"));
+                    break;
+                case 2 :
+                    image = new ImageIcon(Images.chargerImage("/pingouins/PingouinBleu.png"));
+                    break;
+                case 3 :
+                    image = new ImageIcon(Images.chargerImage("/pingouins/PingouinVert.png"));
+                    break;
+                case 4 :
+                    image = new ImageIcon(Images.chargerImage("/pingouins/PingouinJaune.png"));
+                    break;
+            }
+            image.setImage(image.getImage().getScaledInstance(650, 650, Image.SCALE_DEFAULT));
+            JLabel img = new JLabel(image);
+            img.setAlignmentX(CENTER_ALIGNMENT);
+            JPanel jPanel = new JPanel();
+            jPanel.setOpaque(false);
+            jPanel.setLayout(new BorderLayout());
+            jPanel.add(Box.createHorizontalStrut(10), BorderLayout.WEST);
+            jPanel.add(img, BorderLayout.CENTER);
+            panelia.setOpaque(false);
+            panelia.add(jPanel);
             add(panelia);
 
             if (num > Config.NB_JOUEUR) {
                 close = new Button("X");
                 close.setSize(40, 40);
-                closeAction = new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent actionEvent) {
-                        supprimerJoueur();
-                    }
-                };
+                closeAction = actionEvent -> supprimerJoueur();
                 close.addActionListener(closeAction);
                 close.setAlignmentX(CENTER_ALIGNMENT);
                 add(close);
@@ -277,21 +346,8 @@ public class EcranCreationPartie extends Ecran {
         private void updateNumJoueur(int num) {
             this.num = num;
             close.removeActionListener(closeAction);
-            closeAction = new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent actionEvent) {
-                    supprimerJoueur();
-                }
-            };
+            closeAction = actionEvent -> supprimerJoueur();
             close.addActionListener(closeAction);
-        }
-
-        public Joueur getJoueur() {
-            if (difficultesIA.getSelectedIndex() == 0) {
-                return new JoueurHumain(num);
-            } else {
-                return new JoueurIA(num);
-            }
         }
     }
 }

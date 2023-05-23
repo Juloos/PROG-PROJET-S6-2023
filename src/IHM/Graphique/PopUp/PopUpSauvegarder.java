@@ -30,7 +30,7 @@ public class PopUpSauvegarder extends PopUp {
 
         // Preparation du panel de sauvegarde
         JPanel nomPanel = new JPanel();
-        nomPanel.setOpaque(false);
+        nomPanel.setBackground(Color.BLACK);
         nomPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         nomPanel.setLayout(new BoxLayout(nomPanel, BoxLayout.X_AXIS));
         JLabel nomLabel = new JLabel("Nom sauvegarde : ");
@@ -101,8 +101,6 @@ public class PopUpSauvegarder extends PopUp {
                 owner.setEnabled(true);
                 owner.setVisible(true);
         });
-
-
         JPanel panelBouton = new JPanel();
         panelBouton.setOpaque(false);
         panelBouton.setLayout(new BoxLayout(panelBouton, BoxLayout.X_AXIS));
