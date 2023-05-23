@@ -41,6 +41,7 @@ public class IHMGraphique extends IHM {
     JFrame frame;
     Clip clip;
     JoueurHumain joueurActif;
+    boolean animationEnCours;
     Timer timerAffichageMessage;
 
     public IHMGraphique(MoteurJeu moteurJeu) {
@@ -84,40 +85,42 @@ public class IHMGraphique extends IHM {
 
             if (animation != null) {
                 System.out.println("On lance une animation");
+                animationEnCours = true;
                 animation.execute();
             } else {
-                updateAffichage(jeu);
+                // Mise à jour de la fenêtre de jeu
+                fenetres.peek().update(jeu);
+                fenetres.peek().update(this);
+
+                // Mise à jour du plateau graphique
+                plateauGraphique.setJeu(jeu);
+                plateauGraphique.viderTuilesSurbrillance();
+
+                if (moteurJeu.estPhasePlacementPions()) {
+                    // On affiche en surbrillance les tuiles sur lesquelles un pion peut être placées
+                    plateauGraphique.ajouterTuilesSurbrillance(jeu.placementsPionValide(), Couleurs.SURBRILLANCE);
+                } else {
+                    // On affiche en surbrillance les pions du joueur actif
+                    ArrayList<Coord> pions = new ArrayList<>(moteurJeu.getJoueurActif().getPions());
+                    for (int i = 0; i < pions.size(); i++) {
+                        if (moteurJeu.getJeu().estPionBloque(pions.get(i))) {
+                            pions.remove(i);
+                        }
+                    }
+                    plateauGraphique.ajouterTuilesSurbrillance(pions, Couleurs.SURBRILLANCE_PION);
+                }
+                plateauGraphique.repaint();
+
+                moteurJeu.finUpdateAffichage();
             }
+            animationEnCours = false;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public synchronized void updateAffichage(JeuConcret jeu) {
-        // Mise à jour de la fenêtre de jeu
-        fenetres.peek().update(jeu);
-        fenetres.peek().update(this);
-
-        // Mise à jour du plateau graphique
-        plateauGraphique.setJeu(jeu);
-        plateauGraphique.viderTuilesSurbrillance();
-
-        if (moteurJeu.estPhasePlacementPions()) {
-            // On affiche en surbrillance les tuiles sur lesquelles un pion peut être placées
-            plateauGraphique.ajouterTuilesSurbrillance(jeu.placementsPionValide(), Couleurs.SURBRILLANCE);
-        } else {
-            // On affiche en surbrillance les pions du joueur actif
-            ArrayList<Coord> pions = new ArrayList<>(moteurJeu.getJoueurActif().getPions());
-            for (int i = 0; i < pions.size(); i++) {
-                if (moteurJeu.getJeu().estPionBloque(pions.get(i))) {
-                    pions.remove(i);
-                }
-            }
-            plateauGraphique.ajouterTuilesSurbrillance(pions, Couleurs.SURBRILLANCE_PION);
-        }
-        plateauGraphique.repaint();
-
-        moteurJeu.finUpdateAffichage();
+    public synchronized boolean getAnimationEnCours() {
+        return animationEnCours;
     }
 
     @Override
@@ -158,6 +161,8 @@ public class IHMGraphique extends IHM {
     @Override
     public void finDePartie() {
         moteurJeu.debug("Ouverture du pop up de fin de partie");
+        plateauGraphique.viderTuilesSurbrillance();
+        plateauGraphique.repaint();
         PopUp p = new PopUpFinPartie(this);
         p.init(this);
         p.setVisible(true);
