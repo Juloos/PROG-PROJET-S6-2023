@@ -2,6 +2,9 @@ package IHM.Graphique;
 
 import java.awt.*;
 
+/**
+ * Classe regroupant les différentes couleurs du jeu
+ */
 public class Couleurs {
 
     public static final Color TRANSPARENT = new Color(0, 0, 0, 0);

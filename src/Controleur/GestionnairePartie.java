@@ -163,8 +163,5 @@ public class GestionnairePartie extends Thread {
     public synchronized void pauseGame(boolean pause) {
         moteurJeu.debug("Jeu en pause : " + pause);
         this.pause = pause;
-        if (pause) {
-            afficherMessage("", 0);
-        }
     }
 }

@@ -7,7 +7,7 @@ import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.Composants.PlateauGraphique;
 import IHM.Graphique.Couleurs;
 import IHM.Graphique.IHMGraphique;
-import IHM.Graphique.Images.Images;
+import IHM.Graphique.Images;
 import IHM.Graphique.PopUp.PopUp;
 import IHM.Graphique.PopUp.PopUpMenu;
 import IHM.Graphique.PopUp.PopUpReglesJeu;
@@ -29,6 +29,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
+/**
+ * Classe du menu losrqu'une partie est en cours
+ */
 public class EcranJeu extends Ecran implements MouseListener, MouseMotionListener {
 
     final IHMGraphique ihm;
@@ -57,6 +60,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         this.ihm = ihm;
     }
 
+    /* Méthodes héritées */
     @Override
     public void open(IHMGraphique ihm) {
         super.open(ihm);
@@ -73,7 +77,6 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
     @Override
     public void creation(IHMGraphique ihm) {
-
         // Création des variables
         Image background = Images.chargerImage("/fondsEcrans/fond.png");
         Image left_button = Images.chargerImage("/icones/arrow_left.png");
@@ -107,7 +110,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
 
         // Inititalisation du panel de message
-        message = new JTextArea();
+        message = new JTextArea("Validez le plateau pour lancer la partie.");
         message.setEditable(false);
         message.setLineWrap(true);
         message.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -239,6 +242,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         panelInf = new JPanel();
         panelInf.setLayout(new BorderLayout());
         panelInf.setOpaque(false);
+        panelInf.add(message, BorderLayout.NORTH);
         panelInf.add(ihm.getMoteurJeu().estPlateauFixer() ? annulerRefaire : buttonGeneration, BorderLayout.CENTER);
         panelInf.add(horizontal, BorderLayout.SOUTH);
 
@@ -256,7 +260,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
     @Override
     public void update(IHMGraphique ihm) {
-        plateauGraphique.setPositionFlecheJoueurActif(menu.getX() - 110, joueurs[joueurActif].getY());
+        plateauGraphique.setPositionFlecheJoueurActif(joueurs[joueurActif].getY());
     }
 
     @Override
@@ -272,7 +276,11 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
     @Override
     public void afficherMessage(String mess) {
-        this.message.setText(mess);
+        try {
+            this.message.setText(mess);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -297,7 +305,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
         // Position et taille de la flèche du joueur actif
         int flecheJoueurActifSize = menuHeight / 8;
-        plateauGraphique.setPositionFlecheJoueurActif(plateauGraphique.getWidth() - flecheJoueurActifSize - 10, joueurs[joueurActif].getY());
+        plateauGraphique.setPositionFlecheJoueurActif(joueurs[joueurActif].getY());
         plateauGraphique.setDimensionFlecheJoueurActif(flecheJoueurActifSize, flecheJoueurActifSize);
 
         for (InfoJoueur joueur : joueurs) {
@@ -312,14 +320,21 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     public void pause() {
         super.pause();
         reprendre.setImageIcon(Images.chargerImage("/icones/play.png"));
+        afficherMessage("Partie en pause");
     }
 
     @Override
     public void resume() {
         super.resume();
         reprendre.setImageIcon(Images.chargerImage("/icones/pause.png"));
+        ihm.afficherMessage("La partie reprend", 2000);
     }
 
+    /* Méthodes d'instances */
+
+    /**
+     * Suggère un coup au joueur actif
+     */
     private void suggererCoup() {
         if (ihm.getMoteurJeu().getJoueurActif() instanceof JoueurHumain && suggestionIA == null) {
             suggestionIA = new IALegendaire(joueurActif);
@@ -339,6 +354,8 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
             afficherMessage("");
         }
     }
+
+    /* Méthodes des interfaces */
 
     /**
      * Lorsqu'un joueur clique sur la fenêtre

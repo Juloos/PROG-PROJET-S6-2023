@@ -4,13 +4,16 @@ import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.Ecrans.EcranAccueil;
 import IHM.Graphique.Ecrans.EcranOptions;
 import IHM.Graphique.IHMGraphique;
-import IHM.Graphique.Images.Images;
+import IHM.Graphique.Images;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Le pop-up du menu des options
+ */
 public class PopUpMenu extends PopUp {
 
     JButtonIcon quitter;
@@ -21,6 +24,7 @@ public class PopUpMenu extends PopUp {
         super(ihm, "Menu", 450, 450);
     }
 
+    /* Méthodes héritées */
     @Override
     public void init(IHMGraphique ihm) {
         this.backgroundImage = Images.chargerImage("/fondsEcrans/background_popup.png");

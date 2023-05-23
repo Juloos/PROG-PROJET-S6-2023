@@ -1,9 +1,12 @@
-package IHM.Graphique.Images;
+package IHM.Graphique;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.net.URL;
 
+/**
+ * Classe permettant de charger les images du jeu
+ */
 public class Images implements Runnable {
     protected static Images INSTANCE;
     // Les tuiles où il n'y a pas de pingouins dessus
@@ -25,6 +28,8 @@ public class Images implements Runnable {
         pingouins = new Image[4];
     }
 
+    /* Méthodes de classe */
+
     public synchronized static Images getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Images();
@@ -32,6 +37,12 @@ public class Images implements Runnable {
         return INSTANCE;
     }
 
+    /**
+     * Charge l'image se trouvant au chemin indiqué
+     *
+     * @param chemin le chemin de l'image depuis le dossier res
+     * @return l'image souhaitée si le chargement a réussi, sinon retourne null
+     */
     public static Image chargerImage(String chemin) {
         try {
             URL url = Images.class.getResource(chemin);
@@ -43,14 +54,48 @@ public class Images implements Runnable {
         return null;
     }
 
+    /**
+     * Redimenssionne l'image
+     *
+     * @param image  l'image a redimenssionée
+     * @param width  la nouvelle largeur de l'image
+     * @param height la nouvelle hauteur de l'image
+     * @return l'image redimenssionnée
+     */
     public static Image resizeImage(Image image, int width, int height) {
         return image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
     }
 
+    /* Getters */
+    public Image getFlecheJoueurActif() {
+        return flecheJoueurActif;
+    }
+
+    public Image getFlecheDeplacement(boolean source) {
+        return source ? flecheDeplacementSource : flecheDeplacementDest;
+    }
+
+    /* Méthodes d'instance */
+
+    /**
+     * Retourne l'image de la tuile souhaitée
+     *
+     * @param avecPingouin vrai s'il y a un pingouin sur la tuile
+     * @param nbPoissons   le nombre de poissons sur la tuile
+     * @return l'image de la tuile souhaitée
+     */
     public Image getTuile(boolean avecPingouin, int nbPoissons) {
         return getTuile(avecPingouin, nbPoissons, -1);
     }
 
+    /**
+     * Retourne l'image de la tuile souhaitée
+     *
+     * @param avecPingouin vrai s'il y a un pingouin sur la tuile
+     * @param nbPoissons   le nombre de poissons sur la tuile
+     * @param numJoueur    le numéro du joueur
+     * @return l'image de la tuile souhaitée
+     */
     public Image getTuile(boolean avecPingouin, int nbPoissons, int numJoueur) {
         if ((avecPingouin && nbPoissons == 0) || nbPoissons < 0 || nbPoissons > 3) {
             return null;
@@ -63,20 +108,18 @@ public class Images implements Runnable {
         }
     }
 
+    /**
+     * Retourne l'image des pingouins du joueur
+     *
+     * @param numJoueur le numéro du joueur
+     * @return l'image des pingouins du joueur
+     */
     public Image getPingouin(int numJoueur) {
         if (numJoueur < 0 || numJoueur > pingouins.length) {
             return null;
         }
 
         return pingouins[numJoueur];
-    }
-
-    public Image getFlecheJoueurActif() {
-        return flecheJoueurActif;
-    }
-
-    public Image getFlecheDeplacement(boolean source) {
-        return source ? flecheDeplacementSource : flecheDeplacementDest;
     }
 
     @Override

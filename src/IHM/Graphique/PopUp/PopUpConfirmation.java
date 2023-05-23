@@ -2,12 +2,15 @@ package IHM.Graphique.PopUp;
 
 import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.IHMGraphique;
-import IHM.Graphique.Images.Images;
+import IHM.Graphique.Images;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+/**
+ * Pop-up pour confirmer une action
+ */
 public class PopUpConfirmation extends PopUp {
 
     private final ActionListener confirmationAction;
@@ -24,6 +27,7 @@ public class PopUpConfirmation extends PopUp {
         this.backgroundImage = Images.chargerImage("/fondsEcrans/background_popup.png");
     }
 
+    /* Méthodes héritées */
     @Override
     public void init(IHMGraphique ihm) {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));

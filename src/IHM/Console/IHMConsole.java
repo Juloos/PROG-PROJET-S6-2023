@@ -17,6 +17,9 @@ import java.util.Scanner;
 import static Global.Config.NB_MAX_JOUEUR;
 import static Global.Config.NB_MIN_JOUEUR;
 
+/**
+ * Permet de jouer au jeu sur un terminal
+ */
 public class IHMConsole extends IHM {
 
     private final Scanner input;
@@ -70,47 +73,6 @@ public class IHMConsole extends IHM {
         } while (action == null || !action.peutAppliquer(getMoteurJeu()));
 
         joueur.setAction(moteurJeu, action);
-    }
-
-    /**
-     * Attend que le joueur actif choisisse une tuile sur laquelle placer un de ses pions
-     *
-     * @return l'action de placement du pion
-     */
-    private ActionCoup attendrePlacementPion() {
-        int numJoueur = getMoteurJeu().getJoueurActif().id;
-
-        System.out.println("Veuillez placez un pingouin (colonne ligne)");
-        String ligne = input.nextLine();
-        int[] valeurs = decouperLigne(ligne);
-
-        Coord coord = new Coord(valeurs[0], valeurs[1]);
-        return new ActionCoup(new CoupAjout(coord, numJoueur));
-    }
-
-    /**
-     * Attend que le joueur actif choisisse un pion à déplacer et sur quelle tuile il veut le déplacer
-     *
-     * @return l'action de déplacement du pion
-     */
-    private ActionCoup attendreDeplacementPion() {
-        int numJoueur = getMoteurJeu().getJoueurActif().id;
-        System.out.println("Veuillez déplacez un pingouin (source puis destination)");
-        // Source
-        System.out.println("Source (colonne ligne)");
-        String ligne = input.nextLine();
-        int[] valeurs = decouperLigne(ligne);
-
-        Coord source = new Coord(valeurs[0], valeurs[1]);
-
-        // Destination
-        System.out.println("Destination (colonne ligne)");
-        ligne = input.nextLine();
-        valeurs = decouperLigne(ligne);
-
-        Coord destination = new Coord(valeurs[0], valeurs[1]);
-
-        return new ActionCoup(new CoupDeplacement(source, destination, numJoueur));
     }
 
     @Override
@@ -199,6 +161,18 @@ public class IHMConsole extends IHM {
         input.close();
     }
 
+    @Override
+    public void run() {
+    }
+
+    /* Méthodes d'instance */
+
+    /**
+     * Découpe une chaine de caractères en un tableau de valeurs entières
+     *
+     * @param ligne la chaine de caractère a découpée
+     * @return le tableau des valeurs entières contenues dans la chaine de caractères
+     */
     private int[] decouperLigne(String ligne) {
         String[] ligne_split = ligne.split(" ");
         int[] valeurs = new int[ligne_split.length];
@@ -208,5 +182,46 @@ public class IHMConsole extends IHM {
         }
 
         return valeurs;
+    }
+
+    /**
+     * Attend que le joueur actif choisisse une tuile sur laquelle placer un de ses pions
+     *
+     * @return l'action de placement du pion
+     */
+    private ActionCoup attendrePlacementPion() {
+        int numJoueur = getMoteurJeu().getJoueurActif().id;
+
+        System.out.println("Veuillez placez un pingouin (colonne ligne)");
+        String ligne = input.nextLine();
+        int[] valeurs = decouperLigne(ligne);
+
+        Coord coord = new Coord(valeurs[0], valeurs[1]);
+        return new ActionCoup(new CoupAjout(coord, numJoueur));
+    }
+
+    /**
+     * Attend que le joueur actif choisisse un pion à déplacer et sur quelle tuile il veut le déplacer
+     *
+     * @return l'action de déplacement du pion
+     */
+    private ActionCoup attendreDeplacementPion() {
+        int numJoueur = getMoteurJeu().getJoueurActif().id;
+        System.out.println("Veuillez déplacez un pingouin (source puis destination)");
+        // Source
+        System.out.println("Source (colonne ligne)");
+        String ligne = input.nextLine();
+        int[] valeurs = decouperLigne(ligne);
+
+        Coord source = new Coord(valeurs[0], valeurs[1]);
+
+        // Destination
+        System.out.println("Destination (colonne ligne)");
+        ligne = input.nextLine();
+        valeurs = decouperLigne(ligne);
+
+        Coord destination = new Coord(valeurs[0], valeurs[1]);
+
+        return new ActionCoup(new CoupDeplacement(source, destination, numJoueur));
     }
 }

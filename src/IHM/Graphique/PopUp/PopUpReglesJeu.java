@@ -2,13 +2,16 @@ package IHM.Graphique.PopUp;
 
 import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.IHMGraphique;
-import IHM.Graphique.Images.Images;
+import IHM.Graphique.Images;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Le pop-up pour afficher les règles du jeu
+ */
 public class PopUpReglesJeu extends PopUp {
 
     private static final Image REGLES_PAGE1 = Images.chargerImage("/regles/regles_page1.png");
@@ -24,6 +27,7 @@ public class PopUpReglesJeu extends PopUp {
         this.ihm = ihm;
     }
 
+    /* Méthodes héritées */
     @Override
     public void init(IHMGraphique ihm) {
         JPanel panel = new JPanel() {
@@ -91,8 +95,6 @@ public class PopUpReglesJeu extends PopUp {
     public void setVisible(boolean b) {
         if (b) {
             ihm.getMoteurJeu().pauseGame(true);
-        } else {
-            ihm.getMoteurJeu().pauseGame(false);
         }
         super.setVisible(b);
     }

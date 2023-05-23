@@ -2,13 +2,16 @@ package IHM.Graphique.PopUp;
 
 import IHM.Graphique.Composants.Button;
 import IHM.Graphique.IHMGraphique;
-import IHM.Graphique.Images.Images;
+import IHM.Graphique.Images;
 import Modele.Actions.ActionSauvegarder;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
+/**
+ * Le pop-up pour sauvegarder une partie
+ */
 public class PopUpSauvegarder extends PopUp {
 
     private final PopUp owner;
@@ -18,6 +21,7 @@ public class PopUpSauvegarder extends PopUp {
         this.owner = owner;
     }
 
+    /* Méthodes héritées */
     @Override
     public void init(IHMGraphique ihm) {
         this.backgroundImage = Images.chargerImage("/fondsEcrans/background_chargement.jpg");

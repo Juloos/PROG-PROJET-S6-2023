@@ -176,9 +176,6 @@ public class MoteurJeu {
         this.gestionnairePartie = new GestionnairePartie(this);
         gestionnairePartie.lancerPartie(joueurs);
         this.gestionnairePartie.start();
-        if (hasIHM()) {
-            ihm.resume();
-        }
         debug("Lancement d'une nouvelle partie");
     }
 
@@ -190,9 +187,6 @@ public class MoteurJeu {
         if (jeu != null) {
             gestionnairePartie.lancerPartie(jeu);
             this.gestionnairePartie.start();
-            if (hasIHM()) {
-                ihm.resume();
-            }
             debug("Lancement dune nouvelle partie depuis une sauvegarde");
         } else {
             afficherMessage("Erreur lors du chargement de la partie", 2000);

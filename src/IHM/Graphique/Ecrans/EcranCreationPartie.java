@@ -4,7 +4,7 @@ import Global.Config;
 import IHM.Graphique.Composants.Button;
 import IHM.Graphique.Couleurs;
 import IHM.Graphique.IHMGraphique;
-import IHM.Graphique.Images.Images;
+import IHM.Graphique.Images;
 import Modele.IA.IA;
 import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurHumain;
@@ -18,6 +18,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Classe du menu pour créer une nouvelle partie
+ */
 public class EcranCreationPartie extends Ecran {
 
     int nbJoueurs;
@@ -29,11 +32,7 @@ public class EcranCreationPartie extends Ecran {
         nbJoueurs = Config.NB_JOUEUR;
     }
 
-    @Override
-    public void open(IHMGraphique ihm) {
-        super.open(ihm);
-    }
-
+    /* Méthodes héritées */
     @Override
     public void creation(IHMGraphique ihm) {
         panel.setLayout(new BorderLayout());
@@ -95,6 +94,7 @@ public class EcranCreationPartie extends Ecran {
         panel.add(buttons, BorderLayout.PAGE_END);
     }
 
+    /* Méthodes d'instances */
     protected void nouveauJoueur() {
         nbJoueurs++;
         if (nbJoueurs >= Config.NB_MAX_JOUEUR) {
@@ -116,12 +116,6 @@ public class EcranCreationPartie extends Ecran {
         }
 
         panel.repaint();
-    }
-
-    @Override
-    public void close(IHMGraphique ihm) {
-        super.close(ihm);
-        System.out.println("Fermeture fenetre");
     }
 
     private class MenuJoueur extends JPanel {

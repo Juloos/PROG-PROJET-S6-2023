@@ -1,6 +1,6 @@
 package IHM.Graphique.Composants;
 
-import IHM.Graphique.Images.Images;
+import IHM.Graphique.Images;
 import Modele.Coord;
 import Modele.Coups.Coup;
 import Modele.Coups.CoupDeplacement;
@@ -11,20 +11,27 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
+/**
+ * Représentation graphique du plateau de jeu
+ */
 public class PlateauGraphique extends JComponent {
 
+    private final HashMap<Coord, Color> tuilesSurbrillances;
     int BORDURES_X = 2, BORDURES_Y = 5;
     double TAILLE_CASES, Y_OFFSET, ESPACEMENT_TUILES;
-    List<Coord> tuilesSurbrillance, pionsSurbrillance;
-    private int arrow_X, arrow_Y, arrow_Width, arrow_Height;
+
+    private int arrow_Y, arrow_Width, arrow_Height;
+
+    /**
+     * Le plateau dessiné par le plateau graphique
+     */
     private JeuConcret jeu;
+
+    /**
+     * Position du pingouin flottant lors de la phase de placements des pingouins
+     */
     private int placementPingouinX, placementPingouinY;
-
-    private volatile boolean animationEnCours;
-
-    private HashMap<Coord, Color> tuilesSurbrillances;
 
     public PlateauGraphique() {
         super();
@@ -37,11 +44,19 @@ public class PlateauGraphique extends JComponent {
         this.jeu = jeu != null ? new JeuConcret(jeu) : null;
     }
 
+    /**
+     * Dessine le plateau sur la fenêtre
+     *
+     * @param g : graphics
+     */
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D drawable = (Graphics2D) g;
 
         if (jeu != null) {
+            // On a un plateau a dessiner
+
+            // Déclaration et initialisation des variables
             Plateau plateau = jeu.getPlateau();
             final int NB_ROWS = plateau.getNbRows();
             TAILLE_CASES = Math.floor((Math.min(getHeight(), getWidth() - (getWidth() / 7)) * 4.0 / (3.0 * NB_ROWS)) - 1.0);
@@ -51,6 +66,7 @@ public class PlateauGraphique extends JComponent {
 
             final Coord placementPingouin = placementPingouinX >= 0 && placementPingouinY >= 0 ? getClickedTuile(placementPingouinX, placementPingouinY) : null;
 
+            // Dessin des tuiles
             for (int r = -BORDURES_Y; r < NB_ROWS + BORDURES_Y; r++) {
                 for (int q = -BORDURES_X; q < (r % 2 == 0 ? plateau.getNbColumns() - 1 + BORDURES_X : plateau.getNbColumns() + BORDURES_X); q++) {
                     Coord coord = new Coord(q, r);
@@ -59,6 +75,7 @@ public class PlateauGraphique extends JComponent {
                     final int x = XHexToPixel(q, r);
                     final int y = YHexToPixel(r);
 
+                    // Choix de l'image de la tuile
                     Image img;
                     if (jeu.estPion(coord) && TYPE_TUILE > 0) {
                         img = Images.getInstance().getTuile(true, TYPE_TUILE, jeu.joueurDePion(coord));
@@ -68,15 +85,18 @@ public class PlateauGraphique extends JComponent {
                         img = Images.getInstance().getTuile(false, TYPE_TUILE);
                     }
 
+                    // Dessin de la tuile
                     drawable.drawImage(img, x, y, (int) TAILLE_CASES, (int) TAILLE_CASES, null);
 
                     if (tuilesSurbrillances.containsKey(coord)) {
+                        // Ajout d'une surbrillance sur la tuile si demandée
                         ajouterSurbrillance(drawable, q, r, tuilesSurbrillances.get(coord));
                     }
                 }
             }
 
             if (placementPingouin != null && jeu.getPlateau().get(placementPingouin) != 1) {
+                // Dessin du pingouin flottant
                 drawable.drawImage(Images.getInstance().getPingouin(jeu.getJoueur().getID()), (int) Math.round(placementPingouinX - (TAILLE_CASES / 2.0)),
                         (int) Math.round(placementPingouinY - (TAILLE_CASES / 1.25)),
                         (int) TAILLE_CASES,
@@ -86,6 +106,7 @@ public class PlateauGraphique extends JComponent {
 
             Coup coup = jeu.dernierCoupJoue();
             if (coup instanceof CoupDeplacement) {
+                // Dessin des indiquations du dernier déplacement effectué
                 CoupDeplacement deplacement = (CoupDeplacement) coup;
 
                 int decalage = deplacement.source.getDecalage(deplacement.destination);
@@ -141,10 +162,19 @@ public class PlateauGraphique extends JComponent {
                 drawable.rotate(-rotation, x, y);
             }
 
+            // Dessin de la flèche pour indiquer le joueur actif
             drawable.drawImage(Images.getInstance().getFlecheJoueurActif(), getWidth() - arrow_Width - 10, arrow_Y, arrow_Width, arrow_Height, null);
         }
     }
 
+    /**
+     * Ajout de la surbrillance sur une tuile
+     *
+     * @param g     graphics
+     * @param q     le numéro de colonne de la tuile
+     * @param r     le numéro de ligne de la tuile
+     * @param color la couleur de la surbrillance de la tuile
+     */
     private void ajouterSurbrillance(Graphics2D g, int q, int r, Color color) {
         final int x = XHexToPixel(q, r) + (int) (TAILLE_CASES / 2.0);
         final int y = YHexToPixel(r) + (int) (TAILLE_CASES / 2.0);
@@ -166,14 +196,34 @@ public class PlateauGraphique extends JComponent {
         g.setColor(saveColor);
     }
 
+    /**
+     * Trouve la position sur l'axe X de la tuile aux coordonées (q, r)
+     *
+     * @param q le numéro de colonne de la tuile
+     * @param r le numéro de ligne de la tuile
+     * @return la position de la tuile sur l'axe X
+     */
     private int XHexToPixel(int q, int r) {
         return (int) ((TAILLE_CASES / 2.0) + ((TAILLE_CASES / ESPACEMENT_TUILES) * Math.sqrt(3.0) * (q - 0.5 * (r & 1))));
     }
 
+    /**
+     * Trouve la position sur l'axe Y de la tuile aux coordonées (q, r)
+     *
+     * @param r le numéro de ligne de la tuile
+     * @return la position de la tuile sur l'axe Y
+     */
     private int YHexToPixel(int r) {
         return (int) (Y_OFFSET + ((TAILLE_CASES / ESPACEMENT_TUILES) * (3.0 / 2.0) * r));
     }
 
+    /**
+     * Retourne les coordonnées de la tuile cliquée aux coordonées (x, y)
+     *
+     * @param x position sur l'axe X du clic
+     * @param y position sur l'axe Y du clic
+     * @return les coordonnées de la tuile cliquée sur le plateau
+     */
     public Coord getClickedTuile(int x, int y) {
         double r = (2.0 / 3.0) * (ESPACEMENT_TUILES / TAILLE_CASES) * (y - Y_OFFSET);
         int rInt = (int) (r - (r % 1 < 0.5 ? 1.0 : 0.0));
@@ -182,17 +232,19 @@ public class PlateauGraphique extends JComponent {
         return new Coord((int) q, rInt);
     }
 
+    /**
+     * Enlève la surbrillance sur toutes les tuiles en surbrillance
+     */
     public synchronized void viderTuilesSurbrillance() {
         tuilesSurbrillances.clear();
     }
 
-    public synchronized void ajouterTuilesSurbrillance(Set<Coord> coords, Color couleur) {
-        for (Coord coord : coords) {
-            ajouterTuilesSurbrillance(coord, couleur);
-        }
-        repaint();
-    }
-
+    /**
+     * Ajout des tuiles en surbrillance de la même couleur
+     *
+     * @param coords  la liste des tuiles à mettre en surbrillance
+     * @param couleur la couleur de la surbrillance
+     */
     public synchronized void ajouterTuilesSurbrillance(List<Coord> coords, Color couleur) {
         for (Coord coord : coords) {
             ajouterTuilesSurbrillance(coord, couleur);
@@ -200,22 +252,44 @@ public class PlateauGraphique extends JComponent {
         repaint();
     }
 
+    /**
+     * Ajout des tuiles en surbrillance de la même couleur
+     *
+     * @param coord   la tuile à mettre en surbrillance
+     * @param couleur la couleur de la surbrillance
+     */
     public synchronized void ajouterTuilesSurbrillance(Coord coord, Color couleur) {
         tuilesSurbrillances.put(coord, couleur);
     }
 
-    public synchronized void setPositionFlecheJoueurActif(int x, int y) {
-        this.arrow_X = x;
+    /**
+     * Met à jour la position sur l'axe Y de la flèche indiquant le joueur actif
+     *
+     * @param y position sur l'axe Y
+     */
+    public synchronized void setPositionFlecheJoueurActif(int y) {
         this.arrow_Y = y;
         repaint();
     }
 
+    /**
+     * Met à jour les dimensions de la flèche indiquant le joueur actif
+     *
+     * @param width  la largeur de la flèche
+     * @param height la hauteur de la flèche
+     */
     public synchronized void setDimensionFlecheJoueurActif(int width, int height) {
         this.arrow_Width = width;
         this.arrow_Height = height;
         repaint();
     }
 
+    /**
+     * Met à jour la position du pingouin flottant lors de la phase de placement des pingouins
+     *
+     * @param x position sur l'axe X
+     * @param y position sur l'axe Y
+     */
     public synchronized void setPlacementPingouin(int x, int y) {
         this.placementPingouinX = x;
         this.placementPingouinY = y;

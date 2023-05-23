@@ -6,6 +6,9 @@ import IHM.Graphique.IHMGraphique;
 import Modele.Coord;
 import Modele.Coups.CoupDeplacement;
 
+/**
+ * Classe de l'animation lorsq'un pingouin est déplacé
+ */
 public class AnimationDeplacementPion extends Animation {
     private final PlateauGraphique plateauGraphique;
     private final CoupDeplacement deplacement;
@@ -16,6 +19,8 @@ public class AnimationDeplacementPion extends Animation {
         this.deplacement = deplacement;
     }
 
+    /* Méthodes héritées */
+
     @Override
     public void begin() {
         super.begin();
@@ -24,7 +29,6 @@ public class AnimationDeplacementPion extends Animation {
     @Override
     public void end() {
         plateauGraphique.viderTuilesSurbrillance();
-        System.out.println("Fin de l'animation de déplacement");
         super.end();
     }
 
