@@ -10,6 +10,15 @@ public abstract class PopUp extends JDialog {
 
     public PopUp(IHMGraphique ihm, String title, int width, int height) {
         super(ihm.getFrame(), title);
+        construct(width, height);
+    }
+
+    public PopUp(PopUp owner, String title, int width, int height) {
+        super(owner, title);
+        construct(width, height);
+    }
+
+    private void construct(int width, int height) {
         JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics graphics) {
@@ -18,21 +27,9 @@ public abstract class PopUp extends JDialog {
             }
         };
         setContentPane(panel);
-        //récupérer la taille de l'écran
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation((screenSize.width-500)/2,
-                (screenSize.height-490)/2
-        );
-
-        setSize(width, height);
-        setModal(true);
-    }
-
-    public PopUp(PopUp owner, String title, int width, int height) {
-        super(owner, title);
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation((screenSize.width-500)/2,
-                (screenSize.height-490)/2
+        this.setLocation((screenSize.width - 500) / 2,
+                (screenSize.height - 490) / 2
         );
         setSize(width, height);
         setModal(true);
