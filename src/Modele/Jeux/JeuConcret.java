@@ -73,7 +73,8 @@ public class JeuConcret extends Jeu {
     public void jouer(Coup c) {
         super.jouer(c);
         passe.push(c);
-        future.clear();  // on doit vider la pile si l'on fait de nouveau coup après avoir reculer
+        // on doit vider la pile si l'on fait de nouveau coup après avoir annuler
+        future.clear();
     }
 
     public int getNbPionsSurPlateau() {
@@ -138,12 +139,22 @@ public class JeuConcret extends Jeu {
         joueurSuivant();
     }
 
+    public Coup dernierCoupJoue() {
+        if (passe.empty()) {
+            return null;
+        }
+        return passe.peek();
+    }
 
+    // Sauvegarde
     public void sauvegarder(String fichier) {
-        // Init fichier
+        // Initialisation de la creation de fichier
         PrintWriter w_f;
         File f;
         try {
+            if(fichier.equals("")){
+                throw new Exception();
+            }
             f = new File(fichier);
             f.setReadable(true);
             f.setWritable(true);
@@ -153,7 +164,7 @@ public class JeuConcret extends Jeu {
             return;
         }
 
-        // Init var
+        // Initialisation des variables
         String sauv_data = "";
         Coup elem_hist;
 
@@ -167,7 +178,7 @@ public class JeuConcret extends Jeu {
         w_f.print(plateau);
 
 
-        //On creer le String de data de sauvegarde (i.e la liste des coup réaliser)
+        // On creer le String de data de sauvegarde (i.e la liste des coup réaliser)
         int compt = 0;
         while (!passe.empty()) {
             compt++;
@@ -175,7 +186,8 @@ public class JeuConcret extends Jeu {
             sauv_data += elem_hist.getSaveString() + " ";
             future.push(elem_hist);
         }
-        // Cela sert a ne pas vider l'historique lorsque l'on sauvegarde
+
+        // Etape pour ne pas vider l'historique lorsque l'on sauvegarde
         while(compt!=0){
             compt--;
             passe.push(future.pop());
@@ -183,24 +195,25 @@ public class JeuConcret extends Jeu {
         w_f.println(sauv_data);
         w_f.close();
     }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Charger
     public static JeuConcret charger(String fichier) {
 
+        // Initialisation des variables
         int test, jou, val, nbJoueurs, testType;
         int id, score, tuile, r, q;
         HashMap<Coord,Boolean> pions;
-
-        Stack<Coup> tempFutur = new Stack<>(), tempPasse = new Stack<>();
+        HashMap<Coord, Integer> tempHash;
+        Stack<Coup> tempFutur = new Stack<>();
         IA.Difficulte difficulte = IA.Difficulte.ALEATOIRE;
         String nom = "";
-        HashMap<Coord, Integer> tempHash;
         Coord tempCoord1, tempCoord2;
         Coup tempCoup;
 
-        Scanner sc_f;
 
-        // Init fichier
+        // Initialisation du lecteur sur le fichier
+        Scanner sc_f;
         try {
             sc_f = new Scanner(new File(fichier));
         } catch (Exception E) {
@@ -208,16 +221,17 @@ public class JeuConcret extends Jeu {
             return null;
         }
 
-        //charge joueur
+        // Chargement des données de joueur
         nbJoueurs = sc_f.nextInt();
         Joueur[] joueurs = new Joueur[nbJoueurs];
         try {
             for (int i = 0; i < nbJoueurs; i++) {
                 testType = sc_f.nextInt();
                 id = sc_f.nextInt();
+                // Recuperation du type de joueur (IA ou Humain)
                 switch (testType) {
                     case 0:
-                        System.err.println(" erreur : Joueur non typé");
+                        System.err.println("Erreur : Joueur non typé");
                         throw new Exception();
                     case 1:
                         sc_f.nextLine();
@@ -248,16 +262,21 @@ public class JeuConcret extends Jeu {
                         System.err.println(fichier + " isn't a save file : not a valid player");
                         throw new Exception();
                 }
+
+                // Recuperation du nombre de poissons puis de tuiles du joueur
                 score = sc_f.nextInt();
                 tuile = sc_f.nextInt();
-                pions = new HashMap<>();
 
+                // Recuperations des coordonées des pions du joueur
+                pions = new HashMap<>();
                 int nbPions = sc_f.nextInt();
                 for (int j = 0; j < nbPions; j++) {
                     q = sc_f.nextInt();
                     r = sc_f.nextInt();
                     pions.put(new Coord(q, r), false);
                 }
+
+                // Création du joueur selon son type
                 switch (testType) {
                     case 1:
                         joueurs[i] = new JoueurHumain(id, score, tuile, pions, nom);
@@ -268,18 +287,18 @@ public class JeuConcret extends Jeu {
                 }
             }
         }catch (Exception E) {
-            System.err.println(" error during player setup");
+            System.err.println("Error during player setup");
             return null;
         }
 
-        //Creation du jeu
+        // Creation du jeu
         JeuConcret jeu = new JeuConcret(joueurs);
         if (jeu == null) {
             System.err.println("Error during game creation");
             return null;
         }
 
-        // Charge plateau
+        // Recuperation et application du plateau de jeu
         try {
             Coord c = new Coord();
             for (c.r = 0; c.r < TAILLE_PLATEAU_X; c.r++) {
@@ -292,19 +311,21 @@ public class JeuConcret extends Jeu {
             return null;
         }
 
-        // Charge historique
+        // Recuperation de l'historique historique
         try{
-        // Tant que le fichier n'est pas vide, vérifie que le fichier est comforme et joue si il trouve un coup
+        // Tant que le fichier n'est pas vide, vérifie que le format est comforme puis stocke dans une pile les coup
             while (sc_f.hasNext()) {
                 test = sc_f.nextInt();
-                // repére le type du coup
+                // Recupere le type du coup
                 switch (test) {
+                    // Coup Ajout
                     case -1:
                         jou = sc_f.nextInt();
                         tempCoord1 = new Coord(sc_f.nextInt(), sc_f.nextInt());
                         tempCoup = new CoupAjout(tempCoord1, jou);
                         tempFutur.push(tempCoup);
                         break;
+                    // Coup Deplacement
                     case -2:
                         jou = sc_f.nextInt();
                         tempCoord1 = new Coord(sc_f.nextInt(), sc_f.nextInt());
@@ -313,6 +334,7 @@ public class JeuConcret extends Jeu {
                         tempCoup = new CoupDeplacement(tempCoord1, tempCoord2, val, jou);
                         tempFutur.push(tempCoup);
                         break;
+                    // Coup Terminaison
                     case -3:
                         jou = sc_f.nextInt();
                         tempHash = new HashMap<>();
@@ -329,24 +351,23 @@ public class JeuConcret extends Jeu {
                         throw new Exception();
                 }
             }
+
+            // Si il y avait un historique
             if (!tempFutur.isEmpty()){
+                // On le remet l'historique dans le bonne ordre
                 jeu.setPasseFromFutur(tempFutur);
+                // On verifie les pions bloqué et met a jour les joueur terminer
                 jeu.checkPionBloque();
+                // On se place sur le tour du joueur ayant sauvegarder
                 jeu.updateJoueurFromeHist();
             }
-            //terminaison
+
+            // Fermeture du lecteur
             sc_f.close();
             return jeu;
         } catch (Exception E) {
             System.err.println("Error during history creation");
             return null;
         }
-    }
-
-    public Coup dernierCoupJoue() {
-        if (passe.empty()) {
-            return null;
-        }
-        return passe.peek();
     }
 }

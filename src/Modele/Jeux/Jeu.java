@@ -289,6 +289,8 @@ public abstract class Jeu {
 
     }
 
+
+    // To String
     @Override
     public String toString() {
         // Même format que Plateau.toString() mais en mettant en couleur les pions des différents joueurs,
