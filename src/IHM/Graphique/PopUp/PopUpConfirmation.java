@@ -40,10 +40,7 @@ public class PopUpConfirmation extends PopUp {
             }
         });
 
-        JLabel label = new JLabel("Voulez-vous quitter ?");
-        label.setFont(new Font("Impact", Font.PLAIN, 48));
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(label);
+        add(Box.createRigidArea(new Dimension(0, 70)));
 
         JButtonIcon confirmation = new JButtonIcon(Images.chargerImage("/boutons/quitter.png"), 190, 80);
         confirmation.setAlignmentX(Component.CENTER_ALIGNMENT);
