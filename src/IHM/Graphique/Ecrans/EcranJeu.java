@@ -110,7 +110,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
 
         // Inititalisation du panel de message
-        message = new JTextArea();
+        message = new JTextArea("Validez le plateau pour lancer la partie.");
         message.setEditable(false);
         message.setLineWrap(true);
         message.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -242,6 +242,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         panelInf = new JPanel();
         panelInf.setLayout(new BorderLayout());
         panelInf.setOpaque(false);
+        panelInf.add(message, BorderLayout.NORTH);
         panelInf.add(ihm.getMoteurJeu().estPlateauFixer() ? annulerRefaire : buttonGeneration, BorderLayout.CENTER);
         panelInf.add(horizontal, BorderLayout.SOUTH);
 
@@ -319,12 +320,14 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     public void pause() {
         super.pause();
         reprendre.setImageIcon(Images.chargerImage("/icones/play.png"));
+        afficherMessage("Partie en pause");
     }
 
     @Override
     public void resume() {
         super.resume();
         reprendre.setImageIcon(Images.chargerImage("/icones/pause.png"));
+        ihm.afficherMessage("La partie reprend", 2000);
     }
 
     /* Méthodes d'instances */

@@ -2,7 +2,7 @@ package IHM.Graphique.PopUp;
 
 import IHM.Graphique.Composants.Button;
 import IHM.Graphique.IHMGraphique;
-import IHM.Graphique.Images.Images;
+import IHM.Graphique.Images;
 import Modele.Actions.ActionSauvegarder;
 
 import javax.swing.*;

@@ -1,6 +1,6 @@
 import Controleur.MoteurJeu;
 
-public class TestIHM {
+public class Main {
 
     public static void main(String[] args) {
         MoteurJeu moteurJeu = new MoteurJeu();

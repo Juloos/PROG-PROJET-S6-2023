@@ -192,8 +192,6 @@ public class IHMGraphique extends IHM {
 
     @Override
     public void run() {
-        super.run();
-
         frame = new JFrame("");
 //        try {
 //            // chargement du fichier audio
