@@ -63,6 +63,8 @@ public abstract class Jeu {
         this.joueurCourant = jeu.joueurCourant;
     }
 
+
+    // Ensemble des methodes pour recupérer les variables de jeu
     public Joueur[] getJoueurs() {
         return joueurs;
     }
@@ -79,32 +81,48 @@ public abstract class Jeu {
         return nbJoueurs;
     }
 
-    public int getNbPions() {
-        return nbPions;
-    }
+    public int getNbPions() { return nbPions; }
+
+    public int getDernierJoueurMort() { return dernierJoueurMort; }
 
     public Plateau getPlateau() {
         return plateau;
     }
 
-    public void generateNewPlateau() {
-        plateau.randomInit();
-    }
 
+    // Ensemble des methode pour verifier la validiter d'un parametre
     public boolean estJoueurValide(int joueur) {
         return joueur >= 0 && joueur < nbJoueurs;
+    }
+
+    public boolean estPion(Coord c) {
+        return Arrays.stream(joueurs).anyMatch(j -> j.estPion(c));
     }
 
     public boolean peutJouer(int joueur) {
         return estJoueurValide(joueur) && joueurs[joueur].peutJouer(this);
     }
 
+    // Ensemble des methodes pour obtenir l'état de la partie, d'un pion ou d'un joueur
+    public boolean estTermine() {
+        return Arrays.stream(joueurs).allMatch(Joueur::estTermine);
+    }
+
     public boolean peutJouer() {
         return peutJouer(joueurCourant);
     }
 
-    public boolean estTermine() {
-        return Arrays.stream(joueurs).allMatch(Joueur::estTermine);
+    public int joueurDePion(Coord c) {
+        for (int i = 0; i < nbJoueurs; i++)
+            if (joueurs[i].estPion(c))
+                return i;
+        return -1;
+    }
+
+    public boolean estPionBloque(Coord c) {
+        return estPion(c) && c.voisins().stream().allMatch(
+                v -> plateau.get(v) == Plateau.VIDE || estPion(v)
+        );
     }
 
     public void checkPionBloque() {
@@ -123,21 +141,33 @@ public abstract class Jeu {
         }
     }
 
-    public boolean estPion(Coord c) {
-        return Arrays.stream(joueurs).anyMatch(j -> j.estPion(c));
+
+    // Mise a jour du tour de joueur
+    void joueurSuivant() {
+        joueurCourant = (joueurCourant + 1) % nbJoueurs;
+        for (int i = 1; i < nbJoueurs; i++) {
+            if (getJoueur().estTermine())
+                joueurCourant = (joueurCourant + 1) % nbJoueurs;
+            else
+                return;
+        }
     }
 
-    public boolean estPionBloque(Coord c) {
-        return estPion(c) && c.voisins().stream().allMatch(
-                v -> plateau.get(v) == Plateau.VIDE || estPion(v)
-        );
-    }
 
-    public int joueurDePion(Coord c) {
+    // Methode pour obtenier l'ensemble des gagnant selon les règles
+    public ArrayList<Integer> getWinner() {
+        ArrayList<Integer> winners = new ArrayList<>();
+        Joueur max = Arrays.stream(joueurs).max(Joueur::compareTo).get();
         for (int i = 0; i < nbJoueurs; i++)
-            if (joueurs[i].estPion(c))
-                return i;
-        return -1;
+            if (joueurs[i].compareTo(max) == 0)
+                winners.add(i);
+        return winners;
+    }
+
+
+    // Methode de modification du plateau
+    public void generateNewPlateau() {
+        plateau.randomInit();
     }
 
     public void manger(Coord c) {
@@ -145,19 +175,8 @@ public abstract class Jeu {
         plateau.set(c, Plateau.VIDE);
     }
 
-    public ArrayList<Coord> deplacementsPion(Coord c) {
-        ArrayList<Coord> liste = new ArrayList<>();
-        for (int dir = 0; dir < 6; dir++) {
-            Coord curr = c.decale(dir);
-            while (plateau.get(curr) != Plateau.VIDE && !estPion(curr)) {
-                liste.add(curr);
-                curr = curr.decale(dir);
-            }
-        }
-        return liste;
-    }
 
-
+    // Methode pour obtenir l'ensemble des emplacement valide lors de la phase de placement
     public synchronized ArrayList<Coord> placementsPionValide() {
         ArrayList<Coord> liste = new ArrayList<>();
         for (int i = 0; i < plateau.getNbColumns(); i++) {
@@ -171,16 +190,29 @@ public abstract class Jeu {
         return liste;
     }
 
-    void joueurSuivant() {
-        joueurCourant = (joueurCourant + 1) % nbJoueurs;
-        for (int i = 1; i < nbJoueurs; i++) {
-            if (getJoueur().estTermine())
-                joueurCourant = (joueurCourant + 1) % nbJoueurs;
-            else
-                return;
+
+    // Methode pour obtenir l'ensemble des deplacements possible lors de la phase de deplacement
+    public ArrayList<Coord> deplacementsPion(Coord c) {
+        ArrayList<Coord> liste = new ArrayList<>();
+        for (int dir = 0; dir < 6; dir++) {
+            Coord curr = c.decale(dir);
+            while (plateau.get(curr) != Plateau.VIDE && !estPion(curr)) {
+                liste.add(curr);
+                curr = curr.decale(dir);
+            }
         }
+        return liste;
     }
 
+
+    // Methode pour jouer un coup (envoie vers la bonne implementation)
+    public void jouer(Coup c) {
+        if (c.getJoueur() == joueurCourant)
+            c.jouer(this);
+    }
+
+
+    // Ensemble des methodes implementant les coups d'un joueur
     public void deplacerPion(Coord c1, Coord c2) {
 
         manger(c1);
@@ -215,10 +247,6 @@ public abstract class Jeu {
         joueurSuivant();
     }
 
-    public int getDernierJoueurMort() {
-        return dernierJoueurMort;
-    }
-
     public void terminerJoueur() {
         dernierJoueurMort = joueurCourant;
         joueurs[joueurCourant].terminer();
@@ -227,11 +255,8 @@ public abstract class Jeu {
         joueurSuivant();
     }
 
-    public void jouer(Coup c) {
-        if (c.getJoueur() == joueurCourant)
-            c.jouer(this);
-    }
 
+    // Ensemble des methodes implementant l'annulation d'un coup
     public void annulerDeplacer(int j, Coord c1, Coord c2) {
         joueurs[j].deplacerPion(c1, c2);
         c1.voisins().forEach(
@@ -262,15 +287,6 @@ public abstract class Jeu {
         this.getJoueur(joueur).reAnimer();
         this.joueurCourant = joueur;
 
-    }
-
-    public ArrayList<Integer> getWinner() {
-        ArrayList<Integer> winners = new ArrayList<>();
-        Joueur max = Arrays.stream(joueurs).max(Joueur::compareTo).get();
-        for (int i = 0; i < nbJoueurs; i++)
-            if (joueurs[i].compareTo(max) == 0)
-                winners.add(i);
-        return winners;
     }
 
     @Override
