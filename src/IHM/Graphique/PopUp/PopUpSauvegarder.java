@@ -8,6 +8,7 @@ import Modele.Actions.ActionSauvegarder;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * Le pop-up pour sauvegarder une partie
@@ -72,17 +73,24 @@ public class PopUpSauvegarder extends PopUp {
         // Creation de la sauvegarde
         Button valider = new Button("Sauvegarder");
         valider.addActionListener(actionEvent -> {
-            ihm.getMoteurJeu().appliquerAction(new ActionSauvegarder("sauvegarde/" + nom.getText()));
-            JOptionPane.showMessageDialog(null, "Sauvegarde réussie", "Sauvegarde", JOptionPane.INFORMATION_MESSAGE);
-            close();
-        });
+                ihm.getMoteurJeu().appliquerAction(new ActionSauvegarder("sauvegarde/" + nom.getText()));
+                if(Arrays.equals(dirSauv.list(), listNameFiles)){
+                    JOptionPane.showMessageDialog(null, "Sauvegarde à échouer", "Sauvegarde", JOptionPane.INFORMATION_MESSAGE);
+                }else{
+                    JOptionPane.showMessageDialog(null, "Sauvegarde réussie", "Sauvegarde", JOptionPane.INFORMATION_MESSAGE);
+                    close();
+                }
+            });
+
 
         Button retour = new Button("Retour");
         retour.addActionListener(actionEvent -> {
-            close();
-            owner.setEnabled(true);
-            owner.setVisible(true);
+                close();
+                owner.setEnabled(true);
+                owner.setVisible(true);
         });
+
+
         JPanel panelBouton = new JPanel();
         panelBouton.setOpaque(false);
         panelBouton.setLayout(new BoxLayout(panelBouton, BoxLayout.X_AXIS));
