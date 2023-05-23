@@ -6,7 +6,6 @@ import IHM.Graphique.Images.Images;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PopUpConfirmation extends PopUp {
@@ -15,14 +14,14 @@ public class PopUpConfirmation extends PopUp {
 
     public PopUpConfirmation(IHMGraphique ihm, ActionListener confirmationAction) {
         super(ihm, "Confirmation", 500, 300);
-        this.backgroundImage = Images.chargerImage("/fondsEcrans/background_popup.png");
         this.confirmationAction = confirmationAction;
+        this.backgroundImage = Images.chargerImage("/fondsEcrans/background_popup.png");
     }
 
     public PopUpConfirmation(PopUp owner, ActionListener confirmationAction) {
         super(owner, "Confirmation", 500, 300);
-        this.backgroundImage = Images.chargerImage("/fondsEcrans/background_popup.png");
         this.confirmationAction = confirmationAction;
+        this.backgroundImage = Images.chargerImage("/fondsEcrans/background_popup.png");
     }
 
     @Override
@@ -33,12 +32,7 @@ public class PopUpConfirmation extends PopUp {
         retour.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(retour);
 
-        retour.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                close();
-            }
-        });
+        retour.addActionListener(actionEvent -> close());
 
         add(Box.createRigidArea(new Dimension(0, 70)));
 

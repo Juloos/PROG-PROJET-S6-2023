@@ -10,8 +10,6 @@ import Modele.Jeux.JeuConcret;
 import Modele.Joueurs.Joueur;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.io.File;
 
@@ -32,7 +30,7 @@ public class EcranChargerPartie extends Ecran {
     @Override
     public void creation(IHMGraphique ihm) {
         panel.setLayout(new BorderLayout());
-        this.backgroundImage = Images.chargerImage("/fondsEcrans/background_chargement.jpg");
+        this.backgroundImage = Images.chargerImage("/fondsEcrans/background_ecranch.jpg");
 
         JLabel titre = new JLabel("Charger une partie", SwingConstants.CENTER);
         titre.setForeground(Color.WHITE);
@@ -69,43 +67,40 @@ public class EcranChargerPartie extends Ecran {
         JPanel panelInfo = new JPanel();
         panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.Y_AXIS));
         panelInfo.setMinimumSize(new Dimension(400, 600));
-        panelInfo.setOpaque(false);
-        listCharg.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                panelInfo.removeAll();
-                int tempInd = listCharg.getSelectedIndex();
-                int nbJoueurs;
-                if (tempInd >= 0 && tempInd <= listNameFiles.length) {
-                    JeuConcret jeu = JeuConcret.charger("sauvegarde/" + listNameFiles[tempInd]);
-                    platGraph.setJeu(jeu);
-                    platGraph.setMaximumSize(new Dimension(900, 900));
-                    nbJoueurs = jeu.getJoueurs().length;
-                    InfoJoueur[] infoJoueurs = new InfoJoueur[nbJoueurs];
-                    for (int i = 0; i < nbJoueurs; i++) {
-                        Joueur joueurTemp = jeu.getJoueurs()[i];
-                        infoJoueurs[i] = new InfoJoueur(joueurTemp);
-                        infoJoueurs[i].setPreferredSize(new Dimension(350, 150));
-                        infoJoueurs[i].setMaximumSize(new Dimension(350, 150));
-                        infoJoueurs[i].setMinimumSize(new Dimension(350, 150));
-                        infoJoueurs[i].setBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, Couleurs.COULEURS_JOUEURS[i]));
-                        infoJoueurs[i].setAlignmentX(Component.CENTER_ALIGNMENT);
-                        infoJoueurs[i].update(joueurTemp.getScore(), joueurTemp.getTuiles());
-                        panelInfo.add(infoJoueurs[i]);
-                        panelInfo.repaint();
-                        panelInfo.revalidate();
-                    }
-                    panel.add(panelInfo, BorderLayout.EAST);
-                    panelPlateau.add(platGraph);
-                    JLabel nbJoueursLabel = new JLabel("Nombre de joueurs : " + nbJoueurs);
-                    nbJoueursLabel.setForeground(Color.WHITE);
-                    nbJoueursLabel.setFont(new Font("Impact", Font.PLAIN, 30));
-                    nbJoueursLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-                    panelPlateau.add(nbJoueursLabel);
-                    panelPlateau.remove(0);
-                    panel.repaint();
-                    panel.revalidate();
+        panelInfo.setBackground(Couleurs.BACKGROUND_ECRAN);
+        listCharg.addListSelectionListener(e -> {
+            panelInfo.removeAll();
+            int tempInd = listCharg.getSelectedIndex();
+            int nbJoueurs;
+            if (tempInd >= 0 && tempInd <= listNameFiles.length) {
+                JeuConcret jeu = JeuConcret.charger("sauvegarde/" + listNameFiles[tempInd]);
+                platGraph.setJeu(jeu);
+                platGraph.setMaximumSize(new Dimension(900, 900));
+                nbJoueurs = jeu.getJoueurs().length;
+                InfoJoueur[] infoJoueurs = new InfoJoueur[nbJoueurs];
+                for (int i = 0; i < nbJoueurs; i++) {
+                    Joueur joueurTemp = jeu.getJoueurs()[i];
+                    infoJoueurs[i] = new InfoJoueur(joueurTemp);
+                    infoJoueurs[i].setPreferredSize(new Dimension(350, 150));
+                    infoJoueurs[i].setMaximumSize(new Dimension(350, 150));
+                    infoJoueurs[i].setMinimumSize(new Dimension(350, 150));
+                    infoJoueurs[i].setBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, Couleurs.COULEURS_JOUEURS[i]));
+                    infoJoueurs[i].setAlignmentX(Component.CENTER_ALIGNMENT);
+                    infoJoueurs[i].update(joueurTemp.getScore(), joueurTemp.getTuiles());
+                    panelInfo.add(infoJoueurs[i]);
+                    panelInfo.repaint();
+                    panelInfo.revalidate();
                 }
+                panel.add(panelInfo, BorderLayout.EAST);
+                panelPlateau.add(platGraph);
+                JLabel nbJoueursLabel = new JLabel("Nombre de joueurs : " + nbJoueurs);
+                nbJoueursLabel.setForeground(Color.WHITE);
+                nbJoueursLabel.setFont(new Font("Impact", Font.PLAIN, 30));
+                nbJoueursLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                panelPlateau.add(nbJoueursLabel);
+                panelPlateau.remove(0);
+                panel.repaint();
+                panel.revalidate();
             }
         });
         JPanel panelPreview = new JPanel();
