@@ -95,12 +95,15 @@ public class PopUpSauvegarder extends PopUp {
             });
 
 
+        // Inititalisation du bouton Retour
         Button retour = new Button("Retour");
         retour.addActionListener(actionEvent -> {
                 close();
                 owner.setEnabled(true);
                 owner.setVisible(true);
         });
+
+        // Création du panel des boutons sauvegarder et retour
         JPanel panelBouton = new JPanel();
         panelBouton.setOpaque(false);
         panelBouton.setLayout(new BoxLayout(panelBouton, BoxLayout.X_AXIS));
