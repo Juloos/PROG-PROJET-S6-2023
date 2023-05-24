@@ -6,7 +6,7 @@ import Modele.Joueurs.Joueur;
 import Modele.Joueurs.JoueurIA;
 
 public class Config {
-    public final static TypeIHM TYPE_IHM = TypeIHM.AUCUNE;
+    public final static TypeIHM TYPE_IHM = TypeIHM.GRAPHIQUE;
     public final static int NB_HEURISTIQUES = 9;
     public final static boolean DEBUG = false;
     public final static int TAILLE_PLATEAU_X = 8;
@@ -19,16 +19,16 @@ public class Config {
     public final static String[] COULEURS = {"\033[0m", "\033[34m", "\033[31m", "\033[32m", "\033[33m"};  // index 0: reset, indexe i+1: couleur du joueur i
     // public final static String[] COULEURS = {"", "0*", "1*", "2*", "3*"};
 
-    public final static Joueur[] JOUEURS_MATCH = new Joueur[]{new JoueurIA(0, IA.Difficulte.FACILE), new JoueurIA(1, IA.Difficulte.MOYEN)};
-    public final static int NB_PARTIES = 50;
+    public final static Joueur[] JOUEURS_MATCH = new Joueur[]{new JoueurIA(0, IA.Difficulte.DIFFICILE), new JoueurIA(1, IA.Difficulte.LEGENDAIRE)};
+    public final static int NB_PARTIES = 100;
 
     public final static int NB_MONTECARLOS = 10;
     public final static int NB_GENERATIONS = 100;
     public final static double MUTATION_COEFF = 1;
 
     public final static Heuristique IA_LEGENDAIRE_HEURISTIQUE = new H11();
-    public final static int IA_LEGENDAIRE_PROFONDEUR = 4;
-    public final static double IA_LEGENDAIRE_THRESHOLD = 1000;
+    public final static int IA_LEGENDAIRE_PROFONDEUR = 6;
+    public final static double IA_LEGENDAIRE_THRESHOLD = 2000;
 
     public final static Heuristique IA_DIFFICILE_HEURISTIQUE = new H3(100);
     public final static int IA_DIFFICILE_PROFONDEUR = 1;
@@ -40,5 +40,5 @@ public class Config {
 
     public final static Heuristique IA_FACILE_HEURISTIQUE = new H5();
     public final static int IA_FACILE_PROFONDEUR = 4;
-    public final static double IA_FACILE_THRESHOLD = Double.POSITIVE_INFINITY;
+    public final static double IA_FACILE_THRESHOLD = 30;
 }

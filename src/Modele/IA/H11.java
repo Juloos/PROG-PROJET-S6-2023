@@ -7,8 +7,8 @@ import static Global.Config.*;
 
 public class H11 implements Heuristique {
     int nbAppels = 0;
-    Heuristique[] heuristiques = {new H1(), new H2(), new H9(), new H7()};
-    double[] poids = {Double.MAX_VALUE, 0.001, 1, 2.15};
+    Heuristique[] heuristiques = {new H1(), new H2(), new H9(), new H10(), new H7()};
+    double[] poids = {Double.MAX_VALUE, 0.01, 1, 3, 7};
 
     @Override
     public double evaluer(Jeu j, int pdvJoueur) {

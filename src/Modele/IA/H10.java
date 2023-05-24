@@ -11,8 +11,8 @@ public class H10 implements Heuristique {
     @Override
     public double evaluer(Jeu j, int pdvJoueur) {
         nbAppels++;
-        int nbpionpdvJoueur = 0;
-        int nbpionadversairemax = 0;
+        int nbpionpdvJoueur = j.getNbPions();
+        int nbpionadversairemin = j.getNbPions();
         for (int joueur = 0; joueur < j.getNbJoueurs(); joueur++) {
             int nbpion = 0;
             for (Coord pions : j.getJoueur(joueur).getPions()) {
@@ -22,11 +22,11 @@ public class H10 implements Heuristique {
             }
             if (joueur == pdvJoueur) {
                 nbpionpdvJoueur = nbpion;
-            } else if (nbpion > nbpionadversairemax) {
-                nbpionadversairemax = nbpion;
+            } else if (nbpion < nbpionadversairemin) {
+                nbpionadversairemin = nbpion;
             }
         }
-        return nbpionpdvJoueur - nbpionadversairemax;
+        return nbpionpdvJoueur - nbpionadversairemin;
     }
 
     @Override
