@@ -20,14 +20,11 @@ public class PlateauGraphique extends JComponent {
     private final HashMap<Coord, Color> tuilesSurbrillances;
     int BORDURES_X = 2, BORDURES_Y = 5;
     double TAILLE_CASES, Y_OFFSET, ESPACEMENT_TUILES;
-
     private int arrow_Y, arrow_Width, arrow_Height;
-
     /**
      * Le plateau dessiné par le plateau graphique
      */
     private JeuConcret jeu;
-
     /**
      * Position du pingouin flottant lors de la phase de placements des pingouins
      */
@@ -36,7 +33,7 @@ public class PlateauGraphique extends JComponent {
     public PlateauGraphique() {
         super();
         this.jeu = null;
-        ESPACEMENT_TUILES = 2.2;
+        ESPACEMENT_TUILES = 2.18;
         tuilesSurbrillances = new HashMap<>();
     }
 
@@ -64,7 +61,7 @@ public class PlateauGraphique extends JComponent {
             BORDURES_X = (int) Math.floor((getWidth() - plateau.getNbColumns() * (TAILLE_CASES / ESPACEMENT_TUILES)) / TAILLE_CASES);
             BORDURES_Y = (int) Math.floor((getHeight() - plateau.getNbRows() * (TAILLE_CASES / ESPACEMENT_TUILES)) / TAILLE_CASES);
 
-            final Coord placementPingouin = placementPingouinX >= 0 && placementPingouinY >= 0 ? getClickedTuile(placementPingouinX, placementPingouinY) : null;
+            final Coord placementPingouin = placementPingouinX >= 0 && placementPingouinY >= 0 ? getTuile(placementPingouinX, placementPingouinY) : null;
 
             // Dessin des tuiles
             for (int r = -BORDURES_Y; r < NB_ROWS + BORDURES_Y; r++) {
@@ -97,8 +94,8 @@ public class PlateauGraphique extends JComponent {
 
             if (placementPingouin != null && jeu.getPlateau().get(placementPingouin) != 1) {
                 // Dessin du pingouin flottant
-                drawable.drawImage(Images.getInstance().getPingouin(jeu.getJoueur().getID()), (int) Math.round(placementPingouinX - (TAILLE_CASES / 2.0)),
-                        (int) Math.round(placementPingouinY - (TAILLE_CASES / 1.25)),
+                drawable.drawImage(Images.getInstance().getPingouin(jeu.getJoueur().getID()), (int) Math.round(placementPingouinX - (TAILLE_CASES / 1.9)),
+                        (int) Math.round(placementPingouinY - (TAILLE_CASES / 1.35)),
                         (int) TAILLE_CASES,
                         (int) TAILLE_CASES,
                         null);
@@ -164,6 +161,8 @@ public class PlateauGraphique extends JComponent {
 
             // Dessin de la flèche pour indiquer le joueur actif
             drawable.drawImage(Images.getInstance().getFlecheJoueurActif(), getWidth() - arrow_Width - 10, arrow_Y, arrow_Width, arrow_Height, null);
+
+            drawable.setColor(Color.BLACK);
         }
     }
 
@@ -180,13 +179,12 @@ public class PlateauGraphique extends JComponent {
         final int y = YHexToPixel(r) + (int) (TAILLE_CASES / 2.0);
 
         Polygon hexagone = new Polygon();
-
         for (int i = 0; i < 6; i++) {
             double angle_deg = 60.0 * i - 30.0;
             double angle_rad = Math.PI / 180.0 * angle_deg;
             hexagone.addPoint(
-                    (int) (x + (TAILLE_CASES / ESPACEMENT_TUILES) * Math.cos(angle_rad)),
-                    (int) (y + (TAILLE_CASES / ESPACEMENT_TUILES) * Math.sin(angle_rad))
+                    (int) Math.floor(x + (TAILLE_CASES / ESPACEMENT_TUILES * 1.01) * Math.cos(angle_rad)),
+                    (int) Math.floor(y + (TAILLE_CASES / ESPACEMENT_TUILES * 1.01) * Math.sin(angle_rad))
             );
         }
 
@@ -204,7 +202,7 @@ public class PlateauGraphique extends JComponent {
      * @return la position de la tuile sur l'axe X
      */
     private int XHexToPixel(int q, int r) {
-        return (int) ((TAILLE_CASES / 2.0) + ((TAILLE_CASES / ESPACEMENT_TUILES) * Math.sqrt(3.0) * (q - 0.5 * (r & 1))));
+        return (int) Math.round((TAILLE_CASES / 2.0) + ((TAILLE_CASES / ESPACEMENT_TUILES) * Math.sqrt(3.0) * (q - 0.5 * (r % 2))));
     }
 
     /**
@@ -214,22 +212,46 @@ public class PlateauGraphique extends JComponent {
      * @return la position de la tuile sur l'axe Y
      */
     private int YHexToPixel(int r) {
-        return (int) (Y_OFFSET + ((TAILLE_CASES / ESPACEMENT_TUILES) * (3.0 / 2.0) * r));
+        return (int) Math.round(Y_OFFSET + ((TAILLE_CASES / ESPACEMENT_TUILES) * (3.0 / 2.0) * r));
     }
 
     /**
-     * Retourne les coordonnées de la tuile cliquée aux coordonées (x, y)
+     * Retourne les coordonnées de la tuile aux coordonées (x, y)
      *
      * @param x position sur l'axe X du clic
      * @param y position sur l'axe Y du clic
      * @return les coordonnées de la tuile cliquée sur le plateau
      */
-    public Coord getClickedTuile(int x, int y) {
-        double r = (2.0 / 3.0) * (ESPACEMENT_TUILES / TAILLE_CASES) * (y - Y_OFFSET);
-        int rInt = (int) (r - (r % 1 < 0.5 ? 1.0 : 0.0));
-        double q = (ESPACEMENT_TUILES / TAILLE_CASES) * (1.0 / Math.sqrt(3.0)) * (x - (TAILLE_CASES / 2.0)) + 0.5 * (rInt & 1);
+    public synchronized Coord getTuile(int x, int y) {
+        Coord coord = null;
+        Point point = new Point(x, y - (int) (TAILLE_CASES / ESPACEMENT_TUILES / 2));
+        int r = 0;
+        int q = 0;
 
-        return new Coord((int) q, rInt);
+        while (r < jeu.getPlateau().getNbRows() && coord == null) {
+            q = 0;
+            while (q < jeu.getPlateau().getNbColumns() && coord == null) {
+                final int tuileX = XHexToPixel(q, r) + (int) (TAILLE_CASES / 2.0);
+                final int tuileY = YHexToPixel(r) + (int) (TAILLE_CASES / 2.0);
+
+                Polygon hexagone = new Polygon();
+                for (int i = 0; i < 6; i++) {
+                    double angle_deg = 60.0 * i - 30.0;
+                    double angle_rad = Math.PI / 180.0 * angle_deg;
+                    hexagone.addPoint(
+                            (int) Math.floor(tuileX + (TAILLE_CASES / ESPACEMENT_TUILES) * Math.cos(angle_rad)),
+                            (int) Math.floor(tuileY + (TAILLE_CASES / ESPACEMENT_TUILES) * Math.sin(angle_rad))
+                    );
+                }
+
+                if (hexagone.contains(point)) {
+                    coord = new Coord(q, r);
+                }
+                q++;
+            }
+            r++;
+        }
+        return coord;
     }
 
     /**

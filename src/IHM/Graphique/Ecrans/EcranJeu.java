@@ -52,7 +52,6 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     Coord selection;
     PlateauGraphique plateauGraphique;
     int joueurActif;
-
     IA suggestionIA;
 
     public EcranJeu(IHMGraphique ihm) {
@@ -369,7 +368,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
         if (clickEnable && !ihm.getAnimationEnCours() && moteurJeu.getJoueurActif() instanceof JoueurHumain) {
             // On récupère la coordonnée de la tuile sélectionnée (peut être invalide)
-            Coord coord = plateauGraphique.getClickedTuile(mouseEvent.getX(), mouseEvent.getY());
+            Coord coord = plateauGraphique.getTuile(mouseEvent.getX(), mouseEvent.getY());
             moteurJeu.debug("Tuile clickée " + coord);
 
             if (moteurJeu.estPhasePlacementPions()) {
