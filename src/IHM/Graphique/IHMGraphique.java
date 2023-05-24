@@ -101,11 +101,8 @@ public class IHMGraphique extends IHM {
                 } else {
                     // On affiche en surbrillance les pions du joueur actif
                     ArrayList<Coord> pions = new ArrayList<>(moteurJeu.getJoueurActif().getPions());
-                    for (int i = 0; i < pions.size(); i++) {
-                        if (moteurJeu.getJeu().estPionBloque(pions.get(i))) {
-                            pions.remove(i);
-                        }
-                    }
+                    pions.removeIf(pion -> moteurJeu.getJeu().estPionBloque(pion));
+
                     plateauGraphique.ajouterTuilesSurbrillance(pions, Couleurs.SURBRILLANCE_PION);
                 }
                 plateauGraphique.repaint();

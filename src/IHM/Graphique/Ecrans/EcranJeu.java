@@ -368,11 +368,8 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
             } else {
                 plateauGraphique.viderTuilesSurbrillance();
                 ArrayList<Coord> pions = new ArrayList<>(ihm.getMoteurJeu().getJoueurActif().getPions());
-                for (int i = 0; i < pions.size(); i++) {
-                    if (ihm.getMoteurJeu().getJeu().estPionBloque(pions.get(i))) {
-                        pions.remove(i);
-                    }
-                }
+                pions.removeIf(pion -> ihm.getMoteurJeu().getJeu().estPionBloque(pion));
+
                 plateauGraphique.ajouterTuilesSurbrillance(pions, Couleurs.SURBRILLANCE_PION);
 
                 // Si le jeu est dans la phase jeu (déplacement des pions jusqu'à fin de la partie)
