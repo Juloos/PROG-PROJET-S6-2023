@@ -22,6 +22,6 @@ public class ActionCoup implements Action {
 
     @Override
     public void afficherMessageErreur(MoteurJeu mt) {
-        mt.getIHM().afficherMessage(coup.getMessageErreur(), 2000);
+        mt.getIHM().afficherMessage(coup.getMessageErreur(), 3000);
     }
 }

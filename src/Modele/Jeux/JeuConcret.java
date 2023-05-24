@@ -240,22 +240,9 @@ public class JeuConcret extends Jeu {
                     case 2:
                         sc_f.nextLine();
                         nom = sc_f.nextLine();
-                        switch (nom) {
-                            case "ALEATOIRE":
-                                difficulte = IA.Difficulte.ALEATOIRE;
-                                break;
-                            case "FACILE":
-                                difficulte = IA.Difficulte.FACILE;
-                                break;
-                            case "MOYEN":
-                                difficulte = IA.Difficulte.MOYEN;
-                                break;
-                            case "DIFFICILE":
-                                difficulte = IA.Difficulte.DIFFICILE;
-                                break;
-                            default:
-                                System.err.println(fichier + " isn't a save file : not a valid IA");
-                                throw new Exception();
+                        if ((difficulte = IA.stringToDiff(nom)) == null){
+                            System.err.println(fichier + " isn't a save file : not a valid IA");
+                            throw new Exception();
                         }
                         break;
                     default:
