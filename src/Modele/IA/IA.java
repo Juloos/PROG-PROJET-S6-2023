@@ -16,6 +16,23 @@ public interface IA {
         LEGENDAIRE  // identifiant : 4
     }
 
+    static  Difficulte stringToDiff(String nom) {
+        switch (nom) {
+            case "ALEATOIRE":
+                return IA.Difficulte.ALEATOIRE;
+            case "FACILE":
+                return IA.Difficulte.FACILE;
+            case "MOYEN":
+                return IA.Difficulte.MOYEN;
+            case "DIFFICILE":
+                return IA.Difficulte.DIFFICILE;
+            case "LEGENDAIRE":
+                return IA.Difficulte.LEGENDAIRE;
+            default:
+                return null;
+        }
+    }
+
     static IA getIA(Difficulte d, int joueur) {
         switch (d) {
             case ALEATOIRE:
