@@ -335,7 +335,10 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
      * Suggère un coup au joueur actif
      */
     private void suggererCoup() {
-        if (ihm.getMoteurJeu().getJoueurActif() instanceof JoueurHumain && suggestionThread == null) {
+        if (ihm.getMoteurJeu().getJoueurActif() instanceof JoueurHumain) {
+            if (suggestionThread != null && suggestionThread.isAlive()) {
+                suggestionThread.interrupt();
+            }
             suggestionThread = new Thread(this);
             suggestionThread.start();
         }
@@ -459,9 +462,10 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     public void run() {
         // Méthode pour suggérer un coup
         IA suggestionIA = new IALegendaire(joueurActif);
-        afficherMessage("Réflexion d'un coup à suggérer");
+        ihm.afficherMessage("Recherche d'une suggestion...", 0);
         Coup coup = suggestionIA.reflechir(ihm.getMoteurJeu().getJeu());
 
+        while (ihm.getMoteurJeu().partieEnPause()) ;
         if (coup instanceof CoupAjout) {
             CoupAjout ajout = (CoupAjout) coup;
             plateauGraphique.ajouterTuilesSurbrillance(ajout.getCible(), Couleurs.SUGGESTION);
@@ -471,7 +475,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
             plateauGraphique.ajouterTuilesSurbrillance(Coord.getCoordsEntre(deplacement.source, deplacement.destination), Couleurs.SUGGESTION);
         }
         plateauGraphique.repaint();
-        afficherMessage("");
+        ihm.afficherMessage("Nouveau coup suggéré", 1000);
         suggestionThread = null;
     }
 }
