@@ -52,20 +52,6 @@ public class EcranOptions extends Ecran {
         panelVolume.add(volumeSlider);
         panelVolume.add(Box.createRigidArea(new Dimension(0, 50)));
         panelVolume.add(Box.createRigidArea(new Dimension(0, 50)));
-        Button rules = new Button("Règles");
-        rules.setFont(new Font("Impact", Font.PLAIN, 48));
-        rules.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                try {
-                    Desktop.getDesktop().open(new java.io.File("/rules.pdf"));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-        rules.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panelVolume.add(rules);
         panel.add(panelVolume, BorderLayout.CENTER);
 
         Button retour = new Button("Retour");

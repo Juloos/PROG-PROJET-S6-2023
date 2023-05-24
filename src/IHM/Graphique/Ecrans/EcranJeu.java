@@ -147,13 +147,13 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
 
         // Initialisation du panel contenant annuler et refaire
         JPanel annulerRefaire = new JPanel();
-        annulerRefaire.setLayout(new BoxLayout(annulerRefaire, BoxLayout.X_AXIS));
+        annulerRefaire.setLayout(new FlowLayout(FlowLayout.CENTER));
         annulerRefaire.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
         annulerRefaire.setOpaque(false);
         annulerRefaire.add(annuler);
-        annulerRefaire.add(Box.createHorizontalGlue());
+        annulerRefaire.add(Box.createHorizontalStrut(20));
         annulerRefaire.add(reprendre);
-        annulerRefaire.add(Box.createHorizontalGlue());
+        annulerRefaire.add(Box.createHorizontalStrut(20));
         annulerRefaire.add(refaire);
 
         // Initialisation du bouton de suggestion d'un coup
@@ -191,7 +191,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         });
 
         // Initialisation du panel contenant regles et options
-        JPanel horizontal = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel horizontal = new JPanel(new FlowLayout(FlowLayout.CENTER));
         horizontal.setOpaque(false);
         horizontal.add(suggestion);
         horizontal.add(regles);
