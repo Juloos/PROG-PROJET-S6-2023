@@ -1,5 +1,6 @@
 package IHM.Graphique.PopUp;
 
+import IHM.Graphique.Composants.Button;
 import IHM.Graphique.Composants.JButtonIcon;
 import IHM.Graphique.IHMGraphique;
 import IHM.Graphique.Images;
@@ -20,8 +21,7 @@ public class PopUpReglesJeu extends PopUp {
     private final IHMGraphique ihm;
     private int pageIndex;
     private Image page;
-
-    private JButton pagePrecedente,pageSuivante;
+    private JButton pagePrecedente, pageSuivante, quitter;
 
     public PopUpReglesJeu(IHMGraphique ihm) {
         super(ihm, "Règles du jeu", ihm.getFrame().getWidth(), ihm.getFrame().getHeight());
@@ -32,6 +32,8 @@ public class PopUpReglesJeu extends PopUp {
     /* Méthodes héritées */
     @Override
     public void init(IHMGraphique ihm) {
+
+        //Initialisation du panel principale
         JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics graphics) {
@@ -41,11 +43,17 @@ public class PopUpReglesJeu extends PopUp {
         };
         panel.setLayout(new BorderLayout());
 
-        JPanel bouttons = new JPanel();
-        bouttons.setLayout(new BoxLayout(bouttons, BoxLayout.X_AXIS));
-        bouttons.setOpaque(false);
+        // Initialisation du boutton quitter
+        quitter = new Button("Retour");
+        quitter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                close();
+            }
+        });
 
-        pagePrecedente = new JButtonIcon(Images.chargerImage("/icones/arrow_left.png"), 100);
+        // Initialisation du boutton pagePrécedente
+        pagePrecedente = new JButtonIcon(Images.chargerImage("/icones/arrow_left.png"), 80);
         pagePrecedente.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -53,7 +61,8 @@ public class PopUpReglesJeu extends PopUp {
             }
         });
 
-        pageSuivante = new JButtonIcon(Images.chargerImage("/icones/arrow_right.png"), 100);
+        // Initialisation du boutton pageSuivante
+        pageSuivante = new JButtonIcon(Images.chargerImage("/icones/arrow_right.png"), 80);
         pageSuivante.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -61,10 +70,17 @@ public class PopUpReglesJeu extends PopUp {
             }
         });
 
+        // Initialisation du panel bouttons
+        JPanel bouttons = new JPanel();
+        bouttons.setLayout(new BoxLayout(bouttons, BoxLayout.X_AXIS));
+        bouttons.setOpaque(false);
         bouttons.add(pagePrecedente);
+        bouttons.add(Box.createHorizontalGlue());
+        bouttons.add(quitter);
         bouttons.add(Box.createHorizontalGlue());
         bouttons.add(pageSuivante);
 
+        // Construction du panel principale
         panel.add(Box.createVerticalGlue(), BorderLayout.CENTER);
         panel.add(bouttons, BorderLayout.SOUTH);
 
