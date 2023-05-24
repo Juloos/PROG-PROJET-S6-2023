@@ -32,7 +32,7 @@ import java.util.ArrayList;
 /**
  * Classe du menu losrqu'une partie est en cours
  */
-public class EcranJeu extends Ecran implements MouseListener, MouseMotionListener {
+public class EcranJeu extends Ecran implements MouseListener, MouseMotionListener, Runnable {
 
     final IHMGraphique ihm;
 
@@ -52,7 +52,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     Coord selection;
     PlateauGraphique plateauGraphique;
     int joueurActif;
-    IA suggestionIA;
+    Thread suggestionThread;
 
     public EcranJeu(IHMGraphique ihm) {
         super("Partie en cours");
@@ -335,22 +335,9 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
      * Suggère un coup au joueur actif
      */
     private void suggererCoup() {
-        if (ihm.getMoteurJeu().getJoueurActif() instanceof JoueurHumain && suggestionIA == null) {
-            suggestionIA = new IALegendaire(joueurActif);
-            afficherMessage("Réflexion d'un coup à suggérer");
-            Coup coup = suggestionIA.reflechir(ihm.getMoteurJeu().getJeu());
-
-            if (coup instanceof CoupAjout) {
-                CoupAjout ajout = (CoupAjout) coup;
-                plateauGraphique.ajouterTuilesSurbrillance(ajout.getCible(), Couleurs.SUGGESTION);
-            } else if (coup instanceof CoupDeplacement) {
-                CoupDeplacement deplacement = (CoupDeplacement) coup;
-                plateauGraphique.ajouterTuilesSurbrillance(deplacement.source, Couleurs.SUGGESTION_DEBUT);
-                plateauGraphique.ajouterTuilesSurbrillance(Coord.getCoordsEntre(deplacement.source, deplacement.destination), Couleurs.SUGGESTION);
-            }
-            plateauGraphique.repaint();
-            suggestionIA = null;
-            afficherMessage("");
+        if (ihm.getMoteurJeu().getJoueurActif() instanceof JoueurHumain && suggestionThread == null) {
+            suggestionThread = new Thread(this);
+            suggestionThread.start();
         }
     }
 
@@ -466,5 +453,25 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {
 
+    }
+
+    @Override
+    public void run() {
+        // Méthode pour suggérer un coup
+        IA suggestionIA = new IALegendaire(joueurActif);
+        afficherMessage("Réflexion d'un coup à suggérer");
+        Coup coup = suggestionIA.reflechir(ihm.getMoteurJeu().getJeu());
+
+        if (coup instanceof CoupAjout) {
+            CoupAjout ajout = (CoupAjout) coup;
+            plateauGraphique.ajouterTuilesSurbrillance(ajout.getCible(), Couleurs.SUGGESTION);
+        } else if (coup instanceof CoupDeplacement) {
+            CoupDeplacement deplacement = (CoupDeplacement) coup;
+            plateauGraphique.ajouterTuilesSurbrillance(deplacement.source, Couleurs.SUGGESTION_DEBUT);
+            plateauGraphique.ajouterTuilesSurbrillance(Coord.getCoordsEntre(deplacement.source, deplacement.destination), Couleurs.SUGGESTION);
+        }
+        plateauGraphique.repaint();
+        afficherMessage("");
+        suggestionThread = null;
     }
 }
