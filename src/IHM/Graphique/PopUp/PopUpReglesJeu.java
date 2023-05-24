@@ -21,6 +21,8 @@ public class PopUpReglesJeu extends PopUp {
     private int pageIndex;
     private Image page;
 
+    private JButton pagePrecedente,pageSuivante;
+
     public PopUpReglesJeu(IHMGraphique ihm) {
         super(ihm, "Règles du jeu", ihm.getFrame().getWidth(), ihm.getFrame().getHeight());
         this.setLocation(ihm.getFrame().getX(), ihm.getFrame().getY());
@@ -43,7 +45,7 @@ public class PopUpReglesJeu extends PopUp {
         bouttons.setLayout(new BoxLayout(bouttons, BoxLayout.X_AXIS));
         bouttons.setOpaque(false);
 
-        JButton pagePrecedente = new JButtonIcon(Images.chargerImage("/icones/arrow_left.png"), 100);
+        pagePrecedente = new JButtonIcon(Images.chargerImage("/icones/arrow_left.png"), 100);
         pagePrecedente.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -51,7 +53,7 @@ public class PopUpReglesJeu extends PopUp {
             }
         });
 
-        JButton pageSuivante = new JButtonIcon(Images.chargerImage("/icones/arrow_right.png"), 100);
+        pageSuivante = new JButtonIcon(Images.chargerImage("/icones/arrow_right.png"), 100);
         pageSuivante.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -69,6 +71,7 @@ public class PopUpReglesJeu extends PopUp {
         setContentPane(panel);
 
         page = REGLES_PAGE1;
+        pagePrecedente.setVisible(false);
     }
 
     private void changerPage(boolean previous) {
@@ -83,9 +86,13 @@ public class PopUpReglesJeu extends PopUp {
         switch (pageIndex) {
             case 0:
                 page = REGLES_PAGE1;
+                pagePrecedente.setVisible(false);
+                pageSuivante.setVisible(true);
                 break;
             case 1:
                 page = REGLES_PAGE2;
+                pagePrecedente.setVisible(true);
+                pageSuivante.setVisible(false);
                 break;
         }
         repaint();
