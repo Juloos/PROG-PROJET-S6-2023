@@ -60,8 +60,7 @@ public class PlateauGraphique extends JComponent {
             Y_OFFSET = TAILLE_CASES / NB_ROWS;
             BORDURES_X = (int) Math.floor((getWidth() - plateau.getNbColumns() * (TAILLE_CASES / ESPACEMENT_TUILES)) / TAILLE_CASES);
             BORDURES_Y = (int) Math.floor((getHeight() - plateau.getNbRows() * (TAILLE_CASES / ESPACEMENT_TUILES)) / TAILLE_CASES);
-
-            final Coord placementPingouin = placementPingouinX >= 0 && placementPingouinY >= 0 ? getTuile(placementPingouinX, placementPingouinY) : null;
+            Coord placementPingouin = getTuile(placementPingouinX, placementPingouinY);
 
             // Dessin des tuiles
             for (int r = -BORDURES_Y; r < NB_ROWS + BORDURES_Y; r++) {
@@ -92,8 +91,7 @@ public class PlateauGraphique extends JComponent {
                 }
             }
 
-            if (placementPingouin != null && jeu.getPlateau().get(placementPingouin) != 1) {
-                // Dessin du pingouin flottant
+            if (placementPingouin == null && placementPingouinX >= 0 && placementPingouinY >= 0) {
                 drawable.drawImage(Images.getInstance().getPingouin(jeu.getJoueur().getID()), (int) Math.round(placementPingouinX - (TAILLE_CASES / 1.9)),
                         (int) Math.round(placementPingouinY - (TAILLE_CASES / 1.35)),
                         (int) TAILLE_CASES,

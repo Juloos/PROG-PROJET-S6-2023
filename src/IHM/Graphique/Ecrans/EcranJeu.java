@@ -111,6 +111,7 @@ public class EcranJeu extends Ecran implements MouseListener, MouseMotionListene
         // Inititalisation du panel de message
         message = new JTextArea("Validez le plateau pour lancer la partie.");
         message.setEditable(false);
+        message.setWrapStyleWord(true);
         message.setLineWrap(true);
         message.setFont(new Font("Arial", Font.PLAIN, 20));
         message.setOpaque(false);
